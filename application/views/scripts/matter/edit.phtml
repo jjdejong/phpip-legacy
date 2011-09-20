@@ -1,0 +1,503 @@
+<link href="/js/css/smoothness/jquery-ui-1.8.12.custom.css" media="screen" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#matter-country').autocomplete({
+        minLength: 1,
+        source: "/matter/get-country-codes",
+        focus: function(event, ui){
+            return false;
+        },
+        autoFocus: true,
+        select: function( event, ui ) {
+                    $( "#matter-country" ).val( ui.item.value );
+                    $( "#matter-country-id" ).val( ui.item.id );
+                 return false;
+        },
+        change: function( event, ui ){
+                    valid=true;
+                    if ( !ui.item ) {
+                      valid=false;
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $(this).val( "" );
+                      $( "#matter-country-id" ).val("");
+                      $(this).data( "autocomplete" ).term = "";
+                      return false;
+                   }
+                 return false;
+        }
+    });
+    $('#matter-origin').autocomplete({
+        minLength: 1,
+        source: "/matter/get-country-codes",
+        focus: function(event, ui){
+            return false;
+        },
+        autoFocus: true,
+        select: function( event, ui ) {
+                    $( "#matter-origin" ).val( ui.item.value );
+                    $( "#matter-origin-id" ).val( ui.item.id );
+                 return false;
+        },
+        change: function( event, ui ){
+                    valid=true;
+                    if ( !ui.item ) {
+                      valid=false;
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $(this).val( "" );
+                      $('#matter-origin-id').val("");
+                      $(this).data( "autocomplete" ).term = "";
+                      return false;
+                   }
+             return false;
+        }
+    });
+/*
+    $('#matter-type').autocomplete({
+        minLength: 1,
+        source: "/matter/get-matter-types",
+        autoFocus: true,
+        focus: function(event, ui){
+            return false;
+        },
+        select: function( event, ui ) {
+                    $( "#matter-type" ).val( ui.item.value );
+                    $( "#matter-type-id" ).val( ui.item.id );
+                 return false;
+        },
+        change: function( event, ui ){
+                    valid=true;
+                    if ( !ui.item ) {
+                      valid=false;
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $(this).val( "" );
+                      $(this).data( "autocomplete" ).term = "";
+                      return false;
+                   }
+                 return false;
+        }
+    });
+*/
+    $('#matter-caseref').autocomplete({
+        minLength: 1,
+        source: "/matter/get-matter-caseref",
+        autoFocus: true,
+        focus: function(event, ui){
+            return false;
+        },
+        select: function( event, ui ) {
+                    $( "#matter-caseref" ).val( ui.item.value );
+                    $( "#matter-caseref-id" ).val( ui.item.id );
+                 return false;
+        },
+/*
+        change: function( event, ui ){
+                    valid=true;
+                    if ( !ui.item ) {
+                      valid=false;
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $(this).val( "" );
+                      $(this).data( "autocomplete" ).term = "";
+                      return false;
+                   }
+                 return false;
+        }
+*/
+    });
+
+    $('#matter-responsible').autocomplete({
+        minLength: 1,
+        source: "/matter/get-all-logins",
+        autoFocus: true,
+        focus: function(event, ui){
+            return false;
+        },
+        select: function( event, ui ) {
+                    $( "#matter-responsible" ).val( ui.item.value );
+                    //$( "#matter-responsible-id" ).val( ui.item.id );
+                 return false;
+        },
+        change: function( event, ui ){
+                    valid=true;
+                    if ( !ui.item ) {
+                      valid=false;
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $(this).val("");
+                      $(this).data("autocomplete").term = "";
+                      return false;
+                   }
+            return false;
+        }
+    });
+    $('#matter-category').autocomplete({
+        minLength: 1,
+        source: "/matter/get-all-categories",
+        autoFocus: true,
+        focus: function(event, ui){
+            return false;
+        },
+        select: function( event, ui ) {
+                    $( "#matter-category" ).val( ui.item.value );
+                    $( "#matter-category-code" ).val( ui.item.id );
+                 return false;
+        },
+        change: function( event, ui ){
+                    valid=true;
+                    if ( !ui.item ) {
+                      valid=false;
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $(this).val("");
+                      $("#matter-category-code").val('');
+                      $(this).data( "autocomplete" ).term = "";
+                      return false;
+                   }
+                 return false;
+        }
+    });
+    $('#matter-parent').autocomplete({
+        minLength: 1,
+        source: "/matter/get-all-refers",
+        autoFocus: true,
+        focus: function(event, ui){
+            return false;
+        },
+        select: function( event, ui ) {
+           $( "#matter-parent" ).val( ui.item.value );
+           $( "#matter-parent-id" ).val( ui.item.id );
+           return false;
+        },
+        change: function( event, ui ){
+          valid=true;
+          if ( !ui.item ) {
+              valid=false;
+          }
+          if ( !valid ) {
+          // remove invalid value, as it didn't match anything
+              $(this).val( "" );
+              $( "#matter-parent-id" ).val('');
+              $(this).data( "autocomplete" ).term = "";
+              return false;
+          }
+          return false;
+        }
+    });
+    $('#matter-container').autocomplete({
+        minLength: 1,
+        source: "/matter/get-container-refers/caseref/<?=$this->matter['caseref']?>/matter_id/<?=$this->matter['ID']?>",
+        autoFocus: true,
+        focus: function(event, ui){
+            return false;
+        },
+        select: function( event, ui ) {
+           $( "#matter-container" ).val( ui.item.value );
+           $( "#matter-container-id" ).val( ui.item.id );
+           return false;
+        },
+        change: function( event, ui ){
+          valid=true;
+          if ( !ui.item ) {
+              valid=false;
+          }
+          if ( !valid ) {
+          // remove invalid value, as it didn't match anything
+              $(this).val( "" );
+              $( "#matter-container-id" ).val( "" );
+              $(this).data( "autocomplete" ).term = "";
+              return false;
+          }
+          return false;
+        }
+    });
+    $('#edit-matter-cancel').click(function(){
+        $('#add-matter-popup').css('display', 'none');
+        $('#facade').css('display', 'none');
+    });
+    $('.close-button').click(function(){
+        $('#add-matter-popup').css('display', 'none');
+        $('#facade').css('display', 'none');
+    });
+
+   $('#matter-idx').keydown(function(event){
+     if(event.keyCode == 46 || event.keyCode == 8){}
+     else{
+       if(event.keyCode < 48 || event.keyCode > 57){
+         event.preventDefault();
+       }
+     }
+   });
+
+   $('#edit-matter-submit').click(function(){
+        var invalid = false;
+        $('.validation-errors').empty();
+        if($('#matter-category-code').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
+            invalid = true;
+        }
+        if($('#matter-country-id').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Country requires a value</span>');
+            invalid = true;
+        }
+        if($('#matter-caseref').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Caseref requires a value</span>');
+            invalid = true;
+        }
+        if($('#matter-responsible').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Responsible requires a value</span>');
+            invalid = true;
+        }
+        if(invalid)
+            $('.validation-errors').css('display', 'block');
+        else{
+            $('.validation-errors').css('display', 'none');
+            var idx = $('#matter-idx').val();
+
+            if($('#matter-origin').val() == '')
+               $('#matter-origin-id').val('');
+
+            if($('#matter-parent').val() == '')
+               $('#matter-parent-id').val('');
+
+            if($('#matter-contianer').val() == '')
+               $('#matter-container-id').val('');
+
+            $.ajax({
+                url: '/matter/edit',
+                type: 'POST',
+                data: { 
+                        matter_id: $('#current-matter-id').val(),
+                        category_code: $('#matter-category-code').val(),
+                        country: $('#matter-country-id').val(),
+                        origin: $('#matter-origin-id').val(),
+                        type_code: $('#matter-type').val(),
+                        caseref: $('#matter-caseref').val(),
+                        caseref_prev: $('#matter-caseref-prev').val(),
+                        responsible: $('#matter-responsible').val(),
+                        parent_ID: $('#matter-parent-id').val(),
+                        container_ID: $('#matter-container-id').val(),
+                        idx: idx,
+                      },
+                success: function(data){
+                    var cdata = data.split('-');
+                    if( cdata[0] == 'caseidx' ){
+                      var conf = confirm("Are you sure you wish to change the matter's family? If yes, you may need to change the parent and container information too");
+                      if(conf == 1){
+                        $('#matter-idx').val(cdata[1]);
+                        $('#edit-matter-submit').click();
+                      }
+                    }else{
+                      if( data != 'false' ){
+                      //  alert("Matter edited!");
+                      $('#add-matter-popup').css('display', 'none');
+                      $('#facade').css('display', 'none');
+                        $(location).attr("href", '/matter/view/id/'+data);
+                     }else
+                      alert("Edit matter failed");
+                   }
+                }
+            });
+        }
+   });
+
+   $('#delete-matter').click(function(){
+        var mid = $(this).attr('mid');
+        var conf = confirm("Do you really want to delete this Matter?");
+        if(conf == 1){
+          $.ajax({
+            url:'/matter/delete',
+            type: 'POST',
+            data: { matter_id: mid },
+            success: function(data){
+              if(data == "true"){
+                $(location).attr("href", '/matter');
+              }else{
+                alert(data);
+              }
+            }
+          });
+        }
+   });
+});
+</script>
+<style type="text/css" >
+#edit-matter-head{
+  display:block;
+  width: 540px;
+  background: #1E4262;
+  color: #FFF;
+  padding: 5px;
+  border: 1px solid #1E4262;
+  -moz-border-radius: 5px 5px 0px 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+}
+#edit-matter{
+  width: 540px;
+  background: #FFF;
+  display: block;
+  border: 1px inset #888;
+  padding: 5px;
+  -moz-border-radius: 0px 0px 5px 5px;
+  -webkit-border-radius: 0px 0px 5px 5px;
+}
+#edit-matter label{
+  display: inline-block;
+  text-align: right;
+  width: 75px;
+  margin: 0px 5px 10px 0px;
+}
+#child-matter-options {
+  border-top: 1px solid #DDD;
+  padding-top: 8px;
+}
+#child-matter-options span{
+  display:inline-block;
+  text-align: right;
+  width: 150px;
+}
+#child-matter-options label{
+  text-align: left;
+  width: 150px;
+}
+#edit-matter input[type="text"]{
+  width: 170px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border: 1px inset #888;
+  padding: 3px 2px;
+}
+#edit-matter-actions{
+  margin: 10px 0px 0px 0px;
+  margin-left:30px;
+}
+.close-button{
+  background: #f00;
+  float:right;
+  padding: 2px 4px 0px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  cursor: pointer;
+  font-family: arial;
+}
+.required-field{
+  color: #f00;
+  font-weight: bold;
+  margin-right:4px;
+}
+.validation-errors{
+  display:none;
+  border:1px solid #f00;
+  color:#f00;
+  padding:5px;
+  width: auto;
+  margin-bottom: 10px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+.validation-errors span{
+    display: block;
+    width: auto;
+    margin-left: 20px;
+}
+.display-field{
+  display: inline-block;
+  width: 170px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border: 1px solid #888;
+  padding: 1px 2px;
+  vertical-align: top;
+  margin-bottom: 2px;
+  min-height: 14px;
+}
+</style>
+<div class="place-card">
+<div id="edit-matter-head">
+Advanced Matter edition <span class="close-button">X</span>
+</div>
+<div id="edit-matter">
+<div class="validation-errors">
+
+</div>
+<input type="hidden" name="current-matter-id" id="current-matter-id" value="<?=$this->matter['ID']?>" />
+<label for="matter-category"><span class="required-field">*</span>Category</label>
+<?php if($this->cat_edit){?>
+<select name="matter-category" id="matter-category" style="width:170px;">
+<?php foreach($this->cats as $cat){
+$selected = "";
+if($cat['id'] == $this->matter['category_code']){
+$selected = "selected=selected";
+}
+?>
+<option value="<?=$cat['id']?>" <?=$selected?> ><?=$cat['value']?></option>
+<?php } ?>
+</select>
+<!-- <input type="text" name="matter-category" id="matter-category" value="<?=$this->matter['category']?>" class="required" />-->
+<?php } else{ ?>
+<span id="matter-category" class="display-field" ><?=$this->matter['category']?></span>
+<?php } ?>
+<input type="hidden" name="matter-category-code" id="matter-category-code" value="<?=$this->matter['category_code']?>" />
+
+<label for="matter-country"><span class="required-field">*</span>Country</label>
+<?php if($this->country_edit){ ?>
+<input type="text" name="matter-country" id="matter-country" value="<?=$this->matter['country_name']?>" class="required" />
+<?php } else{ ?>
+<span id="matter-country" class="display-field" ><?=$this->matter['country_name']?></span>
+<?php } ?>
+<input type="hidden" name="matter-country-id" id="matter-country-id" value="<?=$this->matter['country']?>" />
+
+<label for="matter-origin">Origin</label>
+<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>" />
+<input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->origin_code?>" />
+
+<label for="matter-type">Type</label>
+<select name="matter-type" id="matter-type" style="width:170px;" >
+<option value=""></option>
+<?php foreach($this->types as $type){ 
+$select = "";
+if($type['id'] == $this->matter['type_code'])
+  $select = "selected=selected";
+?>
+<option value="<?=$type['id']?>" <?=$select?> ><?=$type['value']?></option>
+<?php } ?>
+</select>
+
+<label for="matter-caseref"><span class="required-field">*</span>Caseref</label>
+<input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->matter['caseref']?>" class="required" />
+<input type="hidden" name="matter-caseref-prev" id="matter-caseref-prev" value="<?=$this->matter['caseref']?>"/>
+
+<label for="matter-responsible"><span class="required-field">*</span>Responsible</label>
+<input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->matter['responsible']?>" class="required" />
+
+<label for="matter-parent-id">Parent ID</label>
+<input type="text" name="matter-parent" id="matter-parent" value="<?=$this->parent?>" />
+<input type="hidden" name="matter-parent-id" id="matter-parent-id" value="<?=$this->parent_id?>" />
+
+<label for="matter-container-id">Container ID</label>
+<input type="text" name="matter-container" id="matter-container" value="<?=$this->container?>" />
+<input type="hidden" name="matter-container-id" id="matter-container-id" value="<?=$this->container_id?>" />
+
+<label for="matter-idx">Idx</label>
+<input type="text" name="matter-idx" id="matter-idx" value="<?=$this->matter['idx']?>" />
+
+<label for="matter-dead">Dead</label>
+<span id="matter-dead" class="display-field" title="This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status" style="cursor:help;" ><?php echo ($this->matter['dead'])? "Yes":"No" ;?></span>
+
+<div id="edit-matter-actions">
+  <input type="button" name="edit-matter-submit" id="edit-matter-submit" value="Save" class="button-style" />
+  <input type="button" name="edit-matter-cancel" id="edit-matter-cancel" value="cancel" class="button-style" />
+<div style="float:right;vertical-align:bottom; "><a href="javascript:void(0);" id="delete-matter" mid="<?=$this->matter['ID']?>" class="button-style" ><img src="/images/Delete-32.png" alt="Delete" border=0 width=16 height=16 style="vertical-align:middle;" />Delete Matter</a></div>
+</div>
+
+</div>
+</div>

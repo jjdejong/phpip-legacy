@@ -1,0 +1,222 @@
+<style type="text/css" >
+#actors-box{
+  display:block;
+  -moz-border-radius: 0px 4px 4px 4px;
+  -webkit-border-radius: 0px 4px 4px 4px;
+}
+#actors-list{
+  margin: 0px;
+  padding: 0px;
+  max-height:400px;
+  overflow:auto;
+}
+.phpip-lists{
+    margin:0px 5px 5px;
+    padding: 4px;
+    float:left;
+    background: #B5D9E5;
+    display:block;
+    -moz-border-radius: 0px 4px 4px 4px;
+    -webkit-border-radius: 0px 4px 4px 4px;
+    -moz-box-shadow: 2px 2px 1px #888888;
+    -webkit-box-shadow: 2px 2px 1px #888888;
+}
+.phpip-list li{
+    list-style: none;
+    padding: 3px 6px;
+    color: #3F3F38;
+    border-bottom: 1px solid #DDD;
+    background: #FFF;
+}
+.phpip-list li:hover {
+    background: #C8E8F3;
+}
+.list-headers {
+    background: #1E4262;
+    color: #FFF;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    border: none;
+    padding: 4px 6px;
+}
+.phpip-list li:last-child {
+    -moz-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+}
+.col-name{
+    display:inline-block;
+    width: 250px;
+}
+.col-firstname{
+    display:inline-block;
+    width: 200px;
+}
+.col-display{
+    display:inline-block;
+    width: 200px;
+}
+.col-company{
+    display:inline-block;
+    width: 200px;
+}
+.col-delete{
+    display:none;
+    width: 40px;
+    text-align: center;
+}
+.home-box{
+  float:left;
+}
+#actors-tab{
+  background: #B5D9E5;
+  display:block;
+  -moz-border-radius: 4px 4px 0px 0px;
+  -webkit-border-radius: 4px 4px 0px 0px;
+  width:40px;
+  padding: 5px 5px 0px;
+}
+.actor-list-row{
+  cursor: pointer;
+}
+#actor-details-popup{
+  display: none;
+  z-index: 101;
+  position: absolute;
+}
+.filter-input{
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border: 1px inset #555;
+  font-size: 9px;
+  padding: 2px 1px;
+}
+#actor-details-nav{
+  text-align:center;
+}
+#actor-details-nav img{
+  margin-left: 10px;
+  cursor: pointer;
+}
+#delete-actor{
+  float:right;
+  margin-top: 4px;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.actor-list-row').click(function(){
+    var actor_id = $(this).attr('id');
+    $('#facade').css('height',$(document).height()+200);
+    $('#facade').css('display','block');
+    $.ajax({
+      url: '/matter/actor/',
+      type: 'POST',
+      data: { actor_id:actor_id },
+      success: function(data){
+        $('#actor-details-content').empty();
+        $('#actor-details-content').html(data);
+        ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
+        $('#actor-details-popup').css('left', ren_left);
+        $('#actor-details-popup').css('top', '50px');
+        $('#actor-details-popup').css('display', 'block');
+      }
+    });
+  });
+
+  $('#filter-actors').keyup(function(){
+         var url = '/matter/actors-filter/term/'+$(this).val();
+         $.ajax({
+             url: url,
+             type: 'GET',
+             data: { },
+             success: function(data){
+                 $('#actor-table-list').empty();
+                 $('#actor-table-list').html(data);
+             }
+         });
+  });
+
+  $('.actor-delete').click(function(){
+    var del_conf = confirm("Deleting Actor from table. Are you sure?");
+if(del_conf == 1){
+    var aid = $(this).attr('id');
+    $.ajax({
+      url : '/matter/delete-actor',
+      type: 'POST',
+      data: { aid:aid },
+      success: function(data){
+        if(data != "true")
+          alert(data);
+      }
+    });
+}
+    return false;
+  });
+  $('#delete-actor').click(function(){
+    var del_conf = confirm("Deleting Actor from table. Are you sure?");
+if(del_conf == 1){
+    var aid = $('#actor-id').val();
+    $.ajax({
+      url : '/matter/delete-actor',
+      type: 'POST',
+      data: { aid:aid },
+      success: function(data){
+        if(data == "true"){
+          $.ajax({
+          url: '/matter/actornav/nav/next/actor_id/'+aid,
+          type: 'get',
+          data: {},
+          success: function(data){
+            $('#actor-details-content').empty();
+            $('#actor-details-content').html(data);
+          }
+         });
+        }else
+          alert(data);
+      }
+    });
+  }
+    return false;
+  });
+
+  $('.actor-navigation').click(function(){
+      var nav = $(this).attr('id');
+      var url = '/matter/actornav/nav/'+nav+'/actor_id/'+$('#actor-id').val();
+      $.ajax({
+          url: url,
+          type: 'get',
+          data: {},
+          success: function(data){
+            $('#actor-details-content').empty();
+            $('#actor-details-content').html(data);
+          }
+      });
+  });
+
+});
+</script>
+<div id="actors-tab">Actors</div>
+<div id="actors-box" class="place-card">
+<?php if(count($this->actors)): ?>
+    <div class="list-headers"><div class="col-name">Name<br><input type="text" size=20 name="actor-name" id="filter-actors" class="filter-input" /></div><div class="col-firstname">Firstname</div><div class="col-display">Display name</div><div class="col-company">Company</div><div class="col-delete">Delete</div></div>
+<div id="actor-table-list">
+<ul class="phpip-list" id="actors-list">
+<?php foreach($this->actors as $actor): ?>
+    <li class="actor-list-row" id="<?=$actor['id']?>"><div class="col-name"><?=htmlentities($actor['name'])?></div><div class="col-firstname"><?=htmlentities($actor['first_name'])?></div><div class="col-display"><?=htmlentities($actor['display_name'])?></div><div class="col-company"><?=htmlentities($actor['company_name'])?></div><div class="col-delete" ><img src="/images/Delete-32.png" width=16 height=16 border=0 class="actor-delete" id="<?=$actor['id']?>" /></div></li>
+<?php endforeach; ?>
+</ul>
+</div>
+<?php   endif; ?>
+</div>
+
+<div id="actor-details-popup" class="place-card" >
+<div id="actor-details-nav" >
+<span title="backward 10 actors" ><img src="/images/backward.png" alt="backward" class="actor-navigation" id="backward" /></span>
+<span title="previous actor" ><img src="/images/prev.png" alt="prev" class="actor-navigation" id="prev" /></span>
+<span title="next actor" ><img src="/images/next.png" alt="next" class="actor-navigation" id="next" /></span>
+<span title="forward 10 actors" ><img src="/images/forward.png" alt="forward" class="actor-navigation" id="forward" /></span>
+<span title="Delete actor" class="button-style" id="delete-actor" ><img src="/images/Delete-32.png" border=0 width=16 height=16 style="vertical-align:middle;" />Delete</span>
+</div>
+<div id="actor-details-content"></div>
+</div>
+<div id="facade"></div>

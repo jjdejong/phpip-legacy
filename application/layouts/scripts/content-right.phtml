@@ -1,0 +1,91 @@
+<style type="text/css" >
+.stats-field ul{
+	list-style-position:none;
+	list-style-image: none;
+	list-style-type:none;
+	padding-left:5px;
+}
+
+.stats-row{
+	display:inline-block;
+	margin-top:5px;
+	padding:2px 10px;
+	border-bottom: 1px solid #DDD;
+	width:85%;
+}
+.stats-left{
+	display:inline-block;
+	color: #3F3F38;
+	width:68%;
+}
+.stats-right{
+	display:inline-block;
+	color: #733E0F;
+	width:28%;
+	text-align:right;
+}
+
+.stats-field{
+	padding:0px;
+	background:#FFF;
+	border:1px solid #ddd;
+	border-style:inset;
+	-webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+	margin-top:5px;
+}
+
+.stats-field legend{
+	background:#1E4262;
+	color:#fff;
+	-webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding:2px 5px;
+  text-shadow:0 -1px 0 #000000;
+  margin-left:5px;
+}
+
+#active-refresh :hover{
+	cursor:pointer;
+}
+
+#active-head{
+	background:#1E4262;
+	-webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  padding:5px 8px;
+  margin-top:5px;
+  color: #FFF;
+/*  box-shadow:2px 2px 1px #888;
+  -moz-box-shadow:2px 2px 1px #888;
+  -webkit-box-shadow:2px 2px 1px #888; */
+  border: 1px solid #1E4262;
+  border-style: outset;
+ /* font-weight:bold;*/
+}
+
+</style>
+
+<div id='content-right-title'>Statistics</div>
+<div class="inner-right">
+<? echo $this->navigation()->breadcrumbs()->setIndent(8) ?>
+<? #echo $this->navigation()->menu() ?>
+<?php
+/*$navPrimary = $this->navigation()->findOneByLabel('Broadcast');
+echo $this->navigation()
+                   ->menu()
+                   ->renderMenu($navPrimary, array('maxDepth' => 0)); */
+#echo $navPrimary = $this->navigation()->findOneByLabel('Dashboard');
+#echo $this->navigation()
+#                   ->menu()
+#                   ->renderMenu($navPrimary);
+#print_r($this->navigation()->breadcrumbs()->getContainer()->toArray());
+#Reflection::export(new ReflectionObject($this->navigation()->breadcrumbs()->getContainer()))
+
+?>
+
+
+</div>

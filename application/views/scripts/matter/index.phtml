@@ -1,0 +1,402 @@
+<style type="text/css">
+#edit-matter-details h3{
+  border:1px solid #4A7EBB;
+  background:#93CDDD;
+  color:#000;
+  padding:10px;
+  text-align:center;
+  margin: 20px 40px;
+}
+#edit-matter-table{
+  margin-left:20px;
+}
+#edit-matter-table th{
+  text-align:right;
+}
+#edit-matter-table td{
+  text-align:left;
+  height:10px;
+}
+.head-tab{
+  color: #FFFFFF;
+  background-color: #1E4262;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  padding:5px 10px;
+}
+
+.row-tab{
+  border:1px solid #888;
+  background-color: #FFFFFF;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  padding:5px 10px;
+  margin-top:5px;
+  font-size: 10px;
+}
+
+.row-tab:hover {
+  background-color: #AFB5C4;
+  cursor: pointer; 
+  font-size: 10px;
+}
+.head-tab div{
+  display:inline-block;
+  font-size: 10px;
+}
+
+.row-tab div{
+  display:inline-block;
+  vertical-align:top;
+  font-size: 10px;
+/*  text-align: left; */
+}
+
+.column {
+  margin: 0 5px;
+  vertical-align:top;
+}
+.column-case{
+  width:68px;
+  text-align: left;
+}
+.column-title{
+  width: 150px;
+  text-align: left;
+  vertical-align:middle;
+}
+.column-client{
+  width: 50px;
+  text-align:left;
+}
+.column-client-ref{
+  width: 80px;
+  text-align:left;
+}
+.column-origin{
+  width:40px;
+  text-align:left;
+}
+.column-cat{
+  width: 32px;
+  text-align:left;
+}
+.column-status{
+  width: 60px;
+  text-align:left;
+}
+.column-date{
+  width: 70px;
+  text-align:left;
+}
+
+.column-inventor{
+  width: 80px;
+  text-align:left;
+}
+
+.column-filing-no{
+  width: 80px;
+  text-align:left;
+}
+.column-pub-no{
+  width: 75px;
+  text-align:left;
+}
+
+.column-ctnr-pri{
+  width: 25px;
+  text-align:center;
+  vertical-align:middle;
+}
+
+.sorting-dirs{
+  color: white;
+  font-size: 1em;
+  padding: 1px 2px;
+  cursor: pointer;
+  vertical-align: center;
+}
+#matter-filters{
+    float: left;
+    color: #FFFFFF;
+    background-color: #1E4262;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    font-size: 11px;
+    font-weight: normal;
+    padding: 1px 4px 1px 1px;
+}
+#matter-filters label{
+    vertical-align: middle;
+}
+#matter-results-bg{
+  width: 958px;
+}
+.filter-input{
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border: 1px inset #555;
+  font-size: 9px;
+  padding: 2px 1px;
+}
+.sorting-img{
+    display: none;
+    width: 11px;
+    height: 9px;
+    background: url('/images/sort-dirs.png') no-repeat;
+}
+#caseref-sort{
+    background-position: 0px 0px;
+    display: inline-block;
+}
+.matter-dead{
+  color: #666;
+  text-decoration: line-through;
+}
+</style>
+
+<script type="text/javascript">
+     var sortKey = "<?=$this->sort_id?>";
+     var sortDir = "<?=$this->sort_dir?>";
+
+function getFilterUrl()
+{
+         var ref = $('#filter-ref').val();
+         var stat = $('#filter-status').val();
+         var client = $('#filter-client').val();
+         var clref = $('#filter-clref').val();
+         var inventor = $('#filter-inventor').val();
+         var filed = $('#filter-filed').val();
+         var filno = $('#filter-filno').val();
+         var pubno = $('#filter-pubno').val();
+
+         var url = '';
+         if($('input[name=container-filter]:checked').val() == 1){
+            url = url + '/filter/Ctnr/value/1';
+         }
+
+         if(ref != '')
+            url = url + '/Ref/'+ref;
+         if(stat != '')
+            url = url + '/Status/'+stat;
+         if(client != '')
+            url = url + '/Client/'+client;
+         if(clref != '')
+            url = url + '/ClRef/'+clref;
+         if(inventor != '')
+            url = url + '/Inventor1/'+inventor;
+         if(filed != '')
+            url = url + '/Filed/'+filed;
+         if(filno != '')
+            url = url + '/FilNo/'+filno;
+         if(pubno != '')
+            url = url + '/PubNo/'+pubno;
+
+         url = url + '/sort/'+sortKey+'/dir/'+sortDir;
+         return url;
+}
+
+$(document).ready(function(){
+     if(sortDir == 'asc'){
+         $('#'+sortKey+'-asc').attr('id', sortKey+"-desc");
+         $('#'+sortKey+'-sort').css('background-position', '0px 0px');
+     }else{
+         $('#'+sortKey+'-sort').css('background-position', '-10px 0px');
+     }
+     $('.sorting-img').css('display', 'none');
+     $('#'+sortKey+'-sort').css('display', 'inline-block');
+
+     if(sortKey == ""){
+         $('#caseref-sort').css('display', 'inline-block');
+     }
+
+     $(".row-tab").click(function(event){
+        var id_array = $(this).attr('id').split('-');
+        var rid = $(this).attr('rid');
+        var url = '/matter/view/id/'+id_array[2]+'/rid/'+rid;
+        window.open(url);
+//        $(location).attr('href','/matter/view/id/' + id_array[2]);
+     });
+
+     $('.sorting-dirs').click(function(){
+        var sort_id = $(this).attr('id').split('-');
+        sortKey = sort_id[0];
+        sortDir = sort_id[1];
+        var url = '/matter/filter' + getFilterUrl();
+        //url = url+'/sort/' + sort_id[0] + '/dir/'+sort_id[1];
+    /*    if($('input[name=container-filter]:checked').val() == 1){
+            url = url + '/filter/Ctnr/value/1';
+        } */
+
+        var objThis = $(this);
+        var objSort = $('#'+sort_id[0]+'-sort');
+
+//        $(location).attr('href', url);
+
+        $.ajax({
+             url: url,
+             type: 'GET',
+             data: { },
+             success: function(data){
+                 $('#matter-list').empty();
+                 $('#matter-list').html(data);
+                 if(sort_id[1] == 'asc'){
+                      objThis.attr('id', sort_id[0]+"-desc");
+                      objSort.css('background-position', "0px 0px");
+                 }else{
+                      objThis.attr('id', sort_id[0]+"-asc");
+                      objSort.css('background-position', "-10px 0px");
+                 }
+                 $('.sorting-img').css('display', 'none');
+                 objSort.css('display', 'inline-block');
+             }
+         });
+     });
+
+/*     $('#matters-ctnr').click(function(){
+        $(location).attr('href', '/matter/index/filter/Ctnr/value/1');
+     }); */
+
+     $('#matters-pri').click(function(){
+        $(location).attr('href', '/matter/index/filter/Pri/value/1');
+     });
+
+     $('#show-containers').click(function(){
+         //$(location).attr('href', '/matter/index/filter/Ctnr/value/1');
+         var url = '/matter/filter' + getFilterUrl();
+         //$(location).attr('href', url);
+         $.ajax({
+             url: url,
+             type: 'GET',
+             data: { },
+             success: function(data){
+                 $('#matter-list').empty();
+                 $('#matter-list').html(data);
+             }
+         });
+     });
+
+     $('#show-all').click(function(){
+         var url = '/matter/filter' + getFilterUrl();
+         //$(location).attr('href', url);
+         $.ajax({
+             url: url,
+             type: 'GET',
+             data: { },
+             success: function(data){
+                 $('#matter-list').empty();
+                 $('#matter-list').html(data);
+             }
+         });
+     });
+
+     $('.filter-input').keyup(function(){
+         var url = '/matter/filter' + getFilterUrl();
+         $.ajax({
+             url: url,
+             type: 'GET',
+             data: { },
+             success: function(data){
+                 $('#matter-list').empty();
+                 $('#matter-list').html(data);
+             }
+         });
+     });
+
+     $('#matter-list').mouseenter(function(){
+       var filter_url = getFilterUrl();
+       if(filter_url != '')
+         $(location).attr("href", '/matter/filter'+filter_url);
+/*
+         $(location).attr("href", '/matter');
+       else
+*/
+     });
+});
+</script> 
+
+<div id="matter-results-bg" class="place-card">
+<?php 
+$show_conts = '';
+$show_all = 'checked=checked';
+if(isset($this->containers)){
+    if($this->containers){
+        $show_conts = 'checked=checked';
+        $show_all = '';
+    }
+}
+?>
+<div id="matter-filters">
+  <input type="radio" id="show-containers" name="container-filter" value=1 <?=$show_conts?> />
+  <label for="show-containers" >Show Containers</label>
+  <input type="radio" id="show-all" name="container-filter" value=0 <?=$show_all?> />
+  <label for="show-all" >Show All</label>
+</div><br><br>
+
+<div class="head-tab">
+<div class="column column-case"><a class="sorting-dirs" id="caseref-desc" >Ref</a><span class="sorting-img" id="caseref-sort">&nbsp;</span><br>
+<input type="text" name="filter-ref" id="filter-ref" value="<?=$this->filters['Ref']?>" size=5 class="filter-input" />
+</div>
+<div class="column column-cat"><a class="sorting-dirs" id="category_code-asc">Cat</a><span class="sorting-img" id="category_code-sort">&nbsp;</span></div>
+<div class="column column-status"><a class="sorting-dirs" id="Status-asc">Status</a><span class="sorting-img" id="Status-sort">&nbsp;</span>
+<input type="text" name="filter-status" id="filter-status" value="<?=$this->filters['Status']?>" size=6 class="filter-input" />
+</div>
+<div class="column column-client"><a class="sorting-dirs" id="Client-asc">Client</a><span class="sorting-img" id="Client-sort">&nbsp;</span>
+<input type="text" name="filter-client" id="filter-client" value="<?=$this->filters['Client']?>" size=6 class="filter-input" />
+</div>
+<div class="column column-client-ref"><a class="sorting-dirs" id="ClRef-asc">Client Ref</a><span class="sorting-img" id="ClRef-sort">&nbsp;</span>
+<input type="text" name="filter-clref" id="filter-clref" value="<?=$this->filters['ClRef']?>" size=8 class="filter-input" />
+</div>
+<div class="column column-title">Title</div>
+<div class="column column-inventor"><a class="sorting-dirs" id="Inventor1-asc">Inventor 1</a><span class="sorting-img" id="Inventor1-sort">&nbsp;</span>
+<input type="text" name="filter-inventor" id="filter-inventor" value="<?=$this->filters['Inventor1']?>" size=8 class="filter-input" />
+</div>
+<div class="column column-date"><a class="sorting-dirs" id="Filed-asc">Filed</a><span class="sorting-img" id="Filed-sort">&nbsp;</span>
+<input type="text" name="filter-filed" id="filter-filed" value="<?=$this->filters['Filed']?>" size=6 class="filter-input" />
+</div>
+<div class="column column-filing-no"><a class="sorting-dirs" id="FilNo-asc">Filing No.</a><span class="sorting-img" id="FilNo-sort">&nbsp;</span>
+<input type="text" name="filter-filno" id="filter-filno" value="<?=$this->filters['FilNo']?>" size=8 class="filter-input" />
+</div>
+<div class="column column-pub-no"><a class="sorting-dirs" id="PubNo-asc">Pub. No.</a><span class="sorting-img" id="PubNo-sort">&nbsp;</span>
+<input type="text" name="filter-pubno" id="filter-pubno" value="<?=$this->filters['PubNo']?>" size=8 class="filter-input" />
+</div>
+<!-- <div class="column column-ctnr-pri"><a style="color:white;cursor:pointer;" id="matters-ctnr">Ctnr</a></div> -->
+<div class="column column-ctnr-pri"><a style="color:white;cursor:pointer;" id="matters-pri">Pri</a></div>
+</div>
+<div id="matter-list">
+<?php if(count($this->paginator)):?>
+<?php if(count($this->paginator) > 1)
+   echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
+?>
+
+<?php 
+$rindex = 0;
+
+foreach($this->paginator as $matter):?>
+
+<?php //print_r($matter);?>
+<div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: #<?php echo ($matter['Ctnr'])?'89A1C7':'FFF'; ?>" >
+<div class="column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
+<div class="column column-cat"><?php echo $matter['Cat']; ?></div>
+<div class="column column-status"><?php echo $matter['Status'];?></div>
+<div class="column column-client"><?php echo htmlentities($matter['Client']);?></div>
+<div class="column column-client-ref"><?php echo htmlentities($matter['ClRef']);?></div>
+<div class="column column-title"><?php echo htmlentities($matter['Title']);?></div>
+<div class="column column-inventor"><?php echo htmlentities($matter['Inventor1']);?></div>
+<div class="column column-date"><?php echo $matter['Filed'];?></div>
+<div class="column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,10);?></div>
+<div class="column column-pub-no" title="<?=$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>
+<!-- <div class="column column-ctnr-pri"><?php echo $matter['Ctnr'];?></div> -->
+<div class="column column-ctnr-pri"><?php echo $matter['Pri'];?></div>
+</div>
+
+<!-- <a id="edit-matter-<?php //echo $matter['ID'] ?>" class="edit-matter" href="javascript:void(0)" >Edit</a>
+-->
+<?php endforeach; ?>
+<?php if(count($this->paginator) > 1)
+    echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
+?>
+<?php endif; ?>
+</div>
+</div>

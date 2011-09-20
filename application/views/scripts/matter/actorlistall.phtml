@@ -1,0 +1,114 @@
+<style type="text/css" >
+#actors-list-block{
+  width: 942px;
+}
+#actors-list{
+  background: #FFF;
+  padding: 5px;
+  border: 1px inset #888;
+  overflow: auto;
+  height: 400px;
+  border: 1px inset #888;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+}
+.actor-list-row{
+  margin-bottom: 5px;
+  cursor: pointer;
+  padding:4px;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  white-space: nowrap;
+  width: 47%;
+  display: inline-block;
+}
+.actor-list-row:hover {
+  background: #C8E8F3;
+}
+.actorlist-col-name{
+  display:inline-block;
+  width: 220px;
+  vertical-align: top;
+}
+.actorlist-col-first_name{
+  display:inline-block;
+  width: 200px;
+  vertical-align: top;
+}
+.actorlist-col-display_name{
+  display:inline-block;
+  width: 200px;
+  vertical-align: top;
+}
+.actorlist-col-comp_actor{
+  display:inline-block;
+  width: 260px;
+  vertical-align: top;
+}
+.actor-role-row{
+  border-bottom: 1px solid #DDD;
+  margin: 0px 0px 5px 0px;
+}
+#actors-head{
+  cursor: pointer;
+}
+#actor-details-popup{
+  display: none;
+  z-index: 101;
+  position: fixed;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#actors-head').click(function(){
+    $('#actors-browse-popup').css('display', 'none');
+  });
+
+  $('.actor-list-row').click(function(){
+    var actor_id = $(this).attr('id');
+    $('#facade').css('height',$(document).height());
+    $('#facade').css('display','block');
+    $.ajax({
+      url: '/matter/actor/',
+      type: 'POST',
+      data: { actor_id:actor_id },
+      success: function(data){
+        $('#actor-details-popup').empty();
+        $('#actor-details-popup').html(data);
+        ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
+        $('#actor-details-popup').css('left', ren_left);
+        $('#actor-details-popup').css('top', '100px');
+        $('#actor-details-popup').css('display', 'block');
+      }
+    });
+  });
+});
+</script>
+
+<div id="actors-list-block" class="listrow" >
+<div class="status-row" id="actors-head">
+
+<span class="actorlist-col-name" style="width: 47%">Actor Name</span>
+<span class="actorlist-col-name" style="width: 47%">Actor Name</span>
+<?/*<span class="actorlist-col-comp_actor">Actor</span> */?>
+
+</div>
+
+<?php if(isset($this->actors)){ 
+$actor_role = "";
+?>
+<div id="actors-list">
+<?php foreach($this->actors as $actor) {
+
+?>
+<div class="actor-list-row status-row" id="<?=$actor['ID']?>">
+<span class="actorlist-col-name"><?php echo htmlentities($actor['name']);?></span>
+<?/*<span class="actorlist-col-comp_actor"><?php echo htmlentities($actor['company_name']);?></span> */?>
+
+</div>
+  
+<?php } ?>
+</div>
+<?php } ?>
+<div id="actor-details-popup" class="place-card" ></div>
+</div>

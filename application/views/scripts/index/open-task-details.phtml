@@ -1,0 +1,64 @@
+<style type="text/css" >
+#task-details-wrap{
+   width: 400px;
+   -moz-border-radius: 0px 0px 5px 5px;
+   -webkit-border-radius: 0px 0px 5px 5px;
+   border: 1px solid #888;
+   border-style: inset;
+   background: #FFF;
+}
+#task-details-ul{
+  margin: 0px;
+  padding: 0px;
+}
+#task-details-ul li{
+  list-style:none;
+}
+.task-left {
+  display: inline-block;
+  width: 100px;
+  margin: 2px 5px;
+  text-align: right;
+  font-weight: bold;
+}
+.task-right {
+  display: inline-block;
+  width: 175px;
+  margin: 2px 5px;
+}
+#task-details{
+  padding:3px;
+  cursor: pointer;
+  background: #1E4262;
+  color: #FFF;
+  -moz-border-radius: 5px 5px 0px 0px;
+  -webkit-border-radius: 5px 5px 0px 0px;
+}
+</style>
+<script type="text/javascript" >
+ $(document).ready(function(){
+   $('#task-details').click(function(){
+    $('#task-pop-up').css('display', 'none');
+    $('#facade').css('display', 'none');
+   });
+ });
+</script>
+<div id="task-details">Task details</div>
+<div id="task-details-wrap">
+<?php if(isset($this->task_details)){ 
+$task = $this->task_details;
+?>
+    <ul id="task-details-ul">
+      <li><span class="task-left">Name</span><span class="task-right"><?=$task['task_name']?></span></li>
+      <li><span class="task-left">Detail</span><span class="task-right"><?=$task['detail']?></span></li>
+      <li><span class="task-left">Due date</span><span class="task-right"><?=$task['due_date']?></span></li>
+      <li><span class="task-left">Done date</span><span class="task-right"><?=$task['done_date']?></span></li>
+      <li><span class="task-left">Time spent</span><span class="task-right"><?=$task['time_spent']?></span></li>
+      <li><span class="task-left">Notes</span><span class="task-right"><?=$task['notes']?></span></li>
+      <li><span class="task-left">Cost</span><span class="task-right"><?=$task['cost']?></span></li>
+      <li><span class="task-left">Fee</span><span class="task-right"><?=$task['fee']?></span></li>
+      <li><span class="task-left">Currency</span><span class="task-right"><?=$task['currency']?></span></li>
+      <li><span class="task-left">Assigned to</span><span class="task-right"><?=$task['assigned_to']?></span></li>
+    </ul>
+<?php } ?>
+</div>

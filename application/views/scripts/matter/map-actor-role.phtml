@@ -1,0 +1,173 @@
+<!--script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script-->
+<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+<link href="/js/css/smoothness/jquery-ui-1.8.12.base.css" media="screen" rel="stylesheet" type="text/css" >
+       
+<style type="text/css">
+
+
+#MatterAddActor:hover {
+    cursor: pointer;
+}
+
+.formtitle{
+    width:90px;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+#add-new-actor{
+    position: fixed;
+    z-index: 110;
+    display:none;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+    var role_search = "<?=$this->role_search?>";    
+
+    $('.role_search').click(function() { 
+        
+        role_search = $(this).val();
+         $.ajax({
+                type: "GET",
+                url: "/matter/map-actor-role/id/<?=$this->matter_id?>/role/<?=$this->role?>/role_search/" + role_search ,
+                success: function(data){
+                    $('#mapactor-pop-up').html(data);
+                }
+        });
+    });
+
+ /*   $('#rolebox').change(function() {
+        role_search = $(this).val();
+        //alert(role_search);
+         $.ajax({
+                type: "GET",
+                url: "/matter/map-actor-role/id/<?=$this->matter_id?>/role/<?=$this->role?>/role_search/" + role_search ,
+                success: function(data){
+                    $('#mapactor-pop-up').html(data);
+                }
+        });
+    }); */
+
+    $('#rolebox').change(function(){
+      var role_val = $('#rolebox').val().split('-');
+      //alert(role_val[1]);
+      if(role_val[1] == 1){
+     //   alert("add to container");
+        $('input[name=matter_container]:eq(0)').click();
+     //   $('#container_no').removeAttr('checked');
+     //   $('#container_yes').attr('checked', 'checked');
+      }
+      else{
+       // alert("add to matter");
+       // $('#container_yes').removeAttr('checked');
+       // $('#container_no').attr('checked', 'checked');
+        $('input[name=matter_container]:eq(1)').click();
+      }
+    });
+
+    $("#cancel").click(function(event){
+        $('#mapactor-pop-up').css('display','none');
+        $('#facade').css('display','none');
+    });
+
+    $("#MatterAddActor").click(function(event){
+        $('#mapactor-pop-up').css('display','none');
+        $('#facade').css('display','none');
+    });
+    
+    $( "#actor" ).autocomplete({
+            minLength: 1,
+            source: "/matter/get-all-actors/role/1",
+            focus: function( event, ui ) {
+                return false;
+            },
+            select: function( event, ui ) {
+                if(ui.item.id == 'cna786'){
+                    var drole = $('#rolebox').val().split('-');
+                    $.ajax({
+                        type: "GET",
+                        url: '/matter/add-actor/role/'+drole[0],
+                        success: function(data){
+                            $('#add-new-actor').html(data);
+                            var ren_left = Math.round($(window).width()/2) - Math.round($('#add-new-actor').width()/2);
+                            $('#add-new-actor').css('left', ren_left);
+                            $('#add-new-actor').css('top', '10px');
+                            $('#add-new-actor').css('display', 'block');
+                        }
+                    });
+                }else{
+                    $( "#actor" ).val( ui.item.value );
+                    $( "#actor-id" ).val( ui.item.id );
+                }
+                return false;
+            },
+            autoFocus: true,
+    });
+
+    $("#submit").click(function(){
+      var role_val = $('#rolebox').val().split('-');
+      $.ajax({
+        type: "POST",
+        url: '/matter/add-matter-actor/',
+        data: { matter_ID : $('#matter-id').val(), actor_ID : $('#actor-id').val(), role : role_val[0], add_container : $('input[name=matter_container]:checked').val(), role_shareable : role_val[1] },
+        success: function(data){
+          //alert(data);
+          $('#mapactor-pop-up').css('display','none');
+          $('#facade').css('display','none');
+          location.reload();
+        }
+      });
+    });
+});
+</script>  
+<div class="listrow" style="width:100%"><div id="MatterAddActor" class="status-row">
+<span class="eventlist-col-name" style="margin-left: 5px;">Add Actor</span>
+</div>
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto;" >
+<!-- span class="formtitle">Search in Role:</span><input class="role_search" name="role_search" type="radio" value="<?=$this->role?>" <?
+if($this->role_search == $this->role)
+	echo " checked='checked'";
+?>>
+<?=$this->role_name[0]['name']?>, <input class="role_search" name="role_search" type="radio" value="1" <?
+if($this->role_search == 1) 
+	echo " checked='checked'";
+?>> All
+<br-->
+<span class="formtitle">Role:</span> <select id="rolebox" name="role_select">
+        <option value='0-0'>Select</option> 
+<?
+        $cont_yes = ""; $cont_no = "";
+        foreach ($this->all_roles as $role){
+            if ($role['code'] == $this->role_search){
+                $selected = " selected";
+                ($role['shareable']) ? $cont_yes = "checked" : $cont_no = "checked";
+            }
+            else
+                $selected = "";
+            echo "<option value='". $role['code'] ."-". $role['shareable']."' $selected>" . $role['name'] . "</option>";
+        }
+            if (1 == $this->role_search)
+                $selected = " selected";
+            else
+                $selected = "";
+        ?>
+      </select>
+<br>
+<span class="formtitle">Add Actor:</span> <input id="actor" width="200"/>
+<input type="hidden" id="actor-id" style="width:200px"/>
+<input type="hidden" id="matter-id" value="<?=$this->matter_id?>" />
+<br>
+<?php if($this->container_id): ?>
+<input type="radio" name="matter_container" value="<?=$this->container_id?>" id="container_yes" <?=$cont_yes?> />
+<label for="container_yes" >Add actor to container</label><br>
+<input type="radio" name="matter_container" value='0' id="container_no" <?=$cont_no?> />
+<label for="container_no" >Add actor to current matter only</label>
+<br>
+<?php endif; ?>
+<input id="submit" type="submit" value="Add">
+<input id="cancel" type="button" value="Cancel">
+</div>
+</div>
+
+<div id="add-new-actor" class="place-card"></div>

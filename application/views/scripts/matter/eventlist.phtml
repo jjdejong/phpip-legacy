@@ -1,0 +1,344 @@
+<style type="text/css">
+.status-row{
+display:block;
+}
+.eventlist-col-name{
+display:inline-block;
+width: 150px;
+vertical-align: top;
+}
+.eventlist-col-event_date{
+display:inline-block;
+width: 125px;
+vertical-align: top;
+}
+
+.eventlist-col-detail{
+display:inline-block;
+width: 100px;
+vertical-align: top;
+}
+
+.eventlist-col-refer{
+display:inline-block;
+width: 170px;
+vertical-align: top;
+}
+
+.eventlist-col-notes{
+display:inline-block;
+width: 250px;
+vertical-align: top;
+}
+
+.eventlist-col{
+display:inline-block;
+width: 150px;
+vertical-align: top;
+}
+
+#MatterAllEvent:hover {
+    cursor: pointer;
+}
+
+#MatterAllEventBlock{
+    width: 941px;
+}
+
+#add-event-popup{
+  width: 530px;
+  z-index: 101;
+  height: auto;
+  top: 0px;
+  display:none;
+  position:absolute;
+}
+#add-event-wrap{
+  background: #FFF;
+  padding: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border: 1px inset #ccc;
+}
+#add-event-wrap label{
+  width:75px;
+  display:inline-block;
+  vertical-align: top;
+  text-align: right;
+}
+#add-event-wrap input{
+  margin-bottom:5px;
+}
+
+</style>
+<link href="/js/css/smoothness/jquery-ui-1.8.12.custom.css" media="screen" rel="stylesheet" type="text/css" >
+
+<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
+<script type="text/javascript" src="/js/jquery.jeditable.datepicker.js"></script>
+<script type="text/javascript">
+    $("#MatterAllEvent").click(function(event){
+        $('#event-pop-up').css('display','none');
+        location.reload();
+    });
+
+    $('#event_date').datepicker({
+        minDate: +0,
+        dateFormat: 'yy-mm-dd',
+    });
+
+    $.editable.addInputType("datepicker", {
+        element:  function(settings, original) {
+            var input = $("<input type=\"text\" name=\"value\" style==\"width:10px\"/>");
+            settings.onblur = function(e) {
+            };
+            $(this).append(input);
+            return(input);
+        },
+        plugin:  function(settings, original) {
+            var form = this;
+            $("input", this).filter(":text").datepicker({
+                dateFormat: 'dd/mm/yy',
+                onSelect: function(dateText) { $(this).hide(); $(form).trigger("submit"); }
+            });
+        }
+    });
+
+    $.editable.addInputType('autocomplete', {
+                element : $.editable.types.text.element,
+                plugin : function(settings, original){
+                  $('input', this).autocomplete(settings.autocomplete);
+          }
+    });
+
+    $('.editable').editable('/matter/update-event', {
+          submitdata: function(value,settings){
+                     var evid = $(this).parent().attr('id');
+                     var field_class = $(this).attr('class').split(' ');
+                     var field_name = (field_class[0]).split('-');
+                     return { event_id: evid, field: field_name[2] }
+               },
+          cancel : 'X',
+          submit : 'Ok',
+          placeholder: '...',
+          select : true,
+          indicator : '<img src="/images/indicator.gif" />',
+          tooltip: 'Click to edit....'
+    });
+
+    $('.date-editable').editable('/matter/update-event', {
+          submitdata: function(value,settings){
+                     var evid = $(this).parent().attr('id');
+                     return { event_id: evid, field: 'event_date' }
+                 },
+            type: 'datepicker',
+            select: true,
+            indicator : '<img src="/images/indicator.gif" />',
+            placeholder: '...',
+            tooltip: 'Click to edit...',
+            callback: function(data){
+          }
+    });
+
+    var alt_matter_id = '';
+    var valid = true;
+    $('.refer-autocomplete').editable('/matter/update-event', {
+        type: 'autocomplete',
+        onblur: 'submit',
+        autocomplete: {
+          minLength : 0,
+          source : "/matter/get-all-refers",
+          select: function( event, ui ) {
+            $(this).val(ui.item.value);
+            alt_matter_id = ui.item.id;
+            var valid = true;
+            if ( !ui.item ) {
+              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
+              valid = false;
+              ui.item.each(function(value) {
+                if ( value.match( matcher ) ) {
+                  valid = true;
+                  return true;
+                }
+              });
+            }
+            if ( !valid ) {
+              // remove invalid value, as it didn't match anything
+              $( this ).val( "" );
+              input.data( "autocomplete" ).term = "";
+              return false;
+            }
+            return true;
+          }
+        },
+        submitdata: function(value,settings){
+             var eid = $(this).parent().attr('id').split('-');
+             return { event_id : eid, field : 'alt_matter_ID', alt_matter: alt_matter_id };
+           },
+           cancel : false,
+           submit : false,
+           placeholder: '...',
+           indicator : '<img src="/images/indicator.gif" />',
+           tooltip: 'Click to edit...',
+           select: true
+   });
+
+   $('#add-event').click(function(){
+        var height = $(document).height();
+        $('#facade').css("height", height);
+        $('#facade').show();
+        ren_left = Math.round($(window).width()/2) - Math.round($('#add-event-popup').width());
+        $('#add-event-popup').css('left', ren_left);
+        $('#add-event-popup').css('display', 'block');
+    });
+
+    $('#add-event-cancel').click(function(){
+        $('#add-event-popup').css('display', 'none');
+        $('#facade').hide();
+    });
+
+    $( "#event_name" ).autocomplete({
+            minLength: 1,
+            source: "/matter/get-all-events",
+            focus: function( event, ui ) {
+                    /*$( "#actor" ).val( ui.item.id );*/
+                    return false;
+            },
+            select: function( event, ui ) {
+                    $( "#event_name" ).val( ui.item.value );
+                    $( "#event_id" ).val( ui.item.id );
+                    var valid = true;
+                    if ( !ui.item ) {
+                      valid = false;
+                      var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
+                      ui.item.each(function(value) {
+                        if ( value.match( matcher ) ) {
+                          valid = true;
+                          return true;
+                        }
+                      });
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $( this ).val( "" );
+                      $(this).data( "autocomplete" ).term = "";
+                      return false;
+                   }
+                    return true;
+            }
+    });
+
+    $( "#event_refers" ).autocomplete({
+            minLength: 1,
+            source: "/matter/get-all-refers",
+            focus: function( event, ui ) {
+                    /*$( "#actor" ).val( ui.item.id );*/
+                    return false;
+            },
+            select: function( event, ui ) {
+                    $( "#event_refers" ).val( ui.item.value );
+                    $( "#alt_matter_id" ).val( ui.item.id );
+                    var valid = true;
+                    if ( !ui.item ) {
+                      valid = false;
+                      var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
+                      ui.item.each(function(value) {
+                        if ( value.match( matcher ) ) {
+                          valid = true;
+                          return true;
+                        }
+                      });
+                    }
+                   if ( !valid ) {
+                     // remove invalid value, as it didn't match anything
+                      $( this ).val( "" );
+                      $(this).data( "autocomplete" ).term = "";
+                      return false;
+                   }
+                    return true;
+            }
+    });
+
+    $('#add-event-submit').click(function(){
+       if($('#event_id').val() == ''){
+           alert('Select event name!');
+           return;
+       }
+
+       $.ajax({
+           url: '/matter/add-event',
+           type: 'POST',
+           data: { matter_ID: $('#matter_id').val(),
+                   code: $('#event_id').val(),
+                   event_date: $('#event_date').val(),
+                   alt_matter_ID: $('#alt_matter_id').val(),
+                   detail: $('#event_detail').val(),
+                   notes: $('#event_notes').val(),
+                  },
+           success: function(data){
+              $.ajax({
+                type: "POST",
+                url: "/matter/eventlist/id/<?=$this->matter_id?>",
+                data: {},
+                success: function(data){
+                    $('#event-pop-up').empty();
+                    $('#event-pop-up').html(data);
+                }
+              });
+              $('#add-event-popup').css('display', 'none');
+              $('#facade').hide();
+           }
+       }); 
+    });
+</script>
+
+<?php // Matter Open Tasks ?> 
+<?php //if(isset($this->matter_open_tasks)):
+//print_r($this->matter_open_tasks);
+   $trigger_id = "";
+   $add_empty_row = 0;
+ ?>
+<div id="MatterAllEventBlock" class="listrow" ><div id="MatterAllEvent" class="status-row" style="display:inline-block;height:21px;">
+<span class="eventlist-col-name" style="margin-left: 5px;">All Events</span>
+<span class="eventlist-col-event_date" >Date</span>
+<span class="eventlist-col-detail" >Number</span>
+<span class="eventlist-col-notes" >Notes</span>
+<span class="eventlist-col-refer" >Refers to</span>
+</div>
+<a href="javascript:void(0)" style="float:right;" id="add-event" class="button-style">Add Event</a>
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto;" >
+<?php foreach($this->matter_events as $matter_event): 
+//print_r($matter_event); exit();
+?> 
+<div class="status-row" id="<?=$matter_event['ID']?>" >
+<span class="eventlist-col-name"><?=$matter_event['name']?></span>
+<span class="eventlist-col-event_date date-editable" ><?=$matter_event['event_date']?></span>
+<span class="eventlist-col-detail editable" ><?=$matter_event['detail']?></span>
+<span class="eventlist-col-notes editable" ><?=$matter_event['notes']?></span>
+<span class="eventlist-col-refer refer-autocomplete" ><? if($matter_event['alt_matter_ID']){ ?>
+    	<?=$matter_event['alt_caseref'] ?> <?=$matter_event['country'] . " " . $matter_event['origin'] . " " . $matter_event['matter_type'];
+    } ?></span>
+</div>
+<? endforeach; ?>
+</div>
+</div>
+<?php //endif; ?>
+<div id="add-event-popup" class="listrow">
+<div id="add-event-wrap">
+<input type="hidden" name="matter_id" value="<?=$this->matter_id?>" id="matter_id" />
+<label for="event_name" ><span style="color: #f00;">*</span>Event Name </label>
+<input type="text" name="event_name" id="event_name" value=""/>
+<input type="hidden" name ="event_id" id="event_id" value="" />
+<label for="event_date" >Event date </label>
+<input type="text" name="event_date" id="event_date" value=""/>
+<label for="event_detail" >Number </label>
+<input type="text" name="event_detail" id="event_detail" value="" />
+<label for="event_notes" >Notes </label>
+<input type="text" name="event_notes" id="event_notes" value="" />
+<label for="event_refers" >Refers to </label>
+<input type="text" name="event_refers" id="event_refers" value=""/><br>
+<input type="hidden" name ="alt_matter_id" id="alt_matter_id" value="" />
+<input type="button" name="add_event_submit" id="add-event-submit" value="Add event" class="button-style" />
+<input type="button" name="add_event_cancel" id="add-event-cancel" value="Cancel" class="button-style" />
+</div>
+</div>

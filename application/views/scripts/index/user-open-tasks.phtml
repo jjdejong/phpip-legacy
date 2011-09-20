@@ -1,0 +1,99 @@
+<style type="text/css">
+.phpip-list{
+    margin:5px 5px 0px;
+    padding: 4px;
+    float:left;
+    background: #B5D9E5;
+    -moz-border-radius: 4px 4px 4px 4px;
+    -webkit-border-radius: 4px 4px 4px 4px;
+    -moz-box-shadow: 2px 2px 1px #888888;
+    -webkit-box-shadow: 2px 2px 1px #888888;
+    max-height:300px;
+    overflow:auto;
+}
+.phpip-list li{
+    list-style: none;
+    padding: 3px 6px;
+    color: #3F3F38;
+    border-bottom: 1px solid #DDD;
+    background: #FFF;
+}
+.phpip-list li:hover {
+    background: #C8E8F3;
+}
+.phpip-list li:first-child {
+    background: #1E4262;
+    color: #FFF;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    border: none;
+}
+.phpip-list li:last-child {
+    -moz-border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+}
+#open-tasks-list{
+    max-height: 270px;
+    width: 540px;
+    overflow-x: hidden;
+    overflow: auto;
+}
+#ren-tasks-list{
+    max-height: 270px;
+    width: 540px;
+    overflow-x: hidden;
+    overflow: auto;
+}
+.col-task-name{
+   display: inline-block;
+   width: 200px;
+}
+.col-task-matter{
+   display: inline-block;
+   width: 150px;
+}
+.col-task-due_date{
+  display: inline-block;
+  width: 100px;
+}
+.col-actions{
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+}
+</style>
+
+<div >
+<?php if(isset($this->open_tasks)): ?>
+<ul class="phpip-list" id="open-tasks-list">
+    <li><div class="col-task-name">Task name</div><div class="col-task-matter">Matter UID</div><div class="col-task-due_date">Due date</div><div class="col-actions"></div></li>
+<?php foreach($this->open_tasks as $open_task){
+$task_name  = $open_task['task_name'];
+$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
+
+$matter_UID  = $open_task['caseref'];
+$matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
+$matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
+$matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
+?>
+    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['matter_ID']?>"><?=$matter_UID?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
+<?php } ?>
+</ul>
+<?php endif; ?>
+<?php if(isset($this->ren_tasks)): ?>
+<ul class="phpip-list" id="ren-tasks-list">
+    <li><div class="col-task-name">Task name</div><div class="col-task-matter">Matter UID</div><div class="col-task-due_date">Due date</div><div class="col-actions"></div></li>
+<?php foreach($this->ren_tasks as $open_task){
+$task_name  = $open_task['task_name'];
+$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
+
+$matter_UID  = $open_task['caseref'];
+$matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
+$matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
+$matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
+?>
+    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['matter_ID']?>"><?=$matter_UID?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
+<?php } ?>
+</ul>
+<?php endif; ?>
+</div>

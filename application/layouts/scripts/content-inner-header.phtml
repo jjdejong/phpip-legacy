@@ -1,0 +1,62 @@
+<? $cFront = Zend_Controller_Front::getInstance();
+$module = $cFront->getRequest()->getModuleName();
+$module = strtolower($module);
+
+$controller = $cFront->getRequest()->getControllerName();
+$controller = strtolower($controller);
+
+$action = $cFront->getRequest()->getActionName();
+$action = strtolower($action);
+?>
+<? $header = '';
+   if($module != 'default'){
+       $header = "<a href=\"/$module\">$module</a>";
+   }
+
+   if($controller != 'index'){
+       if($header != ''){
+           $header .= " - ";
+       }
+       $header .= "<a href=\"/$module/$controller\">$controller</a>";
+   }
+
+   if($action != 'index'){
+       if($header != ''){
+           $header .= " - ";
+       }
+       $header .= ' <a href="">' . $action . '</a>';
+   }
+
+       #echo "$module - $controller - $action"; 
+?>
+<? if($header != ''){ ?>
+<div id="inner-header">
+<div id="inner-header-title"><?echo "$header"; ?></div>
+<? if($controller == "matter"){ ?>
+<?php if($module == 'default' && $controller == 'matter' && $action == 'view'){ ?>
+<div id="inner-header-navigation">
+<div id="matter-head-navigation">
+<span title="previous matter" class="matter-navigation" id="<?php echo ((int)$this->matter_index)-1; ?>" ><img src="/images/prev.png" alt="prev"  id="prev" /></span>
+<span title="next matter" class="matter-navigation" id="<?php echo ((int)$this->matter_index)+1; ?>" ><img src="/images/next.png" alt="next" id="next" /></span>
+</div>
+<div id="inner-header-search">
+<input id="matter-search" type="text" name="matter_search" />
+<!--<a href="/contact/group/search" title="Search"><div class="icon-search"></div></a>-->
+<select style="height:20px;width:100px;" id="matter-option" name="search_field">
+  <option value="caseref" selected>caseref</option>
+</select>
+<input id="matter-ref-search" type="button" name="search" value="search" class="button-style"/>
+</div>
+</div>
+<?php } ?>
+
+<?php if($module == 'default' && $controller == 'matter' && ($action == 'index' || $action == 'filter')){ ?>
+<div style="float:right">
+<input type="button" id="clear-matter-filters" name="clear-filters" class="button-style" value="Clear filters" />
+</div>
+<?php } ?>
+
+<?php }?>
+
+</div>
+<? } ?>

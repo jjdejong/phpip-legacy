@@ -1,0 +1,69 @@
+<?php
+
+#echo $this->doctype('HTML5'); ?>
+
+<?= $this->doctype() ?>
+<html>
+<head>
+<?= $this->headTitle() ?>
+<?= $this->headMeta() ?>
+<?= $this->headLink()
+        ->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen');
+?>
+
+<? $this->headScript()->appendFile(
+    '/js/js/jquery-1.5.1.min.js',
+    'text/javascript'
+    ); ?>
+
+<? $this->headScript()->appendFile(
+    '/js/js/jquery-ui-1.8.12.custom.min.js',
+    'text/javascript'
+    ); ?>
+    
+<? $this->headScript()->appendFile(
+    '/js/jquery-custom-function.js',
+    'text/javascript'
+    ); ?>
+
+<?= $this->headScript()->appendFile(
+    '/js/jquery.selectbox-0.5.js',
+    'text/javascript'
+    ); ?>
+    
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=UTF-8">
+</head>
+<body<?= 0 != count($this->routeContext) ? ' class="' . implode(' ', array_unique($this->routeContext)) . '"' : '' ?> class="tundra">
+<div id="header">
+<div id="header-inside">
+    <div id="logo"><a class="header-link" href="<?= $this->url(array(), null, true) ?>">phpIP</a></div>
+<div id="header-right">
+
+<?php
+    if ($this->login && $this->login != "" ){ ?>
+
+<div id="loggedin"><?php  echo "Connected as " . $this->firstname;?></div>
+<?= $this->render('content-left.phtml') ?>
+<!--  <div class="top-right-nav">
+    <a class="header-link" href="<?= $this->url(array ( 'controller' => 'auth', 'action' => 'logout', 'module' => 'default',))?>">LOG OUT</a>
+</div>  -->
+
+<?
+    }
+
+?></div>
+</div>
+</div>
+<div id="page">
+    <div id="content">
+        <div id="content-body">
+		<?= $this->render('content-inner-header.phtml') ?>
+            <div id="content-layout">
+                <?= $this->layout()->content ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

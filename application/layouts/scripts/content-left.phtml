@@ -1,0 +1,14 @@
+<div id="inner">
+<? #echo $this->navigation()->menu() ?>
+<?php
+$navPrimary = $this->navigation()->findBy('label','Top Level Nav');
+#$navPrimary = $this->navigation()->findBy('Label','Touch');
+echo $this->navigation()
+                   ->menu()
+                   ->renderMenu($navPrimary, array('maxDepth' => 1));
+#
+#print_r($this->navigation());
+#Reflection::export(new ReflectionObject($this->navigation())) ;
+
+?>
+</div>

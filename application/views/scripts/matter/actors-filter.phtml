@@ -1,0 +1,42 @@
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.actor-list-row').click(function(){
+    var actor_id = $(this).attr('id');
+    $('#facade').css('height',$(document).height());
+    $('#facade').css('display','block');
+    $.ajax({
+      url: '/matter/actor/',
+      type: 'POST',
+      data: { actor_id:actor_id },
+      success: function(data){
+        $('#actor-details-content').empty();
+        $('#actor-details-content').html(data);
+        ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
+        $('#actor-details-popup').css('left', ren_left);
+        $('#actor-details-popup').css('top', '100px');
+        $('#actor-details-popup').css('display', 'block');
+      }
+    });
+  });
+$('.actor-delete').click(function(){
+    var del_conf = confirm("Deleting Actor from table. Are you sure?");
+if(del_conf == 1){
+    var aid = $(this).attr('id');
+    $.ajax({
+      url : '/matter/delete-actor',
+      type: 'POST',
+      data: { aid:aid },
+      success: function(data){
+         if(data != "true")
+          alert(data);      }    });
+}
+    return false;
+  });
+});
+</script>
+
+<ul class="phpip-list" id="actors-list">
+<?php foreach($this->actors as $actor): ?>
+    <li class="actor-list-row" id="<?=$actor['id']?>"><div class="col-name"><?=htmlentities($actor['name'])?></div><div class="col-firstname"><?=htmlentities($actor['first_name'])?></div><div class="col-display"><?=htmlentities($actor['display_name'])?></div><div class="col-company"><?=htmlentities($actor['company_name'])?></div><div class="col-delete" ><img src="/images/Delete-32.png" width=16 height=16 border=0 class="actor-delete" id="<?=$actor['id']?>" /></div></li>
+<?php endforeach; ?>
+</ul>

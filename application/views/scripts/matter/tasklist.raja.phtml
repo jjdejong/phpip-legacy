@@ -1,0 +1,206 @@
+<?php
+/**
+ *
+ * @param string $str The text string to split
+ * @param integer $words The number of words to extract. Defaults to 15
+ */
+function word_split($str,$words=15) {
+        $string_add = "";
+	$word_count = preg_split("/[\s]+/", $str);
+	$arr = preg_split("/[\s]+/", $str,$words+1);
+	$arr = array_slice($arr,0,$words);
+       	if(count($word_count) > 3)
+	    $string_add = "..."; 
+	return array( join(' ',$arr) . $string_add, $string_add);
+}
+//Usage
+/*$input = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+eiusmod tempor incididunt ut labore et dolore magna liqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat.';*/
+//echo word_split($input,10);
+//Will output
+//Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+?>
+<style type="text/css">
+.status-row{
+display:block;
+}
+.tasklist-col-name{
+display:inline-block;
+width: 220px;
+vertical-align: top;
+}
+.tasklist-col-date{
+display:inline-block;
+width: 120px;
+vertical-align: top;
+}
+
+.tasklist-col-number{
+display:inline-block;
+width: 78px;
+vertical-align: top;
+}
+
+.tasklist-col-done{
+display:inline-block;
+width: 38px;
+vertical-align: top;
+text-align: center;
+}
+
+.tasklist-col-cost{
+display:inline-block;
+width: 40px;
+vertical-align: top;
+}
+
+
+.tasklist-col-currency{
+display:inline-block;
+width: 36px;
+vertical-align: top;
+}
+
+.tasklist-col-time{
+display:inline-block;
+width: 65px;
+vertical-align: top;
+}
+
+.tasklist-col-notes{
+display:inline-block;
+width: 185px;
+vertical-align: top;
+}
+
+
+
+.tasklist-col{
+display:inline-block;
+width: 150px;
+vertical-align: top;
+}
+
+#MatterAllTasks:hover {
+    cursor: pointer;
+}
+
+#MatterAllTasksBlock{
+    width: 941px;
+}
+
+.notes:hover {
+    cursor: help;
+}
+
+</style>
+<link href="/js/css/smoothness/jquery-ui-1.8.12.custom.css" media="screen" rel="stylesheet" type="text/css" >
+
+<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
+<script type="text/javascript" src="/js/jquery.jeditable.datepicker.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $("#MatterAllTasks").click(function(event){
+        $('#tasklist-pop-up').css('display','none');
+    });
+
+    $('.editables').editable('/matter/update-task', {
+          submitdata: function(value,settings){
+                var tid = $(this).parent().attr('id');
+                        alert(tid);
+                        return { task_id : tid }
+                },
+          cancel : 'X',
+          submit : 'Ok',
+          select : true,
+          indicator : '<img src="/images/indicator.gif" />',
+          tooltip: 'Click to edit...'
+    });
+
+    $('.editable-date').editable({
+        type: 'datepicker'
+    });
+});
+</script>
+
+<?php // Matter Open Tasks ?> 
+<?php //if(isset($this->matter_open_tasks)):
+//print_r($this->matter_open_tasks);
+   $trigger_id = "";
+   $event_code = "";
+   $add_empty_row = 0;
+ ?>
+<div id="MatterAllTasksBlock" class="listrow" ><div id="MatterAllTasks" class="status-row">
+<span class="tasklist-col-name" style="margin-left: 5px;"><? 
+if ($this->renewal == 1) 
+    echo "All renewals";
+else
+    echo "All tasks";
+     ?></span>
+<span class="tasklist-col-number" >Due date</span>
+<span class="tasklist-col-done" >Done</span>
+<span class="tasklist-col-number" >Done date</span>
+<span class="tasklist-col-cost" >Cost</span>
+<span class="tasklist-col-cost" >Fee</span>
+<span class="tasklist-col-currency" >Cur.</span>
+<? if ($this->renewal == 0) {?> 
+<span class="tasklist-col-time" >Time</span>
+<? } ?>
+<span class="tasklist-col-number" >Assigned To</span>
+<span class="tasklist-col-notes" >Notes</span>
+</div>
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto;" >
+<?php foreach($this->matter_open_tasks as $open_task): 
+    if($trigger_id != $open_task['trigger_ID']){
+       $trigger_id = $open_task['trigger_ID'];
+    //if($event_code != $open_task['event_code']){
+      // $event_code = $open_task['event_code'];
+	//print_r($open_task);
+ ?>
+<? if($add_empty_row){ ?>
+<div style="height:15px;"></div>
+<? } ?>
+<div class="status-row" style="margin:5px 0px; border-bottom: 1px solid #DDD;">
+<span class="tasklist-col-name"><b><?=$open_task['trigger_name'] . " - " . $open_task['event_date'] ?></b></span>
+</div>
+<?php  }
+    if($trigger_id == $open_task['trigger_ID']){
+?> 
+<div class="status-row" id="<?=$open_task['ID']?>">
+<span class="tasklist-col-name"><?=$open_task['task_name']?>
+<? if($open_task['detail'] != "") 
+	echo " - " . $open_task['detail'] ?></span>
+<?php
+$editable = 'editable';
+$date_edit = 'editable-date';
+if($open_task['done']){
+  $editable = "";
+  $date_edit = "";
+}
+?>
+<span class="tasklist-col-number <?=$date_edit?>" ><?=$open_task['due_date']?></span>
+<span class="tasklist-col-done" ><input type="checkbox" name="doneflag" value="<?=$open_task['ID']?>" <? if($open_task['done']) echo "checked disabled"; ?> ></span>
+<span class="tasklist-col-number <?=$date_edit?>" ><?=$open_task['done_date']?></span>
+<span class="tasklist-col-cost <?=$editable?>" ><?=$open_task['cost']?></span>
+<span class="tasklist-col-cost <?=$editable?>" ><?=$open_task['fee']?></span>
+<span class="tasklist-col-currency <?=$editable?>" ><?=$open_task['currency']?></span>
+<? if ($this->renewal == 0) {?> 
+<span class="tasklist-col-time <?=$editable?>" ><?=$open_task['time_spent']?></span>
+<?}?>
+<span class="tasklist-col-number <?=$editable?>" ><?=$open_task['assigned_to']?></span>
+<? if(strlen($open_task['task_notes']) < 25){?>
+<span class="tasklist-col-notes <?=$editable?>" ><?=$open_task['task_notes'];?></span>
+<? } else { ?>
+<span class="tasklist-col-notes notes <?=$editable?>" title="<?=$open_task['task_notes'];?>"><? echo substr($open_task['task_notes'], 0, 25) . "...";?></span>
+<? } ?>
+</div>
+<?php }
+	$add_empty_row = 1;
+ ?>
+<? endforeach; ?>
+</div>
+</div>
+<?php //endif; ?>

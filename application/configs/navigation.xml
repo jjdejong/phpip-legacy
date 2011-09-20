@@ -1,0 +1,50 @@
+<configdata>
+    <nav>
+        <toplevelnav>
+            <label>Top Level Nav</label>
+            <uri></uri>
+            <pages>
+                <dashboard>
+                    <label>Home</label>
+                    <id>home</id>
+                    <title>Home</title>
+                    <uri>/</uri>
+                </dashboard>
+                <matter>
+                    <label>Matter</label>
+                    <id>matter</id>
+                    <title>Matter</title>
+                    <uri>/matter</uri>
+                </matter>
+                <tables>
+                    <label>Tables</label>
+                    <id>tables</id>
+                    <title>Tables</title>
+                    <uri>/matter/actors-table</uri>
+                    <pages>
+                        <actors>
+                            <label>Actors</label>
+                            <id>actors</id>
+                            <title>Actors</title>
+                            <uri>/matter/actors-table</uri>
+                        </actors>
+                    </pages>
+                </tables>
+                <account>
+                    <label>Account</label>
+                    <id>account</id>
+                    <title>Account</title>
+                    <uri>/</uri>
+                    <pages>
+                        <logout>
+                            <label>Logout</label>
+                            <id>logout</id>
+                            <title>Log out</title>
+                            <uri>/auth/logout</uri>
+                        </logout>
+                    </pages>
+                </account>
+	    </pages>
+        </toplevelnav>
+    </nav>
+</configdata>

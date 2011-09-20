@@ -1,0 +1,40 @@
+<script type="text/javascript" src="/js/jquery-extended/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" >
+$(document).ready(function(){
+    $(".row-tab").click(function(event){
+        var id_array = $(this).attr('id').split('-');
+        $(location).attr('href','/matter/view/id/' + id_array[2]);
+    });
+});
+</script>
+
+<?php if(count($this->paginator)):?>
+<?php if(count($this->paginator) > 1)
+   echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
+?>
+<?php 
+$rindex = 0;
+foreach($this->paginator as $matter):?>
+<?php //print_r($matter);?>
+<div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: #<?php echo ($matter['Ctnr'])?'89A1C7':'FFF'; ?>" >
+<div class="column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
+<div class="column column-cat"><?php echo $matter['Cat']; ?></div>
+<div class="column column-status"><?php echo $matter['Status'];?></div>
+<div class="column column-client"><?php echo htmlentities($matter['Client']);?></div>
+<div class="column column-client-ref"><?php echo htmlentities($matter['ClRef']);?></div>
+<div class="column column-title"><?php echo htmlentities($matter['Title']);?></div>
+<div class="column column-inventor"><?php echo htmlentities($matter['Inventor1']);?></div>
+<div class="column column-date"><?php echo $matter['Filed'];?></div>
+<div class="column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,10);?></div>
+<div class="column column-pub-no" title="<?=$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>
+<!-- <div class="column column-ctnr-pri"><?php echo $matter['Ctnr'];?></div> -->
+<div class="column column-ctnr-pri"><?php echo $matter['Pri'];?></div>
+</div>
+
+<!-- <a id="edit-matter-<?php //echo $matter['ID'] ?>" class="edit-matter" href="javascript:void(0)" >Edit</a>
+-->
+<?php endforeach; ?>
+<?php if(count($this->paginator) > 1)
+   echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
+?>
+<?php endif; ?>
