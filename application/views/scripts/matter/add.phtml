@@ -201,13 +201,23 @@ $(document).ready(function(){
                         responsible: $('#matter-responsible').val()
                       },
                 success: function(data){
+                    if(isNaN(parseInt(data))){
+                       alert(data);
+                    }else{
+                        $('#add-matter-popup').css('display', 'none');
+                        $('#facade').css('display', 'none');
+                        $(location).attr("href", '/matter/view/id/'+data);
+                    }
+/*
                     if( data != 'false' ){
                       //  alert("Matter added!");
                     $('#add-matter-popup').css('display', 'none');
                     $('#facade').css('display', 'none');
                         $(location).attr("href", '/matter/view/id/'+data);
-                   }else
+                   }else{
                       alert("Add matter failed");
+                   }
+*/
                 }
             });
         }

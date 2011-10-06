@@ -145,7 +145,7 @@ if(del_conf == 1){
       type: 'POST',
       data: { aid:aid },
       success: function(data){
-        if(data != "true")
+        if(isNaN(parseInt(data)))
           alert(data);
       }
     });

@@ -50,5 +50,19 @@ class IndexController extends Zend_Controller_Action
         $this->render('index');
     }
 
+    public function taskFilterAction()
+    {
+        $this->_helper->layout->disableLayout();
+
+        $task_type = $this->_getParam('task_type');
+        $task_filter = $this->_getParam('filter');
+
+        $matterModel = new Application_Model_Matter();
+        if($task_type == 'open')
+          $this->view->open_tasks = $matterModel->getUserOpenTasks(null,0,$task_filter);
+        else
+          $this->view->open_tasks = $matterModel->getUserOpenTasks(null,1,$task_filter);
+    }
+
 }
 

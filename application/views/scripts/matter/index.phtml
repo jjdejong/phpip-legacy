@@ -53,15 +53,15 @@
 }
 
 .column {
-  margin: 0 5px;
+  margin: 0 10px 0px 0px;
   vertical-align:top;
 }
 .column-case{
-  width:68px;
+  width:90px;
   text-align: left;
 }
 .column-title{
-  width: 150px;
+  width: 180px;
   text-align: left;
   vertical-align:middle;
 }
@@ -69,8 +69,16 @@
   width: 50px;
   text-align:left;
 }
+.column-agent{
+  width: 70px;
+  text-align:left;
+}
 .column-client-ref{
   width: 80px;
+  text-align:left;
+}
+.column-agent-ref{
+  width: 90px;
   text-align:left;
 }
 .column-origin{
@@ -96,11 +104,11 @@
 }
 
 .column-filing-no{
-  width: 80px;
+  width: 65px;
   text-align:left;
 }
 .column-pub-no{
-  width: 75px;
+  width: 60px;
   text-align:left;
 }
 
@@ -108,6 +116,7 @@
   width: 25px;
   text-align:center;
   vertical-align:middle;
+  white-space: nowrap;
 }
 
 .sorting-dirs{
@@ -126,12 +135,14 @@
     font-size: 11px;
     font-weight: normal;
     padding: 1px 4px 1px 1px;
+    display: inline-block;
+    margin-right: 20px;
 }
 #matter-filters label{
     vertical-align: middle;
 }
 #matter-results-bg{
-  width: 958px;
+  /*width: 958px;*/
 }
 .filter-input{
   -moz-border-radius: 4px;
@@ -164,40 +175,80 @@ function getFilterUrl()
 {
          var ref = $('#filter-ref').val();
          var stat = $('#filter-status').val();
+         var stat_date = $('#filter-status_date').val();
          var client = $('#filter-client').val();
          var clref = $('#filter-clref').val();
+         var agent = $('#filter-agent').val();
+         var agtref = $('#filter-agtref').val();
          var inventor = $('#filter-inventor').val();
          var filed = $('#filter-filed').val();
          var filno = $('#filter-filno').val();
+         var published = $('#filter-published').val();
          var pubno = $('#filter-pubno').val();
+         var granted = $('#filter-granted').val();
+         var grtno = $('#filter-grtno').val();
+
+
+
+         var display_style = $('input:radio[name=displaystyle]:checked').val()
+         var responsible = $('input[name=responsible-filter]:checked').val()
 
          var url = '';
          if($('input[name=container-filter]:checked').val() == 1){
             url = url + '/filter/Ctnr/value/1';
          }
-
          if(ref != '')
             url = url + '/Ref/'+ref;
+         
+         if(stat_date != '')
+            url = url + '/Status_date/'+stat_date;
          if(stat != '')
             url = url + '/Status/'+stat;
          if(client != '')
             url = url + '/Client/'+client;
          if(clref != '')
             url = url + '/ClRef/'+clref;
+         if(agent != '')
+            url = url + '/Agent/'+agent;
+         if(agtref != '')
+            url = url + '/AgtRef/'+agtref;
          if(inventor != '')
             url = url + '/Inventor1/'+inventor;
          if(filed != '')
             url = url + '/Filed/'+filed;
          if(filno != '')
             url = url + '/FilNo/'+filno;
+         if(published != '')
+            url = url + '/Published/'+published;
          if(pubno != '')
             url = url + '/PubNo/'+pubno;
-
+         if(granted != '')
+            url = url + '/Granted/'+granted;
+         if(grtno != '')
+            url = url + '/GrtNo/'+grtno;
+         
+        
+         if(responsible == 1)
+            url = url + '/responsible/'+'<?=$this->login?>';
          url = url + '/sort/'+sortKey+'/dir/'+sortDir;
+         <?if($this->category_display){?>
+            url = url + '/display/<?=$this->category_display?>';
+         <?}?>
+            url = url + '/display_style/'+display_style;
          return url;
 }
 
 $(document).ready(function(){
+     //alert('hi');
+    <?if($this->display_style){?>
+          $('.display_actor,.display_status').css('display','none');
+              $('.display_status,').css('display','inline-block');
+    <?}else {?>
+              $('.display_actor,.display_status').css('display','none');
+              $('.display_actor').css('display','inline-block');
+    <?}?>
+
+
      if(sortDir == 'asc'){
          $('#'+sortKey+'-asc').attr('id', sortKey+"-desc");
          $('#'+sortKey+'-sort').css('background-position', '0px 0px');
@@ -262,6 +313,63 @@ $(document).ready(function(){
         $(location).attr('href', '/matter/index/filter/Pri/value/1');
      });
 
+     $('.display_style').click(function(){
+         //$(location).attr('href', '/matter/index/filter/Ctnr/value/1');
+         //$(location).attr('href', url);
+
+              //alert($(this).val());
+         if($(this).val() == 1){
+             $('.display_actor,.display_status').css('display','none');
+             $('.display_status,').css('display','inline-block');
+             //Clear the filters exclusive to actor view
+             $('#filter-agent').val('');
+             $('#filter-agtref').val('');
+             $('#filter-inventor').val('');
+             $('#filter-filed').val('');
+         }else {
+             $('.display_actor,.display_status').css('display','none');
+             $('.display_actor').css('display','inline-block');
+             //Clear the filters exclusive to status view
+             $('#filter-status_date').val('');
+             $('#filter-filno').val('');
+             $('#filter-published').val('');
+             $('#filter-pubno').val('');
+             $('#filter-granted').val('');
+             $('#filter-grtno').val('');
+
+
+         }
+
+         var url = '/matter/filter' + getFilterUrl();
+
+         $.ajax({
+             url: url,
+             type: 'POST',
+             data: {},
+             success: function(data){
+                 $('#matter-list').empty();
+                 $('#matter-list').html(data);
+             }
+         });
+     });
+
+
+     $('#show-responsible').click(function(){
+         //$(location).attr('href', '/matter/index/filter/Ctnr/value/1');
+         var url = '/matter/filter' + getFilterUrl();
+         //$(location).attr('href', url);
+         $.ajax({
+             url: url,
+             type: 'GET',
+             data: { },
+             success: function(data){
+                 $('#matter-list').empty();
+                 $('#matter-list').html(data);
+             }
+         });
+     });
+
+
      $('#show-containers').click(function(){
          //$(location).attr('href', '/matter/index/filter/Ctnr/value/1');
          var url = '/matter/filter' + getFilterUrl();
@@ -304,16 +412,17 @@ $(document).ready(function(){
          });
      });
 
+/**
      $('#matter-list').mouseenter(function(){
        var filter_url = getFilterUrl();
        if(filter_url != '')
          $(location).attr("href", '/matter/filter'+filter_url);
-/*
-         $(location).attr("href", '/matter');
-       else
-*/
+//         $(location).attr("href", '/matter');
+//       else
      });
+**/
 });
+
 </script> 
 
 <div id="matter-results-bg" class="place-card">
@@ -332,38 +441,78 @@ if(isset($this->containers)){
   <label for="show-containers" >Show Containers</label>
   <input type="radio" id="show-all" name="container-filter" value=0 <?=$show_all?> />
   <label for="show-all" >Show All</label>
+</div>
+
+
+<div id="matter-filters">
+  <input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?if (!$this->display_style){?>checked<?}?>/>
+  <label for="show-actor" >Actor View</label>
+  <input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?if ($this->display_style){?>checked<?}?>/>
+  <label for="show-status" >Status View</label>
+</div>
+
+<div id="matter-filters">
+  <input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?if ($this->responsible){?>checked<?}?>/>
+  <label for="show-responsible" >Show Mine</label>
 </div><br><br>
 
 <div class="head-tab">
-<div class="column column-case"><a class="sorting-dirs" id="caseref-desc" >Ref</a><span class="sorting-img" id="caseref-sort">&nbsp;</span><br>
+<div  class="display_actor display_status column column-case"><a class="sorting-dirs" id="caseref-desc" >UID</a><span class="sorting-img" id="caseref-sort">&nbsp;</span><br>
 <input type="text" name="filter-ref" id="filter-ref" value="<?=$this->filters['Ref']?>" size=5 class="filter-input" />
 </div>
-<div class="column column-cat"><a class="sorting-dirs" id="category_code-asc">Cat</a><span class="sorting-img" id="category_code-sort">&nbsp;</span></div>
-<div class="column column-status"><a class="sorting-dirs" id="Status-asc">Status</a><span class="sorting-img" id="Status-sort">&nbsp;</span>
-<input type="text" name="filter-status" id="filter-status" value="<?=$this->filters['Status']?>" size=6 class="filter-input" />
+<div class="display_actor display_status column column-cat"><a class="sorting-dirs" id="category_code-asc">Cat</a><span class="sorting-img" id="category_code-sort">&nbsp;</span></div>
+<div class="display_actor display_status column column-status"><a class="sorting-dirs" id="Status-asc">Status</a><span class="sorting-img" id="Status-sort">&nbsp;</span>
+<br /><input type="text" name="filter-status" id="filter-status" value="<?=$this->filters['Status']?>" size=6 class="filter-input" />
 </div>
-<div class="column column-client"><a class="sorting-dirs" id="Client-asc">Client</a><span class="sorting-img" id="Client-sort">&nbsp;</span>
-<input type="text" name="filter-client" id="filter-client" value="<?=$this->filters['Client']?>" size=6 class="filter-input" />
+<div class="display_status column column-date"><a class="sorting-dirs" id="Status_date-asc">Date</a><span class="sorting-img" id="Status_date-sort">&nbsp;</span>
+<br /><input type="text" name="filter-status_date" id="filter-status_date" value="<?=$this->filters['Status_date']?>" size=6 class="filter-input" />
 </div>
-<div class="column column-client-ref"><a class="sorting-dirs" id="ClRef-asc">Client Ref</a><span class="sorting-img" id="ClRef-sort">&nbsp;</span>
-<input type="text" name="filter-clref" id="filter-clref" value="<?=$this->filters['ClRef']?>" size=8 class="filter-input" />
+<div class="display_actor display_status column column-client"><a class="sorting-dirs" id="Client-asc">Client</a><span class="sorting-img" id="Client-sort">&nbsp;</span>
+<br /><input type="text" name="filter-client" id="filter-client" value="<?=$this->filters['Client']?>" size=6 class="filter-input" />
 </div>
-<div class="column column-title">Title</div>
-<div class="column column-inventor"><a class="sorting-dirs" id="Inventor1-asc">Inventor 1</a><span class="sorting-img" id="Inventor1-sort">&nbsp;</span>
-<input type="text" name="filter-inventor" id="filter-inventor" value="<?=$this->filters['Inventor1']?>" size=8 class="filter-input" />
+<div class="display_actor display_status column column-client-ref"><a class="sorting-dirs" id="ClRef-asc">Ref</a><span class="sorting-img" id="ClRef-sort">&nbsp;</span>
+<br /><input type="text" name="filter-clref" id="filter-clref" value="<?=$this->filters['ClRef']?>" size=8 class="filter-input" />
 </div>
-<div class="column column-date"><a class="sorting-dirs" id="Filed-asc">Filed</a><span class="sorting-img" id="Filed-sort">&nbsp;</span>
-<input type="text" name="filter-filed" id="filter-filed" value="<?=$this->filters['Filed']?>" size=6 class="filter-input" />
+
+<div class="display_actor column column-agent"><a class="sorting-dirs" id="Agent-asc">Agent</a><span class="sorting-img" id="Agent-sort">&nbsp;</span>
+<br /><input type="text" name="filter-agent" id="filter-agent" value="<?=$this->filters['Agent']?>" size=6 class="filter-input" />
 </div>
-<div class="column column-filing-no"><a class="sorting-dirs" id="FilNo-asc">Filing No.</a><span class="sorting-img" id="FilNo-sort">&nbsp;</span>
-<input type="text" name="filter-filno" id="filter-filno" value="<?=$this->filters['FilNo']?>" size=8 class="filter-input" />
+<div class="display_actor column column-agent-ref"><a class="sorting-dirs" id="AgtRef-asc">Ref</a><span class="sorting-img" id="AgtRef-sort">&nbsp;</span>
+<br /><input type="text" name="filter-agtref" id="filter-agtref" value="<?=$this->filters['AgtRef']?>" size=8 class="filter-input" />
 </div>
-<div class="column column-pub-no"><a class="sorting-dirs" id="PubNo-asc">Pub. No.</a><span class="sorting-img" id="PubNo-sort">&nbsp;</span>
-<input type="text" name="filter-pubno" id="filter-pubno" value="<?=$this->filters['PubNo']?>" size=8 class="filter-input" />
+
+
+<div class="display_actor column column-title">Detail</div>
+<div class="display_actor column column-inventor"><a class="sorting-dirs" id="Inventor1-asc">Inventor</a><span class="sorting-img" id="Inventor1-sort">&nbsp;</span>
+<br /><input type="text" name="filter-inventor" id="filter-inventor" value="<?=$this->filters['Inventor1']?>" size=8 class="filter-input" />
 </div>
+<div class="display_actor display_status column column-date"><a class="sorting-dirs" id="Filed-asc">Filed</a><span class="sorting-img" id="Filed-sort">&nbsp;</span>
+<br /><input type="text" name="filter-filed" id="filter-filed" value="<?=$this->filters['Filed']?>" size=6 class="filter-input" />
+</div>
+<div class="display_status column column-filing-no"><a class="sorting-dirs" id="FilNo-asc">Number</a><span class="sorting-img" id="FilNo-sort">&nbsp;</span>
+<br /><input type="text" name="filter-filno" id="filter-filno" value="<?=$this->filters['FilNo']?>" size=8 class="filter-input" />
+</div>
+
+<div class="display_status column column-date"><a class="sorting-dirs" id="Published-asc">Published</a><span class="sorting-img" id="Published-sort">&nbsp;</span>
+<br /><input type="text" name="filter-published" id="filter-published" value="<?=$this->filters['filed']?>" size=6 class="filter-input" />
+</div>
+<div class="display_status column column-pub-no"><a class="sorting-dirs" id="PubNo-asc">Number</a><span class="sorting-img" id="PubNo-sort">&nbsp;</span>
+<br /><input type="text" name="filter-pubno" id="filter-pubno" value="<?=$this->filters['PubNo']?>" size=8 class="filter-input" />
+</div>
+
+
+<div class="display_status column column-date"><a class="sorting-dirs" id="Granted-asc">Granted</a><span class="sorting-img" id="Granted-sort">&nbsp;</span>
+<br /><input type="text" name="filter-granted" id="filter-granted" value="<?=$this->filters['granted']?>" size=6 class="filter-input" />
+</div>
+<div class="display_status column column-pub-no"><a class="sorting-dirs" id="GrtNo-asc">Number</a><span class="sorting-img" id="GrtNo-sort">&nbsp;</span>
+<br /><input type="text" name="filter-grtno" id="filter-grtno" value="<?=$this->filters['GrtNo']?>" size=8 class="filter-input" />
+</div>
+
+<!--div class="display_actor display_status column column-ctnr-pri"><a class="sorting-dirs" id="responsible-asc">Responsible</a><span class="sorting-img" id="responsible-sort">&nbsp;</span></div-->
+
 <!-- <div class="column column-ctnr-pri"><a style="color:white;cursor:pointer;" id="matters-ctnr">Ctnr</a></div> -->
-<div class="column column-ctnr-pri"><a style="color:white;cursor:pointer;" id="matters-pri">Pri</a></div>
 </div>
+
 <div id="matter-list">
 <?php if(count($this->paginator)):?>
 <?php if(count($this->paginator) > 1)
@@ -377,18 +526,24 @@ foreach($this->paginator as $matter):?>
 
 <?php //print_r($matter);?>
 <div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: #<?php echo ($matter['Ctnr'])?'89A1C7':'FFF'; ?>" >
-<div class="column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
-<div class="column column-cat"><?php echo $matter['Cat']; ?></div>
-<div class="column column-status"><?php echo $matter['Status'];?></div>
-<div class="column column-client"><?php echo htmlentities($matter['Client']);?></div>
-<div class="column column-client-ref"><?php echo htmlentities($matter['ClRef']);?></div>
-<div class="column column-title"><?php echo htmlentities($matter['Title']);?></div>
-<div class="column column-inventor"><?php echo htmlentities($matter['Inventor1']);?></div>
-<div class="column column-date"><?php echo $matter['Filed'];?></div>
-<div class="column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,10);?></div>
-<div class="column column-pub-no" title="<?=$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>
+<div class="display_actor display_status column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
+<div class="display_actor display_status column column-cat"><?php echo $matter['Cat']; ?></div>
+<div class="display_actor display_status column column-status"><?php echo $matter['Status'];?></div>
+<div class="display_status column column-date"><?php echo $matter['Status_date'];?></div>
+<div class="display_actor display_status column column-client"><?php echo htmlentities($matter['Client']);?></div>
+<div class="display_actor display_status column column-client-ref"><?php echo htmlentities($matter['ClRef']);?></div>
+<div class="display_actor column column-agent"><?php echo htmlentities($matter['Agent']);?></div>
+<div class="display_actor column column-agent-ref"><?php echo htmlentities($matter['AgtRef']);?></div>
+<div class="display_actor column column-title"><?php echo htmlentities($matter['Title']);?></div>
+<div class="display_actor column column-inventor"><?php echo htmlentities($matter['Inventor1']);?></div>
+<div class="display_actor display_status column column-date"><?php echo $matter['Filed'];?></div>
+<div class="display_status column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,10);?></div>
+<div class="display_status column column-date" title="<?=$matter['Published']?>"><?php echo $matter['Published'];?></div>
+<div class="display_status column column-pub-no" title="<?=$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>
+<div class="display_status column column-date" title="<?=$matter['Granted']?>"><?php echo $matter['Granted'];?></div>
+<div class="display_status column column-pub-no" title="<?=$matter['GrtNo']?>"><?php echo substr($matter['GrtNo'], 0, 10);?></div>
 <!-- <div class="column column-ctnr-pri"><?php echo $matter['Ctnr'];?></div> -->
-<div class="column column-ctnr-pri"><?php echo $matter['Pri'];?></div>
+<!-- div class="column column-ctnr-pri"><?php echo $matter['responsible'];?></div -->
 </div>
 
 <!-- <a id="edit-matter-<?php //echo $matter['ID'] ?>" class="edit-matter" href="javascript:void(0)" >Edit</a>

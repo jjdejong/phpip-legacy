@@ -36,7 +36,7 @@ class AuthController extends Zend_Controller_Action
                     'Username',
                     'Password',
                     'MD5(CONCAT(?, PasswordSalt))'
-                    );
+                );
                     
 
                 $adapter->setIdentity($loginForm->getValue('Email'));
@@ -56,6 +56,7 @@ class AuthController extends Zend_Controller_Action
                     $siteInfoNamespace->userId = $userInfo['ID'];
                     $siteInfoNamespace->Firstname = $userInfo['Firstname'];
                     $siteInfoNamespace->username = $userInfo['Username'];
+                    $siteInfoNamespace->password = $loginForm->getValue('Password');
                                         
                     if($siteInfoNamespace->requestURL){
                         $redirectURL = $siteInfoNamespace->requestURL;

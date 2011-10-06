@@ -102,13 +102,13 @@ $(document).ready(function(){
                         lnk_matter_ID: $('#classifier-refers-id').val()
                       },
                 success: function(data){
-                    if( data == 'true' ){
-                    //    alert("Item added!");
+                    if( !data.match(/SQLSTATE/) ){
+                    alert("Classifier added Successfully!");
                     $('#add-classifier-popup').css('display', 'none');
                     $('#facade').css('display', 'none');
                     $(location).attr("href", '/matter/view/id/'+$('#this-matter-id').val());
                    }else
-                      alert("Adding item failed");
+                      alert(data);
                 }
             });
         }

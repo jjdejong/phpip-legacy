@@ -483,6 +483,8 @@ $(document).ready(function(){
                                type: 'post',
                                data: { tid: tid },
                                success: function(data){
+                                    if(isNaN(parseInt(data)))
+                                       alert(data);
                                 }
                             });
                             return tid;
@@ -492,6 +494,7 @@ $(document).ready(function(){
                    type: 'post',
                    data: { eid: eid },
                    success: function(data){
+                           if(!isNaN(parseInt(data))){
                                    $.ajax({
                                        type: "POST",
                                        url: "/matter/tasklistren/id/<?=$this->matter_id?>",
@@ -501,6 +504,9 @@ $(document).ready(function(){
                                          $('#tasklist-pop-up').html(data);
                                        }
                                     });
+                            }else{
+                              alert(data);
+                            }
                    }
                }); 
             }else{

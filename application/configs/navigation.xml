@@ -15,6 +15,33 @@
                     <id>matter</id>
                     <title>Matter</title>
                     <uri>/matter</uri>
+                    <pages>
+                        <displaypat>
+                            <label>PAT</label>
+                            <id>pat</id>
+                            <title>PAT</title>
+                            <uri>/matter/index/display/pat</uri>
+                        </displaypat>
+                        <displaytm>
+                            <label>TM</label>
+                            <id>tm</id>
+                            <title>TM</title>
+                            <uri>/matter/index/display/tm</uri>
+                        </displaytm>
+                        <displayltg>
+                            <label>LTG</label>
+                            <id>ltg</id>
+                            <title>LTG</title>
+                            <uri>/matter/index/display/ltg</uri>
+                        </displayltg>
+                        <displayoth>
+                            <label>OTH</label>
+                            <id>oth</id>
+                            <title>OTH</title>
+                            <uri>/matter/index/display/oth</uri>
+                        </displayoth>
+                    </pages>
+
                 </matter>
                 <tables>
                     <label>Tables</label>

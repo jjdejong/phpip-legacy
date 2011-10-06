@@ -334,12 +334,16 @@ $(document).ready(function(){
 				     url: "/matter/delete-matter-actor",
 				     data: { 'mal_id':mal_id[2] },
 				     success: function(data){
+                                           if(!isNaN(parseInt(data))){
 					     $('#pr-confirm').dialog("close");
 					     $('#'+mal_id[2]).hide();
                                              reorder_actors = 1;
                                              actors_count = actors_count - 1;
                                              if(actors_count < 2)
                                                $('#sortable-role-actors').sortable({disabled: true});
+                                           }else{
+                                             alert(data);
+                                           }
 				     }
 				   });
 		     },

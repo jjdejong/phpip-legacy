@@ -63,6 +63,7 @@
 
 #current-matter-edit{
   color: white;
+  font-size: 16px;
 }
 
 #parent-matter{
@@ -577,7 +578,7 @@ $(document).ready(function(){
       type: 'POST',
       data: { aid:aid },
       success: function(data){
-        if(data == "true"){
+        if(!isNaN(parseInt(data))){
           $.ajax({
           url: '/matter/actornav/nav/next/actor_id/'+aid,
           type: 'get',
@@ -603,10 +604,14 @@ $(document).ready(function(){
       else
         $matter_dead = "";
 ?>
-	<div class="matter-title"><a href="javascript:void(0);" id="current-matter-edit" class="<?=$matter_dead?>" ><?php echo $this->matter_record[0]['UID']; 
-	if ($this->matter_record[0]['type_code'] != "")
-	  echo  " - " . $this->matter_record[0]['type_code'] ;
-	echo  " (" . $this->matter_record[0]['category_code'] . ")"; ?></a>
+	<div class="matter-title">
+       <?php echo $this->matter_record[0]['category'] ."</br>";?>
+          <a href="javascript:void(0);" id="current-matter-edit" class="<?=$matter_dead?>" ><?php 
+       // echo  " (" . $this->matter_record[0]['category_code'] ."</br>";
+        echo $this->matter_record[0]['UID']; 
+//	if ($this->matter_record[0]['type_code'] != "")
+//	  echo  " - " . $this->matter_record[0]['type_code'] ;
+	 ?></a>
 
 	<?php
 	if($this->matter_parent){
@@ -618,7 +623,7 @@ $(document).ready(function(){
 			echo  " (" . $this->matter_parent[0]['category_code'] . ")</a>"; 
 		}
 
-		echo "<br />" . $this->matter_record[0]['ID'] ;
+//		echo "<br />" . $this->matter_record[0]['ID'] ;
 
 		?>
 	</div>

@@ -276,17 +276,24 @@ vertical-align: top;
                    notes: $('#event_notes').val(),
                   },
            success: function(data){
-              $.ajax({
-                type: "POST",
-                url: "/matter/eventlist/id/<?=$this->matter_id?>",
-                data: {},
-                success: function(data){
-                    $('#event-pop-up').empty();
-                    $('#event-pop-up').html(data);
-                }
-              });
-              $('#add-event-popup').css('display', 'none');
-              $('#facade').hide();
+              if(!data.match(/SQLSTATE/)) {
+                 alert(data);
+                 $('#event-pop-up').empty();
+                 $('#event-pop-up').html(data);
+
+                 $.ajax({
+                   type: "POST",
+                   url: "/matter/eventlist/id/<?=$this->matter_id?>",
+                   data: {},
+                   success: function(data){
+                       $('#event-pop-up').empty();
+                       $('#event-pop-up').html(data);
+                   }
+                 });
+                 $('#add-event-popup').css('display', 'none');
+                 $('#facade').hide();
+              } else
+                 alert(data);
            }
        }); 
     });

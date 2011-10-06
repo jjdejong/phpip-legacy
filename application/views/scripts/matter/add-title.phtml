@@ -39,13 +39,20 @@ $(document).ready(function(){
                         value: $('#classifier-value').val(),
                       },
                 success: function(data){
-                    if( data == 'true' ){
+                  /*  if( data == 'true' ){
                     //    alert("Item added!");
                     $('#add-classifier-popup').css('display', 'none');
                     $('#facade').css('display', 'none');
                     $(location).attr("href", '/matter/view/id/'+$('#this-matter-id').val());
                    }else
-                      alert("Adding item failed");
+                      alert("Adding item failed"); */
+                   if(isNaN(parseInt(data))){
+                     alert(data);
+                   }else{
+                     $('#add-classifier-popup').css('display', 'none');
+                     $('#facade').css('display', 'none');
+                     $(location).attr("href", '/matter/view/id/'+$('#this-matter-id').val());
+                   }
                 }
             });
         }

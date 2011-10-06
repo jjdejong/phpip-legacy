@@ -229,6 +229,7 @@ var nterm = '';
             type: 'post',
             data: { classifier_id: cid },
             success: function(data){
+              if(!isNaN(parseInt(data))){
                 $.ajax({
                 type: "POST",
                 url: "/matter/classifierlist/id/"+$('#this-matter-id').val(),
@@ -238,6 +239,9 @@ var nterm = '';
                   $('#classifier-popup').html(data);
                 }
                });
+              }else{
+                alert(data);
+              }
             }
          });
        }
@@ -275,10 +279,15 @@ var nterm = '';
           url: "/matter/add-classifier/type_code/"+type_code,
           data: {},
           success: function(data){
+            
+            if(isNaN(parseInt(data))){
               $('#add-classifier-popup').html(data);
               var ren_left = Math.round($(window).width()/2) - Math.round($('#add-classifier-popup').width()/2);
               $('#add-classifier-popup').css('left', ren_left);
               $('#add-classifier-popup').css('display', 'block');
+            }else{
+              alert(data);
+            }
           }
       });
       return false;

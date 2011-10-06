@@ -5,6 +5,14 @@ $(document).ready(function(){
         var id_array = $(this).attr('id').split('-');
         $(location).attr('href','/matter/view/id/' + id_array[2]);
     });
+    <?if($this->display_style){?>
+          $('.display_actor,.display_status').css('display','none');
+              $('.display_status,').css('display','inline-block');
+    <?}else {?>
+              $('.display_actor,.display_status').css('display','none');
+              $('.display_actor').css('display','inline-block');
+    <?}?>
+
 });
 </script>
 
@@ -16,19 +24,27 @@ $(document).ready(function(){
 $rindex = 0;
 foreach($this->paginator as $matter):?>
 <?php //print_r($matter);?>
+
+<?php //print_r($matter);?>
 <div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: #<?php echo ($matter['Ctnr'])?'89A1C7':'FFF'; ?>" >
-<div class="column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
-<div class="column column-cat"><?php echo $matter['Cat']; ?></div>
-<div class="column column-status"><?php echo $matter['Status'];?></div>
-<div class="column column-client"><?php echo htmlentities($matter['Client']);?></div>
-<div class="column column-client-ref"><?php echo htmlentities($matter['ClRef']);?></div>
-<div class="column column-title"><?php echo htmlentities($matter['Title']);?></div>
-<div class="column column-inventor"><?php echo htmlentities($matter['Inventor1']);?></div>
-<div class="column column-date"><?php echo $matter['Filed'];?></div>
-<div class="column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,10);?></div>
-<div class="column column-pub-no" title="<?=$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>
+<div class="display_actor display_status column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
+<div class="display_actor display_status column column-cat"><?php echo $matter['Cat']; ?></div>
+<div class="display_actor display_status column column-status"><?php echo $matter['Status'];?></div>
+<div class="display_status column column-date"><?php echo $matter['Status_date'];?></div>
+<div class="display_actor display_status column column-client"><?php echo htmlentities($matter['Client']);?></div>
+<div class="display_actor display_status column column-client-ref"><?php echo htmlentities($matter['ClRef']);?></div>
+<div class="display_actor column column-agent"><?php echo htmlentities($matter['Agent']);?></div>
+<div class="display_actor column column-agent-ref"><?php echo htmlentities($matter['AgtRef']);?></div>
+<div class="display_actor column column-title"><?php echo htmlentities($matter['Title']);?></div>
+<div class="display_actor column column-inventor"><?php echo htmlentities($matter['Inventor1']);?></div>
+<div class="display_actor display_status column column-date"><?php echo $matter['Filed'];?></div>
+<div class="display_status column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,10);?></div>
+<div class="display_status column column-date" title="<?=$matter['Published']?>"><?php echo $matter['Published'];?></div>
+<div class="display_status column column-pub-no" title="<?=$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>
+<div class="display_status column column-date" title="<?=$matter['Granted']?>"><?php echo $matter['Granted'];?></div>
+<div class="display_status column column-pub-no" title="<?=$matter['GrtNo']?>"><?php echo substr($matter['GrtNo'], 0, 10);?></div>
 <!-- <div class="column column-ctnr-pri"><?php echo $matter['Ctnr'];?></div> -->
-<div class="column column-ctnr-pri"><?php echo $matter['Pri'];?></div>
+<!-- div class="column column-ctnr-pri"><?php echo $matter['responsible'];?></div -->
 </div>
 
 <!-- <a id="edit-matter-<?php //echo $matter['ID'] ?>" class="edit-matter" href="javascript:void(0)" >Edit</a>

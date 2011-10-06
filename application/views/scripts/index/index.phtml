@@ -4,7 +4,7 @@
     float:left;
     margin: 10px 0px;
 }
-.phpip-list{
+.phpip-lists{
     margin:0px 5px 5px;
     padding: 4px;
     float:left;
@@ -15,7 +15,13 @@
     -moz-box-shadow: 2px 2px 1px #888888;
     -webkit-box-shadow: 2px 2px 1px #888888;
     max-height:270px;
-    overflow:auto;
+}
+.phpip-list{
+    margin: 0px;
+    padding: 0px;
+    border: 1px inset #CCC;
+    -moz-border-radius: 0px 0px 4px 4px;
+    -webkit-border-radius: 0px 0px 4px 4px;
 }
 .phpip-list li{
     list-style: none;
@@ -27,12 +33,24 @@
 .phpip-list li:hover {
     background: #C8E8F3;
 }
-.phpip-list li:first-child {
+.home-box-header{
+    background: #B5D9E5;
+    display:block;
+    height: 24px;
+    padding: 5px 5px 0px 0px;
+    margin:0px 0px -3px 5px;
+    -moz-border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-box-shadow: 2px 0px 1px #888;
+    -webkit-box-shadow: 2px 0px 1px #888;
+}
+.list-headers {
     background: #1E4262;
     color: #FFF;
     -moz-border-radius: 4px 4px 0 0;
     -webkit-border-radius: 4px 4px 0 0;
     border: none;
+    padding: 4px 6px;
 }
 .phpip-list li:last-child {
     -moz-border-radius: 0 0 4px 4px;
@@ -45,8 +63,7 @@
 #open-tasks-list{
     max-height: 270px;
     width: 540px;
-    overflow-x: hidden;
-    overflow: auto;
+    overflow:auto;
 }
 #ren-tasks-list{
     max-height: 270px;
@@ -125,7 +142,6 @@
   -moz-border-radius: 4px 4px 0px 0px;
   -webkit-border-radius: 4px 4px 0px 0px;
   width:auto;
-  padding: 5px 5px;
   display:block; 
 }
 .home-box{
@@ -139,17 +155,25 @@ text-align: center;
 display: block;
 }
 .clear-tasks-box{
-  background: #B5D9E5;
-  padding: 4px 5px 0px;
   float:right;
-  margin:-3px 20px 0px 0px;
-  -moz-border-radius: 4px 4px 0px 0px;
-  -webkit-border-radius: 4px 4px 0px 0px;
-  height:24px;
 }
 .done-date{
   width: 100px;
   border: 1px inset #ccc;
+  -moz-border-radius:3px;
+  -webkit-border-radius:3px;
+}
+.home-card{
+    background-color: #B5D9E5;
+    padding:5px;
+    margin-left: 5px;
+    display: inline-block;
+    -moz-border-radius:0px 0px 5px 5px;
+    -webkit-border-radius:0px 0px 5px 5px;
+    border-radius:0px 0px 5px 5px;
+    box-shadow:2px 2px 1px #888;
+    -moz-box-shadow:2px 2px 1px #888;
+    -webkit-box-shadow:2px 2px 1px #888;
 }
 </style>
 
@@ -195,6 +219,7 @@ $(document).ready(function(){
         dateFormat: 'dd/mm/yy',
 //        minDate: 0,
     });
+    $('.done-date').datepicker('setDate', new Date());
 
     $('#clear-open-tasks').click(function(){
         var tids = new Array();
@@ -205,9 +230,12 @@ $(document).ready(function(){
         $.ajax({
           url: '/matter/clear-tasks',
           type: 'POST',
-          data: { task_ids: tids, done_data: $('#open-done-date').val() },
+          data: { task_ids: tids, done_date: $('#open-done-date').val() },
           success:function(data){
-            location.reload();
+            if(!isNaN(parseInt(data)))
+              location.reload();
+            else
+              alert(data);
           }
         });
     });
@@ -221,9 +249,12 @@ $(document).ready(function(){
         $.ajax({
           url: '/matter/clear-tasks',
           type: 'POST',
-          data: { task_ids: tids, done_data: $('#ren-done-date').val() },
+          data: { task_ids: tids, done_date: $('#ren-done-date').val() },
           success:function(data){
-            location.reload();
+            if(!isNaN(parseInt(data)))
+              location.reload();
+            else
+              alert(data);
           }
         });
     });
@@ -247,37 +278,70 @@ $(document).ready(function(){
         $('.flake-dialog').css('display', 'none');
         $('#facade').css("display", "none");
     });
+
+    $("input[name='open-tasks-filter']").change(function(){
+        var tasks_flag = $("input[name='open-tasks-filter']:checked").val();
+        $.ajax({
+          type: "POST",
+          url: '/index/task-filter',
+          data: { task_type : 'open', filter: tasks_flag },
+          success: function(data){
+            $('#open-tasks-list').html(data);
+          }
+        });
+    });
+
+    $("input[name='open-rens-filter']").change(function(){
+        var tasks_flag = $("input[name='open-rens-filter']:checked").val();
+        $.ajax({
+          type: "POST",
+          url: '/index/task-filter',
+          data: { task_type : 'ren', filter: tasks_flag },
+          success: function(data){
+            $('#ren-tasks-list').html(data);
+          }
+        });
+    });
 });
 </script>
 <div id="home-wrap">
 
 <div id="home-left">
 <div id="categories-box" class="home-box">
+<div class="home-box-header">
 <div class="list-header">Categories</div>
-<div style="float:right;margin:1px 3px 0px 0px;"><a href="javascript:void(0);" class="add-cat-matter button-style" style="padding: 2px;" id="" ><img src="/images/Add-16.png" alt="+" width=14 height=14 title="Add Matter" class="img-buttons" style="vertical-align:middle;"></img> Add new matter</a></div>
-<br>
-<ul class="phpip-list" id="category-list">
-    <li><div class="col-cat">Category</div><div class="col-code">Code</div><div class="col-count">No of matters</div><div class="col-actions"></div></li>
+<div class="clear-tasks-box"><a href="javascript:void(0);" class="add-cat-matter button-style" style="display:block;" id="" ><img src="/images/Add-16.png" alt="+" width=14 height=14 title="Add Matter" class="img-buttons" style="vertical-align:middle;"></img> Add new matter</a></div>
+</div>
+<div id="" class="home-card">
+    <div class="list-headers"><div class="col-cat">Category</div><div class="col-code">Code</div><div class="col-count">no_of_matters</div><div class="col-actions"></div></div>
 <?php if(count($this->categories)){ ?>
+<ul class="phpip-list" id="category-list">
 <?php foreach($this->categories as $matter): ?>
     <li><div class="col-cat"><a href=""><?=$matter['category']?></a></div><div class="col-code"><?=$matter['category_code']?></div><div class="col-count"><?=$matter['no_of_matters']?></div><div class="col-actions"><a href="javascript:void(0);" class="add-cat-matter" id="<?=$matter['category']?>-<?=$matter['category_code']?>" ><img src="/images/Add-16.png" alt="+" width=14 height=14 title="Add Matter" class="img-buttons"></img></a></div></li>
 <?php endforeach; ?>
 </ul>
-<?php }else{ ?>
-<li></li>
 <?php } ?>
+</div>
 </div>
 
 <div id="open-tasks-box" class="home-box">
-<?php if(count($this->open_tasks)): ?>
-<div class="list-header">Open tasks</div>
-<div class="clear-tasks-box">
-<label for="open-done-date" >Done date </label><input type="text" value="" id="open-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
-<input type="button" class="button-style" id="clear-open-tasks" value="Clear tasks" style="padding: 0px 8px;" />
+<div class="home-box-header">
+<div class="list-header">Open tasks
+<input type="radio" name="open-tasks-filter" id="open-tasks-all" value="0" checked="checked" />
+<label for="open-tasks-all" >All</label>
+<input type="radio" name="open-tasks-filter" id="open-tasks-assigned" value="1" />
+<label for="open-tasks-assigned" >Assigned to me</label>
 </div>
-<br>
+
+ <div class="clear-tasks-box">
+<input type="button" class="button-style" id="clear-open-tasks" value="Clear selected on" style="padding: 0px 8px;" />
+<label for="open-done-date" ></label><input type="text" value="" id="open-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
+</div>
+</div>
+<div id="" class="home-card">
+<?php if(count($this->open_tasks)): ?>
+<div class="list-headers"><div class="col-task-name">Task name</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></div>
 <ul class="phpip-list" id="open-tasks-list">
-    <li><div class="col-task-name">Task name</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></li>
 <?php foreach($this->open_tasks as $open_task){ 
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
@@ -287,38 +351,52 @@ $matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
 $matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
 $matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
 ?>
-    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div>
+   <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div>
 <div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="Clear" /></div></li>
 <?php } ?>
 </ul>
-</div>
 <?php endif; ?>
+</div>
+</div>
+
 </div>
 
 <div id="home-right" >
 <div id="users-box" class="home-box">
+<div class="home-box-header">
+<div class="list-header">Users tasks</div>
+</div>
+<div id="" class="home-card">
+<div class="list-headers"><div class="col-user-login">User</div><div class="col-open-count">Open Tasks</div><div class="col-most-urgent">Most urgent</div></div>
 <?php if(count($this->users_list)): ?>
-<div class="list-header">Users tasks</div><br>
 <ul class="phpip-list" id="users-task-count" >
-    <li><div class="col-user-login">User</div><div class="col-open-count">Open Tasks</div><div class="col-most-urgent">Most urgent</div></li>
 <?php foreach($this->users_list as $user){ 
 if($user['no_of_tasks'] > 0){
 ?>
-    <li><div class="col-user-login"><a href="/index/user-page/username/<?=$user['login']?>"><?=$user['login']?></a></div><div class="col-open-count"><a href="/index/user-open-tasks/username/<?=$user['login']?>"><?=$user['no_of_tasks']?></a></div><div class="col-most-urgent"><?=$user['urgent_date']?></div></li>
+<li><div class="col-user-login"><a href="/index/user-page/username/<?=$user['login']?>"><?=$user['login']?></a></div><div class="col-open-count"><a href="/index/user-open-tasks/username/<?=$user['login']?>"><?=$user['no_of_tasks']?></a></div><div class="col-most-urgent"><?=$user['urgent_date']?></div></li>
 <?php }} ?>
 </ul>
 <?php endif;?>
 </div>
-<div id="open-renewals-box" class="home-box">
-<?php if(count($this->ren_tasks)): ?>
-<div class="list-header">Open renewals</div>
-<div class="clear-tasks-box">
-<label for="ren-done-date" >Done date </label><input type="text" value="" id="ren-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
-<input type="button" class="button-style" id="clear-ren-tasks" value="Clear tasks" style="padding: 0px 8px;" />
 </div>
-<br>
+
+<div id="open-renewals-box" class="home-box">
+<div class="home-box-header">
+<div class="list-header">Open renewals
+<input type="radio" name="open-rens-filter" id="open-rens-all" value="0" checked="checked" />
+<label for="open-rens-all" >All</label>
+<input type="radio" name="open-rens-filter" id="open-rens-assigned" value="1" />
+<label for="open-rens-assigned" >Assigned to me</label>
+</div>
+<div class="clear-tasks-box">
+<input type="button" class="button-style" id="clear-ren-tasks" value="Clear selected on" style="padding: 0px 8px;" />
+<label for="ren-done-date" ></label><input type="text" value="" id="ren-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
+</div>
+</div>
+<div id="" class="home-card">
+<?php if(count($this->ren_tasks)): ?>
+<div class="list-headers"><div class="col-task-name">Task name</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></div>
 <ul class="phpip-list" id="ren-tasks-list">
-    <li><div class="col-task-name">Task name</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></li>
 <?php foreach($this->ren_tasks as $open_task){ 
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
@@ -334,7 +412,7 @@ $matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
 </ul>
 <?php endif; ?>
 </div>
-</div>
+
 </div>
 
 </div>

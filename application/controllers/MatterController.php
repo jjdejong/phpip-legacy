@@ -8,6 +8,9 @@ class MatterController extends Zend_Controller_Action
     $this->username = $siteInfoNamespace->username;
   }
 
+/**
+ * Displays all Matters list
+**/
   public function indexAction()
   {
     $filter_array['value'] = $this->_getParam('value');
@@ -23,13 +26,21 @@ class MatterController extends Zend_Controller_Action
     $get_dir = $this->_getParam('dir');
     $sort_field = isset($get_sort) ? $get_sort : 'caseref';
     $sort_dir = isset($get_dir) ? $get_dir : 'asc';
+    $this->view->category_display = $this->_getParam('display');
+    $this->view->display_style = $this->_getParam('displaystyle');
 
     //print_r($filter_array);
 
     $page = $this->_getParam('page',1);
 
+    $mfs = new Zend_Session_Namespace('matter_filter');
+    $mfs->filter_array = $filter_array;
+    $mfs->sort_field = $sort_field;
+    $mfs->sort_dir = $sort_dir;
+    $mfs->multi_sort = array();
+
     $matterModel = new Application_Model_Matter();
-    $paginator = $matterModel->paginateMatters($filter_array, $sort_field, $sort_dir);
+    $paginator = $matterModel->paginateMatters($filter_array, $sort_field, $sort_dir, array(), $this->view->category_display);
     $paginator->setCurrentPageNumber($page);
     $paginator->setItemCountPerPage(25);
 
@@ -44,7 +55,9 @@ class MatterController extends Zend_Controller_Action
     $this->view->sort_dir = 'asc';
   //  $this->view->container = $containers;
   }
-
+/**
+ * to add a new Matter
+**/
   public function addAction()
   {
     $this->_helper->layout->disableLayout();
@@ -65,16 +78,20 @@ class MatterController extends Zend_Controller_Action
 
         $matterModel = new Application_Model_Matter();
         $result = $matterModel->save($matter);
-        if(!$result){
+        echo $result;
+/*
+        if(!is_int($result)){
            $msg = "Failed to add matter";
            $this->view->matter_status = false;
-           echo "false";
+           $this->view->error_msg = $result;
+           echo $result;
         }
         else{
            $msg = "Matter added successfully";
            $this->view->matter_status = true;
            echo $result;
         }
+*/
     }else{
       $category_id = $this->_getParam('category_id');
       $category_arr = explode('-', $category_id);
@@ -95,6 +112,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * Matter detail page
+**/
   public function viewAction()
   {
     $matter_id = $this->_getParam('id',1);
@@ -127,6 +147,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * to edit a Matter
+**/
   public function editAction()
   {
     $request = $this->getRequest();
@@ -205,6 +228,10 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * displays all task list
+ * called upon clicking tasks box in matter view page
+**/
   public function tasklistAction()
   {
     $this->_helper->layout->disableLayout();
@@ -216,6 +243,10 @@ class MatterController extends Zend_Controller_Action
 //    $this->view->matter_events = $matterModel->getMatterAllEvents($matter_id);
   }
 
+/**
+ * displays all renewal tasks
+ * called upon clicking renewal tasks box in matter view page
+**/
   public function tasklistrenAction()
   {
     $this->_helper->layout->disableLayout();
@@ -228,6 +259,10 @@ class MatterController extends Zend_Controller_Action
     $this->view->matter_id = $matter_id;
   }
 
+/**
+ * displays all events
+ * called upon clicking events box in matter view page
+**/
   public function eventlistAction()
   {
     $this->_helper->layout->disableLayout();
@@ -237,6 +272,9 @@ class MatterController extends Zend_Controller_Action
     $this->view->matter_id = $matter_id;
   }
 
+/**
+ * Deprecated
+**/
   public function actorlistAction()
   {
     $this->_helper->layout->disableLayout();
@@ -246,6 +284,10 @@ class MatterController extends Zend_Controller_Action
     $this->view->matter_actors = $matterModel->getMatterActors($matter_id, $container_id);
   }
 
+/**
+ * Displays all classifiers list
+ * called upon clicking classifier box in matter view page
+**/
   public function classifierlistAction()
   {
     $this->_helper->layout->disableLayout();
@@ -254,6 +296,9 @@ class MatterController extends Zend_Controller_Action
     $this->view->classifiers = $matterModel->getMatterClassifiers($matter_id);
   }
 
+/**
+ * Displays all actors from actor table
+**/
   public function actorsTableAction()
   {
     //$this->_helper->layout->disableLayout();
@@ -261,6 +306,10 @@ class MatterController extends Zend_Controller_Action
     $this->view->actors = $matterModel->getAllActors();
   }
 
+/**
+ * Displays filtered actors from actor table
+ * called when filter term is entered in actor Name input in actors-table page
+**/
   public function actorsFilterAction()
   {
     $this->_helper->layout->disableLayout();
@@ -269,6 +318,9 @@ class MatterController extends Zend_Controller_Action
     $this->view->actors = $matterModel->getAllActors($term);
   }
 
+/**
+ * Adds an actor to a selected role
+**/
   public function mapActorRoleAction()
   {
     $this->_helper->layout->disableLayout();
@@ -288,6 +340,10 @@ class MatterController extends Zend_Controller_Action
 
   }
 
+/**
+ * gets all actors for a role
+ * used in autocomplete of actor fields
+**/
   public function getAllActorsAction()
   {
     $this->_helper->layout->disableLayout();
@@ -306,6 +362,10 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($matter_actors);
   }
 
+/**
+ * gets all logins for a role
+ * used in autocomplete of responsible fields
+**/
   public function getAllLoginsAction()
   {
     $this->_helper->layout->disableLayout();
@@ -318,6 +378,10 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($this->view->matter_login);
   }
 
+/**
+ * gets all categories
+ * used in autocomplete of category fields
+**/
   public function getAllCategoriesAction()
   {
     $this->_helper->layout->disableLayout();
@@ -329,6 +393,10 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($this->view->matter_categories);
   }
 
+/**
+ * displays actors for a particular role and provides editing and sorting of the list
+ * called upon clicking role in actors' box in matter view page
+**/
   public function roleActorsAction()
   {
   	$this->_helper->layout->disableLayout();
@@ -349,6 +417,9 @@ class MatterController extends Zend_Controller_Action
         $this->view->actors_count = count($this->view->role_actors);
   }
   
+/**
+ * Updates actor_role  
+**/
   public function saveRoleAction()
   {
   	$this->_helper->layout->disableLayout();
@@ -364,6 +435,10 @@ class MatterController extends Zend_Controller_Action
   	$matterModel->saveRole($role_code, $role_data);
   }
 
+/**
+ * Actor is linked to Matter
+ * an entry is inserted into matter_actor_lnk
+**/
   public function addMatterActorAction()
   {
     $this->_helper->layout->disableLayout();
@@ -400,10 +475,16 @@ class MatterController extends Zend_Controller_Action
     $data['date'] = date('Y-m-d');
 
     $result = $matterModel->addMatterActor($data);
+    if($matterModel->getError()){
+      echo $matterModel->getError();
+    }
     if($result)
       echo "Actor linked to the Matter";
   }
   
+/**
+ * Updates a record in matter_actor_lnk
+**/
   public function saveMatterActorAction()
   {
     $this->_helper->layout->disableLayout();
@@ -429,6 +510,9 @@ class MatterController extends Zend_Controller_Action
   	echo $display_val;
   }
   
+/**
+ * Deletes an actor linked to matter from matter_actor_lnk
+**/
   public function deleteMatterActorAction()
   {
       $this->_helper->layout->disableLayout();
@@ -439,9 +523,13 @@ class MatterController extends Zend_Controller_Action
   	  
       $mal_id = $this->getRequest()->getPost('mal_id');
       $matterModel = new Application_Model_Matter();
-      $matterModel->deleteMatterActor($mal_id);
+      $result = $matterModel->deleteMatterActor($mal_id);
+      echo $result;
   }
 
+/**
+ * saves actors display order for a role
+**/
   public function saveDisplayOrderAction() //actors display order
   {
       $this->_helper->layout->disableLayout();
@@ -459,6 +547,10 @@ class MatterController extends Zend_Controller_Action
       endforeach;
   }
 
+/**
+ * updates Matter for each field specified
+ * used to update matter on in-place edit
+**/
   public function updateMatterAction()
   {
     $this->_helper->layout->disableLayout();
@@ -479,6 +571,9 @@ class MatterController extends Zend_Controller_Action
     echo nl2br(htmlentities($field_value));
   }
 
+/**
+ * updates task for each field specified from in-place edit
+**/
   public function updateTaskAction()
   {
     $this->_helper->layout->disableLayout();
@@ -504,6 +599,9 @@ class MatterController extends Zend_Controller_Action
     echo $field_value;
   }
 
+/**
+ * clears a task for a given done_date or now()
+**/
   public function clearTaskAction()
   {
     $this->_helper->layout->disableLayout();
@@ -519,6 +617,9 @@ class MatterController extends Zend_Controller_Action
     echo $result;
   }
 
+/**
+ * clears multiple tasks for a given done_date
+**/
   public function clearTasksAction()
   {
     $this->_helper->layout->disableLayout();
@@ -536,6 +637,9 @@ class MatterController extends Zend_Controller_Action
     echo $result;
   }
 
+/**
+ * updates event for a specified field from in-place edit feature
+**/
   public function updateEventAction()
   {
     $this->_helper->layout->disableLayout();
@@ -560,6 +664,9 @@ class MatterController extends Zend_Controller_Action
     echo $post_data['value'];
   }
 
+/**
+ * gets autocomplete list from all caserefs 
+**/
   public function getAllRefersAction()
   {
     $this->_helper->layout->disableLayout();
@@ -572,6 +679,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($matter_refers);
   }
 
+/**
+ * gets autocomplete list from caserefs of container matters
+**/
   public function getContainerRefersAction()
   {
     $this->_helper->layout->disableLayout();
@@ -587,6 +697,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($matter_refers);
   }
 
+/**
+ * autocompletes task name
+**/
   public function getAllTasksAction()
   {
     $this->_helper->layout->disableLayout();
@@ -597,6 +710,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($matter_tasks);
   }
 
+/**
+ * Adds a task to an event 
+**/
   public function addEventTaskAction()
   {
     $this->_helper->layout->disableLayout();
@@ -609,10 +725,15 @@ class MatterController extends Zend_Controller_Action
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->addTaskToEvent($post_data);
 
-    if($result)
+    if($matterModel->getError())
+      echo $matterModel->getError();
+    else if($result)
       echo "Task added to the event successfully";
   }
 
+/**
+ * Adds a new event
+**/
   public function addEventAction()
   {
     $this->_helper->layout->disableLayout();
@@ -625,10 +746,15 @@ class MatterController extends Zend_Controller_Action
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->addEvent($post_data);
 
-    if($result)
+    if($matterModel->getError())
+      echo $matterModel->getError();
+    else if($result)
       echo "Task added to the event successfully";
   }
 
+/**
+ * Deletes a task
+**/
   public function deleteTaskAction()
   {
     $this->_helper->layout->disableLayout();
@@ -639,9 +765,12 @@ class MatterController extends Zend_Controller_Action
 
     $task_id = $this->getRequest()->getPost('tid');
     $matterModel = new Application_Model_Matter();
-    $matterModel->deleteTask($task_id);
+    echo $matterModel->deleteTask($task_id);
   }
 
+/**
+ * autocompletes event names from all events
+**/
   public function getAllEventsAction()
   {
     $this->_helper->layout->disableLayout();
@@ -652,6 +781,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($matter_events);
   }
 
+/**
+ * Deletes an event
+**/
   public function deleteEventAction()
   {
     $this->_helper->layout->disableLayout();
@@ -662,10 +794,15 @@ class MatterController extends Zend_Controller_Action
 
     $event_id = $this->getRequest()->getPost('eid');
     $matterModel = new Application_Model_Matter();
-    $matterModel->deleteEvent($event_id);
+    echo $matterModel->deleteEvent($event_id);
 
   }
 
+/**
+ * autocompletes countries from country tables
+ * country.iso as id
+ * country.name as value
+**/
   public function getCountryCodesAction()
   {
      $this->_helper->layout->disableLayout();
@@ -676,6 +813,9 @@ class MatterController extends Zend_Controller_Action
      echo json_encode($country_codes);
   }
 
+/**
+ * autocompletes matter.type from matter table
+**/
   public function getMatterTypesAction()
   {
      $this->_helper->layout->disableLayout();
@@ -686,6 +826,10 @@ class MatterController extends Zend_Controller_Action
      echo json_encode($matter_types);
   }
 
+/**
+ * autocompletes caseref for a new matter
+ * returns max(caseref) + 1 where caseref matches like term
+**/
   public function getMatterCaserefAction()
   {
      $this->_helper->layout->disableLayout();
@@ -696,6 +840,10 @@ class MatterController extends Zend_Controller_Action
      echo json_encode($matter_caseref);
   }
 
+/**
+ * add a title from "Add item" link in the matter view page
+ * titles are added to classifier table as main classifiers
+**/
   public function addTitleAction()
   {
     $this->_helper->layout->disableLayout();
@@ -711,20 +859,24 @@ class MatterController extends Zend_Controller_Action
         }
         $matterModel = new Application_Model_Matter();
         $result = $matterModel->addClassifier($post_data);
-        if($result){
+      /*  if($result){
             echo "true";
             return;
         }
         else{
             echo "false";
             return;
-        }
+        }*/
+        echo $result;
     }else{
         $cat_code = $this->_getParam('cat_code');
         $this->view->classifier_types = $matterModel->getMainClassifierTypes($cat_code);
     }
   }
 
+/**
+ * adds a new classifier
+**/
   public function addClassifierAction()
   {
     $this->_helper->layout->disableLayout();
@@ -753,6 +905,13 @@ class MatterController extends Zend_Controller_Action
 
         $matterModel = new Application_Model_Matter();
         $result = $matterModel->addClassifier($post_data);
+        
+        if($matterModel->getError()){
+            echo $matterModel->getError();
+        } else {
+            echo $result; 
+        } 
+/*
         if($result){
             echo "true";
             return;
@@ -760,13 +919,16 @@ class MatterController extends Zend_Controller_Action
         else{
             echo "false";
             return;
-        }
+        } */
     }else{
         $this->view->type_code = $this->_getParam('type_code');
         $this->view->classifier_types = $matterModel->getClassifierTypes();
     }
   }
 
+/**
+ * edits/updates a classifier upon inplace-edit feature 
+**/
   public function editClassifierAction()
   {
     $this->_helper->layout->disableLayout();
@@ -775,9 +937,20 @@ class MatterController extends Zend_Controller_Action
     $post_data = $this->getRequest()->getPost();
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->editClassifier($post_data['cid'], $post_data['value']);
-    echo $post_data['value'];
+    if($matterModel->getError()){
+        echo $matterModel->getError();
+    } else {
+        echo $post_data['value'];
+    } 
   }
 
+/**
+ * retrieves matter list based on filters
+ * filter field/fields
+ * filter value/values
+ * sort field
+ * sort directions
+**/
   public function filterAction()
   {
     $filter_array['value'] = $this->_getParam('value');
@@ -786,6 +959,9 @@ class MatterController extends Zend_Controller_Action
     if($filter_array['field'] == 'Ctnr'){
         $this->view->containers = 1;
     }
+
+    $category_display = $this->_getParam('display');
+    $this->view->display_style = $this->_getParam('display_style');
 
     $get_sort = $this->_getParam('sort');
     $get_dir = $this->_getParam('dir');
@@ -813,8 +989,10 @@ class MatterController extends Zend_Controller_Action
     $mfs->sort_dir = $sort_dir;
     $mfs->multi_sort = $post_data;
 
+    $this->view->responsible = $post_data[responsible];
+
     $matterModel = new Application_Model_Matter();
-    $paginator = $matterModel->paginateMatters($filter_array, $sort_field, $sort_dir, $post_data);
+    $paginator = $matterModel->paginateMatters($filter_array, $sort_field, $sort_dir, $post_data,$category_display);
     $paginator->setCurrentPageNumber($page);
     $paginator->setItemCountPerPage(25);
 
@@ -830,6 +1008,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * autocompletes non-actors from actor table where phy_person=0
+**/
   public function getNonActorsAction()
   {
     $this->_helper->layout->disableLayout();
@@ -841,6 +1022,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($matter_actors);
   }
 
+/**
+ * autocompletes roles from actor_role
+**/
   public function getActorRolesAction()
   {
     $this->_helper->layout->disableLayout();
@@ -852,6 +1036,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($actor_roles);
   }
 
+/**
+ * add/create a new actor
+**/
   public function addActorAction()
   {
     $this->_helper->layout->disableLayout();
@@ -899,6 +1086,9 @@ class MatterController extends Zend_Controller_Action
     $this->view->default_role_code = $role_info['code'];
   }
 
+/**
+ * displays and offers in-place edit of actor details
+**/
   public function actorAction()
   {
     $this->_helper->layout->disableLayout();
@@ -910,6 +1100,9 @@ class MatterController extends Zend_Controller_Action
     $this->view->actor = $actorInfo;
   }
 
+/**
+ * updates actor field through in-place edit feature
+**/
   public function updateActorAction()
   {
     $this->_helper->layout->disableLayout();
@@ -925,18 +1118,25 @@ class MatterController extends Zend_Controller_Action
     $dvalue = $post_data['dvalue'];
     $matterModel = new Application_Model_Matter();
     $matterModel->updateActor($actor_id, $field_name, $field_value);
+   
+    if(!$matterModel->getError()){
+        if(isset($dvalue) && !$matterModel->getError()){
+         $field_value = $dvalue;
+        }
 
-    if(isset($dvalue)){
-     $field_value = $dvalue;
+        if(in_array($field_name, array('address', 'address_mailing', 'address_billing', 'notes'))){
+          $field_value = nl2br($field_value);
+        }
+
+        echo $field_value;
+    } else {
+        echo $matterModel->getError() ;
     }
-
-    if(in_array($field_name, array('address', 'address_mailing', 'address_billing', 'notes'))){
-      $field_value = nl2br($field_value);
-    }
-
-    echo $field_value;
   }
 
+/**
+ * clones a matter
+**/
   public function cloneAction()
    {
     $this->_helper->layout->disableLayout();
@@ -1008,6 +1208,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * create a new child matter for a matter
+**/
   public function childAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1103,7 +1306,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
-
+/**
+ * Enter national phase, create new matters for a given matter with national phase options
+**/
   public function nationalAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1174,6 +1379,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * deletes an actor
+**/
   public function deleteActorAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1186,6 +1394,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * navigate through actors from actor view page
+**/
   public function actornavAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1214,6 +1425,9 @@ class MatterController extends Zend_Controller_Action
     $this->render('actor');
   }
 
+/**
+ * deletes a matter
+**/
   public function deleteAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1226,6 +1440,9 @@ class MatterController extends Zend_Controller_Action
     }
   }
 
+/**
+ * autocompletes caserefs from container matters list 
+**/
   public function getContainerCaserefsAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1237,6 +1454,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($container_caserefs);
   }
 
+/**
+ * update a classifer field through in-place edit feature
+**/
   public function updateClassifierAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1270,6 +1490,9 @@ class MatterController extends Zend_Controller_Action
     echo $display_value;
   }
 
+/**
+ * autocompletes values from classifier_value table
+**/
   public function getClassifierValuesAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1281,6 +1504,9 @@ class MatterController extends Zend_Controller_Action
     echo json_encode($classifier_values);
   }
 
+/**
+ * deletes a classifier
+**/
   public function deleteClassifierAction()
   {
     $this->_helper->layout->disableLayout();
@@ -1291,9 +1517,12 @@ class MatterController extends Zend_Controller_Action
 
     $classifier_id = $this->getRequest()->getPost('classifier_id');
     $matterModel = new Application_Model_Matter();
-    $matterModel->deleteClassifier($classifier_id);
+    echo $matterModel->deleteClassifier($classifier_id);
   }
 
+/**
+ * saves classifier display order
+**/
   public function saveClassifierDisplayAction()
   {
       $this->_helper->layout->disableLayout();
@@ -1311,6 +1540,9 @@ class MatterController extends Zend_Controller_Action
       endforeach;
   }
 
+/**
+ * navigates through matter list either full list or filtered list
+**/
   public function matterNavAction()
   {
       $this->_helper->layout->disableLayout();

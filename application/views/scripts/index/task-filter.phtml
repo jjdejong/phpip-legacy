@@ -1,0 +1,34 @@
+<script type="text/javascript" src="/js/js/jquery-1.5.1.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.open-task').click(function(){
+       var tid = $(this).attr('id');
+       $('#facade').css('height', $(document).height());
+       $('#facade').css("display", "block");
+       $.ajax({
+         url: '/index/open-task-details',
+         type: 'GET',
+         data: { task_id: tid },
+         success: function(data){
+             $('#task-pop-up').html(data);
+             var ren_left = Math.round($(window).width()/2) - Math.round($('#task-pop-up').width()/2);
+             $('#task-pop-up').css('left', ren_left);
+             $('#task-pop-up').css('display', 'block');
+         }
+       });
+    });
+});
+</script>
+
+<?php foreach($this->open_tasks as $open_task){
+$task_name  = $open_task['task_name'];
+$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
+
+$matter_UID  = $open_task['caseref'];
+$matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
+$matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
+$matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
+?>
+   <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div>
+<div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="Clear" /></div></li>
+<?php } ?>
