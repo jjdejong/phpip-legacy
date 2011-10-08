@@ -399,18 +399,18 @@ and lnk.display_order=1) as "Inventor 1"',
 
 
     if(empty($filter_array))
-        $filter_clause = "where (matter.category_code IN (select code from matter_category $dsiplay_with))";
+        $filter_clause = "AND (matter.category_code IN (select code from matter_category $dsiplay_with))";
     else{
-        $filter_clause = "WHERE (matter.category_code IN (select code from matter_category $dsiplay_with))";
+        $filter_clause = "AND (matter.category_code IN (select code from matter_category $dsiplay_with))";
         if($filter_array['value'] && $filter_array['field'])
 	  $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
 
         if($filter_array['field'] == 'Ctnr'){
-          $filter_clause = "WHERE matter.container_ID IS NULL";
+          $filter_clause = "AND matter.container_ID IS NULL";
         }
 
         if($filter_array['field'] == 'Pri'){
-          $filter_clause = "WHERE EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
+          $filter_clause = "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
         }
     }
 
@@ -445,15 +445,14 @@ and lnk.display_order=1) as "Inventor 1"',
     $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.category_code AS Cat,
 event_name.name AS Status,
-max(status.event_date) AS Status_date,
-ifnull(cli.display_name, cli.name) AS Client,
+status.event_date AS Status_date,
+IFNULL(cli.display_name, cli.name) AS Client,
 clilnk.actor_ref AS ClRef,
-
-ifnull(agt.display_name, agt.name) AS Agent,
+IFNULL(agt.display_name, agt.name) AS Agent,
 agtlnk.actor_ref AS AgtRef,
 classifier.value AS Title,
 classifier.value AS Title,
-concat(upper(inv.name),' ',inv.first_name) as Inventor1,
+CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
 fil.event_date AS Filed,
 fil.detail AS FilNo,
 pub.event_date AS Published,
@@ -465,29 +464,24 @@ matter.container_ID,
 matter.parent_ID,
 matter.responsible,
 matter.dead,
-if(isnull(matter.container_ID),1,0) AS Ctnr,
-(select count(1) from event where event.alt_matter_ID = matter.ID and event.code = 'PRI') AS Pri
-from matter 
-  left join (matter_actor_lnk clilnk, actor cli) 
-    on (ifnull(matter.container_ID,matter.ID) = clilnk.matter_ID and clilnk.role = 'CLI' and clilnk.display_order = 1 and cli.ID = clilnk.actor_ID) 
-  left join (matter_actor_lnk invlnk,actor inv) 
-    on (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID and invlnk.role = 'INV' and invlnk.display_order=1 and inv.ID = invlnk.actor_ID)
-  left join (matter_actor_lnk agtlnk, actor agt) 
-    on (matter.ID = agtlnk.matter_ID and agtlnk.role = 'AGT' and agtlnk.display_order = 1 and agt.ID = agtlnk.actor_ID)
-  left join event fil 
-    on (matter.ID=fil.matter_ID and fil.code='FIL')
-  left join event pub 
-    on (matter.ID=pub.matter_ID and pub.code='PUB')
-  left join event grt 
-    on (matter.ID=grt.matter_ID and grt.code='GRT')
-  join (event status, event_name) 
-    on (matter.ID=status.matter_ID and event_name.code=status.code and event_name.status_event=1)
-  left join (classifier, classifier_type) 
-    on (classifier.matter_ID = ifnull(matter.container_ID, matter.ID) and classifier.type_code=classifier_type.code and main_display=1 and classifier_type.display_order=1)
-
-
-".$filter_clause ." group by caseref, container_id, origin, matter.country, matter.type_code, idx " 
-. $multi_query . " order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
+IF(isnull(matter.container_ID),1,0) AS Ctnr
+FROM matter 
+  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
+    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
+  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
+    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' AND invlnk.display_order=1 AND inv.ID = invlnk.actor_ID)
+  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
+    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
+  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
+  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
+  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
+  JOIN (event status, event_name) 
+    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
+      LEFT JOIN event e2 ON status.matter_id=e2.matter_id AND status.event_date < e2.event_date  
+  LEFT JOIN (classifier, classifier_type) 
+    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
+WHERE e2.matter_id IS NULL
+".$filter_clause ." ". $multi_query . " order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
 
     $results = $dbStmt->fetchAll();
     $adapter = new Zend_Paginator_Adapter_Array($results);
@@ -519,7 +513,7 @@ from matter
  * retrieves all matter from a container.
  * this function is not used now.
 **/
-  public function getFromContainer($containerId = null)
+  /*public function getFromContainer($containerId = null)
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
@@ -529,7 +523,7 @@ from event, event_name
 where event.matter_ID=m.ID
 and event.code=event_name.code
 and event_name.status_event=1) as Date',
-'(select if(display_name="", name, display_name)
+'(select ifnull(display_name=, name)
 from actor, matter_actor_lnk lnk
 where ifnull(m.container_ID,m.ID)=lnk.matter_ID
 and actor.ID=lnk.actor_ID
@@ -555,7 +549,7 @@ and lnk.display_order=1) as "Inventor 1"',
                             ->order(array('m.caseref', 'm.origin', 'm.country'));
 
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
+  }*/
 
 /**
  * gets complete details of a matter from matter table
@@ -2178,17 +2172,17 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     if(empty($filter_array))
         $filter_clause = '';
     else{
-        $filter_clause = "WHERE 1=1";
+        $filter_clause = "AND 1=1";
         if($filter_array['value'] && $filter_array['field'])
 	  $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
 
-        if($filter_array['field'] == 'Ctnr'){
-          $filter_clause = "WHERE matter.container_ID IS NULL";
-        }
+        /*if($filter_array['field'] == 'Ctnr'){
+          $filter_clause = "AND matter.container_ID IS NULL";
+        }*/
 
-        if($filter_array['field'] == 'Pri'){
-          $filter_clause = "WHERE EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
-        }
+        /*if($filter_array['field'] == 'Pri'){
+          $filter_clause = "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
+        }*/
     }
 
     $multi_query = '';
@@ -2208,46 +2202,45 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbStmt = $this->_dbTable->getAdapter()->query("select ID, dead, concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),'')) AS Ref,
+    $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.category_code AS Cat,
-(select event_name.name from event, event_name 
-where event.matter_ID = matter.ID 
-and event.code = event_name.code 
-and event_name.status_event = 1 
-order by event.event_date desc limit 1) AS Status,
-(select max(event.event_date) from event, event_name 
-where event.matter_ID = matter.ID 
-and event.code = event_name.code 
-and event_name.status_event = 1) AS Status_date,
-(select ifnull(actor.display_name, actor.name) from actor, matter_actor_lnk lnk 
-where ifnull(matter.container_ID,matter.ID) = lnk.matter_ID 
-and actor.ID = lnk.actor_ID 
-and lnk.role = 'CLI' 
-and lnk.display_order = 1 limit 1) AS Client,
-(select actor_ref from actor, matter_actor_lnk lnk 
-where ifnull(matter.container_ID,matter.ID) = lnk.matter_ID 
-and actor.ID = lnk.actor_ID 
-and lnk.role = 'CLI' 
-and lnk.display_order = 1 limit 1) AS ClRef,
-if(isnull(matter.container_ID),
-(select classifier.value from classifier where classifier.matter_ID = matter.ID and classifier.type_code = 'TIT' LIMIT 1),
-(select classifier.value from classifier where classifier.matter_ID = matter.container_ID and classifier.type_code = 'TITOF' LIMIT 1)) AS Title,
-(select concat(actor.name,', ',actor.first_name) as inventor from actor, matter_actor_lnk lnk 
-where (ifnull(matter.container_ID,matter.ID) = lnk.matter_ID) 
-and actor.ID = lnk.actor_ID 
-and lnk.role = 'INV' ". $inventor_filter .") AS Inventor1,
-(select event.event_date from event 
-where event.matter_ID = matter.ID 
-and event.code = 'FIL' limit 1) AS Filed,
-(select event.detail from event 
-where event.matter_ID = matter.ID 
-and event.code = 'FIL' limit 1) AS FilNo,
-(select event.detail from event 
-where event.matter_ID = matter.ID 
-and event.code = 'PUB' limit 1) AS PubNo,
-if(isnull(matter.container_ID),1,0) AS Ctnr,
-(select count(1) from event where event.alt_matter_ID = matter.ID and event.code = 'PRI') AS Pri
-from matter ".$filter_clause. $multi_query ." order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
+event_name.name AS Status,
+status.event_date AS Status_date,
+IFNULL(cli.display_name, cli.name) AS Client,
+clilnk.actor_ref AS ClRef,
+IFNULL(agt.display_name, agt.name) AS Agent,
+agtlnk.actor_ref AS AgtRef,
+classifier.value AS Title,
+classifier.value AS Title,
+CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
+fil.event_date AS Filed,
+fil.detail AS FilNo,
+pub.event_date AS Published,
+pub.detail AS PubNo,
+grt.event_date AS Granted,
+grt.detail AS GrtNo,
+matter.ID,
+matter.container_ID,
+matter.parent_ID,
+matter.responsible,
+matter.dead,
+IF(isnull(matter.container_ID),1,0) AS Ctnr
+FROM matter 
+  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
+    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
+  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
+    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' ". $inventor_filter ." AND inv.ID = invlnk.actor_ID)
+  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
+    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
+  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
+  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
+  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
+  JOIN (event status, event_name) 
+    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
+      LEFT JOIN event e2 ON status.matter_id=e2.matter_id AND status.event_date < e2.event_date  
+  LEFT JOIN (classifier, classifier_type) 
+    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
+WHERE e2.matter_id IS NULL ".$filter_clause. $multi_query ." order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
 
     return $dbStmt->fetchAll();
   }

@@ -427,7 +427,7 @@ $(document).ready(function(){
                    cost: $('#task_cost').val(),
                    fee: $('#task_fee').val(),
                    currency: $('#task_currency').val(),
-                   tmpmatterID: $('#tmpmatterID').val()
+                   //tmpmatterID: $('#tmpmatterID').val()
                   },
            success: function(data){
               if(!data.match(/SQLSTATE/)){
@@ -614,7 +614,6 @@ $done_date_edit = 'editable-done-date';
 
 <div id="add-task-popup" class="listrow">
 <div id="add-task-wrap">
-<input type="hidden" name="tmpmatterID" value="<?=$this->matter_id?>" id="tmpmatterID" />
 <input type="hidden" name="trigger_id" value="" id="trigger_id" />
 <label for="task_name" ><span style="color: #f00;">*</span>Task Name </label>
 <input type="text" name="task_name" id="task_name" value=""/>
