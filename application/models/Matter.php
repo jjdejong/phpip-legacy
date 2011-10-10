@@ -436,9 +436,10 @@ and lnk.display_order=1) as "Inventor 1"',
           }
         }
     }
-    $inventor_filter = 'and lnk.display_order = 1';
+    $inventor_filter = 'AND invlnk.display_order = 1';
     if(array_key_exists('Inventor1', $multi_filter)){
-        $inventor_filter = "HAVING inventor like '".$multi_filter['Inventor1']."%' LIMIT 1";
+        //$inventor_filter = "AND inv.name LIKE '".$multi_filter['Inventor1']."%'";
+        $inventor_filter = '';
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
@@ -450,7 +451,6 @@ IFNULL(cli.display_name, cli.name) AS Client,
 clilnk.actor_ref AS ClRef,
 IFNULL(agt.display_name, agt.name) AS Agent,
 agtlnk.actor_ref AS AgtRef,
-classifier.value AS Title,
 classifier.value AS Title,
 CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
 fil.event_date AS Filed,
@@ -464,12 +464,13 @@ matter.container_ID,
 matter.parent_ID,
 matter.responsible,
 matter.dead,
-IF(isnull(matter.container_ID),1,0) AS Ctnr
+IF(isnull(matter.container_ID),1,0) AS Ctnr,
+1 AS Pri
 FROM matter 
   LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
     ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
   LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
-    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' AND invlnk.display_order=1 AND inv.ID = invlnk.actor_ID)
+    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' ".$inventor_filter." AND inv.ID = invlnk.actor_ID)
   LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
     ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
   LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
@@ -477,7 +478,7 @@ FROM matter
   LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
   JOIN (event status, event_name) 
     ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
-      LEFT JOIN event e2 ON status.matter_id=e2.matter_id AND status.event_date < e2.event_date  
+      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
   LEFT JOIN (classifier, classifier_type) 
     ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
 WHERE e2.matter_id IS NULL
@@ -2167,22 +2168,23 @@ from event where matter_id=".$matter_ID." and code='PRI';";
 /**
  * fetchMatters is used to navigate through filtered matter list
 **/
-  public function fetchMatters($filter_array = array(), $sortField = "caseref, Ctnr desc", $sortDir = "ASC", $multi_filter = array() )
+  public function fetchMatters($filter_array = array(), $sortField = "caseref, container_ID", $sortDir = "ASC", $multi_filter = array() )
   {
     if(empty($filter_array))
         $filter_clause = '';
     else{
-        $filter_clause = "AND 1=1";
-        if($filter_array['value'] && $filter_array['field'])
-	  $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
+        $filter_clause = '';
+        if($filter_array['value'] && $filter_array['field']) {
+	      $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
+	    }
 
-        /*if($filter_array['field'] == 'Ctnr'){
+        if($filter_array['field'] == 'Ctnr'){
           $filter_clause = "AND matter.container_ID IS NULL";
-        }*/
+        }
 
-        /*if($filter_array['field'] == 'Pri'){
+        if($filter_array['field'] == 'Pri'){
           $filter_clause = "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
-        }*/
+        }
     }
 
     $multi_query = '';
@@ -2196,9 +2198,10 @@ from event where matter_id=".$matter_ID." and code='PRI';";
           }
         }
     }
-    $inventor_filter = 'and lnk.display_order = 1';
+    $inventor_filter = 'AND invlnk.display_order = 1';
     if(array_key_exists('Inventor1', $multi_filter)){
-        $inventor_filter = "HAVING inventor like '".$multi_filter['Inventor1']."%' LIMIT 1";
+        //$inventor_filter = "HAVING inv.name LIKE '".$multi_filter['Inventor1']."%'";
+        $inventor_filter = '';
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
@@ -2210,7 +2213,6 @@ IFNULL(cli.display_name, cli.name) AS Client,
 clilnk.actor_ref AS ClRef,
 IFNULL(agt.display_name, agt.name) AS Agent,
 agtlnk.actor_ref AS AgtRef,
-classifier.value AS Title,
 classifier.value AS Title,
 CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
 fil.event_date AS Filed,
@@ -2224,7 +2226,8 @@ matter.container_ID,
 matter.parent_ID,
 matter.responsible,
 matter.dead,
-IF(isnull(matter.container_ID),1,0) AS Ctnr
+IF(isnull(matter.container_ID),1,0) AS Ctnr,
+1 AS Pri
 FROM matter 
   LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
     ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
@@ -2237,7 +2240,7 @@ FROM matter
   LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
   JOIN (event status, event_name) 
     ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
-      LEFT JOIN event e2 ON status.matter_id=e2.matter_id AND status.event_date < e2.event_date  
+      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date  
   LEFT JOIN (classifier, classifier_type) 
     ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
 WHERE e2.matter_id IS NULL ".$filter_clause. $multi_query ." order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
