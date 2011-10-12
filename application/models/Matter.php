@@ -1343,7 +1343,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     $dbSelect = $this->getDbTable()->getAdapter()->select();
     $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref,'-', country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
                             ->joinLeft(array('e' => 'event'), "m.ID=e.matter_ID AND e.code='FIL'", array('e.detail as number', 'e.event_date as filing_date'))
-                            ->where("m.origin IS NULL AND caseref LIKE '".$term."%'");
+                            ->where("m.type_code IS NULL AND caseref LIKE '".$term."%'");
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
   }
 
@@ -1840,8 +1840,8 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
       $db = new Zend_Db_Adapter_Pdo_Mysql(array(
                                  'host' => '127.0.0.1',
-                                 'username' => 'root',
-                                 'password' => 'root12',
+                                 'username' => 'phpip_user',
+                                 'password' => 'phpip_user',
                                  'dbname' => 'information_schema',
                ));
       return $db;
@@ -2092,6 +2092,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     if(empty($data))
       return false;
 
+	$this->getDbTable('Application_Model_DbTable_Matter')->getAdapter()->query("SET NAMES utf8");
     $this->getDbTable('Application_Model_DbTable_Matter')->update($data, array('ID = ?' => $matter_id));
   }
 

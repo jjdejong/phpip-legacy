@@ -103,7 +103,7 @@ $(document).ready(function(){
                       },
                 success: function(data){
                     if( !data.match(/SQLSTATE/) ){
-                    alert("Classifier added Successfully!");
+                    //alert("Classifier added Successfully!");
                     $('#add-classifier-popup').css('display', 'none');
                     $('#facade').css('display', 'none');
                     $(location).attr("href", '/matter/view/id/'+$('#this-matter-id').val());
