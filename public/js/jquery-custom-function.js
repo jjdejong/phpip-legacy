@@ -47,6 +47,23 @@ $(document).ready(function(){
         $(location).attr('href', '/matter');
     }); */
 
+/*
+   $('#matter-search').change(function(){
+      var ref = $('#matter-search').val();
+      var url = '/matter/filter/Ref/'+ref;
+      $(location).attr('href', url);
+   });
+*/
+   $('#matter-search').keypress(function(event){
+	var keycode = (event.keyCode ? event.keyCode : event.which);
+ 	if(keycode == '13'){
+            var ref = $('#matter-search').val();
+            var url = '/matter/filter/Ref/'+ref;
+            $(location).attr('href', url);
+	}
+   });
+
+
    $('#matter-ref-search').click(function(){
       var ref = $('#matter-search').val();
       var url = '/matter/filter/Ref/'+ref;

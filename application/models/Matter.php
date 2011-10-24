@@ -428,7 +428,7 @@ and lnk.display_order=1) as "Inventor 1"',
     $multi_query = '';
     if(!empty($multi_filter)){
         foreach($multi_filter as $key => $value){
-          if($value != '' && $key != 'display' && $key != 'display_style'){
+         if($value != '' && $key != 'display' && $key != 'display_style'){
             if($multi_query == '')
                 $multi_query = " HAVING ". $key." LIKE '".$value."%'";
             else
@@ -1142,8 +1142,9 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
                             ->joinLeft(array('as' => 'actor'), 'a.site_ID = as.ID', 'as.name as site_name')
                             ->joinLeft(array('ar' => 'actor_role'), 'a.default_role = ar.code', 'ar.name as drole_name')
                             ->joinLeft(array('c' => 'country'), 'a.country = c.iso', 'c.name as country_name')
-                            ->joinLeft(array('cm' => 'country'), 'a.country_mailing = cm.iso', 'c.name as country_mailing')
-                            ->joinLeft(array('cb' => 'country'), 'a.country_billing = cb.iso', 'c.name as country_billing')
+                            ->joinLeft(array('cm' => 'country'), 'a.country_mailing = cm.iso', 'cm.name as country_mailing')
+                            ->joinLeft(array('cb' => 'country'), 'a.country_billing = cb.iso', 'cb.name as country_billing')
+                            ->joinLeft(array('na' => 'country'), 'a.nationality = na.iso', 'na.name as nationality_name')
                             ->where('a.ID = ?', $actor_id);
     return $this->_dbTable->getAdapter()->fetchRow($selectQuery);
   }
@@ -1838,10 +1839,13 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 **/
   public function getInfoDb()
   {
+      $this->setDbTable('Application_Model_DbTable_Matter');
+      $db_detail = $this->_dbTable->getAdapter()->getConfig(); 
+      
       $db = new Zend_Db_Adapter_Pdo_Mysql(array(
                                  'host' => '127.0.0.1',
-                                 'username' => 'phpip_user',
-                                 'password' => 'phpip_user',
+                                 'username' => $db_detail["username"],
+                                 'password' => $db_detail["password"],
                                  'dbname' => 'information_schema',
                ));
       return $db;
@@ -2169,15 +2173,22 @@ from event where matter_id=".$matter_ID." and code='PRI';";
 /**
  * fetchMatters is used to navigate through filtered matter list
 **/
-  public function fetchMatters($filter_array = array(), $sortField = "caseref, container_ID", $sortDir = "ASC", $multi_filter = array() )
+  public function fetchMatters($filter_array = array(), $sortField = "caseref, container_ID", $sortDir = "ASC", $multi_filter = array(),  $matter_category_display_type = false)
   {
+
+    if ($matter_category_display_type)
+        $dsiplay_with = " where display_with='$matter_category_display_type'";
+    else
+        $dsiplay_with = "";
+
+
+
     if(empty($filter_array))
-        $filter_clause = '';
+        $filter_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
     else{
-        $filter_clause = '';
-        if($filter_array['value'] && $filter_array['field']) {
-	      $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
-	    }
+        $filter_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
+        if($filter_array['value'] && $filter_array['field']) 
+	  $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
 
         if($filter_array['field'] == 'Ctnr'){
           $filter_clause = "AND matter.container_ID IS NULL";
@@ -2188,10 +2199,25 @@ from event where matter_id=".$matter_ID." and code='PRI';";
         }
     }
 
+
+    if($sortField == 'Ref'){
+      if($sortDir == 'desc'){
+        $sortField = "caseref desc, container_id, origin, country, idx";
+        $sortDir = '';
+      }
+      if($sortDir == 'asc'){
+        $sortField = "caseref, container_id, origin, country, idx";
+        $sortDir = '';
+      }
+    }
+
+    if($sortField == "")
+        $sortField = "caseref, container_ID";
+
     $multi_query = '';
     if(!empty($multi_filter)){
         foreach($multi_filter as $key => $value){
-          if($value != ''){
+          if($value != ''  && $key != 'display' && $key != 'display_style'){
             if($multi_query == '')
                 $multi_query = " HAVING ". $key." LIKE '".$value."%'";
             else
@@ -2201,11 +2227,53 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     }
     $inventor_filter = 'AND invlnk.display_order = 1';
     if(array_key_exists('Inventor1', $multi_filter)){
-        //$inventor_filter = "HAVING inv.name LIKE '".$multi_filter['Inventor1']."%'";
-        $inventor_filter = '';
+        $inventor_filter = "HAVING inv.name LIKE '".$multi_filter['Inventor1']."%'";
+        //$inventor_filter = '';
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
+    $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
+matter.category_code AS Cat,
+event_name.name AS Status,
+status.event_date AS Status_date,
+IFNULL(cli.display_name, cli.name) AS Client,
+clilnk.actor_ref AS ClRef,
+IFNULL(agt.display_name, agt.name) AS Agent,
+agtlnk.actor_ref AS AgtRef,
+classifier.value AS Title,
+CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
+fil.event_date AS Filed,
+fil.detail AS FilNo,
+pub.event_date AS Published,
+pub.detail AS PubNo,
+grt.event_date AS Granted,
+grt.detail AS GrtNo,
+matter.ID,
+matter.container_ID,
+matter.parent_ID,
+matter.responsible,
+matter.dead,
+IF(isnull(matter.container_ID),1,0) AS Ctnr,
+1 AS Pri
+FROM matter 
+  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
+    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
+  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
+    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' ".$inventor_filter." AND inv.ID = invlnk.actor_ID)
+  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
+    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
+  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
+  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
+  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
+  JOIN (event status, event_name) 
+    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
+      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
+  LEFT JOIN (classifier, classifier_type) 
+    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
+WHERE e2.matter_id IS NULL
+".$filter_clause ." ". $multi_query . " order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
+
+    /*
     $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.category_code AS Cat,
 event_name.name AS Status,
@@ -2245,7 +2313,7 @@ FROM matter
   LEFT JOIN (classifier, classifier_type) 
     ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
 WHERE e2.matter_id IS NULL ".$filter_clause. $multi_query ." order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
-
+*/
     return $dbStmt->fetchAll();
   }
 }

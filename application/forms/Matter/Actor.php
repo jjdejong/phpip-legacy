@@ -71,6 +71,13 @@ class Application_Form_Matter_Actor extends Zend_Form
                     'value' => '1'
                 ));
 
+         $this->addElement('text', 'nationality', array(
+                    'label' => '',
+                    'filters' => array('StringTrim'),
+                    'class' => 'actor-input'
+                ));
+
+
          $this->addElement('radio', 'small_entity', array(
                     'label' => '',
                     'filters' => array('StringTrim'),

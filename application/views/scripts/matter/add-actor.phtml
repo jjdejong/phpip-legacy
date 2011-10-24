@@ -146,6 +146,36 @@ $(document).ready(function(){
             return false;
         }
     });
+
+    $('#nationality').autocomplete({
+        minLength: 1,
+        source: "/matter/get-country-codes/",
+        focus: function( event, ui ) {
+            return false;
+        },
+        autoFocus: true,
+        select: function( event, ui ) {
+            $( "#nationality" ).val( ui.item.value );
+            $( "#nationality-code" ).val( ui.item.id );
+                return false;
+        },
+        change: function( event, ui ){
+            valid=true;
+            if ( !ui.item ) {
+                valid=false;
+            }
+            if ( !valid ) {
+                // remove invalid value, as it didn't match anything
+                $(this).val( "" );
+                $( "#nationality-code" ).val( "" );
+                $(this).data( "autocomplete" ).term = "";
+                return false;
+            }
+            return false;
+        }
+    });
+
+
     $('#country').autocomplete({
         minLength: 1,
         source: "/matter/get-country-codes/",
@@ -282,6 +312,7 @@ $(document).ready(function(){
                     phy_person: $('input[name=phy_person]').val(),
                     small_entity: $('#small_entity').val(),
                     address: $('#address').val(),
+                    nationality: $('#nationality-code').val(),
                     country: $('#country-code').val(),
                     address_mailing: $('#address_mailing').val(),
                     country_mailing: $('#country_mailing-code').val(),
@@ -355,6 +386,8 @@ Create new Actor <span class="close-button">X</span>
 <?php echo $this->actorForm->getElement('WorkSite');?>
 <label for="phy_person" title="<?=$this->actorComments['phy_person']?>" >Physical Person</label>
 <?php echo $this->actorForm->getElement('phy_person');?>
+<label for="nationality" title="<?=$this->actorComments['nationality']?>" >Nationality</label>
+<?php echo $this->actorForm->getElement('nationality');?>
 <label for="small_entity" title="<?=$this->actorComments['small_entity']?>" >Small Entity</label>
 <?php echo $this->actorForm->getElement('small_entity');?>
 </fieldset>
@@ -395,6 +428,7 @@ Create new Actor <span class="close-button">X</span>
 <input type="hidden" value="" id="parent_company-id" name="parent_company-id"/>
 <input type="hidden" value="" id="WorkSite-id" name="WorkSite-id"/>
 <input type="hidden" value="" id="country-code" name="country-code"/>
+<input type="hidden" value="" id="nationality-code" name="country-code"/>
 <input type="hidden" value="" id="country_mailing-code" name="country_mailing-code"/>
 <input type="hidden" value="" id="country_billing-code" name="country_billing-code"/>
 <input type="hidden" value="<?=$this->default_role_code?>" id="default_role-code" name="default_role-code"/>

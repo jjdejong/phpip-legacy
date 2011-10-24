@@ -361,6 +361,7 @@ $(document).ready(function(){
         ren_left = Math.round($(window).width()/2) - Math.round($('#add-task-popup').width()/2);
         $('#add-task-popup').css('left', ren_left);
         $('#add-task-popup').css('display', 'block');
+        $('#task_name').focus();
     });
 
     $('#add-task-cancel').click(function(){

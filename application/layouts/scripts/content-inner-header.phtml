@@ -36,8 +36,8 @@ $action = strtolower($action);
 <?php if($module == 'default' && $controller == 'matter' && $action == 'view'){ ?>
 <div id="inner-header-navigation">
 <div id="matter-head-navigation">
-<span title="previous matter" class="matter-navigation" id="<?php echo ((int)$this->matter_index)-1; ?>" ><img src="/images/prev.png" alt="prev"  id="prev" /></span>
-<span title="next matter" class="matter-navigation" id="<?php echo ((int)$this->matter_index)+1; ?>" ><img src="/images/next.png" alt="next" id="next" /></span>
+<span title="previous matter" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)-1;}else{echo "matter-previous-" . $this->matter_id;} ?>" ><img src="/images/prev.png" alt="prev"  id="prev" /></span>
+<span title="next matter" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)+1;}else{echo "matter-next-" . $this->matter_id;} ?>" ><img src="/images/next.png" alt="next" id="next" /></span>
 </div>
 <div id="inner-header-search">
 <input id="matter-search" type="text" name="matter_search" />

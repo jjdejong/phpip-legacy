@@ -1,10 +1,22 @@
 <script type="text/javascript" src="/js/jquery-extended/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" >
 $(document).ready(function(){
-    $(".row-tab").click(function(event){
+/*    $(".row-tab").click(function(event){
         var id_array = $(this).attr('id').split('-');
         $(location).attr('href','/matter/view/id/' + id_array[2]);
+         var url = '/matter/view/id/'+id_array[2];
+         window.open(url);
     });
+*/
+     $(".row-tab").click(function(event){
+        var id_array = $(this).attr('id').split('-');
+        var rid = $(this).attr('rid');
+        var url = '/matter/view/id/'+id_array[2]+'/rid/'+rid;
+        window.open(url);
+//        $(location).attr('href','/matter/view/id/' + id_array[2]);
+     });
+
+
     <?if($this->display_style){?>
           $('.display_actor,.display_status').css('display','none');
               $('.display_status,').css('display','inline-block');

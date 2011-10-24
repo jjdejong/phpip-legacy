@@ -38,6 +38,8 @@ class MatterController extends Zend_Controller_Action
     $mfs->sort_field = $sort_field;
     $mfs->sort_dir = $sort_dir;
     $mfs->multi_sort = array();
+    $mfs->display_style = $this->view->display_style;
+    $mfs->category_display = $this->view->category_display;
 
     $matterModel = new Application_Model_Matter();
     $paginator = $matterModel->paginateMatters($filter_array, $sort_field, $sort_dir, array(), $this->view->category_display);
@@ -117,8 +119,11 @@ class MatterController extends Zend_Controller_Action
 **/
   public function viewAction()
   {
-    $matter_id = $this->_getParam('id',1);
-    $matter_index = $this->_getParam('rid',1);
+    $matter_id = $this->_getParam('id',0);
+    #$matter_index = $this->_getParam('rid',0);
+    #$matter_id = $this->_getParam('id');
+    $matter_index = $this->_getParam('rid');
+
 
     $matterModel = new Application_Model_Matter();
     $this->view->matter_record = $matterModel->getMatter($matter_id);
@@ -722,6 +727,11 @@ class MatterController extends Zend_Controller_Action
       return;
 
     $post_data = $this->getRequest()->getPost();
+
+    
+    $date = explode("/",$post_data[due_date]);
+    $post_data[due_date] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
+
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->addTaskToEvent($post_data);
 
@@ -743,6 +753,11 @@ class MatterController extends Zend_Controller_Action
       return;
 
     $post_data = $this->getRequest()->getPost();
+
+    
+    $date = explode("/",$post_data[event_date]);
+    $post_data[event_date] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
+
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->addEvent($post_data);
 
@@ -1555,14 +1570,31 @@ class MatterController extends Zend_Controller_Action
       $sort_dir = $mfs->sort_dir;
       $post_data = $mfs->multi_sort;
 
+
       $matterModel = new Application_Model_Matter();
-      $matters = $matterModel->fetchMatters($filter_array, $sort_field, $sort_dir, $post_data);
+      $matters = $matterModel->fetchMatters($filter_array, $sort_field, $sort_dir, $post_data, $mfs->category_display);
       $mcount = count($matters);
+
+      if(preg_match("/matter/",$rid)){
+          $rid_array = explode("-",$rid);
+          $position = 0;
+      
+          foreach($matters as $matter){
+              if ($matter['ID'] == $rid_array[2]){
+                  if($rid_array[1] == "previous")
+                      $rid = $position - 1; 
+                  if($rid_array[1] == "next")
+                      $rid = $position + 1; 
+              }
+              $position++;
+          }
+      }
+
       if($mcount > 0)
          $rid = $rid % $mcount;
 
       if($rid < 0)
-         $rid = $mcount;
+         $rid = $mcount-1;
 
       $matter_id = $matters[$rid]['ID'];
 

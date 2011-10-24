@@ -179,6 +179,52 @@ var dvalue = '';
            select: true
     });
 
+    $('.nationality-editable').editable('/matter/update-actor', {
+        type: 'autocomplete',
+        onblur: 'submit',
+        autocomplete: {
+          minLength : 0,
+          source : "/matter/get-country-codes",
+          autoFocus: true,
+          select: function( event, ui ) {
+            $(this).val(ui.item.value);
+            fvalue = ui.item.id;
+            dvalue = ui.item.value;
+            var valid = true;
+            alert(ui);
+            if ( !ui.item ) {
+              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
+              valid = false;
+              ui.item.each(function(value) {
+                if ( value.match( matcher ) ) {
+                  valid = true;
+                  return true;
+                }
+              });
+            }
+            if ( !valid ) {
+              // remove invalid value, as it didn't match anything
+              $( this ).val( "" );
+              fvalue = "";
+              dvalue = "";
+              input.data( "autocomplete" ).term = "";
+              return false;
+            }
+            return true;
+          }
+        },
+        submitdata: function(value,settings){
+             var actor_id = $('#actor-id').val();
+             var field_name = $(this).attr('id');
+             return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
+           },
+           placeholder: '...',
+           indicator : '<img src="/images/indicator.gif" />',
+           tooltip: 'Click to edit...',
+           select: true
+    });
+
+
     $('.country-editable').editable('/matter/update-actor', {
         type: 'autocomplete',
         onblur: 'submit',
@@ -332,6 +378,8 @@ Actor Information  <span class="close-button">X</span>
 <span class="actor-input auto-editable" id="site_ID" ><?=$this->actor['site_name']?></span>
 <label for="phy_person" title="<?=$this->actorComments['phy_person']?>" >Physical person</label>
 <span class="actor-input opt-editable" id="phy_person" ><input type="radio" name="phy_person" value="1" <?php echo ($this->actor['phy_person'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;<input type="radio" name="phy_person" value="0" <?php echo ($this->actor['phy_person'])? '' :'checked="checked"'; ?> />NO</span>
+<label for="nationality" title="<?=$this->actorComments['nationality']?>" >Nationality</label>
+<span class="actor-input country-editable" id="nationality" ><?=$this->actor['nationality_name']?></span>
 <label for="small_entity" title="<?=$this->actorComments['small_entity']?>" >Small entity</label>
 <span class="actor-input opt-editable" id="small_entity"><input type="radio" name="small_entity" value="1" <?php echo ($this->actor['small_entity'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;<input type="radio" name="small_entity" value="0" <?php echo ($this->actor['small_entity'])? '' :'checked="checked"'; ?> />NO</span>
 </fieldset>
@@ -339,7 +387,7 @@ Actor Information  <span class="close-button">X</span>
 <legend >Contact details</legend>
 <label for="address" title="<?=$this->actorComments['address']?>" >Address</label>
 <span class="actor-input teditable" id="address" ><?=nl2br(htmlentities($this->actor['address']))?></span>
-<label for="country" title="<?=$this->actorComments['country']?>" >country</label>
+<label for="country" title="<?=$this->actorComments['country']?>" >Country</label>
 <span class="actor-input country-editable" id="country" ><?=$this->actor['country_name']?></span>
 <label for="address_mailing" title="<?=$this->actorComments['address_mailing']?>" >Address mailing</label>
 <span class="actor-input teditable" id="address_mailing" ><?=nl2br(htmlentities($this->actor['address_mailing']))?></span>
