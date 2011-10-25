@@ -445,6 +445,7 @@ and lnk.display_order=1) as "Inventor 1"',
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.category_code AS Cat,
+matter.origin,
 event_name.name AS Status,
 status.event_date AS Status_date,
 IFNULL(cli.display_name, cli.name) AS Client,
@@ -1541,7 +1542,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
    if($flag)
      $where = "(t.assigned_to='".$user."') AND t.trigger_ID = e.ID AND m.ID = e.matter_ID and t.code = en.code AND t.done=0 AND m.dead=0".$ren_condition;
    else
-     $where = "(ifnull(t.assigned_to, m.responsible)='".$user."' OR a.login='".$user."') AND t.trigger_ID = e.ID AND m.ID = e.matter_ID and t.code = en.code AND t.done=0 AND m.dead=0 AND t.due_date < DATE_ADD(NOW(), INTERVAL 1 YEAR)".$ren_condition;
+     $where = "'".$user."' IN(t.assigned_to, m.responsible, a.login) AND t.trigger_ID = e.ID AND m.ID = e.matter_ID and t.code = en.code AND t.done=0 AND m.dead=0 AND t.due_date < DATE_ADD(NOW(), INTERVAL 1 YEAR)".$ren_condition;
      
 
       $this->setDbTable('Application_Model_DbTable_Task');
@@ -2234,6 +2235,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.category_code AS Cat,
+matter.origin,
 event_name.name AS Status,
 status.event_date AS Status_date,
 IFNULL(cli.display_name, cli.name) AS Client,

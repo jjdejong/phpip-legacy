@@ -112,7 +112,7 @@ $(document).ready(function(){
                       //  alert("Matter added!");
                     $('#add-matter-popup').css('display', 'none');
                     $('#facade').css('display', 'none');
-                    $(location).attr("href", '/matter/filter/Ref/'+ $('#matter-caseref-id').val()+'/Status/entered');
+                    $(location).attr("href", '/matter/filter/Ref/' + $('#matter-caseref-id').val() + '/origin/' + $('#matter-origin-id').val());
                    }else
                       alert("Adding matters failed");
                 }
@@ -160,7 +160,7 @@ $(document).ready(function(){
       var alt_id = 'alt-entered-date-'+aid;
       $(this).datepicker({
         showOn: 'focus',
-        minDate: +0,
+        //minDate: +0,
         dateFormat: 'dd/mm/yy',
         defaultDate: '<?php echo date('d/m/Y');?>',
         altField: '#'+alt_id,

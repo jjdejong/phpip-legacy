@@ -3,7 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $('#matter-country').autocomplete({
-        minLength: 1,
+        minLength: 2,
         source: "/matter/get-country-codes",
         focus: function(event, ui){
             return false;
@@ -30,7 +30,7 @@ $(document).ready(function(){
         }
     });
     $('#matter-origin').autocomplete({
-        minLength: 1,
+        minLength: 2,
         source: "/matter/get-country-codes",
         focus: function(event, ui){
             return false;
@@ -85,7 +85,7 @@ $(document).ready(function(){
     });
 */
     $('#matter-caseref').autocomplete({
-        minLength: 1,
+        minLength: 3,
         source: "/matter/get-matter-caseref",
         autoFocus: true,
         focus: function(event, ui){
@@ -169,7 +169,7 @@ $(document).ready(function(){
     });
 */
     $('#matter-parent').autocomplete({
-        minLength: 1,
+        minLength: 3,
         source: "/matter/get-all-refers",
         autoFocus: true,
         focus: function(event, ui){
@@ -196,7 +196,7 @@ $(document).ready(function(){
         }
     });
     $('#matter-container').autocomplete({
-        minLength: 1,
+        minLength: 3,
         source: "/matter/get-container-refers/caseref/<?=$this->matter['caseref']?>/matter_id/<?=$this->matter['ID']?>",
         autoFocus: true,
         focus: function(event, ui){
@@ -286,7 +286,7 @@ $(document).ready(function(){
             if($('#matter-parent').val() == '')
                $('#matter-parent-id').val('');
 
-            if($('#matter-contianer').val() == '')
+            if($('#matter-container').val() == '')
                $('#matter-container-id').val('');
 
             $.ajax({

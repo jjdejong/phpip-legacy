@@ -187,6 +187,7 @@ function getFilterUrl()
          var pubno = $('#filter-pubno').val();
          var granted = $('#filter-granted').val();
          var grtno = $('#filter-grtno').val();
+         var origin = $('#filter-origin').val();
 
 
 
@@ -226,6 +227,8 @@ function getFilterUrl()
             url = url + '/Granted/'+granted;
          if(grtno != '')
             url = url + '/GrtNo/'+grtno;
+         if(origin != '')
+            url = url + '/origin/'+origin;
          
         
          if(responsible == 1)
@@ -508,6 +511,10 @@ if(isset($this->containers)){
 <br /><input type="text" name="filter-grtno" id="filter-grtno" value="<?=$this->filters['GrtNo']?>" size=8 class="filter-input" />
 </div>
 
+<div class="column column-cat"><a class="sorting-dirs" id="origin-asc">Origin</a><span class="sorting-img" id="origin-sort">&nbsp;</span>
+<br /><input type="hidden" name="filter-origin" id="filter-origin" value="<?=$this->filters['origin']?>" size=8 class="filter-input" />
+</div>
+
 <!--div class="display_actor display_status column column-ctnr-pri"><a class="sorting-dirs" id="responsible-asc">Responsible</a><span class="sorting-img" id="responsible-sort">&nbsp;</span></div-->
 
 <!-- <div class="column column-ctnr-pri"><a style="color:white;cursor:pointer;" id="matters-ctnr">Ctnr</a></div> -->
@@ -542,6 +549,7 @@ foreach($this->paginator as $matter):?>
 <div class="display_status column column-pub-no" title="<?=$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>
 <div class="display_status column column-date" title="<?=$matter['Granted']?>"><?php echo $matter['Granted'];?></div>
 <div class="display_status column column-pub-no" title="<?=$matter['GrtNo']?>"><?php echo substr($matter['GrtNo'], 0, 10);?></div>
+<!-- <div class="column column-cat"><?php echo $matter['origin'];?></div> -->
 <!-- <div class="column column-ctnr-pri"><?php echo $matter['Ctnr'];?></div> -->
 <!-- div class="column column-ctnr-pri"><?php echo $matter['responsible'];?></div -->
 </div>

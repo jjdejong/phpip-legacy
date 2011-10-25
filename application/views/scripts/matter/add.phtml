@@ -3,7 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
     $('#matter-country').autocomplete({
-        minLength: 1,
+        minLength: 2,
         source: "/matter/get-country-codes",
         focus: function(event, ui){
             return false;
@@ -29,7 +29,7 @@ $(document).ready(function(){
         }
     });
     $('#matter-origin').autocomplete({
-        minLength: 1,
+        minLength: 2,
         source: "/matter/get-country-codes",
         focus: function(event, ui){
             return false;
@@ -81,7 +81,7 @@ $(document).ready(function(){
         }
     });
     $('#matter-caseref').autocomplete({
-        minLength: 1,
+        minLength: 3,
         source: "/matter/get-matter-caseref",
         autoFocus: true,
         focus: function(event, ui){

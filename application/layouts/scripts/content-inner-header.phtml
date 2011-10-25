@@ -39,9 +39,9 @@ $action = strtolower($action);
 <span title="previous matter" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)-1;}else{echo "matter-previous-" . $this->matter_id;} ?>" ><img src="/images/prev.png" alt="prev"  id="prev" /></span>
 <span title="next matter" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)+1;}else{echo "matter-next-" . $this->matter_id;} ?>" ><img src="/images/next.png" alt="next" id="next" /></span>
 </div>
+    
 <div id="inner-header-search">
 <input id="matter-search" type="text" name="matter_search" />
-<!--<a href="/contact/group/search" title="Search"><div class="icon-search"></div></a>-->
 <select style="height:20px;width:100px;" id="matter-option" name="search_field">
   <option value="caseref" selected>caseref</option>
 </select>
@@ -52,6 +52,13 @@ $action = strtolower($action);
 
 <?php if($module == 'default' && $controller == 'matter' && ($action == 'index' || $action == 'filter')){ ?>
 <div style="float:right">
+<div id="inner-header-search">
+<input id="matter-search" type="text" name="matter_search" />
+<select style="height:20px;width:100px;" id="matter-option" name="search_field">
+    <option value="caseref" selected>caseref</option>
+</select>
+<input id="matter-ref-search" type="button" name="search" value="search" class="button-style"/>
+</div>
 <input type="button" id="clear-matter-filters" name="clear-filters" class="button-style" value="Clear filters" />
 </div>
 <?php } ?>
