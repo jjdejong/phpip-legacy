@@ -454,7 +454,7 @@ and lnk.display_order=1) as "Inventor 1"',
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
+    $dbStmt = $this->_dbTable->getAdapter()->query("select distinct concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.country AS country,
 matter.category_code AS Cat,
 matter.origin,
@@ -489,7 +489,7 @@ FROM matter
   LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
   LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
   LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
-  JOIN (event status, event_name) 
+  LEFT JOIN (event status, event_name) 
     ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
       LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
   LEFT JOIN (classifier, classifier_type) 
@@ -1082,7 +1082,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   }
 
 /**
- * retrieves all recordes from actor_role filtered by search term
+ * retrieves all records from actor_role filtered by search term
 **/
   public function getActorRoles($term = '')
   {
@@ -1910,7 +1910,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     $container_ID = $this->getMatterContainer($matter_ID);
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $query = "insert into matter_actor_lnk (matter_id, actor_id, display_order, role, shared, actor_ref, company_id, rate, date)
+    $query = "replace into matter_actor_lnk (matter_id, actor_id, display_order, role, shared, actor_ref, company_id, rate, date)
 select ". $clone_ID .", actor_id, display_order, role, shared, actor_ref, company_id, rate, date
 from matter_actor_lnk
 where matter_id=".$matter_ID . " or (matter_id=".$container_ID." and shared=1)";
@@ -1927,7 +1927,7 @@ where matter_id=".$matter_ID . " or (matter_id=".$container_ID." and shared=1)";
       return false;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $query = "insert into matter_actor_lnk (matter_id, actor_id, display_order, role, shared, actor_ref, company_id, rate, date)
+    $query = "replace into matter_actor_lnk (matter_id, actor_id, display_order, role, shared, actor_ref, company_id, rate, date)
 select ". $child_ID .", actor_id, display_order, role, shared, actor_ref, company_id, rate, date
 from matter_actor_lnk
 where matter_id=".$matter_ID;  //. " or matter_id=(select container_id from matter where id=".$matter_ID.")) and shared=0";
@@ -2296,7 +2296,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
+    $dbStmt = $this->_dbTable->getAdapter()->query("select distinct concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.category_code AS Cat,
 matter.country AS country,
 matter.origin,
@@ -2331,7 +2331,7 @@ FROM matter
   LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
   LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
   LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
-  JOIN (event status, event_name) 
+  LEFT JOIN (event status, event_name) 
     ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
       LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
   LEFT JOIN (classifier, classifier_type) 

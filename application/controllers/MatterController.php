@@ -470,9 +470,10 @@ class MatterController extends Zend_Controller_Action
       $data['matter_ID'] = $container_id;
       if($role_shareable == 0)
         $data['shared'] = 1;
-    }
-    else
+    } else {
       $data['matter_ID'] = $matter_id;
+      $data['shared'] = 0;
+	}
 
     $actor_info = $matterModel->getActorInfo($data['actor_ID']);
     $data['company_ID'] = $actor_info['company_ID'];
@@ -1021,7 +1022,7 @@ class MatterController extends Zend_Controller_Action
     $mfs->sort_dir = $sort_dir;
     $mfs->multi_sort = $post_data;
 
-    $this->view->responsible = $post_data[responsible];
+    $this->view->responsible = $post_data['responsible'];
 
     $matterModel = new Application_Model_Matter();
     $paginator = $matterModel->paginateMatters($filter_array, $sort_field, $sort_dir, $post_data,$category_display);
