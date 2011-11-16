@@ -660,9 +660,12 @@ class MatterController extends Zend_Controller_Action
     if($field_name == 'event_date')
         $data["$field_name"] = new Zend_Db_Expr("STR_TO_DATE('$field_value', '%d/%m/%Y' )");
 
-    if($field_name == 'alt_matter_ID')
-        $data["$field_name"] = $post_data['alt_matter'];
-
+    if($field_name == 'alt_matter_ID') {
+        if($post_data['alt_matter'] == "")
+            $data["$field_name"] = NULL;
+        else
+            $data["$field_name"] = $post_data['alt_matter'];
+    }
     $matterModel = new Application_Model_Matter();
     $matterModel->saveEventDetails($event_id, $data);
 
@@ -731,6 +734,20 @@ class MatterController extends Zend_Controller_Action
     
     $date = explode("/",$post_data[due_date]);
     $post_data[due_date] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
+
+
+    if(!$post_data[detail])
+        $post_data[detail] = NULL;
+    if($post_data[time_spent] == "")
+        $post_data[time_spent] = NULL;
+    if($post_data[notes] == "")
+        $post_data[notes] = NULL;
+    if($post_data[cost] == "")
+        $post_data[cost] = NULL;
+    if($post_data[fee] == "")
+        $post_data[fee] = NULL;
+    if($post_data[currency] == "")
+        $post_data[currency] = NULL;
 
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->addTaskToEvent($post_data);
@@ -1071,6 +1088,8 @@ class MatterController extends Zend_Controller_Action
                 unset($post_data['site_ID']);
             if($post_data['display_name'] == '')
                 unset($post_data['display_name']);
+            if($post_data['nationality'] == '')
+                $post_data['nationality'] = NULL;
 
             $actor_id = $matterModel->addActor($post_data);
           if($actor_id){
@@ -1408,6 +1427,23 @@ class MatterController extends Zend_Controller_Action
         echo $result;
     }
   }
+
+/**
+ * show Actor Used in details
+**/
+  public function actorUsedInAction()
+  {
+    $this->_helper->layout->disableLayout();
+    if($this->getRequest()->isPost()){
+        $actor_id = $this->_getParam('aid');
+        $matterModel = new Application_Model_Matter();
+        $this->view->matter_dependencies = $matterModel->getActorMatterDependencies($actor_id);
+        $this->view->other_actor_dependencies = $matterModel->getActorOtherActorDependencies($actor_id);
+    }
+  }
+
+
+
 
 /**
  * navigate through actors from actor view page

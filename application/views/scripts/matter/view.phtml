@@ -732,9 +732,17 @@ if(count($this->matter_actors))
 <div class="listrow" style="width:457px;display:inline-block;">
 <div class="status-row" id="MatterStatus"><span class="status-col-name">Status</span><span class="status-col-date">Date</span><span class="status-col-number" >Number</span></div>
 <div class="list-matter-block-info" style="width:97%" >
-<?php foreach($this->matter_events as $event): ?> 
-<div class="status-row"><span class="status-col-name"><?=$event['name']?></span><span class="status-col-date"><?=$event['event_date']?></span><span class="status-col-number" ><? if($event['alt_matter_ID'] !=  ""){ ?><a href="/matter/view/id/<?=$event['alt_matter_ID']?>"><?=$event['detail']?></a><?} else {?><?=$event['detail']?><?}?></span></div>
+
+<?php foreach($this->matter_events as $event):
+    if ($this->matter_record[0]['origin'] == 'EP') $CC = 'EP';
+    else $CC = $this->matter_record[0]['country'];
+    $country_code = $this->matter_record[0]['country'];
+    $removethese = array("/^$country_code/",'/ /', '/,/', '/-/', '/\//');
+    //print_r($removethese);
+    $pubno = preg_replace($removethese, '', $event['detail']);?> 
+<div class="status-row"><span class="status-col-name"><?=$event['name']?></span><span class="status-col-date"><?=$event['event_date']?></span><span class="status-col-number" ><? if($event['alt_matter_ID'] !=  ""){ ?><a href="/matter/view/id/<?=$event['alt_matter_ID']?>"><?=$event['detail']?></a><?} else if($event['code'] == 'PUB' || $event['code'] == 'GRT'){ ?><a href="http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=<?=$CC?>&NR=<?=$pubno?>" target="_blank"><?=$event['detail']?></a><?} else {?><?=$event['detail']?><?}?></span></div>
 <?php endforeach; ?>
+
 </div>
 
 </div>

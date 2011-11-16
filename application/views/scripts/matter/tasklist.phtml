@@ -93,7 +93,7 @@ vertical-align: top;
     cursor: help;
 }
 #add-task-popup{
-  width: 530px;
+  width: 500px;
   z-index: 101;
   height: auto;
   top: 200px;
@@ -432,7 +432,7 @@ $(document).ready(function(){
                   },
            success: function(data){
               if(!data.match(/SQLSTATE/)){
-                  alert(data);
+                  //alert(data);
                   $.ajax({
                     type: "POST",
                     url: "/matter/tasklist/id/<?=$this->matter_id?>",

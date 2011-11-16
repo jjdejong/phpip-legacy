@@ -389,7 +389,7 @@ and lnk.display_order=1) as "Inventor 1"',
 /**
  * retrieves paginated list of matter with specified filters
 **/
-  public function paginateMatters($filter_array = array(), $sortField = "caseref, container_id, origin, country, idx", $sortDir = "", $multi_filter = array(), $matter_category_display_type = false)
+  public function paginateMatters($filter_array = array(), $sortField = "caseref, container_id, origin, country, matter.type_code, idx", $sortDir = "", $multi_filter = array(), $matter_category_display_type = false)
   {
 
     if ($matter_category_display_type)
@@ -414,16 +414,27 @@ and lnk.display_order=1) as "Inventor 1"',
         }
     }
 
-    if($sortField == 'Ref'){
+    if($sortField == 'caseref'){
       if($sortDir == 'desc'){
-        $sortField = "caseref desc, container_id, origin, country, idx";
+        $sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
         $sortDir = '';
       }
       if($sortDir == 'asc'){
-        $sortField = "caseref, container_id, origin, country, idx";
+        $sortField = "caseref, container_id, origin, country, matter.type_code, idx";
         $sortDir = '';
       }
     }
+    if($sortField == 'Ref'){
+      if($sortDir == 'desc'){
+        $sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
+        $sortDir = '';
+      }
+      if($sortDir == 'asc'){
+        $sortField = "caseref, container_id, origin, country, matter.type_code, idx";
+        $sortDir = '';
+      }
+    }
+
 
     $multi_query = '';
     if(!empty($multi_filter)){
@@ -444,6 +455,7 @@ and lnk.display_order=1) as "Inventor 1"',
 
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
+matter.country AS country,
 matter.category_code AS Cat,
 matter.origin,
 event_name.name AS Status,
@@ -1973,6 +1985,47 @@ from event where matter_id=".$matter_ID." and code='PRI';";
      }
   }
 
+
+/**
+ * actor's Matter Dependencies
+**/
+  public function getActorMatterDependencies($actor_id = null)
+  {
+      if(!$actor_id)
+        return;
+
+     $this->setDbTable('Application_Model_DbTable_Actor');
+     $matter_dependencies_stmt = $this->_dbTable->getAdapter()->query("select matter.id,
+          concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),'')) AS UID,
+          actor_role.name as role
+          from  matter, matter_actor_lnk, actor_role
+          where matter_actor_lnk.matter_id=matter.id
+          and matter_actor_lnk.role=actor_role.code
+          and matter_actor_lnk.actor_id=$actor_id");
+     return $matter_dependencies_stmt->fetchAll();
+  }
+
+
+/**
+ * actor's Matter Dependencies
+**/
+  public function getActorOtherActorDependencies($actor_id = null)
+  {
+      if(!$actor_id)
+        return;
+
+     $this->setDbTable('Application_Model_DbTable_Actor');
+     $other_actor_dependencies_stmt = $this->_dbTable->getAdapter()->query("select id, ifnull(display_name, concat(name,' ',first_name)) as Actor,
+         (case $actor_id
+           when parent_id then 'Parent'
+           when company_id then 'Company'
+           when site_id then 'Site'
+         end) as Dependency
+         from actor
+         where $actor_id in (parent_id, company_id, site_id)");
+     return $other_actor_dependencies_stmt->fetchAll();
+  }
+
 /**
  * get next actor record sorted by actor name
 **/
@@ -2174,7 +2227,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
 /**
  * fetchMatters is used to navigate through filtered matter list
 **/
-  public function fetchMatters($filter_array = array(), $sortField = "caseref, container_ID", $sortDir = "ASC", $multi_filter = array(),  $matter_category_display_type = false)
+  public function fetchMatters($filter_array = array(), $sortField = "caseref, container_ID, origin, country, matter.type_code, idx", $sortDir = "ASC", $multi_filter = array(),  $matter_category_display_type = false)
   {
 
     if ($matter_category_display_type)
@@ -2201,13 +2254,23 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     }
 
 
-    if($sortField == 'Ref'){
+    if($sortField == 'caseref'){
       if($sortDir == 'desc'){
-        $sortField = "caseref desc, container_id, origin, country, idx";
+        $sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
         $sortDir = '';
       }
       if($sortDir == 'asc'){
-        $sortField = "caseref, container_id, origin, country, idx";
+        $sortField = "caseref, container_id, origin, country, matter.type_code, idx";
+        $sortDir = '';
+      }
+    }
+    if($sortField == 'Ref'){
+      if($sortDir == 'desc'){
+        $sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
+        $sortDir = '';
+      }
+      if($sortDir == 'asc'){
+        $sortField = "caseref, container_id, origin, country, matter.type_code, idx";
         $sortDir = '';
       }
     }
@@ -2235,6 +2298,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
 matter.category_code AS Cat,
+matter.country AS country,
 matter.origin,
 event_name.name AS Status,
 status.event_date AS Status_date,
