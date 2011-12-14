@@ -922,7 +922,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
        $ren_condition = "  AND t.code = 'REN'";
 
      if($ren == 0){
-     $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
+     $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'e.detail as event_detail', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
                              ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID".$ren_condition, array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
                              ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
                              ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))

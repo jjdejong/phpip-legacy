@@ -57,7 +57,7 @@
   vertical-align:top;
 }
 .column-case{
-  width:90px;
+  width:80px;
   text-align: left;
 }
 .column-title{
@@ -66,7 +66,7 @@
   vertical-align:middle;
 }
 .column-client{
-  width: 50px;
+  width: 70px;
   text-align:left;
 }
 .column-agent{
@@ -81,12 +81,12 @@
   width: 90px;
   text-align:left;
 }
-.column-origin{
+/*.column-origin{
   width:40px;
   text-align:left;
-}
+}*/
 .column-cat{
-  width: 32px;
+  width: 24px;
   text-align:left;
 }
 .column-status{
@@ -94,7 +94,7 @@
   text-align:left;
 }
 .column-date{
-  width: 70px;
+  width: 60px;
   text-align:left;
 }
 
@@ -104,7 +104,7 @@
 }
 
 .column-filing-no{
-  width: 65px;
+  width: 70px;
   text-align:left;
 }
 .column-pub-no{
@@ -569,7 +569,7 @@ foreach($this->paginator as $matter):?>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-title"><?php echo htmlentities($matter['Title']);?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-inventor"><?php echo htmlentities($matter['Inventor1']);?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-date"><?php echo $matter['Filed'];?></div>
-<div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,10);?></div>
+<div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,13);?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Published']?>"><?php echo $matter['Published'];?></div>
 <?/*<div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div> */?>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>"><?php
@@ -580,7 +580,7 @@ foreach($this->paginator as $matter):?>
     //print_r($matter);
     $pubno = preg_replace($removethese, '', $matter['PubNo']);
 ?>
-<a href="http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=<?=$CC?>&NR=<?=$pubno?>" target="_blank"><?php echo substr($matter['PubNo'], 0, 10);?></a></div>
+<a href="http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=<?=$CC?>&NR=<?=$pubno?>" target="_blank"><?php echo substr($matter['PubNo'], 0, 12);?></a></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Granted']?>"><?php echo $matter['Granted'];?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-pub-no" title="<?=$matter['GrtNo']?>"><?php echo substr($matter['GrtNo'], 0, 10);?></div>
 <!-- <div class="column column-cat"><?php echo $matter['origin'];?></div> -->

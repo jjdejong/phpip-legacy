@@ -84,6 +84,8 @@
   width: 170px;
   margin: 0px 10px 10px 0px;
   vertical-align: top;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
 .row-head{
@@ -706,7 +708,7 @@ foreach($this->matter_actors as $actor):
 		echo "<br />";
 	    $actor_display_name = ($actor['display_name'] == "" ) ? $actor['name'] .  (($actor['first_name']) ? (", " . $actor['first_name']) : "") : $actor['display_name'];
 
-            $actor_display_name = htmlentities($actor_display_name );
+            //$actor_display_name = htmlentities($actor_display_name );
 
 	    if($actor['actor_ref'])
 	    	$actor_display_name .=  " (" . $actor['actor_ref'] . ")";
@@ -715,9 +717,9 @@ foreach($this->matter_actors as $actor):
 	        $actor_display_name .=  " - " . $actor['company_name'];
 
 	    if(strlen($actor_display_name) > 23)
-	        echo  "<span id='".$actor['ID']."' class='matter-actor actor_company".($actor['inherited']?" actor-inherit":"")."' title='". $actor_display_name . "'>" . substr($actor_display_name, 0, 22) . "..</span>";
+	        echo  "<span id='".$actor['ID']."' class='matter-actor actor_company".($actor['inherited']?" actor-inherit":"")."' title='". $actor_display_name . "'>" . htmlentities($actor_display_name) . "</span>";
 	    else
-	    	echo  "<span id='".$actor['ID']."' class='matter-actor ".($actor['inherited']?" actor-inherit":"")."' >".$actor_display_name."</span>";
+	    	echo  "<span id='".$actor['ID']."' class='matter-actor ".($actor['inherited']?" actor-inherit":"")."' >".htmlentities($actor_display_name)."</span>";
   }
 endforeach;
 if(count($this->matter_actors))
@@ -870,7 +872,7 @@ if(strlen($classifier['value']) > 80){
 <?php if($classifier['url'] == '')
         echo $classifier_value;
       else
-        echo '<a href="'.$classifier['url'].'">'.$classifier_value.'</a>'; ?>
+        echo '<a href="'.$classifier['url'].'" target="_blank">'.$classifier_value.'</a>'; ?>
 
 </span>
 <?

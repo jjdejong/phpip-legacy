@@ -596,8 +596,8 @@ class MatterController extends Zend_Controller_Action
     if(isset($post_data['rule_id']) && $post_data['rule_id'])
         $rule_id = NULL;
 
-    if($field_name == 'done_date' && $fiel_value == '')
-      $fiel_value = date('Y-m-d');
+    if($field_name == 'done_date' && $field_value == '')
+      $field_value = date('Y-m-d');
 
     $matterModel = new Application_Model_Matter();
     $matterModel->saveTaskDetails($task_id, $field_name, $field_value, $rule_id);
@@ -756,7 +756,7 @@ class MatterController extends Zend_Controller_Action
     if($matterModel->getError())
       echo $matterModel->getError();
     else if($result)
-      echo "Task added to the event successfully";
+      echo "Task added";
   }
 
 /**
@@ -782,7 +782,7 @@ class MatterController extends Zend_Controller_Action
     if($matterModel->getError())
       echo $matterModel->getError();
     else if($result)
-      echo "Task added to the event successfully";
+      echo "Event added";
   }
 
 /**
@@ -1100,7 +1100,7 @@ class MatterController extends Zend_Controller_Action
             if($post_data['display_name'] == '')
                 unset($post_data['display_name']);
             if($post_data['nationality'] == '')
-                $post_data['nationality'] = NULL;
+                unset ($post_data['nationality']);
 
             $actor_id = $matterModel->addActor($post_data);
           if($actor_id){

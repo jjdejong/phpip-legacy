@@ -39,7 +39,7 @@ vertical-align: top;
 
 .tasklist-col-due_date, .tasklist-col-done_date, .tasklist-col-assigned_to{
 display:inline-block;
-width: 78px;
+width: 80px;
 vertical-align: top;
 }
 
@@ -65,13 +65,13 @@ vertical-align: top;
 
 .tasklist-col-time_spent{
 display:inline-block;
-width: 65px;
+width: 60px;
 vertical-align: top;
 }
 
 .tasklist-col-notes{
 display:inline-block;
-width: 180px;
+width: 178px;
 vertical-align: top;
 }
 
@@ -238,7 +238,7 @@ $(document).ready(function(){
           placeholder: '...',
           select : true,
           indicator : '<img src="/images/indicator.gif" />',
-          tooltip: 'Click to edit....'
+          tooltip: 'Click to edit...'
     });
     $('.editable-due-date').editable('/matter/update-task', {
             submitdata: function(value,settings){
@@ -564,7 +564,7 @@ foreach($this->matter_event_tasks as $event_task):
 <div style="height:15px;"></div>
 <? } ?>
 <div class="status-row event-head" style="margin:5px 0px; border-bottom: 1px solid #DDD;">
-<span class="tasklist-col-name"><b><?=$event_task['event_name'] . " - " . $event_task['event_date'] ?></b>
+<span class="tasklist-col-name"><b><?=$event_task['event_name'] . ": " . $event_task['event_date'] ?></b>
 </span>
 <div class="event-actions"><span class="add-task-toevent" id="<?=$event_id?>" title="Add task to event"><img src="/images/Add-16.png" alt="+" width=16 height=16 title="Add Task"></img></span>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="delete-event" style="cursor:pointer;" id="<?=$event_id?>"><img src="/images/Delete-32.png" alt="-" width=16 height=16 title="Delete Event"></img></span></div>
