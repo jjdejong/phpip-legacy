@@ -642,7 +642,7 @@ $(document).ready(function(){
 <?php 
 foreach($this->matter_classifier_main as $classifier):
 $cid = $classifier['ID'];
-    if($classifier['c_value']){
+    if($classifier['c_value'] && is_array($classifier_arr)){
         $classifier_arr[$classifier['type']] = ($classifier_arr[$classifier['type']])? $classifier_arr[$classifier['type']].' ; <span class="title-editable" id="'.$cid.'" >'.htmlentities($classifier['c_value']).'</span>' : '<span class="title-editable" id="'.$cid.'" >'.htmlentities($classifier['c_value']).'</span>';
     }
     if($classifier['cv_value'])
@@ -655,7 +655,7 @@ if($this->matter_classifier_container_main):
 foreach($this->matter_classifier_container_main as $classifier):
 $cid = $classifier['ID'];
     if($classifier['c_value']){
-        $classifier_arr[$classifier['type']] = ($classifier_arr[$classifier['type']])? $classifier_arr[$classifier['type']].' ; <span class="title-editable" id="'.$cid.'" >'.htmlentities($classifier['c_value']) . '</span>': '<span class="title-editable" id="'.$cid.'" >'.htmlentities($classifier['c_value']) . '</span>';
+        $classifier_arr[$classifier['type']] = (isset($classifier_arr[$classifier['type']]) && $classifier_arr[$classifier['type']])? $classifier_arr[$classifier['type']].' ; <span class="title-editable" id="'.$cid.'" >'.htmlentities($classifier['c_value']) . '</span>': '<span class="title-editable" id="'.$cid.'" >'.htmlentities($classifier['c_value']) . '</span>';
     }
     if($classifier['cv_value']){
         $classifier_arr[$classifier['cv_type']] = ($classifier_arr[$classifier['cv_type']])? $classifier_arr[$classifier['cv_type']].' ; <span class="title-editable" >'.htmlentities($classifier['cv_value']) . '</span>': '<span class="title-editable" >'.htmlentities($classifier['cv_value']) .'</span>';

@@ -97,13 +97,22 @@ $(document).ready(function(){
                         }
                     });
                 }else{
-                    $( "#actor" ).val( ui.item.value );
+                    //alert($( "#actor" ).val());
+                    //alert(ui.item.label.replace(/&amp;/i, '&'));
+                    Encoder.EncodeType = "entity";
+                    $( "#actor" ).val(Encoder.htmlDecode(ui.item.label.replace(/&amp;/i, '&')));
                     $( "#actor-id" ).val( ui.item.id );
                 }
                 return false;
             },
             autoFocus: true,
-    });
+    }).data( "autocomplete" )._renderItem = function( ul, item ) {
+        //alert(item);
+        return $( "<li></li>" )
+            .data( "item.autocomplete", item )
+            .append( "<a>" + item.label.replace(/&amp;/i, '&')  + "</a>" )
+            .appendTo( ul );
+    };;
 
     $("#submit").click(function(){
       var role_val = $('#rolebox').val().split('-');

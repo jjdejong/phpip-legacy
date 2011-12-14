@@ -1007,6 +1007,16 @@ class MatterController extends Zend_Controller_Action
     $page = $this->_getParam('page',1);
 
     $post_data = $this->getRequest()->getParams();
+    //print_r($post_data);
+    $post_data_arr = array();
+
+    foreach($post_data as $key=>$data){
+        $post_data_arr[$key] = preg_replace("/~~/","/",$data);
+    }
+
+    $post_data = $post_data_arr;
+
+
     unset($post_data['controller']);
     unset($post_data['action']);
     unset($post_data['module']);

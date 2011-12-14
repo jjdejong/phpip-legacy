@@ -173,23 +173,24 @@
 
 function getFilterUrl()
 {
-         var ref = $('#filter-ref').val();
-         var stat = $('#filter-status').val();
-         var stat_date = $('#filter-status_date').val();
-         var client = $('#filter-client').val();
-         var clref = $('#filter-clref').val();
-         var agent = $('#filter-agent').val();
-         var agtref = $('#filter-agtref').val();
-         var inventor = $('#filter-inventor').val();
-         var filed = $('#filter-filed').val();
-         var filno = $('#filter-filno').val();
-         var published = $('#filter-published').val();
-         var pubno = $('#filter-pubno').val();
-         var granted = $('#filter-granted').val();
-         var grtno = $('#filter-grtno').val();
-         var origin = $('#filter-origin').val();
+         var ref = $('#filter-ref').val().replace(/\//,"~~");
+         var stat = $('#filter-status').val().replace(/\//,"~~");
+         var stat_date = $('#filter-status_date').val().replace(/\//,"~~");
+         var client = $('#filter-client').val().replace(/\//,"~~");
+         var clref = $('#filter-clref').val().replace(/\//,"~~");
+         var agent = $('#filter-agent').val().replace(/\//,"~~");
+         var agtref = $('#filter-agtref').val().replace(/\//,"~~");
+         var inventor = $('#filter-inventor').val().replace(/\//,"~~");
+         var filed = $('#filter-filed').val().replace(/\//,"~~");
+         var filno = $('#filter-filno').val().replace(/\//,"~~");
+         var published = $('#filter-published').val().replace(/\//,"~~");
+         var pubno = $('#filter-pubno').val().replace(/\//,"~~");
+         var granted = $('#filter-granted').val().replace(/\//,"~~");
+         var grtno = $('#filter-grtno').val().replace(/\//,"~~");
+         var origin = $('#filter-origin').val().replace(/\//,"~~");
 
-
+         //alert(escape(agtref));
+         //alert(encodeURIComponent(escape((agtref))));
 
          var display_style = $('input:radio[name=displaystyle]:checked').val()
          var responsible = $('input[name=responsible-filter]:checked').val()
@@ -238,6 +239,7 @@ function getFilterUrl()
             url = url + '/display/<?=$this->category_display?>';
          <?}?>
             url = url + '/display_style/'+display_style;
+         //alert(url);
          return url;
 }
 

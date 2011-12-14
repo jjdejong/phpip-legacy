@@ -1002,7 +1002,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     $result = $this->_dbTable->getAdapter()->fetchAll($selectQuery);
     foreach($result as $key => $actor){
       $actor_display = $actor['name'] . (($actor['first_name'] == '')?"":(", ".$actor['first_name'])).( ($actor['display_name'])?(" (".$actor['display_name'].")"):"" );
-      $result[$key]['value'] = $actor_display;
+      $result[$key]['value'] = htmlentities($actor_display);
     }
     return $result;
   }
