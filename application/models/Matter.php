@@ -1915,7 +1915,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
         return;
 
      $this->setDbTable('Application_Model_DbTable_Actor');
-     $other_actor_dependencies_stmt = $this->_dbTable->getAdapter()->query("select id, ifnull(display_name, concat(name,' ',first_name)) as Actor,
+     $other_actor_dependencies_stmt = $this->_dbTable->getAdapter()->query("select id, concat(name,' ',ifnull(first_name,'')) as Actor,
          (case $actor_id
            when parent_id then 'Parent'
            when company_id then 'Company'
