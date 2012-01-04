@@ -364,7 +364,7 @@ class MatterController extends Zend_Controller_Action
     #echo '["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"]';
     #echo '[ { value: "jquery" }, { value: "jquery-ui" }, { value: "sizzlejs" } ]; ';
     #echo json_encode(array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"));
-    echo json_encode($matter_actors);
+    echo @json_encode($matter_actors);
   }
 
 /**
@@ -505,7 +505,7 @@ class MatterController extends Zend_Controller_Action
         if(strcmp(substr($post_data['id'], 0, 10), 'company_ID') == 0)
         {
             $post_data['id'] = 'company_ID';
-            $post_data['value'] = $post_data['company_id'];
+            $post_data['value'] = isset($post_data['company_id']) ? $post_data['company_id'] : NULL;
         }
   	$data[$post_data['id']] = $post_data['value'];
   //	$matter_id = $post_data['matter_id'];
@@ -598,6 +598,8 @@ class MatterController extends Zend_Controller_Action
 
     if($field_name == 'done_date' && $field_value == '')
       $field_value = date('Y-m-d');
+    elseif ($field_value == '')
+      $field_value = NULL;
 
     $matterModel = new Application_Model_Matter();
     $matterModel->saveTaskDetails($task_id, $field_name, $field_value, $rule_id);
@@ -608,7 +610,7 @@ class MatterController extends Zend_Controller_Action
 /**
  * clears a task for a given done_date or now()
 **/
-  public function clearTaskAction()
+/*  public function clearTaskAction()
   {
     $this->_helper->layout->disableLayout();
     $this->_helper->viewRenderer->setNoRender();
@@ -621,7 +623,7 @@ class MatterController extends Zend_Controller_Action
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->clearTask($task_id, $post_date['done_date']);
     echo $result;
-  }
+  }*/
 
 /**
  * clears multiple tasks for a given done_date
@@ -656,7 +658,10 @@ class MatterController extends Zend_Controller_Action
     $field_name = $post_data['field'];
     $field_value = $post_data['value'];
     $data = array();
-    $data["$field_name"] = $field_value;
+    if ($field_value == "")
+    	$data["$field_name"] = NULL;
+    else
+    	$data["$field_name"] = $field_value;
 
     if($field_name == 'event_date')
         $data["$field_name"] = new Zend_Db_Expr("STR_TO_DATE('$field_value', '%d/%m/%Y' )");
@@ -735,20 +740,11 @@ class MatterController extends Zend_Controller_Action
     
     $date = explode("/",$post_data[due_date]);
     $post_data[due_date] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
-
-
-    if(!$post_data[detail])
-        $post_data[detail] = NULL;
-    if($post_data[time_spent] == "")
-        $post_data[time_spent] = NULL;
-    if($post_data[notes] == "")
-        $post_data[notes] = NULL;
-    if($post_data[cost] == "")
-        $post_data[cost] = NULL;
-    if($post_data[fee] == "")
-        $post_data[fee] = NULL;
-    if($post_data[currency] == "")
-        $post_data[currency] = NULL;
+        
+    foreach($post_data as $key=>$data){
+        if($data == "")
+            unset($post_data[$key]);
+    }
 
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->addTaskToEvent($post_data);
@@ -771,7 +767,11 @@ class MatterController extends Zend_Controller_Action
       return;
 
     $post_data = $this->getRequest()->getPost();
-
+    
+    foreach($post_data as $key=>$data){
+        if($data == "")
+            unset($post_data[$key]);
+    }
     
     $date = explode("/",$post_data[event_date]);
     $post_data[event_date] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
@@ -919,22 +919,28 @@ class MatterController extends Zend_Controller_Action
     if($this->getRequest()->isPost()){
         $this->_helper->viewRenderer->setNoRender();
         $post_data = $this->getRequest()->getPost();
+        
+        foreach($post_data as $key=>$data){
+        if($data == "")
+            unset($post_data[$key]);
+    	}
+    
         if(!$post_data['matter_ID'] || !$post_data['type_code']){
           echo "false";
           return;
         }
-        if($post_data['value_ID'] == ''){
+        if(!isset($post_data['value_ID'])){
            $cvs = $matterModel->getClassifierValues($post_data['type_code']);
            if(count($cvs) > 0){
              $data = array( 'value' => $post_data['value'], 'type_code' => $post_data['type_code'] );
              $post_data['value_ID'] = $matterModel->addClassifierValue($data);
-           }else{
+           }/*else{
              unset($post_data['value_ID']);
-           }
+           }*/
         }
 
-        if($post_data['lnk_matter_ID'] == '')
-           unset($post_data['lnk_matter_ID']);
+        /*if($post_data['lnk_matter_ID'] == '')
+           unset($post_data['lnk_matter_ID']);*/
 
         $matterModel = new Application_Model_Matter();
         $result = $matterModel->addClassifier($post_data);
@@ -1032,7 +1038,7 @@ class MatterController extends Zend_Controller_Action
     $mfs->sort_dir = $sort_dir;
     $mfs->multi_sort = $post_data;
 
-    $this->view->responsible = $post_data['responsible'];
+    $this->view->responsible = @$post_data['responsible'];
 
     $matterModel = new Application_Model_Matter();
     $paginator = $matterModel->paginateMatters($filter_array, $sort_field, $sort_dir, $post_data,$category_display);
@@ -1091,7 +1097,7 @@ class MatterController extends Zend_Controller_Action
     if($request->isPost()){
         $post_data = $request->getPost();
         if($actorForm->isValid($post_data)){
-            if($post_data['parent_ID'] == '')
+            /*if($post_data['parent_ID'] == '')
                 unset($post_data['parent_ID']);
             if($post_data['company_ID'] == '')
                 unset($post_data['company_ID']);
@@ -1100,7 +1106,12 @@ class MatterController extends Zend_Controller_Action
             if($post_data['display_name'] == '')
                 unset($post_data['display_name']);
             if($post_data['nationality'] == '')
-                unset ($post_data['nationality']);
+                unset ($post_data['nationality']);*/
+                
+            foreach($post_data as $key=>$data){
+        		if($data == "")
+            		unset($post_data[$key]);
+    		}
 
             $actor_id = $matterModel->addActor($post_data);
           if($actor_id){
@@ -1160,7 +1171,7 @@ class MatterController extends Zend_Controller_Action
     $actor_id = $post_data['actor_id'];
     $field_name = $post_data['field'];
     $field_value = $post_data['value'];
-    $dvalue = $post_data['dvalue'];
+    $dvalue = isset($post_data['dvalue']) ? $post_data['dvalue'] : NULL;
     $matterModel = new Application_Model_Matter();
     $matterModel->updateActor($actor_id, $field_name, $field_value);
    

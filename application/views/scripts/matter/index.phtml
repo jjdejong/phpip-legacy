@@ -486,58 +486,58 @@ if(isset($this->containers)){
 
 <div class="head-tab">
 <div  class="display_actor display_status column column-case"><a class="sorting-dirs" id="caseref-desc" >UID</a><span class="sorting-img" id="caseref-sort">&nbsp;</span><br>
-<input type="text" name="filter-ref" id="filter-ref" value="<?=$this->filters['Ref']?>" size=5 class="filter-input" />
+<input type="text" name="filter-ref" id="filter-ref" value="<?=@$this->filters['Ref']?>" size=5 class="filter-input" />
 </div>
 <div class="display_actor display_status column column-cat"><a class="sorting-dirs" id="category_code-asc">Cat</a><span class="sorting-img" id="category_code-sort">&nbsp;</span></div>
 <div class="display_actor display_status column column-status"><a class="sorting-dirs" id="Status-asc">Status</a><span class="sorting-img" id="Status-sort">&nbsp;</span>
-<br /><input type="text" name="filter-status" id="filter-status" value="<?=$this->filters['Status']?>" size=6 class="filter-input" />
+<br /><input type="text" name="filter-status" id="filter-status" value="<?=@$this->filters['Status']?>" size=6 class="filter-input" />
 </div>
 <div class="display_status column column-date"><a class="sorting-dirs" id="Status_date-asc">Date</a><span class="sorting-img" id="Status_date-sort">&nbsp;</span>
-<br /><input type="text" name="filter-status_date" id="filter-status_date" value="<?=$this->filters['Status_date']?>" size=6 class="filter-input" />
+<br /><input type="text" name="filter-status_date" id="filter-status_date" value="<?=@$this->filters['Status_date']?>" size=6 class="filter-input" />
 </div>
 <div class="display_actor display_status column column-client"><a class="sorting-dirs" id="Client-asc">Client</a><span class="sorting-img" id="Client-sort">&nbsp;</span>
-<br /><input type="text" name="filter-client" id="filter-client" value="<?=$this->filters['Client']?>" size=6 class="filter-input" />
+<br /><input type="text" name="filter-client" id="filter-client" value="<?=@$this->filters['Client']?>" size=6 class="filter-input" />
 </div>
 <div class="display_actor display_status column column-client-ref"><a class="sorting-dirs" id="ClRef-asc">Ref</a><span class="sorting-img" id="ClRef-sort">&nbsp;</span>
-<br /><input type="text" name="filter-clref" id="filter-clref" value="<?=$this->filters['ClRef']?>" size=8 class="filter-input" />
+<br /><input type="text" name="filter-clref" id="filter-clref" value="<?=@$this->filters['ClRef']?>" size=8 class="filter-input" />
 </div>
 
 <div class="display_actor column column-agent"><a class="sorting-dirs" id="Agent-asc">Agent</a><span class="sorting-img" id="Agent-sort">&nbsp;</span>
-<br /><input type="text" name="filter-agent" id="filter-agent" value="<?=$this->filters['Agent']?>" size=6 class="filter-input" />
+<br /><input type="text" name="filter-agent" id="filter-agent" value="<?=@$this->filters['Agent']?>" size=6 class="filter-input" />
 </div>
 <div class="display_actor column column-agent-ref"><a class="sorting-dirs" id="AgtRef-asc">Ref</a><span class="sorting-img" id="AgtRef-sort">&nbsp;</span>
-<br /><input type="text" name="filter-agtref" id="filter-agtref" value="<?=$this->filters['AgtRef']?>" size=8 class="filter-input" />
+<br /><input type="text" name="filter-agtref" id="filter-agtref" value="<?=@$this->filters['AgtRef']?>" size=8 class="filter-input" />
 </div>
 
 
 <div class="display_actor column column-title">Detail</div>
 <div class="display_actor column column-inventor"><a class="sorting-dirs" id="Inventor1-asc">Inventor</a><span class="sorting-img" id="Inventor1-sort">&nbsp;</span>
-<br /><input type="text" name="filter-inventor" id="filter-inventor" value="<?=$this->filters['Inventor1']?>" size=8 class="filter-input" />
+<br /><input type="text" name="filter-inventor" id="filter-inventor" value="<?=@$this->filters['Inventor1']?>" size=8 class="filter-input" />
 </div>
 <div class="display_actor display_status column column-date"><a class="sorting-dirs" id="Filed-asc">Filed</a><span class="sorting-img" id="Filed-sort">&nbsp;</span>
-<br /><input type="text" name="filter-filed" id="filter-filed" value="<?=$this->filters['Filed']?>" size=6 class="filter-input" />
+<br /><input type="text" name="filter-filed" id="filter-filed" value="<?=@$this->filters['Filed']?>" size=6 class="filter-input" />
 </div>
 <div class="display_status column column-filing-no"><a class="sorting-dirs" id="FilNo-asc">Number</a><span class="sorting-img" id="FilNo-sort">&nbsp;</span>
-<br /><input type="text" name="filter-filno" id="filter-filno" value="<?=$this->filters['FilNo']?>" size=8 class="filter-input" />
+<br /><input type="text" name="filter-filno" id="filter-filno" value="<?=@$this->filters['FilNo']?>" size=8 class="filter-input" />
 </div>
 
 <div class="display_status column column-date"><a class="sorting-dirs" id="Published-asc">Published</a><span class="sorting-img" id="Published-sort">&nbsp;</span>
-<br /><input type="text" name="filter-published" id="filter-published" value="<?=$this->filters['filed']?>" size=6 class="filter-input" />
+<br /><input type="text" name="filter-published" id="filter-published" value="<?=@$this->filters['filed']?>" size=6 class="filter-input" />
 </div>
 <div class="display_status column column-pub-no"><a class="sorting-dirs" id="PubNo-asc">Number</a><span class="sorting-img" id="PubNo-sort">&nbsp;</span>
-<br /><input type="text" name="filter-pubno" id="filter-pubno" value="<?=$this->filters['PubNo']?>" size=8 class="filter-input" />
+<br /><input type="text" name="filter-pubno" id="filter-pubno" value="<?=@$this->filters['PubNo']?>" size=8 class="filter-input" />
 </div>
 
 
 <div class="display_status column column-date"><a class="sorting-dirs" id="Granted-asc">Granted</a><span class="sorting-img" id="Granted-sort">&nbsp;</span>
-<br /><input type="text" name="filter-granted" id="filter-granted" value="<?=$this->filters['granted']?>" size=6 class="filter-input" />
+<br /><input type="text" name="filter-granted" id="filter-granted" value="<?=@$this->filters['granted']?>" size=6 class="filter-input" />
 </div>
 <div class="display_status column column-pub-no"><a class="sorting-dirs" id="GrtNo-asc">Number</a><span class="sorting-img" id="GrtNo-sort">&nbsp;</span>
-<br /><input type="text" name="filter-grtno" id="filter-grtno" value="<?=$this->filters['GrtNo']?>" size=8 class="filter-input" />
+<br /><input type="text" name="filter-grtno" id="filter-grtno" value="<?=@$this->filters['GrtNo']?>" size=8 class="filter-input" />
 </div>
 
 <div class="column column-cat">
-<input type="hidden" name="filter-origin" id="filter-origin" value="<?=$this->filters['origin']?>" size=8 class="filter-input" />
+<input type="hidden" name="filter-origin" id="filter-origin" value="<?=@$this->filters['origin']?>" size=8 class="filter-input" />
 </div>
 
 <!--div class="display_actor display_status column column-ctnr-pri"><a class="sorting-dirs" id="responsible-asc">Responsible</a><span class="sorting-img" id="responsible-sort">&nbsp;</span></div-->

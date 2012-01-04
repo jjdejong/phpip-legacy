@@ -310,10 +310,10 @@ $(document).ready(function(){
 <div id="categories-box" class="home-box">
 <div class="home-box-header">
 <div class="list-header">Categories</div>
-<div class="clear-tasks-box"><a href="javascript:void(0);" class="add-cat-matter button-style" style="display:block;" id="" ><img src="/images/Add-16.png" alt="+" width=14 height=14 title="Add Matter" class="img-buttons" style="vertical-align:middle;"></img> Add new matter</a></div>
+<div class="clear-tasks-box"><a href="javascript:void(0);" class="add-cat-matter button-style" style="display:block;" id="" ><img src="/images/Add-16.png" alt="+" width=14 height=14 title="Add Matter" class="img-buttons" style="vertical-align:middle;"></img> New matter</a></div>
 </div>
 <div id="" class="home-card">
-    <div class="list-headers"><div class="col-cat">Category</div><div class="col-code">Code</div><div class="col-count">no_of_matters</div><div class="col-actions"></div></div>
+    <div class="list-headers"><div class="col-cat">Category</div><div class="col-code">Code</div><div class="col-count">Count</div><div class="col-actions"></div></div>
 <?php if(count($this->categories)){ ?>
 <ul class="phpip-list" id="category-list">
 <?php foreach($this->categories as $matter): ?>
@@ -340,7 +340,7 @@ $(document).ready(function(){
 </div>
 <div id="" class="home-card">
 <?php if(count($this->open_tasks)): ?>
-<div class="list-headers"><div class="col-task-name">Task name</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></div>
+<div class="list-headers"><div class="col-task-name">Task</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></div>
 <ul class="phpip-list" id="open-tasks-list">
 <?php foreach($this->open_tasks as $open_task){ 
 $task_name  = $open_task['task_name'];
@@ -395,7 +395,7 @@ if($user['no_of_tasks'] > 0){
 </div>
 <div id="" class="home-card">
 <?php if(count($this->ren_tasks)): ?>
-<div class="list-headers"><div class="col-task-name">Task name</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></div>
+<div class="list-headers"><div class="col-task-name">Task</div><div class="col-task-matter">Matter</div><div class="col-task-due_date">Due date</div><div class="col-actions">Close</div></div>
 <ul class="phpip-list" id="ren-tasks-list">
 <?php foreach($this->ren_tasks as $open_task){ 
 $task_name  = $open_task['task_name'];

@@ -12,9 +12,6 @@ class Application_Model_Matter
   protected $_container_id;
   protected $_responsible;
   protected $_dead;
-//  protected $_original_title;
-//  protected $_title;
-//  protected $_title_alt;
   protected $_notes;
   protected $_expire_date;
   protected $_term_adjust;
@@ -339,52 +336,6 @@ try{
     $this->_dbTable->insert($data);
   }
 
-/*  public function paginateMatters_dep($filter_array = array(), $sortField = "caseref", $sortDir = "ASC" )
-  {
-
-    if($filter_array['value'] && $filter_array['field'])   
-	$filter_clause = "and " . $filter_array['field'] . " = " . $filter_array['value'];
-
-    $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
-
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array('ID','concat(caseref, " ", country, if(origin is null, "", concat("/",origin))) as Ref','category_code as Cat','(select name from event, event_name where event.matter_ID=m.ID and event.code=event_name.code and event_name.status_event=1 order by event_date desc limit 0,1) as Status','(select DATE_FORMAT(max(event_date), "%d/%m/%Y")
-from event, event_name
-where event.matter_ID=m.ID
-and event.code=event_name.code
-and event_name.status_event=1) as Date',
-'(select if(display_name="", name, display_name)
-from actor, matter_actor_lnk lnk
-where ifnull(m.container_ID,m.ID)=lnk.matter_ID
-and actor.ID=lnk.actor_ID
-and lnk.role="CLI"
-and lnk.display_order=1) as Client',
-'actor_ref AS ClRef',
-//'if(container_ID is null, original_title, title) as Title',
-'if(isnull(m.container_ID),(select value from classifier where classifier.matter_ID=m.ID and type_code="TIT"),(select value from classifier where classifier.matter_ID=m.container_ID and type_code="TITOF")) AS Title',
-'(select concat(name, ", ", first_name)
-from actor, matter_actor_lnk lnk
-where ifnull(m.container_ID,m.ID)=lnk.matter_ID
-and actor.ID=lnk.actor_ID
-and lnk.role="INV"
-and lnk.display_order=1) as "Inventor 1"',
-'(select DATE_FORMAT(event_date, "%d/%m/%Y") from event where event.matter_ID=m.ID and event.code="FIL") as Filed',
-'filed.detail AS FilNo',
-'pub.detail AS PubNo',
-'if(container_ID is null, "Ctnr", "") as Ctnr',
-'if(exists (select 1 from event where event.alt_matter_ID=m.ID and code="PRI"), "Pri", "") as Pri'))
-                            ->joinLeft(array('c' => 'country'), 'c.iso = m.country', array('country_name' => 'c.name'))
-                            ->joinLeft(array('mc' => 'matter_category'), 'm.category_code = mc.code', array('category' => 'mc.category'))
-                            ->where('container_ID IS NULL ' . $filter_clause)
-                            ->order(array("$sortField $sortDir",'parent_ID'));
-                            //->where('m.responsible = ? AND container_ID IS NULL', $siteInfoNamespace->username)
-                            //->order('parent_ID');
-    $adapter = new Zend_Paginator_Adapter_DbSelect();
-
-    return new Zend_Paginator($adapter);
-  } */
 
 /**
  * retrieves paginated list of matter with specified filters
@@ -402,8 +353,9 @@ and lnk.display_order=1) as "Inventor 1"',
         $filter_clause = "AND (matter.category_code IN (select code from matter_category $dsiplay_with))";
     else{
         $filter_clause = "AND (matter.category_code IN (select code from matter_category $dsiplay_with))";
+        
         if($filter_array['value'] && $filter_array['field'])
-	  $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
+	  		$filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
 
         if($filter_array['field'] == 'Ctnr'){
           $filter_clause = "AND matter.container_ID IS NULL";
@@ -441,9 +393,15 @@ and lnk.display_order=1) as "Inventor 1"',
         foreach($multi_filter as $key => $value){
          if($value != '' && $key != 'display' && $key != 'display_style'){
             if($multi_query == '')
-                $multi_query = " HAVING ". $key." LIKE '".$value."%'";
+            	if ($key == 'responsible')
+            		$multi_query = " HAVING (responsible = '".$value."' OR delegate = '".$value."')";
+            	else
+                	$multi_query = " HAVING ". $key." LIKE '".$value."%'";
             else
-                $multi_query .= " AND ".$key." LIKE '".$value."%'";
+                if ($key == 'responsible')
+                	$multi_query .= " AND (responsible = '".$value."' OR delegate = '".$value."')";
+                else
+                	$multi_query .= " AND ".$key." LIKE '".$value."%'";
           }
         }
     }
@@ -476,6 +434,7 @@ matter.ID,
 matter.container_ID,
 matter.parent_ID,
 matter.responsible,
+del.login AS delegate,
 matter.dead,
 IF(isnull(matter.container_ID),1,0) AS Ctnr,
 1 AS Pri
@@ -486,6 +445,8 @@ FROM matter
     ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' ".$inventor_filter." AND inv.ID = invlnk.actor_ID)
   LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
     ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
+  LEFT JOIN (matter_actor_lnk dellnk, actor del) 
+    ON (ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' AND del.ID = dellnk.actor_ID)  
   LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
   LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
   LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
@@ -503,67 +464,6 @@ WHERE e2.matter_id IS NULL
     return new Zend_Paginator($adapter);
   }
 
-/* Previous Left Join in the above query;
-  from matter left join (matter_actor_lnk clilnk, actor cli) 
-    on (ifnull(matter.container_ID,matter.ID) = clilnk.matter_ID and clilnk.role = 'CLI' and clilnk.display_order = 1 and cli.ID = clilnk.actor_ID) 
-  left join (matter_actor_lnk invlnk,actor inv) 
-    on (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID and invlnk.role = 'INV' and invlnk.display_order=1 and inv.ID = invlnk.actor_ID)
-  left join (matter_actor_lnk agtlnk, actor agt) 
-    on (matter.ID = agtlnk.matter_ID and agtlnk.role = 'AGT' and agtlnk.display_order = 1 and agt.ID = agtlnk.actor_ID)
-  left join event fil 
-    on (matter.ID=fil.matter_ID and fil.code='FIL')
-  left join event pub 
-    on (matter.ID=pub.matter_ID and pub.code='PUB')
-  left join event grt 
-    on (matter.ID=grt.matter_ID and grt.code='GRT')
-  join (event status, event_name) 
-    on (matter.ID=status.matter_ID and event_name.code=status.code and event_name.status_event=1)
-  left join (classifier, classifier_type) 
-    on (classifier.matter_ID = ifnull(matter.container_ID, matter.ID) and classifier.type_code=classifier_type.code and main_display=1 and classifier_type.display_order=1)
-*/
-
-
-/**
- * retrieves all matter from a container.
- * this function is not used now.
-**/
-  /*public function getFromContainer($containerId = null)
-  {
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array('ID','concat(caseref, " ", country, if(origin is null, "", concat("/",origin))) as Ref','category_code as Cat','(select name from event, event_name where event.matter_ID=m.ID and event.code=event_name.code and event_name.status_event=1 order by event_date desc limit 0,1) as Status','(select DATE_FORMAT(max(event_date),"%d/%m/%Y")
-from event, event_name
-where event.matter_ID=m.ID
-and event.code=event_name.code
-and event_name.status_event=1) as Date',
-'(select ifnull(display_name=, name)
-from actor, matter_actor_lnk lnk
-where ifnull(m.container_ID,m.ID)=lnk.matter_ID
-and actor.ID=lnk.actor_ID
-and lnk.role="CLI"
-and lnk.display_order=1) as Client',
-'actor_ref AS ClRef',
-//'if(container_ID is null, original_title, title) as Title',
-'if(isnull(m.container_ID),(select value from classifier where classifier.matter_ID=m.ID and type_code="TIT"),(select value from classifier where classifier.matter_ID=m.container_ID and type_code="TITOF")) AS Title',
-'(select concat(name, ", ", first_name)
-from actor, matter_actor_lnk lnk
-where ifnull(m.container_ID,m.ID)=lnk.matter_ID
-and actor.ID=lnk.actor_ID
-and lnk.role="INV"
-and lnk.display_order=1) as "Inventor 1"',
-'(select DATE_FORMAT(event_date, "%d/%m/%Y") from event where event.matter_ID=m.ID and event.code="FIL") as Filed',
-'filed.detail AS FilNo',
-'pub.detail AS PubNo',
-'if(container_ID is null, "Ctnr", "") as Ctnr',
-'if(exists (select 1 from event where event.alt_matter_ID=m.ID and code="PRI"), "Pri", "") as Pri'))
-                            ->joinLeft(array('c' => 'country'), 'c.iso = m.country', array('country_name' => 'c.name'))
-                            ->joinLeft(array('mc' => 'matter_category'), 'm.category_code = mc.code', array('category' => 'mc.category'))
-                            ->where('container_ID = ?', $containerId)
-                            ->order(array('m.caseref', 'm.origin', 'm.country'));
-
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }*/
 
 /**
  * gets complete details of a matter from matter table
@@ -968,7 +868,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 /**
  * retrives actors for a given role and search term
 **/
-  public function getActorForRole($role = NULL, $term = NULL)
+  /*public function getActorForRole($role = NULL, $term = NULL)
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
@@ -980,7 +880,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
                             ->where('a.name like ? ', $term . '%')
                             ->order('a.name asc');
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
+  }*/
 
 /**
  * retrieves all actors from actor table
@@ -1287,7 +1187,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
  * clears a task i.e., task.done = 1 on done_date or now()
  * this function is not in use now, instead clearTasks is used for single/multiple tasks
 **/
-  public function clearTask($task_id = 0, $done_date = '')
+/*  public function clearTask($task_id = 0, $done_date = '')
   {
     $data['done'] = 1;
     $data['done_date'] = $done_date;
@@ -1295,7 +1195,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $data['done_date'] = date('Y-m-d');
 
     return $this->getDbTable('Application_Model_DbTable_Task')->update($data, array('ID = ?' => $task_id));
-  }
+  }*/
 
 /**
  * clears a set of tasks i.e., task.done is set to 1 on done_date or now()
@@ -2208,7 +2108,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     $this->setDbTable('Application_Model_DbTable_Classifier');
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
-    $selectQuery = $dbSelect->from(array('cv' => 'classifier_value'), array('cv.id as id', 'cv.value as value'))
+    $selectQuery = $dbSelect->from(array('cv' => 'classifier_value'), array('cv.id as id', 'cv.value as value', 'cv.notes as notes'))
                             ->where("type_code = '".$type_code."' AND value LIKE '".$term."%'" );
 
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
@@ -2242,7 +2142,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     else{
         $filter_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
         if($filter_array['value'] && $filter_array['field']) 
-	  $filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
+	  		$filter_clause .= " AND " . $filter_array['field'] . " = '" . $filter_array['value']."'";
 
         if($filter_array['field'] == 'Ctnr'){
           $filter_clause = "AND matter.container_ID IS NULL";
@@ -2283,9 +2183,15 @@ from event where matter_id=".$matter_ID." and code='PRI';";
         foreach($multi_filter as $key => $value){
           if($value != ''  && $key != 'display' && $key != 'display_style'){
             if($multi_query == '')
-                $multi_query = " HAVING ". $key." LIKE '".$value."%'";
+            	if ($key == 'responsible')
+            		$multi_query = " HAVING (responsible = '".$value."' OR delegate = '".$value."')";
+            	else
+                	$multi_query = " HAVING ". $key." LIKE '".$value."%'";
             else
-                $multi_query .= " AND ".$key." LIKE '".$value."%'";
+                if ($key == 'responsible')
+                	$multi_query .= " AND (responsible = '".$value."' OR delegate = '".$value."')";
+                else
+                	$multi_query .= " AND ".$key." LIKE '".$value."%'";
           }
         }
     }
@@ -2318,6 +2224,7 @@ matter.ID,
 matter.container_ID,
 matter.parent_ID,
 matter.responsible,
+del.login AS delegate,
 matter.dead,
 IF(isnull(matter.container_ID),1,0) AS Ctnr,
 1 AS Pri
@@ -2328,6 +2235,8 @@ FROM matter
     ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' ".$inventor_filter." AND inv.ID = invlnk.actor_ID)
   LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
     ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
+  LEFT JOIN (matter_actor_lnk dellnk, actor del) 
+    ON (ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' AND del.ID = dellnk.actor_ID)
   LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
   LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
   LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
@@ -2339,47 +2248,6 @@ FROM matter
 WHERE e2.matter_id IS NULL
 ".$filter_clause ." ". $multi_query . " order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
 
-    /*
-    $dbStmt = $this->_dbTable->getAdapter()->query("select concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
-matter.category_code AS Cat,
-event_name.name AS Status,
-status.event_date AS Status_date,
-IFNULL(cli.display_name, cli.name) AS Client,
-clilnk.actor_ref AS ClRef,
-IFNULL(agt.display_name, agt.name) AS Agent,
-agtlnk.actor_ref AS AgtRef,
-classifier.value AS Title,
-CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
-fil.event_date AS Filed,
-fil.detail AS FilNo,
-pub.event_date AS Published,
-pub.detail AS PubNo,
-grt.event_date AS Granted,
-grt.detail AS GrtNo,
-matter.ID,
-matter.container_ID,
-matter.parent_ID,
-matter.responsible,
-matter.dead,
-IF(isnull(matter.container_ID),1,0) AS Ctnr,
-1 AS Pri
-FROM matter 
-  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
-    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
-  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
-    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' ". $inventor_filter ." AND inv.ID = invlnk.actor_ID)
-  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
-    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
-  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
-  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
-  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
-  JOIN (event status, event_name) 
-    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
-      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date  
-  LEFT JOIN (classifier, classifier_type) 
-    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
-WHERE e2.matter_id IS NULL ".$filter_clause. $multi_query ." order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
-*/
     return $dbStmt->fetchAll();
   }
 }
