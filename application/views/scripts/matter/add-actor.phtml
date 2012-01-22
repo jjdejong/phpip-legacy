@@ -61,8 +61,8 @@
   -webkit-border-radius: 5px;
 }
 </style>
-<link href="/js/css/smoothness/jquery-ui-1.8.12.base.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#Employer').autocomplete({
@@ -326,20 +326,14 @@ $(document).ready(function(){
                     VAT_number: $('#VAT_number').val(),
                   },
             success: function(response, status, xhr){
-                //var resp_type = xhr.getResponseHeader("content-type") || "";
                 if(response.length < 100){
                     var resObj = $.parseJSON(''+response);
-//alert(resObj.actor_name);
                     $( "#actor" ).val( resObj.actor_name );
                     $( "#actor-id" ).val( resObj.actor_id );
                     $('#add-new-actor').css('display', 'none');
                 }else{
                     $('#add-new-actor').html(response);
                 }
-/*                if(resp_type.indexOf('html') > -1){
-                }
-                if(resp_type.indexOf('json') > -1){
-                } */
             }
         });
     });

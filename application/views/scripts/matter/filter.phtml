@@ -1,37 +1,13 @@
-<script type="text/javascript" src="/js/jquery-extended/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" >
 $(document).ready(function(){
-/*    $(".row-tab").click(function(event){
-        var id_array = $(this).attr('id').split('-');
-        $(location).attr('href','/matter/view/id/' + id_array[2]);
-         var url = '/matter/view/id/'+id_array[2];
-         window.open(url);
-    });
-*/
 
-/*
-     $(".publink").click(function(event){
-        var pub_str = $(this).attr('id');
-        var pub_array = $(this).attr('id').split('~');
-        var pub_num = pub_array[1]
-        var country_code = pub_array[0]
-        pub_num_1 = pub_num.replace(/ /g, "");
-        pub_num = pub_num_1.replace(/\//g, "");
-        var url = 'http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC='+country_code+'&NR='+pub_num;
-        //alert(url);
-        window.open(url);
-     });
-*/
 
      $(".linkcolumn").click(function(event){
-        //if($(this).hasClass('publink')){
-        //     return false;
-        //}
         var id_array = $(this).attr('mid').split('-');
         var rid = $(this).attr('rid');
         var url = '/matter/view/id/'+id_array[2]+'/rid/'+rid;
         window.open(url);
-//        $(location).attr('href','/matter/view/id/' + id_array[2]);
      });
 
 
@@ -55,7 +31,6 @@ $rindex = 0;
 foreach($this->paginator as $matter):?>
 <?php //print_r($matter);?>
 
-<?php //print_r($matter);?>
 <div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: #<?php echo ($matter['Ctnr'])?'89A1C7':'FFF'; ?>" >
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-cat"><?php echo $matter['Cat']; ?></div>
@@ -70,7 +45,6 @@ foreach($this->paginator as $matter):?>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-date"><?php echo $matter['Filed'];?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-filing-no" title="<?=$matter['FilNo']?>"><?php echo substr($matter['FilNo'], 0,13);?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Published']?>"><?php echo $matter['Published'];?></div>
-<?/*<div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>"><?php echo substr($matter['PubNo'], 0, 10);?></div>*/?>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>"><?php
     if ($matter['origin'] == 'EP') $CC = 'EP';
     else $CC = $matter['country'];
@@ -81,12 +55,8 @@ foreach($this->paginator as $matter):?>
 <a href="http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=<?=$CC?>&NR=<?=$pubno?>" target="_blank"><?php echo substr($matter['PubNo'], 0, 12);?></a></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn linkcolumn column column-date" title="<?=$matter['Granted']?>"><?php echo $matter['Granted'];?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn linkcolumn column column-pub-no" title="<?=$matter['GrtNo']?>"><?php echo substr($matter['GrtNo'], 0, 10);?></div>
-<!-- <div class="column column-ctnr-pri"><?php echo $matter['Ctnr'];?></div> -->
-<!-- div class="column column-ctnr-pri"><?php echo $matter['responsible'];?></div -->
 </div>
 
-<!-- <a id="edit-matter-<?php //echo $matter['ID'] ?>" class="edit-matter" href="javascript:void(0)" >Edit</a>
--->
 <?php endforeach; ?>
 <?php if(count($this->paginator) > 1)
    echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');

@@ -76,11 +76,7 @@
 }
 .col-cat{
     display:inline-block;
-    width: 150px;
-}
-.col-code{
-    display:inline-block;
-    width: 75px;
+    width: 225px;
 }
 .col-count{
     display:inline-block;
@@ -127,6 +123,12 @@
   width:auto;
   top: 200px;
   position:fixed;
+}
+#tasklist-pop-up{
+    display: none;
+    position: absolute;
+    background: transparent; 
+    -moz-box-shadow: 0px;
 }
 #add-matter-popup{
   display: none;
@@ -175,12 +177,26 @@ display: block;
     -moz-box-shadow:2px 2px 1px #888;
     -webkit-box-shadow:2px 2px 1px #888;
 }
+.list-matter-block-info {
+    display:inline-block;
+    vertical-align: top;
+    background-color: #FFFFFF;
+    border: 1px solid #DDD;
+    border-style:inset;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    height: 100px;
+    padding:4px;
+    overflow: auto;
+}
 </style>
 
-<link href="/js/css/smoothness/jquery-ui-1.8.12.custom.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
 <script type="text/javascript">
 $(document).ready(function(){
-    $('.open-task').click(function(){
+
+    $('.open-ren').click(function(){
        var tid = $(this).attr('id');
        $('#facade').css('height', $(document).height());
        $('#facade').css("display", "block");
@@ -196,6 +212,21 @@ $(document).ready(function(){
          }
        });
     });
+    $('.open-task').click(function(){
+       var trigid = $(this).attr('id');
+       $('#facade').css('height', $(document).height());
+       $('#facade').css("display", "block");
+       $.ajax({
+         url: '/matter/tasklist/event_id/' + trigid,
+         type: 'POST',
+         data: {},
+         success: function(data){
+             $('#task-pop-up').html(data);
+             $('#task-pop-up').css('display', 'block');
+         }
+       });
+    });
+
     $('.add-cat-matter').click(function(){
         var catid = $(this).attr('id');
         $('#facade').css('height', $(document).height());
@@ -309,15 +340,15 @@ $(document).ready(function(){
 <div id="home-left">
 <div id="categories-box" class="home-box">
 <div class="home-box-header">
-<div class="list-header">Categories</div>
-<div class="clear-tasks-box"><a href="javascript:void(0);" class="add-cat-matter button-style" style="display:block;" id="" ><img src="/images/Add-16.png" alt="+" width=14 height=14 title="Add Matter" class="img-buttons" style="vertical-align:middle;"></img> New matter</a></div>
+<div class="list-header">Categories for <em><?=$this->categories[0]['responsible']?></em></div>
+<div class="clear-tasks-box"><a href="javascript:void(0);" class="add-cat-matter button-style" style="display:block;" id="">New matter</a></div>
 </div>
 <div id="" class="home-card">
-    <div class="list-headers"><div class="col-cat">Category</div><div class="col-code">Code</div><div class="col-count">Count</div><div class="col-actions"></div></div>
+    <div class="list-headers"><div class="col-cat">Category</div><div class="col-count">Count</div><div class="col-actions"></div></div>
 <?php if(count($this->categories)){ ?>
 <ul class="phpip-list" id="category-list">
 <?php foreach($this->categories as $matter): ?>
-    <li><div class="col-cat"><a href=""><?=$matter['category']?></a></div><div class="col-code"><?=$matter['category_code']?></div><div class="col-count"><?=$matter['no_of_matters']?></div><div class="col-actions"><a href="javascript:void(0);" class="add-cat-matter" id="<?=$matter['category']?>-<?=$matter['category_code']?>" ><img src="/images/Add-16.png" alt="+" width=14 height=14 title="Add Matter" class="img-buttons"></img></a></div></li>
+    <li><div class="col-cat"><a href="/matter/filter/Cat/<?=$matter['category_code']?>/responsible/<?=$matter['responsible']?>"><?=$matter['category']." (".$matter['category_code'].")"?></a></div><div class="col-count"><?=$matter['no_of_matters']?></div><div class="col-actions"><a href="javascript:void(0);" class="add-cat-matter" id="<?=$matter['category']?>-<?=$matter['category_code']?>" title="New <?=$matter['category']?>"><span class="ui-icon ui-icon-plusthick" style="float: right;"></span></span></a></div></li>
 <?php endforeach; ?>
 </ul>
 <?php } ?>
@@ -345,14 +376,11 @@ $(document).ready(function(){
 <?php foreach($this->open_tasks as $open_task){ 
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
-
-$matter_UID  = $open_task['caseref'];
-$matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
-$matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
-$matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
 ?>
-   <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div>
-<div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="Clear" /></div></li>
+   <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>"><?=$task_name?></a></div>
+<div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div>
+<div class="col-task-due_date"><?=$open_task['due_date']?></div>
+<div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="Clear"></div></li>
 <?php } ?>
 </ul>
 <?php endif; ?>
@@ -400,14 +428,9 @@ if($user['no_of_tasks'] > 0){
 <?php foreach($this->ren_tasks as $open_task){ 
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
-
-$matter_UID  = $open_task['caseref'];
-$matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
-$matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
-$matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
 ?>
- <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div>
-<div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-ren-task button-style" value="Clear" /></div></li>
+ <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-ren" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div>
+<div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-ren-task button-style" value="Clear"></div></li>
 <?php } ?>
 </ul>
 <?php endif; ?>

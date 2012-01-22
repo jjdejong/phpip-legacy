@@ -80,9 +80,9 @@
   font-style: italic;
 }
 </style>
-<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript" src="/js/jquery.jeditable.js"></script>
-<link href="/js/css/smoothness/jquery-ui-1.8.12.custom.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -110,8 +110,8 @@ $(document).ready(function(){
 		var mal_id = $(this).parent().attr('id').split('-');
 			return { matter_actor_id : mal_id[2] }
 		},
-          cancel : 'X',
-          submit : 'Ok',
+          //cancel : 'X',
+          //submit : 'Ok',
           select : true,
           indicator : '<img src="/images/indicator.gif" />',
           tooltip: 'Click to edit...'
@@ -388,13 +388,13 @@ $(document).ready(function(){
 
 <div class="listrow" style="width:100%">
 <div class="status-row" id="role-actors-view">
-<span class="eventlist-col-name" style="margin-left: 5px;" id="actor-role-title">Actor Role</span>
+<span class="eventlist-col-name" style="margin-left: 5px;" id="actor-role-title">Role</span>
 </div>
 <div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:97.7%; height: auto;" >
 <input type="hidden" value="<?=$this->matter_id?>" name="matter_id" id="matter-id" />
 <?php if(isset($this->actor_role)): ?>
 
-<div><a href="javascript:void(0);" id="edit-role-info"><?php echo $this->actor_role['name'] . " (" .$this->actor_role['code'].")"?></a></div>
+<div style="width:160px"><?php echo $this->actor_role['name'] . " (" .$this->actor_role['code'].")"?><a href="javascript:void(0);" id="edit-role-info"><span class="ui-icon ui-icon-wrench" style="float:right;"></span></a></div>
 <input type="hidden" value="<?=$this->actor_role['code']?>" name="role_code"/>
 <div id="role-info">
 <input type="checkbox" name="shareable" id="shareable" <?php echo ($this->actor_role['shareable'])? 'checked="checked"': ''; ?>></input><label for="shareable">Shareable</label>
@@ -409,13 +409,12 @@ $(document).ready(function(){
 <div id="role-actors-block">
 
 <div id="role-actors-head"><ul>
-<li style="width: 156px;">Display Name</li>
+<li style="width: 156px;">Name</li>
 <li <?php echo ($this->actor_role['show_ref'])? '' : 'style="display:none;"';?> class="actor_ref" >Actor ref</li>
 <li <?php echo ($this->actor_role['show_company'])? '' : 'style="display:none;"';?> class="actor_comp" >Company</li>
 <li <?php echo ($this->actor_role['show_rate'])? 'style="width:70px;"' : 'style="display:none;"';?> class="actor_rate" >Rate</li>
 <li <?php echo ($this->actor_role['show_date'])? 'style="width:70px;"' : 'style="display:none;"';?> class="actor_date" >Date</li>
 <li style="border:none;" ><img src="" alt="" width=16 height=16 title="Delete Actor"></img></li>
-<!-- <li style="width:50px;">Order</li> -->
 </ul></div>
 <ul id="sortable-role-actors" >
 <?php if(isset($this->role_actors)):
@@ -428,18 +427,17 @@ if($i%2 == 0)
   $row_class = 'even-row';
 ?>
 <li class="role-actors-list <?=$row_class?>" id="<?=$actor['ID']?>">
-<span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float:left; cursor: move;" ></span>
 <ul id="matter-actor-<?=$actor['ID']?>" class="<?php echo ($actor['inherited'])?"actor-inherit":"";?>">
+<!-- <li class="editable" style="width:10px;" id="display_order" ><?=$actor['display_order']?> </li> -->
 <?php 
 $actor_display_name = ($actor['display_name'] == "" ) ? $actor['name'] .  (($actor['first_name']) ? (", " . $actor['first_name']) : "") : $actor['display_name'];
 ?>
-<li><?php echo htmlentities($actor_display_name); ?></li>
+<li style="width: 156px;"><span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float:left; cursor: move;" ></span><?php echo htmlentities($actor_display_name); ?></li>
 <li class="editable actor_ref" <?php echo ($actor['show_ref'])? '' : 'style="display:none;"';?> id="actor_ref" ><?=$actor['actor_ref']?></li>
 <li class="actor_comp editable_comp" <?php echo ($actor['show_company'])? '' : 'style="display:none;"';?> id="company_ID-<?=$actor['company_ID']?>-<?=$actor['ID']?>" ><?=$actor['company_name']?></li>
 <li class="editable actor_rate" <?php echo ($actor['show_rate'])? 'style="width:70px;"' : 'style="display:none;"';?> id="rate" ><?=$actor['rate']?></li>
 <li class="editable actor_date" <?php echo ($actor['show_date'])? 'style="width:70px;"' : 'style="display:none;"';?> id="date" ><?=$actor['date']?></li>
-<!-- <li class="editable actor_display" style="width:50px;" id="display_order" ><?=$actor['display_order']?> </li> -->
-<li class="delete-matter-actor" id="<?=$actor['matter_ID']?>"><img src="/images/Delete-32.png" alt="Del" width=16 height=16 title="Delete Actor"></img></li>
+<li class="delete-matter-actor" id="<?=$actor['matter_ID']?>"><span class="ui-icon ui-icon-trash" style="float:right;"></span></li>
 </ul>
 <input type="hidden" name="company-<?=$actor['company_ID']?>-<?=$actor['ID']?>" value="<?=$actor['company_ID']?>" />
 </li>

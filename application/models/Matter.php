@@ -153,18 +153,6 @@ try{
     $this->setDbTable('Application_Model_DbTable_Matter');
     if(!$this->isMatterUnique($matter)){
       $matter['idx'] = $this->getNextIdx($matter);
-/*
-      $dbSelect = $this->_dbTable->getAdapter()->select();
-     $selectQuery = $dbSelect->from(array('m' => 'matter'), 'max(idx) as midx')
-                             ->where("caseref = '".$matter['caseref']."' AND country='".$matter['country']."' AND origin='".$matter['origin']."' AND type_code='".$matter['type_code']."' AND category_code='".$matter['category_code']."'");
-     $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
-     if($result['midx'] > 1)
-       $matter['idx'] = $result['midx'] + 1;
-     else
-       $matter['idx'] = 2;
-
-*/
-
     }
 
     try{
@@ -782,7 +770,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
  * $ren = 0 retrives non renewal
  * $ren = 1 retrives renewal
 **/
-  public function getMatterAllTask($matter_id = 0, $ren = 0)  // NOT RENewal
+/*  public function getMatterAllTask($matter_id = 0, $ren = 0)  // NOT RENewal
   {
     if(!$matter_id)
       return;
@@ -803,40 +791,45 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
                             ->order(array('e.event_date', 'tl.due_date'));
 
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
+  }*/
 
 /**
  * retrieves all tasks for a matter with event details 
 **/
-  public function getMatterEventTasks($matter_id = 0, $ren = 0) // not RENewal
+  public function getMatterEventTasks($matter_id = 0, $renewal = 0, $event_id = 0) // not RENewal
   {
-    if(!$matter_id)
+    if(!$matter_id && !$event_id)
       return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
-     if ($ren == 0)
-       $ren_condition = "  AND t.code != 'REN'";
-     else if ($ren == 1)
-       $ren_condition = "  AND t.code = 'REN'";
-
-     if($ren == 0){
+     if($renewal == 0 && $event_id == 0){
      $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'e.detail as event_detail', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID".$ren_condition, array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
+                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
                              ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
                              ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
                              ->where('e.matter_ID = ?', $matter_id)
                              ->order(array('e.event_date', 't.due_date'));
      }
 
-     if($ren == 1){
+     if($renewal == 1 && $event_id == 0){
      $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->join(array('t' => 'task'), "e.ID=t.trigger_ID".$ren_condition, array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
+                             ->join(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code = 'REN'", array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
                              ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
                              ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
                              ->where('e.matter_ID = ?', $matter_id)
                              ->order(array('e.event_date', 't.due_date'));
+     }
+     
+     // Retrieve tasks linked to a specific event
+     if($event_id != 0){
+     $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'e.detail as event_detail', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
+                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
+                             ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
+                             ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
+                             ->where('e.ID = ?', $event_id)
+                             ->order('t.due_date');
      }
 
      return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
@@ -865,22 +858,6 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
   }
 
-/**
- * retrives actors for a given role and search term
-**/
-  /*public function getActorForRole($role = NULL, $term = NULL)
-  {
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-    if($role == 1)
-        $role = "%";
-    $selectQuery = $dbSelect->from(array('a' => 'actor'), array('a.id','a.name as value', 'a.first_name','a.display_name','a.login'))
-                            ->joinInner(array('ar' => 'actor_role'), 'ar.code = a.default_role', array('ar.code', 'ar.name as role_name' ))
-                            ->where('ar.code like ? ', $role)
-                            ->where('a.name like ? ', $term . '%')
-                            ->order('a.name asc');
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }*/
 
 /**
  * retrieves all actors from actor table
@@ -1261,17 +1238,6 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
   }
 
-/**
- * This function is not used anymore 
-  public function getParentRefers($term = null, $matter_id = null)
-  {
-    $dbSelect = $this->getDbTable()->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref,'-', country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
-                            ->joinLeft(array('e' => 'event'), "m.ID=e.matter_ID AND e.code='FIL'", array('e.detail as number', 'e.event_date as filing_date'))
-                            ->where("m.origin IS NULL AND m.ID != '".$matter_id."' AND caseref LIKE '".$term."%'");
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
-**/
 
 /**
  * retrives a list of caserefs of container matters
@@ -1427,7 +1393,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     }
       $this->setDbTable('Application_Model_DbTable_Matter');
       $dbSelect = $this->_dbTable->getAdapter()->select();
-      $selectQuery = $dbSelect->from(array('m' => 'matter'), array('m.category_code', 'count(*) as no_of_matters'))
+      $selectQuery = $dbSelect->from(array('m' => 'matter'), array('m.category_code', 'count(*) as no_of_matters', 'm.responsible'))
                               ->join(array('mc' => 'matter_category'), 'm.category_code = mc.code', array('mc.category'))
                               ->where("responsible = '".$user."'") //$siteInfoNamespace->username
                               ->group('category_code');
@@ -1459,16 +1425,13 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
       $this->setDbTable('Application_Model_DbTable_Task');
       $dbSelect = $this->_dbTable->getAdapter()->select();
-      $selectQuery = $dbSelect->from(array('t' => 'task'), array('t.ID as task_ID', 't.code', 'DATE_FORMAT(t.due_date, "%d/%m/%Y") as due_date', 't.detail as task_detail'))
+      $selectQuery = $dbSelect->from(array('t' => 'task'), array('t.ID as task_ID', 't.code', 'DATE_FORMAT(t.due_date, "%d/%m/%Y") as due_date', 't.detail as task_detail', 't.trigger_ID'))
                               ->join(array('e' => 'event'), 't.trigger_ID = e.ID', array('e.matter_ID as MID'))
                               ->join(array('en' => 'event_name'), 't.code=en.code', array('en.name as task_name'))
-                              ->join(array('m' => 'matter'), 'e.matter_ID = m.ID', array('m.caseref', 'm.country', 'm.origin', 'm.type_code', "concat(m.caseref,m.country,if(m.origin IS NULL,'',concat('/',m.origin)),if(m.type_code IS NULL,'',concat('-',m.type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID" ))
+                              ->join(array('m' => 'matter'), 'e.matter_ID = m.ID', array('m.caseref', 'm.country', 'm.origin', 'm.type_code', "concat(m.caseref,m.country,if(m.origin IS NULL,'',concat('/',m.origin)),if(m.type_code IS NULL,'',concat('-',m.type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID"))
                               ->joinLeft(array('mal' => 'matter_actor_lnk'), "(ifnull(m.container_ID,m.ID) = mal.matter_ID AND mal.role='DEL')")
                               ->joinLeft(array('a' => 'actor'), "a.ID = mal.actor_ID")
                               ->where($where)
-//                              ->where("(ifnull(t.assigned_to, m.responsible)='".$user."' OR a.login='".$user."') AND t.trigger_ID = e.ID AND m.ID = e.matter_ID and t.code = en.code AND t.done=0 AND m.dead=0 AND t.due_date < DATE_ADD(NOW(), INTERVAL 1 YEAR)".$ren_condition)
-                           //   ->where("(t.assigned_to='".$user."') AND t.trigger_ID = e.ID AND m.ID = e.matter_ID and t.code = en.code AND t.done=0 AND m.dead=0".$ren_condition)
-//                              ->where("(ifnull(t.assigned_to, m.responsible)='".$user."' OR (select login from actor, matter_actor_lnk where ifnull(m.container_ID, m.ID)=matter_actor_lnk.matter_ID and actor.ID=matter_actor_lnk.actor_ID and matter_actor_lnk.role='DEL')='".$user."') AND t.done=0 AND m.dead=0 AND t.due_date < DATE_ADD(NOW(), INTERVAL 1 YEAR)".$ren_condition)
                               ->order(array('t.due_date', 'm.caseref'));
 
       return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
@@ -1482,11 +1445,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $this->setDbTable('Application_Model_DbTable_Task');
       $dbSelect = $this->_dbTable->getAdapter()->select();
 
- /*     $selectQuery = $dbSelect->from(array('a' => 'actor'), array('a.login'))
-                              ->joinLeft(array('tl' => 'task_list'), '(tl.responsible=a.login OR tl.delegate=a.login) AND tl.done=0 AND tl.dead=0', array('count(tl.ID) as no_of_tasks', 'DATE_FORMAT(Min(tl.due_date), "%d/%m/%Y") as urgent_date'))
-                              ->where('a.login IS NOT NULL')
-                              ->group('a.login'); */
-       $selectQuery = $dbSelect->from(array('t' => 'task', 'm'=> 'matter', 'e' => 'event'), array('count(*) as no_of_tasks', 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y") as urgent_date'))
+      $selectQuery = $dbSelect->from(array('t' => 'task', 'm'=> 'matter', 'e' => 'event'), array('count(*) as no_of_tasks', 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y") as urgent_date'))
                                ->join(array('e' => 'event'), 't.trigger_id=e.id')
                                ->join(array('m' => 'matter'), 'e.matter_id=m.id', array('ifnull(t.assigned_to, m.responsible) as login'))
                                ->where('m.dead=0 AND t.done=0')
@@ -1546,9 +1505,14 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array('max(caseref)+1 as id','max(caseref)+1 as value'))
+    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("ifnull(concat(mid(caseref,1,3), max(mid(caseref,4))+1),'".$term."') as id","ifnull(concat(mid(caseref,1,3), max(mid(caseref,4))+1),'".$term."') as value"))
                             ->where("caseref like  '". $term . "%' AND container_ID is NULL");
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $returnval = $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    if (count($returnval) == 0) {
+    	$returnval[0]['id'] = $term;
+    	$returnval[0]['value'] = $term;
+    }
+    return $returnval;
   }
 
 /**

@@ -1,5 +1,5 @@
-<link href="/js/css/smoothness/jquery-ui-1.8.12.custom.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#matter-country').autocomplete({
@@ -92,7 +92,7 @@ $(document).ready(function(){
                     $( "#matter-caseref-id" ).val( ui.item.id );
                  return false;
         },
-        change: function( event, ui ){
+        /*change: function( event, ui ){
                     valid=true;
                     if ( !ui.item ) {
                       valid=false;
@@ -104,7 +104,7 @@ $(document).ready(function(){
                       return false;
                    }
                  return false;
-        }
+        }*/
     });
     $('#matter-responsible').autocomplete({
         minLength: 1,
@@ -115,7 +115,6 @@ $(document).ready(function(){
         },
         select: function( event, ui ) {
                     $( "#matter-responsible" ).val( ui.item.value );
-                    //$( "#matter-responsible-id" ).val( ui.item.id );
                  return false;
         },
         change: function( event, ui ){
@@ -137,7 +136,7 @@ $(document).ready(function(){
         source: "/matter/get-all-categories",
         autoFocus: true,
         focus: function(event, ui){
-            return false;
+            return true;
         },
         select: function( event, ui ) {
                     $( "#matter-category" ).val( ui.item.value );
@@ -208,16 +207,6 @@ $(document).ready(function(){
                         $('#facade').css('display', 'none');
                         $(location).attr("href", '/matter/view/id/'+data);
                     }
-/*
-                    if( data != 'false' ){
-                      //  alert("Matter added!");
-                    $('#add-matter-popup').css('display', 'none');
-                    $('#facade').css('display', 'none');
-                        $(location).attr("href", '/matter/view/id/'+data);
-                   }else{
-                      alert("Add matter failed");
-                   }
-*/
                 }
             });
         }

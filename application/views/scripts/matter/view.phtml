@@ -101,7 +101,7 @@
 .list-matter-block {
     vertical-align: top;
     background: #B5D9E5;
-    height: 21px;
+    height: 23px;
 }
 .list-matter-block-info {
     display:inline-block;
@@ -142,6 +142,12 @@ vertical-align: top;
 display:inline-block;
 width: 150px;
 vertical-align: top;
+}
+
+.task-col-name{
+    display:inline-block;
+    width: 250px;
+    vertical-align: top;
 }
 
 .renewal-col-name{
@@ -300,6 +306,7 @@ width: 296px;
 }
 
 </style>
+<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="/js/jquery.jeditable.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -324,7 +331,7 @@ $(document).ready(function(){
             $('#tasklist-pop-up').css('top',ren_top - 5);
             $.ajax({
                 type: "POST",
-                url: "/matter/tasklist/id/<?=$this->matter_record[0]['ID']?>",
+                url: "/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>",
                 data: {},
                 success: function(data){
                     $('#tasklist-pop-up').html(data);
@@ -613,11 +620,8 @@ $(document).ready(function(){
 	<div class="matter-title">
        <?php echo $this->matter_record[0]['category'] ."</br>";?>
           <a href="javascript:void(0);" id="current-matter-edit" class="<?=$matter_dead?>" ><?php 
-       // echo  " (" . $this->matter_record[0]['category_code'] ."</br>";
         echo $this->matter_record[0]['UID']; 
-//	if ($this->matter_record[0]['type_code'] != "")
-//	  echo  " - " . $this->matter_record[0]['type_code'] ;
-	 ?></a>
+              ?><span class="ui-icon ui-state-highlight ui-corner-all ui-icon-wrench" style="float: right;"></span></a>
 
 	<?php
 	if($this->matter_parent){
@@ -629,7 +633,6 @@ $(document).ready(function(){
 			echo  " (" . $this->matter_parent[0]['category_code'] . ")</a>"; 
 		}
 
-//		echo "<br />" . $this->matter_record[0]['ID'] ;
 
 		?>
 	</div>
@@ -644,7 +647,7 @@ $(document).ready(function(){
 <span style="margin-top: 5px;" ><a href="javascript:void(0);" id="add-classifier-link" code="<?=$this->matter_record[0]['category_code']?>" >Add item</a></span>
 </div>
 
-<?php //echo htmlentities($this->matter_record[0]['Title']) . "<br>" ;// htmlentities($this->matter_record[0]['title'])  . "/" . htmlentities($this->matter_record[0]['title_alt']) ; ?>
+
 <?php 
 foreach($this->matter_classifier_main as $classifier):
 $cid = $classifier['ID'];
@@ -694,7 +697,7 @@ endif;
 ?>
 <div class="listrow">
 <div class="list-matter-block" > Actors<span id="responsible-actor-span">Responsible : <?=$this->matter_record[0]['responsible']?></span>  <a href="javascript:void(0)" style="float:right;" id="new-actor-0" class="add-actor button-style">Add Actor</a></div>
-<div class="list-matter-block-info" style="height: 150px;">
+<div class="list-matter-block-info" style="height: 150px; width: 99%">
 <input type="hidden" name="matterId" id="this-matter-id" value=<?=$this->matter_id?> />
 <input type="hidden" name="containerId" id="this-container-id" value="<?=$this->matter_record[0]['container_ID']?>" />
 <?php
@@ -702,17 +705,15 @@ foreach($this->matter_actors as $actor):
         //print_r($actor);
 	if($actor['role_name'] != ""){
 	    if($actor_role != $actor['role_name']){
-		if($div_start == 0)
+            if($div_start == 0)
 	    		echo "</div>";
-                $div_start = 0;
+            $div_start = 0;
 	    	$actor_role = $actor['role_name'];
-    	        echo "<div class='actor-block'>";
+            echo "<div class='actor-block'>";
 	        echo '<a href="javascript:void(0);" class="matter-role" id="matter-role-'. $actor['matter_ID'] .'-'.$actor['role'].'" >' . $actor['role_name'] . "</a><span class='add-actor' id='add-actor-" . $actor['role']  . "' title='Add Actor'> + </span><br>";
 	  }else
 		echo "<br />";
 	    $actor_display_name = ($actor['display_name'] == "" ) ? $actor['name'] .  (($actor['first_name']) ? (", " . $actor['first_name']) : "") : $actor['display_name'];
-
-            //$actor_display_name = htmlentities($actor_display_name );
 
 	    if($actor['actor_ref'])
 	    	$actor_display_name .=  " (" . $actor['actor_ref'] . ")";
@@ -734,10 +735,9 @@ if(count($this->matter_actors))
 <?php endif; ?>
 
 <?php //Matter Events?>
-<?php //if(isset($this->matter_events)):?>
 <div class="listrow" style="width:457px;display:inline-block;">
-<div class="status-row" id="MatterStatus"><span class="status-col-name">Status</span><span class="status-col-date">Date</span><span class="status-col-number" >Number</span></div>
-<div class="list-matter-block-info" style="width:97%" >
+<div class="status-row" id="MatterStatus" style="margin-left: 5px;"><span class="status-col-name">Status</span><span class="status-col-date">Date</span><span class="status-col-number">Number</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
+<div class="list-matter-block-info" style="width:98%" >
 
 <?php foreach($this->matter_events as $event):
     if ($this->matter_record[0]['origin'] == 'EP') $CC = 'EP';
@@ -762,40 +762,39 @@ if(count($this->matter_actors))
 </div>
 
 </div>
-<?php //endif; ?>
 
-<?php // Matter Open Tasks ?> 
-<?php //if(isset($this->matter_open_tasks)):
-   $trigger_id = "";
- ?>
+<?php // Matter Open Tasks
+$trigger_id = "";
+?>
 <div class="listrow" style="width:458px;display:inline-block;">
-<div class="status-row" id="MatterOpenTasks"><span class="status-col-name">Open tasks</span><span class="status-col-date">Detail</span><span class="status-col-number" >Due</span></div>
-<div class="list-matter-block-info" style="width:97%" >
+<div class="status-row" id="MatterOpenTasks" style="margin-left: 5px;"><span class="task-col-name">Open tasks</span><span class="status-col-date" >Due</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
+<div class="list-matter-block-info" style="width:98%" >
 <?php foreach($this->matter_open_tasks as $open_task): 
     if($trigger_id != $open_task['trigger_ID']){
        $trigger_id = $open_task['trigger_ID'];
  ?>
 
-<div class="status-row" style="margin:5px 0px; border-bottom: 1px solid #DDD;"><span class="status-col-name"><b><?=$open_task['trigger_name']?></b></span><span class="status-col-date"></span><span class="status-col-number" ></span></div>
+<div class="status-row" style="border-bottom: 1px solid #DDD;"><span class="status-col-name"><b><?=$open_task['trigger_name']?></b></span><span class="status-col-date"></span></div>
 <?php  }
 
     if($trigger_id == $open_task['trigger_ID']){
 ?> 
-<div class="status-row"><span class="status-col-name"><?=$open_task['task_name']?></span><span class="status-col-date"><?=$open_task['detail']?></span><span class="status-col-number" ><?=$open_task['due_date']?></span></div>
+<div class="status-row"><span class="task-col-name"><?=$open_task['task_name']?>
+<? if($open_task['detail'] != "")
+    echo ": " . $open_task['detail'] ?></span>
+<span class="status-col-date" ><?=$open_task['due_date']?></span></div>
 <?php }
       
 endforeach; ?>
 </div>
 </div>
-<?php //endif; ?>
 
 
-<?php //Matter Opent Task Renewals ?>
-<?php //if(isset($this->matter_open_tasks_ren)):
-   $trigger_id = "";
- ?>
+<?php //Matter Opent Task Renewals
+$trigger_id = "";
+?>
 <div class="listrow listrow-short" style="display:inline-block; width:200px !important;">
-<div class="status-row" id="MatterRenTasks"><span class="renewal-col-name">Renewals</span><span class="renewal-col-date" >Due</span></div>
+<div class="status-row" id="MatterRenTasks"><span class="renewal-col-name">Renewals</span><span class="renewal-col-date" >Due</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
 <div class="list-matter-block-info" style="width:97%" >
 <?php foreach($this->matter_open_tasks_ren as $open_task): 
     if($trigger_id != $open_task['trigger_ID']){
@@ -815,45 +814,18 @@ endforeach; ?>
 <?php if(isset($this->matter_expiry)):
 echo "Expiry: ".$this->matter_expiry['expire_term']; echo ($this->matter_expiry['term_adjust'] > 0)? " ( PTA: ".$this->matter_expiry['term_adjust']." days )" : "" ;
 endif; ?>
-<?php //foreach($this->matter_events_expired  as $expired_event): ?>
-<!-- <div class="status-row"><span class="renewal-col-name"><?php //$expired_event['name']?></span><span class="renewal-col-date"></span><span class="renewal-col-number" ><?php //$expired_event['event_date']?></span></div> -->
-<? // endforeach; ?>
+
 </div>
 </div>
-<?php //endif; ?>
 
 
-<?php //Matter Classifier ?>
-<?php //if(isset($this->matter_classifier)):
-   $trigger_id = "";
- ?>
+<?php //Matter Classifier
+$trigger_id = "";
+?>
 <div class="listrow listrow-short" style="display:inline-block; width: 390px !important;">
 <div class="status-row" id="MatterClassifier"><span class="status-col-name">Classifier</span></div>
-<div class="list-matter-block-info" style="width:97%" >
-<?php
-/* 
-foreach($this->matter_classifier as $classifier): 
-    if($classifier['c_value'])
-    	$classifier_array[$classifier['type']] = $classifier['c_value'];
-    if($classifier['cv_value'])
-    	$classifier_array[$classifier['cv_type']] = $classifier['cv_value'];
-    if($classifier['lnk_matter_id']){
-    	$classifier_array[$classifier['type']] = "<a href='/matter/view/id/" . $classifier['lnk_matter_id'] .  "'>" . $classifier['caseref'] . "</a> " . $classifier['country'] . " " . $classifier['origin'] . " " . $classifier['matter_type'];
-    }
-endforeach; 
-if($this->matter_classifier_container):
-foreach($this->matter_classifier_container as $classifier): 
-    if($classifier['c_value'])
-    	$classifier_array[$classifier['type']] = $classifier['c_value'];
-    if($classifier['cv_value'])
-    	$classifier_array[$classifier['cv_type']] = $classifier['cv_value'];
-    if($classifier['lnk_matter_id']){
-    	$classifier_array[$classifier['type']] = "<a href='/matter/view/id/" . $classifier['lnk_matter_id'] .  "'>" . $classifier['caseref'] . "</a> " . $classifier['country'] . " " . $classifier['origin'] . " " . $classifier['matter_type'];
-    }
-endforeach;
-endif;
-*/
-?>
+<div class="list-matter-block-info" style="width:98%" >
+
 
 <?php 
 $ctype = "";
@@ -898,10 +870,8 @@ if(strlen($classifier['value']) > 80){
 
 </div>
 </div>
-<?php //endif; ?>
 
-<?php //notes ?>
-<?php //if(isset($this->matter_record[0]['notes'])): ?>
+<?php //notes?>
 <div class="listrow listrow-short" style="display:inline-block;">
 <div class="status-row"><span class="status-col-name">Notes</span></div>
 <div class="list-matter-block-info" style="width:97%" >
@@ -909,7 +879,6 @@ if(strlen($classifier['value']) > 80){
 </div>
 </div>
 </div>
-<?php //endif; ?>
 
 <div id="facade"></div>
 <div id="actors-browse-popup"></div>

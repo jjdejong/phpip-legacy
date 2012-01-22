@@ -70,13 +70,8 @@
 <?php foreach($this->open_tasks as $open_task){
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
-
-$matter_UID  = $open_task['caseref'];
-$matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
-$matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
-$matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
 ?>
-    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['matter_ID']?>"><?=$matter_UID?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
+    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
 <?php } ?>
 </ul>
 <?php endif; ?>
@@ -86,13 +81,8 @@ $matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
 <?php foreach($this->ren_tasks as $open_task){
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
-
-$matter_UID  = $open_task['caseref'];
-$matter_UID .= ($open_task['country'])? " ".$open_task['country']: "";
-$matter_UID .= ($open_task['origin'])? " ".$open_task['origin']: "";
-$matter_UID .= ($open_task['type_code'])? " ".$open_task['type_code']: "";
 ?>
-    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['matter_ID']?>"><?=$matter_UID?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
+    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
 <?php } ?>
 </ul>
 <?php endif; ?>

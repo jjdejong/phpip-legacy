@@ -26,7 +26,7 @@ consequat.';*/
 .status-row{
 display:block;
 }
-.tasklist-col-name{
+.tasklist-col-detail{
 display:inline-block;
 width: 220px;
 vertical-align: top;
@@ -126,7 +126,7 @@ vertical-align: top;
 .event-actions{
   display:none;
 }
-.event-head span{
+.event-head{
   height: 18px;
   vertical-align: top;
 }
@@ -137,10 +137,13 @@ vertical-align: top;
   display:inline-block;
 }
 
-</style>
-<link href="/js/css/smoothness/jquery-ui-1.8.12.custom.css" media="screen" rel="stylesheet" type="text/css" >
+.task-row:hover{
+  background: #EEF;
+}
 
-<script type="text/javascript" src="/js/js/jquery-ui-1.8.12.custom.min.js"></script>
+</style>
+<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
+<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript" src="/js/jquery.jeditable.js"></script>
 <script type="text/javascript" src="/js/jquery.jeditable.datepicker.js"></script>
 <script type="text/javascript">
@@ -238,7 +241,16 @@ $(document).ready(function(){
           placeholder: '...',
           select : true,
           indicator : '<img src="/images/indicator.gif" />',
-          tooltip: 'Click to edit...'
+          // This is to diplay only the "detail" portion of the task in the edit field when clicking on a task name for edition                 
+          data: function(value, settings){
+             var fclass = $(this).attr('class').split(" ");
+             var field_name = (fclass[0]).split('-');
+             var name_detail = value.split(": ");
+             if (field_name[2] == 'detail')
+                return name_detail[1];
+             else
+                return value;
+          }
     });
     $('.editable-due-date').editable('/matter/update-task', {
             submitdata: function(value,settings){
@@ -290,7 +302,6 @@ $(document).ready(function(){
        var tid = $(this).val();
        var done_val = 0;
        if($(this).is(":checked")){ 
-//        $(this).attr("disabled", true);
           done_val = 1;
        }else{
           done_val = 0;
@@ -305,12 +316,9 @@ $(document).ready(function(){
             url: '/matter/update-task',
             data: { task_id: tid, field: 'done', value: done_val },
             success: function(data){
-             /*   $('.editable').editable('disable');
-                $('.editable-due-date').editable('disable');
-                $('.editable-done-date').editable('disable'); */
               $.ajax({
                 type: "POST",
-                url: "/matter/tasklist/id/<?=$this->matter_id?>",
+                url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
                 data: {},
                 success: function(data){
                     $('#tasklist-pop-up').empty();
@@ -321,36 +329,6 @@ $(document).ready(function(){
         });
     });
 
-/*    $('.tasklist-col-due_date').click(function(){
-        if(confirm_due == 1){
-        confirm_due = 0;
-        var tid = $(this).parent().attr('id');
-              var fclass = $(this).attr('class').split(" ");
-              var field_name = (fclass[0]).split('-');
-                    var rule_id = $(this).attr('rule_id');
-                     if(field_name[2] == "due_date" && rule_id){
-                        $('#pr-confirm').dialog({
-                        autoOpen: false,
-                        width: 400,
-                        modal: true,
-                        resizable: false,
-                        title: "phpIP info",
-                        buttons: {
-                           "Confirm": function(){
-                               $(this).dialog("close");
-                               update_due = 1;
-                            },
-                            "Cancel": function(){
-                               $(this).dialog("close");
-                               update_ude = 0;
-                            }
-                        }
-                       });
-                    $('#pr-confirm').text("Changing the due date will unlink the task from date calculation rule");
-                    $('#pr-confirm').dialog("open");
-                 }
-        }
-    }); */
 
     $('.add-task-toevent').click(function(){
         var trigger_id = $(this).attr('id');
@@ -373,7 +351,6 @@ $(document).ready(function(){
             minLength: 1,
             source: "/matter/get-all-tasks",
             focus: function( event, ui ) {
-                    /*$( "#actor" ).val( ui.item.id );*/
                     return false;
             },
             select: function( event, ui ) {
@@ -435,7 +412,7 @@ $(document).ready(function(){
                   //alert(data);
                   $.ajax({
                     type: "POST",
-                    url: "/matter/tasklist/id/<?=$this->matter_id?>",
+                    url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
                     data: {},
                     success: function(data){
                         $('#tasklist-pop-up').empty();
@@ -463,7 +440,7 @@ $(document).ready(function(){
                  if(!isNaN(parseInt(data))){
                    $.ajax({
                    type: "POST",
-                   url: "/matter/tasklist/id/<?=$this->matter_id?>",
+                   url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
                    data: {},
                    success: function(data){
                     $('#tasklist-pop-up').empty();
@@ -504,7 +481,7 @@ $(document).ready(function(){
                              if(!isNaN(parseInt(data))){
                                    $.ajax({
                                        type: "POST",
-                                       url: "/matter/tasklist/id/<?=$this->matter_id?>",
+                                       url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
                                        data: {},
                                        success: function(data){
                                          $('#tasklist-pop-up').empty();
@@ -526,7 +503,7 @@ $(document).ready(function(){
 </script>
 
 <div id="MatterAllTasksBlock" class="listrow" ><div id="MatterAllTasks" class="status-row">
-<span class="tasklist-col-name" style="margin-left: 5px;"><? 
+<span class="tasklist-col-detail" style="margin-left: 5px;"><? 
 if ($this->renewal == 1) 
     echo "All renewals";
 else
@@ -543,8 +520,9 @@ else
 <? } ?>
 <span class="tasklist-col-assigned_to" >Assigned To</span>
 <span class="tasklist-col-notes" >Notes</span>
+<span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"></span>
 </div>
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto;" >
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
 
 <?php 
 $event_id = '';
@@ -563,45 +541,35 @@ foreach($this->matter_event_tasks as $event_task):
 <? if($add_empty_row){ ?>
 <div style="height:15px;"></div>
 <? } ?>
-<div class="status-row event-head" style="margin:5px 0px; border-bottom: 1px solid #DDD;">
-<span class="tasklist-col-name"><b><?=$event_task['event_name'] . ": " . $event_task['event_date'] ?></b>
+<div class="status-row event-head" style="border-bottom: 1px solid #DDD;">
+<span class="tasklist-col-detail"><b><?=$event_task['event_name'] . ": " . $event_task['event_date'] ?></b>
 </span>
-<div class="event-actions"><span class="add-task-toevent" id="<?=$event_id?>" title="Add task to event"><img src="/images/Add-16.png" alt="+" width=16 height=16 title="Add Task"></img></span>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete-event" style="cursor:pointer;" id="<?=$event_id?>"><img src="/images/Delete-32.png" alt="-" width=16 height=16 title="Delete Event"></img></span></div>
+<div class="event-actions" style="width:48px"><span class="add-task-toevent" id="<?=$event_id?>" title="Add task to <?=$event_task['event_name']?>"><span class="ui-icon ui-icon-plusthick" style="float:left;"></span></span><span class="delete-event" style="cursor:pointer;" id="<?=$event_id?>" title="Delete event"><span class="ui-icon ui-icon-trash" style="float:right;"></span></span></div>
 </div>
 <?php $close_event_box = 1; }
     if($event_id == $event_task['trigger_ID']){
 ?>
 <div class="status-row task-row" id="<?=$event_task['ID']?>">
-<span class="tasklist-col-name"><?=$event_task['task_name']?>
+<span class="tasklist-col-detail editable" title="Click to edit detail"><?=$event_task['task_name']?>
 <? if($event_task['detail'] != "")
-   echo " - " . $event_task['detail'] ?></span>
-<?php
-$editable = 'editable';
-$due_date_edit = 'editable-due-date';
-$done_date_edit = 'editable-done-date';
-/*if($open_task['done']){
-  $editable = "";
-  $due_date_edit = "";
-  $done_date_edit = "";
-}*/
-?>
-<span id="due_date-<?=$event_task['ID']?>" class="tasklist-col-due_date <?=$due_date_edit?>" rule_id="<?=$event_task['rule_used']?>" ><?=$event_task['due_date']?></span>
+   echo ": " . $event_task['detail'] ?></span>
+
+<span id="due_date-<?=$event_task['ID']?>" class="tasklist-col-due_date editable-due-date" rule_id="<?=$event_task['rule_used']?>" ><?=$event_task['due_date']?></span>
 <span class="tasklist-col-done" ><input type="checkbox" name="doneflag-<?=$event_task['ID']?>" value="<?=$event_task['ID']?>" <? if($event_task['done']) echo "checked"; ?> ></span>
-<span id="done_date-<?=$event_task['ID']?>" class="tasklist-col-done_date <?=$done_date_edit?>" ><?=$event_task['done_date']?></span>
-<span class="tasklist-col-cost <?=$editable?>" ><?=$event_task['cost']?></span>
-<span class="tasklist-col-fee <?=$editable?>" ><?=$event_task['fee']?></span>
-<span class="tasklist-col-currency <?=$editable?>" ><?=$event_task['currency']?></span>
+<span id="done_date-<?=$event_task['ID']?>" class="tasklist-col-done_date editable-done-date" ><?=$event_task['done_date']?></span>
+<span class="tasklist-col-cost editable" title="Click to edit cost"><?=$event_task['cost']?></span>
+<span class="tasklist-col-fee editable" title="Click to edit fee"><?=$event_task['fee']?></span>
+<span class="tasklist-col-currency editable" title="Click to edit"><?=$event_task['currency']?></span>
 <? if ($this->renewal == 0) {?>
-<span class="tasklist-col-time_spent <?=$editable?>" ><?=$event_task['time_spent']?></span>
+<span class="tasklist-col-time_spent editable" title="Click to edit (HH:MM:SS)"><?=$event_task['time_spent']?></span>
 <?}?>
-<span class="tasklist-col-assigned_to edit-assigned-to" ><?=$event_task['assigned_to']?></span>
+<span class="tasklist-col-assigned_to edit-assigned-to" "Click to edit"><?=$event_task['assigned_to']?></span>
 <? if(strlen($event_task['task_notes']) < 25){?>
-<span class="tasklist-col-notes <?=$editable?>" ><?=$event_task['task_notes'];?></span>
+<span class="tasklist-col-notes editable" title="Click to edit notes"><?=$event_task['task_notes'];?></span>
 <? } else { ?>
-<span class="tasklist-col-notes notes <?=$editable?>" title="<?=$event_task['task_notes'];?>"><? echo substr($event_task['task_notes'], 0, 25) . "...";?></span>
+<span class="tasklist-col-notes notes editable" title="<?=$event_task['task_notes'];?>"><? echo substr($event_task['task_notes'], 0, 25) . "...";?></span>
 <? } ?>
-<span class="delete-task"><img src="/images/Delete-32.png" alt="Del" width=16 height=16 title="Delete Task"></img></span>
+<span class="delete-task" title="Delete task"><span class="ui-icon ui-icon-trash" style="float:right;"></span></span>
 </div>
 <?php }
   $add_empty_row = 1;
@@ -611,7 +579,6 @@ $done_date_edit = 'editable-done-date';
 
 </div>
 <div id="pr-confirm"></div>
-<?php //endif; ?>
 
 <div id="add-task-popup" class="listrow">
 <div id="add-task-wrap">

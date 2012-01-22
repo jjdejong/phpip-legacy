@@ -20,8 +20,6 @@ class MatterController extends Zend_Controller_Action
         $this->view->containers = 1;
     }
 
-//    $sort_field = isset($this->_getParam('s'))? $this->_getParam('s') : 'caseref';
-//    $sort_dir = isset($this->_getParam('d'))? $this->_getParam('d') : 'asc';
     $get_sort = $this->_getParam('sort');
     $get_dir = $this->_getParam('dir');
     $sort_field = isset($get_sort) ? $get_sort : 'caseref';
@@ -46,12 +44,6 @@ class MatterController extends Zend_Controller_Action
     $paginator->setCurrentPageNumber($page);
     $paginator->setItemCountPerPage(25);
 
-  /*  $containers = array();
-    foreach($paginator as $container)
-    {
-        $containers[$container['ID']] = $matterModel->getFromContainer($container['ID']);
-    }
-*/
     $this->view->paginator = $paginator;
     $this->view->sort_id = 'caseref';
     $this->view->sort_dir = 'asc';
@@ -81,19 +73,7 @@ class MatterController extends Zend_Controller_Action
         $matterModel = new Application_Model_Matter();
         $result = $matterModel->save($matter);
         echo $result;
-/*
-        if(!is_int($result)){
-           $msg = "Failed to add matter";
-           $this->view->matter_status = false;
-           $this->view->error_msg = $result;
-           echo $result;
-        }
-        else{
-           $msg = "Matter added successfully";
-           $this->view->matter_status = true;
-           echo $result;
-        }
-*/
+
     }else{
       $category_id = $this->_getParam('category_id');
       $category_arr = explode('-', $category_id);
@@ -167,20 +147,11 @@ class MatterController extends Zend_Controller_Action
       $caseref_prev = $data['caseref_prev'];
       unset($data['matter_id']);
       unset($data['caseref_prev']);
-      if($data['origin'] == '')
-           $data['origin'] = null;
-
-      if($data['type_code'] == '')
-           $data['type_code'] = null;
-
-      if($data['parent_ID'] == '')
-           $data['parent_ID'] = null;
-
-      if($data['container_ID'] == '')
-           $data['container_ID'] = null;
-
-      if($data['idx'] == '')
-        $data['idx'] = null;
+        
+      foreach($data as $key=>$val){
+        if($val == "")
+            $data[$key] = NULL;
+      }
 
       if(!$matterModel->isMatterUnique($data, $matter_id)){
           $nidx = $matterModel->getNextIdx($data);
@@ -229,7 +200,6 @@ class MatterController extends Zend_Controller_Action
 
       $this->view->cats = $matterModel->getAllCategories();
       $this->view->types = $matterModel->getMatterTypes();
-      //$this->render('add');
     }
   }
 
@@ -240,12 +210,13 @@ class MatterController extends Zend_Controller_Action
   public function tasklistAction()
   {
     $this->_helper->layout->disableLayout();
-    $matter_id = $this->_getParam('id');
+    $matter_id = $this->_getParam('matter_id');
+    $event_id = $this->_getParam('event_id');
     $matterModel = new Application_Model_Matter();
-    $this->view->matter_event_tasks = $matterModel->getMatterEventTasks($matter_id);
+    $this->view->matter_event_tasks = $matterModel->getMatterEventTasks($matter_id, 0, $event_id);
     $this->view->renewal = 0;
     $this->view->matter_id = $matter_id;
-//    $this->view->matter_events = $matterModel->getMatterAllEvents($matter_id);
+    $this->view->event_id = $event_id;
   }
 
 /**
@@ -255,13 +226,13 @@ class MatterController extends Zend_Controller_Action
   public function tasklistrenAction()
   {
     $this->_helper->layout->disableLayout();
-    //$this->_helper->viewRenderer('tasklist');
     $matter_id = $this->_getParam('id');
+    $event_id = $this->_getParam('event_id');
     $matterModel = new Application_Model_Matter();
-    //$this->view->matter_open_tasks = $matterModel->getMatterAllTask($matter_id, 1);
-    $this->view->matter_event_tasks = $matterModel->getMatterEventTasks($matter_id, 1);
+    $this->view->matter_event_tasks = $matterModel->getMatterEventTasks($matter_id, 1, $event_id);
     $this->view->renewal = 1;
     $this->view->matter_id = $matter_id;
+    $this->view->event_id = $event_id;
   }
 
 /**
@@ -280,14 +251,14 @@ class MatterController extends Zend_Controller_Action
 /**
  * Deprecated
 **/
-  public function actorlistAction()
+/*  public function actorlistAction()
   {
     $this->_helper->layout->disableLayout();
     $matter_id = $this->_getParam('matter_id');
     $container_id = $this->_getParam('container_id');
     $matterModel = new Application_Model_Matter();
     $this->view->matter_actors = $matterModel->getMatterActors($matter_id, $container_id);
-  }
+  }*/
 
 /**
  * Displays all classifiers list
@@ -360,10 +331,6 @@ class MatterController extends Zend_Controller_Action
     array_push($matter_actors, array('id' => 'cna786', 'value' => 'Create New Actor'));
 
     $this->view->matter_actor = $matter_actors;
-    #echo '{"c++":"lang", "java":"lang1", "php":"lang2", "coldfusion":"lang3", "javascript":"lang4", "asp":"lang5", "ruby":"lang6"}';
-    #echo '["c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"]';
-    #echo '[ { value: "jquery" }, { value: "jquery-ui" }, { value: "sizzlejs" } ]; ';
-    #echo json_encode(array("c++", "java", "php", "coldfusion", "javascript", "asp", "ruby"));
     echo @json_encode($matter_actors);
   }
 
@@ -508,9 +475,7 @@ class MatterController extends Zend_Controller_Action
             $post_data['value'] = isset($post_data['company_id']) ? $post_data['company_id'] : NULL;
         }
   	$data[$post_data['id']] = $post_data['value'];
-  //	$matter_id = $post_data['matter_id'];
-  //	$role_code = $post_data['role_code'];
-        $matter_actor_id = $post_data['matter_actor_id'];
+    $matter_actor_id = $post_data['matter_actor_id'];
   	$matterModel = new Application_Model_Matter();
   	$matterModel->saveMatterActor($matter_actor_id, $data);
   	echo $display_val;
@@ -574,7 +539,7 @@ class MatterController extends Zend_Controller_Action
     $matterModel = new Application_Model_Matter();
     $matterModel->updateMatter($data, $matter_id);
 
-    echo nl2br(htmlentities($field_value));
+    echo nl2br($field_value);
   }
 
 /**
@@ -607,23 +572,6 @@ class MatterController extends Zend_Controller_Action
     echo $field_value;
   }
 
-/**
- * clears a task for a given done_date or now()
-**/
-/*  public function clearTaskAction()
-  {
-    $this->_helper->layout->disableLayout();
-    $this->_helper->viewRenderer->setNoRender();
-  
-    if(!$this->getRequest()->isPost())
-      return false;
-
-    $post_data = $this->getRequest()->getPost();
-    $task_id = $post_data['task_id'];
-    $matterModel = new Application_Model_Matter();
-    $result = $matterModel->clearTask($task_id, $post_date['done_date']);
-    echo $result;
-  }*/
 
 /**
  * clears multiple tasks for a given done_date
@@ -892,14 +840,6 @@ class MatterController extends Zend_Controller_Action
         }
         $matterModel = new Application_Model_Matter();
         $result = $matterModel->addClassifier($post_data);
-      /*  if($result){
-            echo "true";
-            return;
-        }
-        else{
-            echo "false";
-            return;
-        }*/
         echo $result;
     }else{
         $cat_code = $this->_getParam('cat_code');
@@ -934,13 +874,8 @@ class MatterController extends Zend_Controller_Action
            if(count($cvs) > 0){
              $data = array( 'value' => $post_data['value'], 'type_code' => $post_data['type_code'] );
              $post_data['value_ID'] = $matterModel->addClassifierValue($data);
-           }/*else{
-             unset($post_data['value_ID']);
-           }*/
+           }
         }
-
-        /*if($post_data['lnk_matter_ID'] == '')
-           unset($post_data['lnk_matter_ID']);*/
 
         $matterModel = new Application_Model_Matter();
         $result = $matterModel->addClassifier($post_data);
@@ -950,15 +885,7 @@ class MatterController extends Zend_Controller_Action
         } else {
             echo $result; 
         } 
-/*
-        if($result){
-            echo "true";
-            return;
-        }
-        else{
-            echo "false";
-            return;
-        } */
+
     }else{
         $this->view->type_code = $this->_getParam('type_code');
         $this->view->classifier_types = $matterModel->getClassifierTypes();
@@ -1046,10 +973,8 @@ class MatterController extends Zend_Controller_Action
     $paginator->setItemCountPerPage(25);
 
     $this->view->paginator = $paginator;
-//    if(Zend_Controller_Request_Http::isXmlHttpRequest()){
+
     if(!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
-//echo "ajax request";exit();
-//    if($page == 1){
         $this->_helper->layout->disableLayout();
     }else{
         $this->view->filters = $post_data;
@@ -1097,16 +1022,6 @@ class MatterController extends Zend_Controller_Action
     if($request->isPost()){
         $post_data = $request->getPost();
         if($actorForm->isValid($post_data)){
-            /*if($post_data['parent_ID'] == '')
-                unset($post_data['parent_ID']);
-            if($post_data['company_ID'] == '')
-                unset($post_data['company_ID']);
-            if($post_data['site_ID'] == '')
-                unset($post_data['site_ID']);
-            if($post_data['display_name'] == '')
-                unset($post_data['display_name']);
-            if($post_data['nationality'] == '')
-                unset ($post_data['nationality']);*/
                 
             foreach($post_data as $key=>$data){
         		if($data == "")
@@ -1341,11 +1256,8 @@ class MatterController extends Zend_Controller_Action
       $this->view->country_code = $country_arr[1];
       $this->view->username = $this->username;
 
-      //$matter_ref = $matterModel->getMatterRefPrefix($category_arr[1]);
-      //$caseref = $matterModel->getMatterCaseref($matter_ref['ref_prefix']);
       $this->view->caseref = $caseref;
       $this->view->matter_title = "New Child Matter";
-      //echo "caseref ".$this->view->caseref;exit();
 
       $origin_arr = $matterModel->getCountryByCode($origin);
       $this->view->origin_name = $origin_arr['name'];
@@ -1393,20 +1305,16 @@ class MatterController extends Zend_Controller_Action
       //print_r($form_data);exit();
       $m = 0;
       for($i=0; $i < count($form_data);){
-//        foreach($form_data as $country){
         if(substr($form_data[$i]['name'], 0, 3) == "dis"){
           $i++;
         }
 
         $matter['country'] = $form_data[$i]['value'];
         $entered_date = $form_data[$i+2]['value'];
-//        $matter['type_code'] = $form_data[$i+1]['value'];
-//        $matter['responsible'] = $form_data[$i+2]['value'];
         $result = $matterModel->child($matter);
         if($result){
           $matterModel->childActors($matter_id, $result);
           $matterModel->clonePriorities($matter_id, $result);
-         // $matterModel->childParentFiledEvent($result, $matter_id);
           $matterModel->nationalPhaseEvents($matter_id, $result);
           $matterModel->enteredEvent($result, $entered_date);
           $m++;
