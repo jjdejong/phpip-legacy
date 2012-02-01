@@ -192,7 +192,6 @@ display: block;
 }
 </style>
 
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -231,24 +230,22 @@ $(document).ready(function(){
         var catid = $(this).attr('id');
         $('#facade').css('height', $(document).height());
         $('#facade').css("display", "block");
+        $('#add-matter-popup').css('left', '200px');
         $.ajax({
           url: '/matter/add',
           type: 'GET',
           data: { category_id : catid },
           success: function(data){
              $('#add-matter-popup').html(data);
-             var ren_left = Math.round($(window).width()/2) - Math.round($('#add-matter-popup').width()/2);
-             $('#add-matter-popup').css('left', ren_left);
-             $('#add-matter-popup').css('display', 'block');
           }
         });
+        $('#add-matter-popup').css('display', 'block');
     });
 
     $('.done-date').datepicker({
-        changeMonth: true,
-        changeYear: true,
+        //changeMonth: true,
+        //changeYear: true,
         dateFormat: 'dd/mm/yy',
-//        minDate: 0,
     });
     $('.done-date').datepicker('setDate', new Date());
 
@@ -258,6 +255,11 @@ $(document).ready(function(){
           if($(this).is(':checked'))
              tids.push($(this).attr('id'));
         });
+        if(tids.length == 0) {
+             alert("No tasks selected for clearing!");
+             return;
+        }
+        $( this ).html('<img src="/images/indicator.gif" />');
         $.ajax({
           url: '/matter/clear-tasks',
           type: 'POST',
@@ -277,6 +279,11 @@ $(document).ready(function(){
           if($(this).is(':checked'))
              tids.push($(this).attr('id'));
         });
+        if(tids.length == 0) {
+             alert("No tasks selected for clearing!");
+             return;
+        }
+        $( this ).html('<img src="/images/indicator.gif" />');
         $.ajax({
           url: '/matter/clear-tasks',
           type: 'POST',
@@ -333,6 +340,7 @@ $(document).ready(function(){
           }
         });
     });
+    $( "button, input:button").button();
 });
 </script>
 <div id="home-wrap">
@@ -341,7 +349,7 @@ $(document).ready(function(){
 <div id="categories-box" class="home-box">
 <div class="home-box-header">
 <div class="list-header">Categories for <em><?=$this->categories[0]['responsible']?></em></div>
-<div class="clear-tasks-box"><a href="javascript:void(0);" class="add-cat-matter button-style" style="display:block;" id="">New matter</a></div>
+<div class="clear-tasks-box"><button class="add-cat-matter" style="display:block;" id="Patent-PAT">New matter</button></div>
 </div>
 <div id="" class="home-card">
     <div class="list-headers"><div class="col-cat">Category</div><div class="col-count">Count</div><div class="col-actions"></div></div>
@@ -365,7 +373,7 @@ $(document).ready(function(){
 </div>
 
  <div class="clear-tasks-box">
-<input type="button" class="button-style" id="clear-open-tasks" value="Clear selected on" style="padding: 0px 8px;" />
+<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 0px 8px;" />
 <label for="open-done-date" ></label><input type="text" value="" id="open-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
 </div>
 </div>
@@ -417,7 +425,7 @@ if($user['no_of_tasks'] > 0){
 <label for="open-rens-assigned" >Assigned to me</label>
 </div>
 <div class="clear-tasks-box">
-<input type="button" class="button-style" id="clear-ren-tasks" value="Clear selected on" style="padding: 0px 8px;" />
+<input type="button" id="clear-ren-tasks" value="Clear selected on" style="padding: 0px 8px;" />
 <label for="ren-done-date" ></label><input type="text" value="" id="ren-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
 </div>
 </div>

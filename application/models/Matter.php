@@ -96,7 +96,7 @@ class Application_Model_Matter
     }
 
 /**
- * saves new matter record upon adding a matter and adds a delegate matter
+ * saves new matter record upon adding a matter [and adds a delegate matter]
 **/
   public function save($matter = array())
   {
@@ -115,7 +115,7 @@ try{
     $this->_dbTable->insert($matter);
     $this->setID($this->_adapter->lastInsertID());
     $this->receivedEvent($this->getID());
-    $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
+    /*$siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
     $username = $siteInfoNamespace->username;
     if($matter['responsible'] != $username)
     {
@@ -127,7 +127,7 @@ try{
        $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
        if(isset($result['ID']))
          $this->addDelegateActor($this->getID(), $result);
-    }
+    }*/
   }catch (Exception $e){
   // echo $e->getMessage();
     return $e->getMessage();
@@ -136,7 +136,7 @@ try{
   }
 
 /**
- * creates a new child matter and add a delegate actor
+ * creates a new child matter [and add a delegate actor]
 **/
   public function child($matter = array())
   {
@@ -159,7 +159,7 @@ try{
     $this->_dbTable->insert($matter);
     $this->setID($this->_adapter->lastInsertID());
     $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
-    $username = $siteInfoNamespace->username;
+    /*$username = $siteInfoNamespace->username;
     if($matter['responsible'] != $username)
     {
        $this->setDbTable('Application_Model_DbTable_Actor');
@@ -170,7 +170,7 @@ try{
        $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
        if(isset($result['ID']))
          $this->addDelegateActor($this->getID(), $result);
-    }
+    }*/
   }catch (Exception $e){
   // echo $e->getMessage();
     return false;
@@ -270,7 +270,7 @@ try{
 /**
  * adds a delegate actor for a matter
 **/
-  public function addDelegateActor($matter_id = null, $actor = null)
+/*  public function addDelegateActor($matter_id = null, $actor = null)
   {
     if(!isset($matter_id) || !isset($actor['ID']))
       return;
@@ -289,7 +289,7 @@ try{
     $data['shared'] = $actor_role['shareable'];
     $data['date'] = date('Y-m-d');
     $this->_dbTable->insert($data);
-  }
+  }*/
 
 /**
  * creates Filed, Published, Granted events copied from current matter to a new matter
@@ -1072,7 +1072,6 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
      try{
          $this->_dbTable->insert($data);
      }catch(Exception $e){
-         // $this->setError("Actor name '".$actor['name']."' is duplicate entry!" );
          $this->setError($e->getMessage());
          return false;
      }

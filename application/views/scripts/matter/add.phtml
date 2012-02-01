@@ -1,5 +1,3 @@
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#matter-country').autocomplete({
@@ -92,19 +90,7 @@ $(document).ready(function(){
                     $( "#matter-caseref-id" ).val( ui.item.id );
                  return false;
         },
-        /*change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }*/
+
     });
     $('#matter-responsible').autocomplete({
         minLength: 1,
@@ -161,13 +147,10 @@ $(document).ready(function(){
         $('#add-matter-popup').css('display', 'none');
         $('#facade').css('display', 'none');
     });
-    $('.close-button').click(function(){
-        $('#add-matter-popup').css('display', 'none');
-        $('#facade').css('display', 'none');
-    });
 
    $('#add-matter-submit').click(function(){
         var invalid = false;
+        $( this ).html('<img src="/images/indicator.gif" />');
         $('.validation-errors').empty();
         if($('#matter-category').val() == ""){
             $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
@@ -213,6 +196,7 @@ $(document).ready(function(){
    });
    $('#clone-matter-submit').click(function(){
         var invalid = false;
+        $( this ).html('<img src="/images/indicator.gif" />');
         $('.validation-errors').empty();
         if($('#matter-category').val() == ""){
             $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
@@ -259,6 +243,7 @@ $(document).ready(function(){
    });
    $('#child-matter-submit').click(function(){
         var invalid = false;
+        $( this ).html('<img src="/images/indicator.gif" />');
         $('.validation-errors').empty();
         if($('#matter-country').val() == ""){
             $('.validation-errors').append('<span class="errors">* Country requires a value</span>');
@@ -297,71 +282,69 @@ $(document).ready(function(){
             });
         }
    });
+   $("input:button, button").button();
 });
+
+$( "#matter-country" ).select();
+
 </script>
+
 <style type="text/css" >
 #add-matter-head{
-  display:block;
-  width: 540px;
-  background: #1E4262;
-  color: #FFF;
-  padding: 5px;
-  border: 1px solid #1E4262;
-  -moz-border-radius: 5px 5px 0px 0px;
-  -webkit-border-radius: 5px 5px 0px 0px;
+display:block;
+width: 540px;
+background: #1E4262;
+color: #FFF;
+padding: 5px;
+border: 1px solid #1E4262;
+-moz-border-radius: 5px 5px 0px 0px;
+-webkit-border-radius: 5px 5px 0px 0px;
 }
 #add-matter{
-  width: 540px;
-  background: #FFF;
-  display: block;
-  border: 1px inset #888;
-  padding: 5px;
-  -moz-border-radius: 0px 0px 5px 5px;
-  -webkit-border-radius: 0px 0px 5px 5px;
+width: 540px;
+height: auto;
+background: whitesmoke;
+display: block;
+border: 1px inset #888;
+padding: 5px;
+-moz-border-radius: 0px 0px 5px 5px;
+-webkit-border-radius: 0px 0px 5px 5px;
 }
 #add-matter label{
-  display: inline-block;
-  text-align: right;
-  width: 75px;
-  margin: 0px 5px 10px 0px;
+display: inline-block;
+text-align: right;
+width: 75px;
+margin: 0px 5px 10px 0px;
 }
 #child-matter-options {
-  border-top: 1px solid #DDD;
-  padding-top: 8px;
+border-top: 1px solid #DDD;
+padding-top: 8px;
 }
 #child-matter-options span{
-  display:inline-block;
-  text-align: right;
-  width: 150px;
+display:inline-block;
+text-align: right;
+width: 150px;
 }
 #child-matter-options label{
-  text-align: left;
-  width: 150px;
+text-align: left;
+width: 150px;
 }
 #add-matter input[type="text"]{
-  width: 170px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border: 1px inset #888;
-  padding: 3px 2px;
+width: 170px;
+-moz-border-radius: 3px;
+-webkit-border-radius: 3px;
+border: 1px inset #888;
+padding: 3px 2px;
 }
 #add-matter-actions{
-  margin: 10px 0px 0px 0px;
-  margin-left:30px;
+margin: 10px 0px 0px 0px;
+float: right;
 }
-.close-button{
-  background: #f00;
-  float:right;
-  padding: 2px 4px 0px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  cursor: pointer;
-  font-family: arial;
-}
+
 .required-field{
-  color: #f00;
-  font-weight: bold;
-  margin-right:4px;
+color: #f00;
+    font-weight: bold;
+    margin-right:4px;
 }
 .validation-errors{
 display:none;
@@ -369,30 +352,31 @@ border:1px solid #f00;
 color:#f00;
 padding:5px;
 width: auto;
-margin-bottom: 10px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
+    margin-bottom: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
 }
 .validation-errors span{
-    display: block;
-    width: auto;
+display: block;
+width: auto;
     margin-left: 20px;
 }
 .display-field{
-  display: inline-block;
-  width: 170px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border: 1px solid #888;
-  padding: 1px 2px;
-  vertical-align: top;
-  margin-bottom: 2px;
-  min-height: 14px;
+display: inline-block;
+width: 170px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+border: 1px solid #888;
+padding: 1px 2px;
+    vertical-align: top;
+    margin-bottom: 2px;
+    min-height: 14px;
 }
 </style>
+
 <div class="place-card">
 <div id="add-matter-head">
-<?=$this->matter_title?> <span class="close-button">X</span> 
+<?=$this->matter_title?>
 </div>
 <div id="add-matter">
 <div class="validation-errors">
@@ -442,8 +426,8 @@ margin-bottom: 10px;
 
 <div id="add-matter-actions">
 
-<input type="button" name="<?=$this->matter_cap_id?>" id="<?=$this->matter_cap_id?>" value="<?=$this->matter_cap?>" class="button-style" />
-<input type="button" name="add-matter-cancel" id="add-matter-cancel" value="cancel" class="button-style" />
+<input type="button" name="<?=$this->matter_cap_id?>" id="<?=$this->matter_cap_id?>" value="<?=$this->matter_cap?>" />
+<input type="button" name="add-matter-cancel" id="add-matter-cancel" value="Cancel" />
 </div>
 </form>
 </div>

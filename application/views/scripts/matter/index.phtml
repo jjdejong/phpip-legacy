@@ -299,12 +299,13 @@ $(document).ready(function(){
                  }
                  $('.sorting-img').css('display', 'none');
                  objSort.css('display', 'inline-block');
+                 window.history.pushState('', 'phpIP' , url);
              }
          });
      });
 
 
-                  $('.display_style').click(function(){
+     $('.display_style').click(function(){
 
          if($(this).val() == 1){
              $('.display_actor,.display_status').css('display','none');
@@ -329,7 +330,7 @@ $(document).ready(function(){
          }
 
          var url = '/matter/filter' + getFilterUrl();
-
+                  
          $.ajax({
              url: url,
              type: 'POST',
@@ -337,6 +338,7 @@ $(document).ready(function(){
              success: function(data){
                  $('#matter-list').empty();
                  $('#matter-list').html(data);
+                 window.history.pushState('', 'phpIP' , url);
              }
          });
      });
@@ -351,6 +353,7 @@ $(document).ready(function(){
              success: function(data){
                  $('#matter-list').empty();
                  $('#matter-list').html(data);
+                 window.history.pushState('', 'phpIP' , url);
              }
          });
      });
@@ -365,6 +368,7 @@ $(document).ready(function(){
              success: function(data){
                  $('#matter-list').empty();
                  $('#matter-list').html(data);
+                 window.history.pushState('', 'phpIP' , url);
              }
          });
      });
@@ -378,6 +382,7 @@ $(document).ready(function(){
              success: function(data){
                  $('#matter-list').empty();
                  $('#matter-list').html(data);
+                 window.history.pushState('', 'phpIP' , url);
              }
          });
      });
@@ -386,7 +391,7 @@ $(document).ready(function(){
          if($(this).val().length != 0 && $(this).val().length < 3 && ($(this).attr("id") == "filter-ref" || $(this).attr("id") == "filter-title")){
              return false;
          }
-         var url = '/matter/filter' + getFilterUrl();
+         var url = '/matter/filter' + getFilterUrl();;
          $.ajax({
              url: url,
              type: 'GET',
@@ -394,6 +399,7 @@ $(document).ready(function(){
              success: function(data){
                  $('#matter-list').empty();
                  $('#matter-list').html(data);
+                 window.history.pushState('', 'phpIP' , url);
              }
          });
      });

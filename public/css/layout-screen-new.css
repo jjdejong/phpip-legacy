@@ -175,7 +175,7 @@ li{
     -webkit-border-radius:5px;
     -moz-border-radius:5px;
     border-radius:5px;
-    background-color: white;
+    background-color: whitesmoke;
     border: 1px solid ;
     min-height:400px;
 }
@@ -279,7 +279,7 @@ li{
 
 #inner-header-subtitle div{
 	  display: inline-block;
-	  font-wieght: bolder;
+	  font-weight: bolder;
 	  font-size: 20px;
 	  text-transform: capitalize;
 	  vertical-align:middle;
@@ -360,7 +360,13 @@ li{
     margin: 0 0 0 10px;
 }
 
-
+.icon-busy{
+    background: url('/images/indicator.gif') white;
+    color: white;
+    width: 32px;
+    height: 32px;
+    display: inline-block;
+}
 
 .page-icon{
     font-size: 12px;

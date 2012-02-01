@@ -97,10 +97,7 @@
   margin-left: 10px;
   cursor: pointer;
 }
-#delete-actor{
-  float:right;
-  margin-top: 4px;
-}
+
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -136,22 +133,7 @@ $(document).ready(function(){
          });
   });
 
-/*  $('.actor-delete').click(function(){
-    var del_conf = confirm("Deleting Actor from table. Are you sure?");
-if(del_conf == 1){
-    var aid = $(this).attr('id');
-    $.ajax({
-      url : '/matter/delete-actor',
-      type: 'POST',
-      data: { aid:aid },
-      success: function(data){
-        if(isNaN(parseInt(data)))
-          alert(data);
-      }
-    });
-}
-    return false;
-  });*/
+
   $('#delete-actor').click(function(){
     var del_conf = confirm("Deleting Actor from table. Are you sure?");
 if(del_conf == 1){
@@ -192,6 +174,7 @@ if(del_conf == 1){
           }
       });
   });
+  $( "button, input:button" ).button();
 
 });
 </script>
@@ -211,11 +194,11 @@ if(del_conf == 1){
 
 <div id="actor-details-popup" class="place-card" >
 <div id="actor-details-nav" >
-<span title="backward 10 actors" ><img src="/images/backward.png" alt="backward" class="actor-navigation" id="backward" /></span>
-<span title="previous actor" ><img src="/images/prev.png" alt="prev" class="actor-navigation" id="prev" /></span>
-<span title="next actor" ><img src="/images/next.png" alt="next" class="actor-navigation" id="next" /></span>
-<span title="forward 10 actors" ><img src="/images/forward.png" alt="forward" class="actor-navigation" id="forward" /></span>
-<span title="Delete actor" class="button-style" id="delete-actor" ><img src="/images/Delete-32.png" border=0 width=16 height=16 style="vertical-align:middle;" />Delete</span>
+<button title="Backward 10" class="actor-navigation" id="backward"><span class="ui-icon ui-icon-seek-first"/></button>
+<button title="Previous" class="actor-navigation" id="prev"><span class="ui-icon ui-icon-seek-prev"/></button>
+<button title="Next" class="actor-navigation" id="next"><span class="ui-icon ui-icon-seek-next"/></button>
+<button title="Forward 10" class="actor-navigation" id="forward"><span class="ui-icon ui-icon-seek-end"/></button>
+<button title="Delete actor" id="delete-actor" style="float: right;"><span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete</button>
 </div>
 <div id="actor-details-content"></div>
 </div>

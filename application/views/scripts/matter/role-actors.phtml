@@ -80,9 +80,7 @@
   font-style: italic;
 }
 </style>
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
+
 <script type="text/javascript">
 $(document).ready(function(){
 
@@ -116,35 +114,6 @@ $(document).ready(function(){
           indicator : '<img src="/images/indicator.gif" />',
           tooltip: 'Click to edit...'
 	});
-
-/*	$('#editable_comp').editable('/matter/save-matter-company/', {
-		id : 'company_edit',
-		name : 'company_value',
-		submitdata: function(value,settings){
-		  return {matter_id : $('input[name=matter_id]').val(), role_code : $('input[name=role_code]').val()}
-		},
-    cancel : 'X',
-    submit : 'Ok',
-    indicator : '<img src="/images/indicator.gif" />',
-    tooltip: 'Click to edit...'
-	});
-
-	
-	$( "#company_edit" ).autocomplete({
-        minLength: 1,
-        source: "/matter/get-all-actors/role/" + role_search ,
-        focus: function( event, ui ) {
-                //$( "#actor" ).val( ui.item.id );
-                return false;
-        },
-        select: function( event, ui ) {
-                $( "#editable_comp" ).val( ui.item.value );
-               // $( "#actor-id" ).val( ui.item.id );
-                return false;
-        }
-  }); */
-
-	//role_search = $('input[name=role_code]').val();
 	
 	$.editable.addInputType('autocomplete', {
 		element : $.editable.types.text.element,
@@ -236,34 +205,6 @@ $(document).ready(function(){
     else
     	$('input[name=show_date]').removeAttr('checked');
 	});
-
-/*	$('input[name=show_ref]').click(function(){
-		if($(this).is(':checked'))
-			$('.actor_ref').css('display', 'block');
-		else
-			$('.actor_ref').css('display', 'none');
-	});
-
-	$('input[name=show_company]').click(function(){
-		if($(this).is(':checked'))
-			$('.actor_comp').css('display', 'block');
-		else
-			$('.actor_comp').css('display', 'none');
-	});
-
-	$('input[name=show_rate]').click(function(){
-		if($(this).is(':checked'))
-			$('.actor_rate').css('display', 'block');
-		else
-			$('.actor_rate').css('display', 'none');
-	});
-
-	$('input[name=show_date]').click(function(){
-		if($(this).is(':checked'))
-			$('.actor_date').css('display', 'block');
-		else
-			$('.actor_date').css('display', 'none');
-	}); */
 
 	$('input[name=save_role]').click(function(){
 		var shareable = $('input[name=shareable]').is(':checked') ? 1 : 0;
@@ -388,13 +329,13 @@ $(document).ready(function(){
 
 <div class="listrow" style="width:100%">
 <div class="status-row" id="role-actors-view">
-<span class="eventlist-col-name" style="margin-left: 5px;" id="actor-role-title">Role</span>
+<span class="eventlist-col-name" style="margin-left: 5px;" id="actor-role-title">Role<span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"</span></span>
 </div>
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:97.7%; height: auto;" >
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
 <input type="hidden" value="<?=$this->matter_id?>" name="matter_id" id="matter-id" />
 <?php if(isset($this->actor_role)): ?>
 
-<div style="width:160px"><?php echo $this->actor_role['name'] . " (" .$this->actor_role['code'].")"?><a href="javascript:void(0);" id="edit-role-info"><span class="ui-icon ui-icon-wrench" style="float:right;"></span></a></div>
+<div style="width:160px"><?php echo $this->actor_role['name'] . " (" .$this->actor_role['code'].")"?><a href="javascript:void(0);" id="edit-role-info" title="Configure fields to display for this role"><span class="ui-icon ui-icon-wrench" style="float: right;"></span></a></div>
 <input type="hidden" value="<?=$this->actor_role['code']?>" name="role_code"/>
 <div id="role-info">
 <input type="checkbox" name="shareable" id="shareable" <?php echo ($this->actor_role['shareable'])? 'checked="checked"': ''; ?>></input><label for="shareable">Shareable</label>

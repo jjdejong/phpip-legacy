@@ -1,94 +1,6 @@
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-/*    $('.matter-country').autocomplete({
-        minLength: 1,
-        source: "/matter/get-country-codes",
-        focus: function(event, ui){
-            return false;
-        },
-        autoFocus: true,
-        select: function( event, ui ) {
-                    $( this ).val( ui.item.value );
-                    $( "#matter-country-id" ).val( ui.item.id );
-                 return false;
-        },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
-    }); */
-    $('.matter-type').live('keyup.autocomplete', function(){
-      $(this).autocomplete({
-        minLength: 1,
-        source: "/matter/get-matter-types",
-        autoFocus: true,
-        focus: function(event, ui){
-            return false;
-        },
-        select: function( event, ui ) {
-                    $( this ).val( ui.item.value );
-                    $( this ).attr( 'id', ui.item.id );
-                 return false;
-        },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
-      });
-    });
-    $('.matter-responsible').live('keyup.autocomplete', function(){
-      $(this).autocomplete({
-        minLength: 1,
-        source: "/matter/get-all-logins",
-        autoFocus: true,
-        focus: function(event, ui){
-            return false;
-        },
-        select: function( event, ui ) {
-                    $( this ).val( ui.item.value );
-                    //$( "#matter-responsible-id" ).val( ui.item.id );
-                 return false;
-        },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
-      });
-    });
     $('#national-matter-cancel').click(function(){
-        $('#add-matter-popup').css('display', 'none');
-        $('#facade').css('display', 'none');
-    });
-    $('.close-button').click(function(){
         $('#add-matter-popup').css('display', 'none');
         $('#facade').css('display', 'none');
     });
@@ -177,25 +89,21 @@ $(document).ready(function(){
      $(clobj).each(function(i,j){
        select_options += '<option value="'+j.value+'" >'+j.text+'</option>';
      });
-     var new_matter = '<div id="nmp-' + mindex + '"><span style="display:inline-block;width:250px;"><select name="'+ sname +'" class="matter-country required" id="'+sname+'" >'+select_options+'</select></span><input type="text" name="entered_date['+mindex+']" class="entered-date" value="" /><input type="hidden" name="alt_entered_date['+mindex+']" id="alt-entered-date['+mindex+']" /><span class="national-matter-remove" id="'+mindex+'" ><img src="/images/Delete-32.png" width=16 height=16 alt="Delete" /></span></div>';
-/*
-<label for="matter-type" style="width:75px;margin: 0 5px 10px 0;">Type</label><input type="text" name="matter_type['+mindex+']" class="matter-type" value="" id="" /><label for="matter-responsible" style="width:75px;margin: 0 5px 10px 0;"><span class="required-field">*</span>Responsible</label><input type="text" name="matter_responsible['+mindex+']" class="matter-responsible required" value="" /></div>';
-*/
+     var new_matter = '<div id="nmp-' + mindex + '"><span style="display:inline-block;width:250px;"><select name="'+ sname +'" class="matter-country required" id="'+sname+'" >'+select_options+'</select></span><input type="text" name="entered_date['+mindex+']" class="entered-date" value="" /><input type="hidden" name="alt_entered_date['+mindex+']" id="alt-entered-date['+mindex+']" /><span class="national-matter-remove ui-icon ui-icon-trash" id="'+mindex+'" style="float: left;"></span></div>';
      $('#national-phase-matters').append(new_matter);
- //    $('#matter-country-demo option').clone().appendTo('input[name=matter_country['+mindex+']]');
-//     $('input[name=matter_country['+mindex+']]').append($('#matter-country-demo option').clone());
    });
 
    $('.national-matter-remove').live("click", function(){
      var rid = $(this).attr('id');
      $('#nmp-'+ rid).remove();
    });
+   $( "button, input:button").button();
 });
 </script>
 <style type="text/css" >
 #add-matter-head{
   display:block;
-  width: 500px;
+  width: 400px;
   background: #1E4262;
   color: #FFF;
   padding: 5px;
@@ -205,7 +113,7 @@ $(document).ready(function(){
 }
 
 #add-matter{
-  width: 500px;
+  width: 400px;
   background: #FFF;
   display: block;
   border: 1px inset #888;
@@ -243,15 +151,7 @@ $(document).ready(function(){
   margin: 10px 0px 0px 0px;
   margin-left:30px;
 }
-.close-button{
-  background: #f00;
-  float:right;
-  padding: 2px 4px 0px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  cursor: pointer;
-  font-family: arial;
-}
+
 .required-field{
   color: #f00;
   font-weight: bold;
@@ -301,7 +201,7 @@ margin-bottom: 10px;
 
 <div class="place-card">
 <div id="add-matter-head">
-Enter national phase <span class="close-button">X</span> 
+Enter national phase <?=$this->caseref ?> <?=$this->country_code ?>
 </div>
 <div id="add-matter">
 <div class="validation-errors">
@@ -309,37 +209,28 @@ Enter national phase <span class="close-button">X</span>
 </div>
 <form type="post" id="add-matter-form" >
 
-<label for="matter-caseref">Caseref</label>
-<span id="matter-caseref" class="display-field" ><?=$this->caseref?></span>
 <input type="hidden" name="matter-caseref-id" id="matter-caseref-id" value="<?=$this->caseref?>" />
-
-<label for="matter-category">Category</label>
-<span id="matter-category" class="display-field" ><?=$this->category?></span>
 <input type="hidden" name="matter-category-code" id="matter-category-code" value="<?=$this->category_code?>" />
-
-<label for="matter-origin">Origin</label>
-<span id="matter-origin" class="display-field" ><?=$this->country_name?></span>
 <input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->country_code?>" />
-<div id="national-phase-matters" style="display:block;border-top:1px solid #DDD;margin:10px 0px;padding-top:10px;">
+<div id="national-phase-matters" style="display:block; padding-top:10px;">
 
-<label style="width: 250px; text-align:center;"><span class="required-field">*</span>Country</label><label style="text-align:center;">Entered date</label>
+<label style="margin-left: 22px; width: 253px; text-align: left;"><span class="required-field">*</span>Country</label><label style="text-align:center;">Entered date</label>
 
 <?php 
 $i=0;
 foreach($this->country_options as $cflag){ ?>
 <div id="nmp-<?=$i?>" >
 <input type="hidden" name="matter_country[<?=$i?>]" value="<?=$cflag['iso']?>" />
-<span class="national-countries"><?=$cflag['name']?></span><input type="text" name="entered_date[<?=$i?>]" class="entered-date" value="" id="<?=$i?>"/><input type="hidden" name="alt_entered_date[<?=$i?>]" id="alt-entered-date-<?=$i?>" value="" /><span class="national-matter-remove" id="<?=$i?>" ><img src="/images/Delete-32.png" width=16 height=16 alt="Delete" /></span>
+<span class="national-countries"><?=$cflag['name']?></span><input type="text" name="entered_date[<?=$i?>]" class="entered-date" value="" id="<?=$i?>"/><input type="hidden" name="alt_entered_date[<?=$i?>]" id="alt-entered-date-<?=$i?>" value="" /><span class="national-matter-remove ui-icon ui-icon-trash" id="<?=$i?>" title="Remove" style="float: left;"></span>
 </div>
 <?php $i++; } ?>
 
 </div>
 
 <div id="add-matter-actions">
-<input type="button" name="national-matter-submit" id="national-matter-submit" value="Submit" class="button-style" />
-<input type="button" name="national-matter-cancel" id="national-matter-cancel" value="Cancel" class="button-style" />
-<!-- <input type="button" name="national-matter-minus" id="national-matter-minus" value="(-1) Remove" class="button-style" style="float:right;" /> -->
-<input type="button" name="national-matter-plus" id="national-matter-plus" value="(+1) Add" class="button-style" style="float:right;" />
+<input type="button" name="national-matter-cancel" id="national-matter-cancel" value="Cancel" style="float:right; margin-left: 4px;" />
+<input type="button" name="national-matter-submit" id="national-matter-submit" value="Submit" style="float:right;" />
+<input type="button" name="national-matter-plus" id="national-matter-plus" value="Add country" />
 </div>
 </form>
 <select name ="matter_country_demo" id="matter-country-demo" style="display:none;">

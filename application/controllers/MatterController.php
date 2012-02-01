@@ -426,11 +426,10 @@ class MatterController extends Zend_Controller_Action
     $data['actor_ID'] = $this->getRequest()->getPost('actor_ID');
     $data['role'] = $this->getRequest()->getPost('role');
     $container_id = $matterModel->getMatterContainer($matter_id);
-
+	$data['actor_ref'] = $this->getRequest()->getPost('actor_ref');
     $role_shareable = $this->getRequest()->getPost('role_shareable');
 
     $data['shared'] = $matterModel->isRoleShareable($data['role']);
-//    echo "matter ID: ".$matter_id. " container: ".$container_id." yn: ".$this->getRequest()->getPost('add_container');exit();
 
     if($this->getRequest()->getPost('add_container') && $container_id)
     {

@@ -71,11 +71,7 @@ vertical-align: top;
 }
 
 </style>
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
 
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
-<script type="text/javascript" src="/js/jquery.jeditable.datepicker.js"></script>
 <script type="text/javascript">
     $("#MatterAllEvent").click(function(event){
         $('#event-pop-up').css('display','none');
@@ -296,8 +292,9 @@ vertical-align: top;
               } else
                  alert(data);
            }
-       }); 
+       });
     });
+    $( "button, input:button").button();
 </script>
 
 <?php // Matter Open Tasks ?> 
@@ -313,7 +310,8 @@ vertical-align: top;
 <span class="eventlist-col-notes" >Notes</span>
 <span class="eventlist-col-refer" >Refers to</span>
 </div>
-<a href="javascript:void(0)" style="float:right;" id="add-event" class="button-style">Add Event</a>
+<!-- <a href="javascript:void(0)" style="float:right;" id="add-event" class="button-style">Add Event</a> -->
+<button id="add-event" style="float: right;">Add Event</button>
 <div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
 <?php foreach($this->matter_events as $matter_event): 
 //print_r($matter_event); exit();
@@ -346,7 +344,7 @@ vertical-align: top;
 <label for="event_refers" >Refers to </label>
 <input type="text" name="event_refers" id="event_refers" value=""/><br>
 <input type="hidden" name ="alt_matter_id" id="alt_matter_id" value="" />
-<input type="button" name="add_event_submit" id="add-event-submit" value="Add event" class="button-style" />
-<input type="button" name="add_event_cancel" id="add-event-cancel" value="Cancel" class="button-style" />
+<button name="add_event_cancel" id="add-event-cancel" style="float: right;">Cancel</button>
+<button name="add_event_submit" id="add-event-submit" style="float: right;">Add event</button>
 </div>
 </div>

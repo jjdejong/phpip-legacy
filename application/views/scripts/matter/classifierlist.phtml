@@ -52,9 +52,6 @@
   width: 900px;
 }
 </style>
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 var fvalue = '';
@@ -299,6 +296,7 @@ var nterm = '';
           $(this).find('span.sort-icon').hide();
         }
     });
+    $( "button, input:button").button();
 });
 </script>
 
@@ -306,7 +304,7 @@ var nterm = '';
 <span class="classifier-col-value" style="margin-left: 5px;">All classifiers</span>
 <span class="classifier-col-url" style="margin-left: 5px;">url</span>
 <span class="classifier-col-lnkto" style="margin-left: 5px;">lnkTo</span>
-<span class="add-classifier-totype button-style" style="float:right;margin: 0px 5px 3px 0px;vertical-align:top;" >Add classifier</span>
+<button class="add-classifier-totype" style="float:right;margin: 0px 5px 3px 0px;vertical-align:top;">Add classifier</button>
 </div>
 
 <div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto;" >
@@ -328,8 +326,8 @@ foreach($this->classifiers as $classifier){
 <div id="classifier-type-<?=$classifier['type_code']?>" style="float:left;">
 <div class="status-row classifier-head" style="margin:5px 0px; border-bottom: 1px solid #DDD;">
 <span class="classifier-col-value"><b><?=$classifier['type']?></b></span>
-<div class="classifier-actions"><span class="add-classifier-totype" id="<?=$classifier['type_code']?>" title="Add classifier to type"><img src="/images/Add-16.png" alt="+" width=16 height=16 title="Add Classifier"></img></span>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete-classifier-type" style="cursor:pointer;" id="<?=$classifier['type_code']?>"><img src="/images/Delete-32.png" alt="-" width=16 height=16 title="Delete Classifier type"></img></span></div>
+<div class="classifier-actions"><span class="add-classifier-totype" id="<?=$classifier['type_code']?>" title="Add classifier to type"><span class="ui-icon ui-icon-plusthick" title="Add classifier" style="float: left;"></span></span>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete-classifier-type" style="cursor:pointer;" id="<?=$classifier['type_code']?>"><span class="ui-icon ui-icon-trash" title="Delete classifier type" style="float: right;"></span></span></div>
 </div>
 <div style="display:block;"><ul class="sortable-classifiers" >
 <?php $close_type=1; }
@@ -345,7 +343,7 @@ foreach($this->classifiers as $classifier){
   <span class="classifier-col-value <?=$vclass?>" id="<?=$classifier['type_code']?>" ><?=$classifier['value']?></span>
   <span class="classifier-col-url url-editable"><?=$classifier['url']?></span>
   <span class="classifier-col-lnkto lnk-editable"><?=$classifier['lnkTo']?></span>
-  <span class="delete-classifier"><img src="/images/Delete-32.png" alt="Del" width=16 height=16 title="Delete classifier"></img></span>
+  <span class="delete-classifier"><span class="ui-icon ui-icon-trash" title="Delete classifier" style="float: right;"></span></span>
 </div></li>
 <?php } 
    $add_empty_row = 1;

@@ -1,4 +1,5 @@
-<? $cFront = Zend_Controller_Front::getInstance();
+<?php 
+$cFront = Zend_Controller_Front::getInstance();
 $module = $cFront->getRequest()->getModuleName();
 $module = strtolower($module);
 
@@ -7,8 +8,7 @@ $controller = strtolower($controller);
 
 $action = $cFront->getRequest()->getActionName();
 $action = strtolower($action);
-?>
-<? $header = '';
+   $header = '';
    if($module != 'default'){
        $header = "<a href=\"/$module\">$module</a>";
    }
@@ -35,9 +35,9 @@ $action = strtolower($action);
 <? if($controller == "matter"){ ?>
 <?php if($module == 'default' && $controller == 'matter' && $action == 'view'){ ?>
 <div id="inner-header-navigation">
-<div id="matter-head-navigation">
-<span title="Previous" class="matter-navigation ui-icon ui-icon-seek-prev" style="float:left;" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)-1;}else{echo "matter-previous-" . $this->matter_id;} ?>"></span>
-<span title="Next" class="matter-navigation ui-icon ui-icon-seek-next" style="float:left;" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)+1;}else{echo "matter-next-" . $this->matter_id;} ?>"></span>
+<div id="matter-head-navigation" style="float:left;">
+<button title="Previous" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)-1;}else{echo "matter-previous-" . $this->matter_id;} ?>"><span class=" ui-icon ui-icon-seek-prev"/></button>
+<button title="Next" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)+1;}else{echo "matter-next-" . $this->matter_id;} ?>"><span class="ui-icon ui-icon-seek-next"/></button>
 </div>
     
 <div id="inner-header-search">
@@ -46,7 +46,7 @@ $action = strtolower($action);
   <option value="caseref" selected>caseref</option>
   <option value="Responsible">Responsible</option>
 </select>
-<input id="matter-ref-search" type="button" name="search" value="search" class="button-style"/>
+<input id="matter-ref-search" type="button" name="search" value="search" />
 </div>
 </div>
 <?php } ?>
@@ -59,9 +59,9 @@ $action = strtolower($action);
     <option value="caseref" selected>caseref</option>
     <option value="Responsible"d>Responsible</option>
 </select>
-<input id="matter-ref-search" type="button" name="search" value="search" class="button-style"/>
+<input id="matter-ref-search" type="button" name="search" value="search"/>
 </div>
-<input type="button" id="clear-matter-filters" name="clear-filters" class="button-style" value="Clear filters" />
+<input type="button" id="clear-matter-filters" name="clear-filters" value="Clear filters" />
 </div>
 <?php } ?>
 

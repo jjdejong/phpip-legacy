@@ -1,5 +1,3 @@
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
     $('#matter-country').autocomplete({
@@ -56,34 +54,7 @@ $(document).ready(function(){
              return false;
         }
     });
-/*
-    $('#matter-type').autocomplete({
-        minLength: 1,
-        source: "/matter/get-matter-types",
-        autoFocus: true,
-        focus: function(event, ui){
-            return false;
-        },
-        select: function( event, ui ) {
-                    $( "#matter-type" ).val( ui.item.value );
-                    $( "#matter-type-id" ).val( ui.item.id );
-                 return false;
-        },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
-    });
-*/
+
     $('#matter-caseref').autocomplete({
         minLength: 3,
         source: "/matter/get-matter-caseref",
@@ -96,21 +67,6 @@ $(document).ready(function(){
                     $( "#matter-caseref-id" ).val( ui.item.id );
                  return false;
         },
-/*
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
-*/
     });
 
     $('#matter-responsible').autocomplete({
@@ -139,35 +95,7 @@ $(document).ready(function(){
             return false;
         }
     });
-/*
-    $('#matter-category').autocomplete({
-        minLength: 1,
-        source: "/matter/get-all-categories",
-        autoFocus: true,
-        focus: function(event, ui){
-            return false;
-        },
-        select: function( event, ui ) {
-                    $( "#matter-category" ).val( ui.item.value );
-                    $( "#matter-category-code" ).val( ui.item.id );
-                 return false;
-        },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val("");
-                      $("#matter-category-code").val('');
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
-    });
-*/
+
     $('#matter-parent').autocomplete({
         minLength: 3,
         source: "/matter/get-all-refers",
@@ -243,10 +171,6 @@ $(document).ready(function(){
    $('#edit-matter-submit').click(function(){
         var invalid = false;
         $('.validation-errors').empty();
-
-        //alert($('#matter-category').val());
-        //alert($('#matter-category-code').val());
-        //return false;
         <?php if($this->cat_edit){?>
         if($('#matter-category').val() == ""){
             $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
@@ -255,8 +179,6 @@ $(document).ready(function(){
             $('#matter-category-code').val($('#matter-category').val());
         }
         <?php }?>
-
-
 
         if($('#matter-category-code').val() == ""){
             $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
@@ -315,7 +237,6 @@ $(document).ready(function(){
                       }
                     }else{
                       if( data != 'false' ){
-                      //  alert("Matter edited!");
                       $('#add-matter-popup').css('display', 'none');
                       $('#facade').css('display', 'none');
                         $(location).attr("href", '/matter/view/id/'+data);
@@ -345,6 +266,8 @@ $(document).ready(function(){
           });
         }
    });
+                  
+   $( "button, input:submit" ).button();
 });
 </script>
 <style type="text/css" >
@@ -360,7 +283,7 @@ $(document).ready(function(){
 }
 #edit-matter{
   width: 540px;
-  background: #FFF;
+  background: whitesmoke;
   display: block;
   border: 1px inset #888;
   padding: 5px;
@@ -395,7 +318,6 @@ $(document).ready(function(){
 }
 #edit-matter-actions{
   margin: 10px 0px 0px 0px;
-  margin-left:30px;
 }
 .close-button{
   background: #f00;
@@ -496,11 +418,11 @@ if($type['id'] == $this->matter['type_code'])
 <label for="matter-responsible"><span class="required-field">*</span>Responsible</label>
 <input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->matter['responsible']?>" class="required" />
 
-<label for="matter-parent-id">Parent ID</label>
+<label for="matter-parent-id">Parent</label>
 <input type="text" name="matter-parent" id="matter-parent" value="<?=$this->parent?>" />
 <input type="hidden" name="matter-parent-id" id="matter-parent-id" value="<?=$this->parent_id?>" />
 
-<label for="matter-container-id">Container ID</label>
+<label for="matter-container-id">Container</label>
 <input type="text" name="matter-container" id="matter-container" value="<?=$this->container?>" />
 <input type="hidden" name="matter-container-id" id="matter-container-id" value="<?=$this->container_id?>" />
 
@@ -511,9 +433,9 @@ if($type['id'] == $this->matter['type_code'])
 <span id="matter-dead" class="display-field" title="This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status" style="cursor:help;" ><?php echo ($this->matter['dead'])? "Yes":"No" ;?></span>
 
 <div id="edit-matter-actions">
-  <input type="button" name="edit-matter-submit" id="edit-matter-submit" value="Save" class="button-style" />
-  <input type="button" name="edit-matter-cancel" id="edit-matter-cancel" value="cancel" class="button-style" />
-<div style="float:right;vertical-align:bottom; "><a href="javascript:void(0);" id="delete-matter" mid="<?=$this->matter['ID']?>" class="button-style" ><img src="/images/Delete-32.png" alt="Delete" border=0 width=16 height=16 style="vertical-align:middle;" />Delete Matter</a></div>
+  <button name="edit-matter-cancel" id="edit-matter-cancel" style="float: right;"><span class="ui-icon ui-icon-cancel" style="float: left;"></span>Cancel</button>
+  <button name="edit-matter-submit" id="edit-matter-submit" style="float: right;"><span class="ui-icon ui-icon-disk" style="float: left;"></span>Save</button>
+  <button id="delete-matter" mid="<?=$this->matter['ID']?>"><span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete Matter</button>
 </div>
 
 </div>

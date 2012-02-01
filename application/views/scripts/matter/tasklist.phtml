@@ -101,7 +101,7 @@ vertical-align: top;
   position:fixed;
 }
 #add-task-wrap{
-  background: #FFF;
+  background: whitesmoke;
   padding: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -110,7 +110,7 @@ vertical-align: top;
 #add-task-wrap label{
   width:75px;
   display:inline-block;
-  vertical-align: top;
+  vertical-align: middle;
   text-align: right;
 }
 #add-task-wrap input{
@@ -142,10 +142,7 @@ vertical-align: top;
 }
 
 </style>
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
-<script type="text/javascript" src="/js/jquery.jeditable.datepicker.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
     $.editable.addInputType("datepicker", {
@@ -236,8 +233,8 @@ $(document).ready(function(){
                      var field_name = (fclass[0]).split('-');
                      return { task_id : tid , field : field_name[2]}
                 },
-          cancel : 'X',
-          submit : 'Ok',
+          //cancel : 'X',
+          //submit : 'Ok',
           placeholder: '...',
           select : true,
           indicator : '<img src="/images/indicator.gif" />',
@@ -331,12 +328,11 @@ $(document).ready(function(){
 
 
     $('.add-task-toevent').click(function(){
-        var trigger_id = $(this).attr('id');
-        $('#trigger_id').val(trigger_id);
-        var height = $(document).height();
-        $('#facade').css("height", height);
+        $('#trigger_id').val( $(this).attr('id') );
+        $('#popup-label').val( $(this).attr('title') );
+        $('#facade').css("height", $(document).height());
         $('#facade').show();
-        ren_left = Math.round($(window).width()/2) - Math.round($('#add-task-popup').width()/2);
+        var ren_left = Math.round($(window).width()/2) - Math.round($('#add-task-popup').width()/2);
         $('#add-task-popup').css('left', ren_left);
         $('#add-task-popup').css('display', 'block');
         $('#task_name').focus();
@@ -391,7 +387,6 @@ $(document).ready(function(){
            alert('Due date required!');
            return;
        }
-
        $.ajax({
            url: '/matter/add-event-task',
            type: 'POST',
@@ -425,7 +420,7 @@ $(document).ready(function(){
               }else
                   alert(data);
            }
-       }); 
+       });
     });
 
     $('.delete-task').click(function(){
@@ -498,6 +493,7 @@ $(document).ready(function(){
             }
         }
     });
+    $("button, input:button").button();
 });
 
 </script>
@@ -581,6 +577,7 @@ foreach($this->matter_event_tasks as $event_task):
 <div id="pr-confirm"></div>
 
 <div id="add-task-popup" class="listrow">
+<input type="text" id="popup-label" value="" style="font-weight: bold; background-color: transparent; border: 0px; margin-bottom: 2px" />
 <div id="add-task-wrap">
 <input type="hidden" name="trigger_id" value="" id="trigger_id" />
 <label for="task_name" ><span style="color: #f00;">*</span>Task Name </label>
@@ -600,8 +597,9 @@ foreach($this->matter_event_tasks as $event_task):
 <input type="text" name="task_time" id="task_time" value="" />
 <label for="task_assigned_to" >Assigned to </label>
 <input type="text" name="task_assigned_to" id="task_assigned_to" value="" /><br>
-<label for="task_notes" >Notes </label><textarea name="task_notes" id="task_notes" rows=2 cols=40></textarea><br>
-<input type="button" name="add_task_submit" id="add-task-submit" value="Add task" class="button-style" />
-<input type="button" name="add_task_cancel" id="add-task-cancel" value="Cancel" class="button-style" />
+<label for="task_notes" >Notes</label>
+<textarea name="task_notes" id="task_notes" rows=2 cols=45></textarea><br>
+<input type="button" name="add_task_cancel" id="add-task-cancel" value="Cancel" style="margin-top: 10px; margin-left: 4px; float: right;"/>
+<input type="button" name="add_task_submit" id="add-task-submit" value="Add task" style="margin-top: 10px; float: right;"/>
 </div>
 </div>

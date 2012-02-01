@@ -38,10 +38,10 @@
   vertical-align: top;
 }
 
-.row-tab:hover {
-  /*background-color: #AFB5C4;
-  cursor: pointer; */
-}
+/*.row-tab:hover {
+  background-color: #AFB5C4;
+  cursor: pointer;
+}*/
 .head-tab div{
   display:inline-block;
   text-align: center;
@@ -59,11 +59,6 @@
   text-align: left !important;
   margin: 5px;
   width: 180px;
-}
-
-#current-matter-edit{
-  color: white;
-  font-size: 16px;
 }
 
 #parent-matter{
@@ -201,7 +196,7 @@ width: 296px;
     cursor: pointer;
 }
 
-#mapactor-pop-up, #tasklist-pop-up, #event-pop-up, #actors-browse-popup, #classifier-popup{
+#mapactor-pop-up, #tasklist-pop-up, #event-pop-up, #classifier-popup{
     display: none;
     position: absolute;
     background: transparent; 
@@ -244,25 +239,17 @@ width: 296px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
 }
-#add-classifier-link{
-  background: #4E7291;
-  color: #fff;
-  text-shadow: 0 -1px 0 #000;
-  padding: 2px 2px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  width: 80px !important;
-}
+
 #title-action-div{
   float:right;
 }
 #title-action-div a{
   display: inline-block;
-  width: 120px;
 }
-#title-action-div span{
-  display:block;
-  margin-bottom: 4px;
+#title-action-div button{
+  display:block !important;
+  margin-bottom: 4px !important;
+  width: 150px !important;
 }
 #responsible-actor-span{
   margin-left:300px;
@@ -305,9 +292,15 @@ width: 296px;
   margin-top: 4px;
 }
 
+/*.ui-button .ui-button-text
+{
+    padding-top: 1px !important;
+    padding-bottom: 1px !important;
+    //font-size: .8em !important;
+}*/
+
 </style>
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){
         $("#MatterStatus").click(function(event){
@@ -371,15 +364,12 @@ $(document).ready(function(){
         });
  
         $(".add-actor").click(function(event){
-            $('#mapactor-pop-up').css('width','450px');
-            ren_left = Math.round($(window).width()/2) - Math.round($('#mapactor-pop-up').width()/2);
             role = $(this).attr('id').split('-');
-            ren_top = $(this).offset().top;
 
             $('#facade').css('height',$(document).height());
             $('#facade').css('display','block');
             $('#mapactor-pop-up').css('top',200);
-            $('#mapactor-pop-up').css('left', ren_left);
+            $('#mapactor-pop-up').css('left',200);
             $.ajax({
                 type: "POST",
                 url: "/matter/map-actor-role/id/<?=$this->matter_record[0]['ID']?>/role/" + role[2],
@@ -438,19 +428,18 @@ $(document).ready(function(){
 
           $('#facade').css('height', $(document).height());
           $('#facade').css("display", "block");
+          $('#add-matter-popup').css('left', 200);
           $.ajax({
             url: '/matter/clone',
             type: 'GET',
             data: { category_id : catid, country: country, origin: origin, type: type },
             success: function(data){
               $('#add-matter-popup').html(data);
-              var ren_left = Math.round($(window).width()/2) - Math.round($('#add-matter-popup').width()/2);
-              $('#add-matter-popup').css('left', ren_left);
-              $('#add-matter-popup').css('display', 'block');
             }
           });
+          $('#add-matter-popup').css('display', 'block');
         });
-
+                  
         $('#child-matter-link').click(function(){
           var catid = $(this).attr('code');
           var country = $(this).attr('country');
@@ -460,17 +449,16 @@ $(document).ready(function(){
 
           $('#facade').css('height', $(document).height());
           $('#facade').css("display", "block");
+          $('#add-matter-popup').css('left', 200);
           $.ajax({
             url: '/matter/child',
             type: 'GET',
             data: { caseref : caseref, category_id : catid, country: country, origin: origin, type: type },
             success: function(data){
               $('#add-matter-popup').html(data);
-              var ren_left = Math.round($(window).width()/2) - Math.round($('#add-matter-popup').width()/2);
-              $('#add-matter-popup').css('left', ren_left);
-              $('#add-matter-popup').css('display', 'block');
             }
           });
+          $('#add-matter-popup').css('display', 'block');
         });
 
         $('#national-matter-link').click(function(){
@@ -480,17 +468,16 @@ $(document).ready(function(){
 
           $('#facade').css('height', $(document).height());
           $('#facade').css('display', 'block');
+          $('#add-matter-popup').css('left', 200);
           $.ajax({
             url: '/matter/national',
             type: 'GET',
             data: { caseref: caseref, category_id : catid, country : country },
             success: function(data){
               $('#add-matter-popup').html(data);
-              var ren_left = Math.round($(window).width()/2) - Math.round($('#add-matter-popup').width()/2);
-              $('#add-matter-popup').css('left', ren_left);
-              $('#add-matter-popup').css('display', 'block');
             }
           });
+          $('#add-matter-popup').css('display', 'block');
         });
 
         $('.title-editable').editable('/matter/edit-classifier', {
@@ -500,8 +487,8 @@ $(document).ready(function(){
               return { cid : cid }
             },
             select: true,
-            submit: 'Ok',
-            cancel: 'Cancel',
+            submit: 'OK',
+            cancel: 'X',
             indicator : '<img src="/images/indicator.gif" />',
             placeholder: '',
             tooltip: 'Click to edit...',
@@ -512,8 +499,8 @@ $(document).ready(function(){
             submitdata: function(value,settings){
               return { matter_id : $('#this-matter-id').val(), field: 'notes' }
             },
-            submit: 'Ok',
-            cancel: 'Cancel',
+            submit: 'OK',
+            cancel: 'X',
             select: true,
             indicator : '<img src="/images/indicator.gif" />',
             placeholder: '...',
@@ -522,21 +509,6 @@ $(document).ready(function(){
                return value.replace(/(<br>)*/g, '');
             }
         });
-
-    $('#actors-browse').click(function(){
-        ren_top = $(this).parent().offset().top;
-        $('#actors-browse-popup').css('top',ren_top - 5);
-        $.ajax({
-            type: "GET",
-            url: "/matter/actorlistall/matter_id/<?=$this->matter_record[0]['ID']?>/container_id/<?=$this->matter_record[0]['container_ID']?>",
-            data: {},
-            success: function(data){
-                $('#actors-browse-popup').empty();
-                $('#actors-browse-popup').html(data);
-            }
-        });
-        $('#actors-browse-popup').css('display', 'block');
-    });
 
     $('#current-matter-edit').click(function(){
       $('#facade').css('height', $(document).height());
@@ -556,11 +528,11 @@ $(document).ready(function(){
       });
     });
 
-      $('#add-classifier-link').hide();
-    $('.matter-name').mouseover(function(){
-      $('#add-classifier-link').show();
+    $('#add-classifier-link').hide();
+    $('#matter-main-titles').mouseover(function(){
+        $('#add-classifier-link').show();
     }).mouseout(function(){
-      $('#add-classifier-link').hide();
+        $('#add-classifier-link').hide();
     });
 
     $('.matter-actor').click(function(){
@@ -581,34 +553,10 @@ $(document).ready(function(){
         }
       });
     });
+                  
+    $( "button, input:submit").button();
 
-  $('#delete-actor').click(function(){
-    var del_conf = confirm("Deleting Actor from table. Are you sure?");
-  if(del_conf == 1){
-    var aid = $('#actor-id').val();
-    $.ajax({
-      url : '/matter/delete-actor',
-      type: 'POST',
-      data: { aid:aid },
-      success: function(data){
-        if(!isNaN(parseInt(data))){
-          $.ajax({
-          url: '/matter/actornav/nav/next/actor_id/'+aid,
-          type: 'get',
-          data: {},
-          success: function(data){
-            $('#actor-details-content').empty();
-            $('#actor-details-content').html(data);
-          }
-         });
-        }else
-          alert(data);
-      }
-     });
-    }
-    return false;
-  });
-}); 
+});
 </script>  
 
 <div class="head-tab">
@@ -618,33 +566,27 @@ $(document).ready(function(){
         $matter_dead = "";
 ?>
 	<div class="matter-title">
-       <?php echo $this->matter_record[0]['category'] ."</br>";?>
-          <a href="javascript:void(0);" id="current-matter-edit" class="<?=$matter_dead?>" ><?php 
-        echo $this->matter_record[0]['UID']; 
-              ?><span class="ui-icon ui-state-highlight ui-corner-all ui-icon-wrench" style="float: right;"></span></a>
+    <?php echo $this->matter_record[0]['category'] ."</br>";?>
+    <span style="color: white; font-size: 16px; margin-right: 5px; float: left;" class="<?=$matter_dead?>"><?php echo $this->matter_record[0]['UID']; ?> <button id="current-matter-edit" title="Advanced edit" style="background: transparent; border: transparent;"><span class="ui-icon ui-icon-wrench"></span></button></span>
 
 	<?php
 	if($this->matter_parent){
-		echo "<br /><a id='parent-matter' href='/matter/view/id/" .  $this->matter_parent[0]['ID']  . "'>" . $this->matter_parent[0]['caseref'] . "" . $this->matter_parent[0]['country'];
+		echo "<br /><a id='parent-matter' href='/matter/view/id/" .  $this->matter_parent[0]['ID']  . "' style='float: left;' title='See parent'>" . $this->matter_parent[0]['caseref'] . "" . $this->matter_parent[0]['country'];
 		if ($this->matter_parent[0]['origin'] != "")
 			echo  "/" . $this->matter_parent[0]['origin']; 
 		if ($this->matter_parent[0]['type_code'] != "")
 			echo  " - " . $this->matter_parent[0]['type_code'] ;
 			echo  " (" . $this->matter_parent[0]['category_code'] . ")</a>"; 
-		}
-
-
-		?>
+		} ?>
 	</div>
 <div class="matter-name">
 
-<div id="title-action-div" >
-<span ><a href="javascript:void(0);" class="title-button" id="clone-matter-link" country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>" origin="<?=$this->matter_record[0]['origin']?>" type="<?=$this->matter_record[0]['type_code']?>"  code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>" >Clone matter</a></span>
-<span ><a href="javascript:void(0);" class="title-button" id="child-matter-link" caseref="<?=$this->matter_record[0]['caseref']?>" country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>" origin="<?=$this->matter_record[0]['origin']?>" type="<?=$this->matter_record[0]['type_code']?>"  code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>" >New child</a></span>
+<div id="title-action-div">
+<button id="clone-matter-link" country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>" origin="<?=$this->matter_record[0]['origin']?>" type="<?=$this->matter_record[0]['type_code']?>" code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>"><span class="ui-icon ui-icon-copy" style="float: left;"></span>Clone matter</button>
+<button id="child-matter-link" caseref="<?=$this->matter_record[0]['caseref']?>" country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>" origin="<?=$this->matter_record[0]['origin']?>" type="<?=$this->matter_record[0]['type_code']?>" code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>"><span class="ui-icon ui-icon-link" style="float: left;"></span>New child</button>
 <?php if($this->national_phase){ ?>
-<span ><a href="javascript:void(0);" class="title-button" id="national-matter-link" caseref="<?=$this->matter_record[0]['caseref']?>" country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>" origin="<?=$this->matter_record[0]['origin']?>" type="<?=$this->matter_record[0]['type_code']?>"  code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>" >Enter national phase</a></span>
+<button id="national-matter-link" caseref="<?=$this->matter_record[0]['caseref']?>" country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>" origin="<?=$this->matter_record[0]['origin']?>" type="<?=$this->matter_record[0]['type_code']?>" code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>"><span class="ui-icon ui-icon-flag" style="float: left;"></span>Enter nat. phase</button>
 <?php } ?>
-<span style="margin-top: 5px;" ><a href="javascript:void(0);" id="add-classifier-link" code="<?=$this->matter_record[0]['category_code']?>" >Add item</a></span>
 </div>
 
 
@@ -676,19 +618,19 @@ endforeach;
 endif;
 
 ?>
-<div id="matter-main-titles">
+<div id="matter-main-titles" style="border: 1px inset #000;">
 <?php if(count($classifier_arr)){ ?> 
 
 <?php foreach($classifier_arr as $type => $value): ?>
 <div class="" style="margin:5px 0px; display:block; text-align:left;"><span class="classifier-main-name"><b><?=$type?></b></span><span class="classifier-main-value" ><?php echo $value;?></span></div>
-<?  endforeach; ?>
-
-<?php }else{ ?>
-
-<?php } ?>
+<?php  endforeach; 
+    } else
+        echo "...Hover the mouse here to add a title item..."; 
+?>
+<button id="add-classifier-link" code="<?=$this->matter_record[0]['category_code']?>" style="position: absolute; width: 120px; margin-left: 50px"><span class="ui-icon ui-icon-plusthick" style="float: left;"></span>Add title item</button>
 </div>
 
-    </div>
+</div>
 </div>
 
 <?php if(isset($this->matter_actors)):
@@ -696,7 +638,7 @@ endif;
     $actor_role = "";
 ?>
 <div class="listrow">
-<div class="list-matter-block" > Actors<span id="responsible-actor-span">Responsible : <?=$this->matter_record[0]['responsible']?></span>  <a href="javascript:void(0)" style="float:right;" id="new-actor-0" class="add-actor button-style">Add Actor</a></div>
+<div class="list-matter-block" > Actors<span id="responsible-actor-span">Responsible: <?=$this->matter_record[0]['responsible']?></span>  <button style="float:right;" id="new-actor-0" class="add-actor">Add Actor</button></div>
 <div class="list-matter-block-info" style="height: 150px; width: 99%">
 <input type="hidden" name="matterId" id="this-matter-id" value=<?=$this->matter_id?> />
 <input type="hidden" name="containerId" id="this-container-id" value="<?=$this->matter_record[0]['container_ID']?>" />
@@ -736,7 +678,7 @@ if(count($this->matter_actors))
 
 <?php //Matter Events?>
 <div class="listrow" style="width:457px;display:inline-block;">
-<div class="status-row" id="MatterStatus" style="margin-left: 5px;"><span class="status-col-name">Status</span><span class="status-col-date">Date</span><span class="status-col-number">Number</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
+<div class="status-row" id="MatterStatus" style="margin-left: 5px;" title="Click for more detail"><span class="status-col-name">Status</span><span class="status-col-date">Date</span><span class="status-col-number">Number</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
 <div class="list-matter-block-info" style="width:98%" >
 
 <?php foreach($this->matter_events as $event):
@@ -767,7 +709,7 @@ if(count($this->matter_actors))
 $trigger_id = "";
 ?>
 <div class="listrow" style="width:458px;display:inline-block;">
-<div class="status-row" id="MatterOpenTasks" style="margin-left: 5px;"><span class="task-col-name">Open tasks</span><span class="status-col-date" >Due</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
+<div class="status-row" id="MatterOpenTasks" style="margin-left: 5px;" title="Click for more detail"><span class="task-col-name">Open tasks</span><span class="status-col-date" >Due</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
 <div class="list-matter-block-info" style="width:98%" >
 <?php foreach($this->matter_open_tasks as $open_task): 
     if($trigger_id != $open_task['trigger_ID']){
@@ -794,7 +736,7 @@ endforeach; ?>
 $trigger_id = "";
 ?>
 <div class="listrow listrow-short" style="display:inline-block; width:200px !important;">
-<div class="status-row" id="MatterRenTasks"><span class="renewal-col-name">Renewals</span><span class="renewal-col-date" >Due</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
+<div class="status-row" id="MatterRenTasks" title="Click for more detail"><span class="renewal-col-name">Renewals</span><span class="renewal-col-date" >Due</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
 <div class="list-matter-block-info" style="width:97%" >
 <?php foreach($this->matter_open_tasks_ren as $open_task): 
     if($trigger_id != $open_task['trigger_ID']){
@@ -823,7 +765,7 @@ endif; ?>
 $trigger_id = "";
 ?>
 <div class="listrow listrow-short" style="display:inline-block; width: 390px !important;">
-<div class="status-row" id="MatterClassifier"><span class="status-col-name">Classifier</span></div>
+<div class="status-row" id="MatterClassifier" title="Click for more detail"><span class="status-col-name">Classifier</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
 <div class="list-matter-block-info" style="width:98%" >
 
 
@@ -881,7 +823,6 @@ if(strlen($classifier['value']) > 80){
 </div>
 
 <div id="facade"></div>
-<div id="actors-browse-popup"></div>
 <div id="event-pop-up"></div>
 <div id="tasklist-pop-up"></div>
 <div id="classifier-popup"></div>
@@ -893,12 +834,6 @@ if(strlen($classifier['value']) > 80){
 <div id="add-matter-popup"></div>
 
 <div id="actor-details-popup" class="place-card" >
-<div id="actor-details-nav" style="display:none;" >
-<span title="backward 10 actors" ><img src="/images/backward.png" alt="backward" class="actor-navigation" id="backward" /></span>
-<span title="previous actor" ><img src="/images/prev.png" alt="prev" class="actor-navigation" id="prev" /></span>
-<span title="next actor" ><img src="/images/next.png" alt="next" class="actor-navigation" id="next" /></span>
-<span title="forward 10 actors" ><img src="/images/forward.png" alt="forward" class="actor-navigation" id="forward" /></span>
-<span title="Delete actor" class="button-style" id="delete-actor" ><img src="/images/Delete-32.png" border=0 width=16 height=16 style="vertical-align:middle;" />Delete</span>
-</div>
+
 <div id="actor-details-content"></div>
 </div>

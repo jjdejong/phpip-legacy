@@ -7,9 +7,8 @@
 <head>
 <?= $this->headTitle() ?>
 <?= $this->headMeta() ?>
-<?= $this->headLink()
-        ->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen');
-?>
+<?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen'); ?>
+<?= $this->headLink()->appendStylesheet($this->baseUrl('/js/css/custom-theme/jquery-ui-1.8.17.custom.css'), 'screen'); ?>
 
 <? $this->headScript()->appendFile(
     '/js/jquery-1.7.1.min.js',
@@ -23,6 +22,11 @@
 
 <? $this->headScript()->appendFile(
     '/js/jquery-ui-1.8.17.custom.min.js',
+    'text/javascript'
+    ); ?>
+
+<? $this->headScript()->appendFile(
+    '/js/jquery.jeditable.js',
     'text/javascript'
     ); ?>
     
@@ -49,9 +53,6 @@
 
 <div id="loggedin"><?php  echo "Connected as " . $this->firstname;?></div>
 <?= $this->render('content-left.phtml') ?>
-<!--  <div class="top-right-nav">
-    <a class="header-link" href="<?= $this->url(array ( 'controller' => 'auth', 'action' => 'logout', 'module' => 'default',))?>">LOG OUT</a>
-</div>  -->
 
 <?
     }

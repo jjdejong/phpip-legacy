@@ -79,16 +79,8 @@ input{
   width: 220px; 
   display: none; 
 } 
-#actor-used-in{ 
-  float:right; 
-  margin: -3px 10px 0px; 
-  height: 16px; 
-}
 
 </style>
-<link href="/js/css/smoothness/jquery-ui-1.8.17.custom.css" media="screen" rel="stylesheet" type="text/css" >
-<script type="text/javascript" src="/js/jquery-ui-1.8.17.custom.min.js"></script>
-<script type="text/javascript" src="/js/jquery.jeditable.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
    $('#actor-used-in').click(function(){
@@ -106,8 +98,6 @@ $(document).ready(function(){
             $('#actor-details-used-in').css('top', top_position);
             $('#actor-details-used-in').css('left', left_position);
             $('#actor-details-used-in').html(data);
-            //$('#actor-details-used-in').show();
-            //$('#actor-details-used-in').show("slow");
             $('#actor-details-used-in').css("display", "block");
             
           }
@@ -372,24 +362,13 @@ var dvalue = '';
         $('#facade').css('display', 'none');
         $('#actor-details-used-in').css('display', 'none');
     });
-
-  /*  $('#next-actor').click(function(){
-        $.ajax({
-          url: '/matter/actornav/nav/next/actor_id/'+$('#actor-id').val(),
-          type: 'get',
-          data: {},
-          success: function(data){
-            //$('#actor-details-popup').empty();
-            $('#actor-detail-popup').html(data);
-          }
-        });
-    }); */
+    $( "button, input:button" ).button();
 
 });
 </script>
 
 <div id="edit-actor-head">
-Actor Information <span class="close-button">X</span><span title="Actor used in" class="button-style" id="actor-used-in" >Used in</span>
+Actor Information <span class="close-button">X</span>
 </div>
 <div id="edit-actor-content">
 <input type="hidden" name="actor_id" id="actor-id" value="<?=$this->actor['ID']?>" />
@@ -451,6 +430,7 @@ Actor Information <span class="close-button">X</span><span title="Actor used in"
 <span class="actor-input editable" id="VAT_number" ><?=$this->actor['VAT_number']?></span>
 <label for="notes" title="<?=$this->actorComments['notes']?>" >Notes</label>
 <span class="actor-input teditable" id="notes" ><?=$this->actor['notes']?></span>
+<button title="Actor used in" id="actor-used-in" style="float: right; margin-top: 10px">Used in<span class="ui-icon ui-icon-arrowthick-1-e" style="float: right;"></span></button>
 </fieldset>
 
 <input type="hidden" value="" id="Employer-id" name="Employer-id"/>
