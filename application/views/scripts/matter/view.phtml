@@ -63,6 +63,12 @@
 
 #parent-matter{
   color: #999 !important;
+  float: left;
+}
+
+#container-matter{
+  color: #BBB !important;
+  float: left;
 }
 
 .matter-name{
@@ -571,13 +577,16 @@ $(document).ready(function(){
 
 	<?php
 	if($this->matter_parent){
-		echo "<br /><a id='parent-matter' href='/matter/view/id/" .  $this->matter_parent[0]['ID']  . "' style='float: left;' title='See parent'>" . $this->matter_parent[0]['caseref'] . "" . $this->matter_parent[0]['country'];
-		if ($this->matter_parent[0]['origin'] != "")
-			echo  "/" . $this->matter_parent[0]['origin']; 
-		if ($this->matter_parent[0]['type_code'] != "")
-			echo  " - " . $this->matter_parent[0]['type_code'] ;
-			echo  " (" . $this->matter_parent[0]['category_code'] . ")</a>"; 
-		} ?>
+		echo "<br /><a id='parent-matter' href='/matter/view/id/" .  $this->matter_parent[0]['ID']  . "' title='See parent'>" . $this->matter_parent[0]['UID'];
+        echo  " (" . $this->matter_parent[0]['category_code'] . ")</a>"; 
+    } 
+	if($this->matter_container){
+		echo "<br /><a id='container-matter' href='/matter/view/id/" .  $this->matter_container[0]['ID']  . "' title='See container'>" . $this->matter_container[0]['UID'];
+        echo  " (" . $this->matter_container[0]['category_code'] . ")</a>";
+    }?>
+
+
+
 	</div>
 <div class="matter-name">
 

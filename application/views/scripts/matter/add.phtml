@@ -25,7 +25,7 @@ $(document).ready(function(){
                    }
                  return false;
         }
-    });
+    }).select();
     $('#matter-origin').autocomplete({
         minLength: 2,
         source: "/matter/get-country-codes",
@@ -285,8 +285,6 @@ $(document).ready(function(){
    $("input:button, button").button();
 });
 
-$( "#matter-country" ).select();
-
 </script>
 
 <style type="text/css" >
@@ -384,36 +382,32 @@ padding: 1px 2px;
 </div>
 <form type="post" action="" id="add-matter-form" >
 
-<label for="matter-category"><?php if(!isset($this->child)){?><span class="required-field">*</span><?php } ?>Category</label>
-<?php if(isset($this->child)){?>
-<span id="matter-category" class="display-field" ><?=$this->category?></span>
-<?php }else{ ?>
-<input type="text" name="matter-category" id="matter-category" value="<?=$this->category?>" class="required" />
-<?php } ?>
+<label for="matter-category"><span class="required-field">*</span>Category</label>
+<input type="text" name="matter-category" id="matter-category" value="<?=$this->category?>" class="required" onfocus="this.select()" />
 <input type="hidden" name="matter-category-code" id="matter-category-code" value="<?=$this->category_code?>" />
 
 <label for="matter-country"><span class="required-field">*</span>Country</label>
-<input type="text" name="matter-country" id="matter-country" value="<?=$this->country_name?>" class="required" />
+<input type="text" name="matter-country" id="matter-country" value="<?=$this->country_name?>" class="required" onfocus="this.select()" />
 <input type="hidden" name="matter-country-id" id="matter-country-id" value="<?=$this->country_code?>" />
 
 <label for="matter-origin">Origin</label>
-<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>" />
+<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>" onfocus="this.select()" />
 <input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->origin_code?>" />
 
 <label for="matter-type">Type</label>
-<input type="text" name="matter-type" id="matter-type" value="<?=$this->type_name?>" />
+<input type="text" name="matter-type" id="matter-type" value="<?=$this->type_name?>" onfocus="this.select()" />
 <input type="hidden" name="matter-type-id" id="matter-type-id" value="<?=$this->type_code?>" />
 
 <label for="matter-caseref"><?php if(!isset($this->child)){?><span class="required-field">*</span><?php } ?>Caseref</label>
 <?php if(isset($this->child)){?>
 <span id="matter-caseref" class="display-field" ><?=$this->caseref?></span>
 <?php }else { ?>
-<input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->caseref?>" class="required" />
+<input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->caseref?>" class="required" onfocus="this.select()" />
 <?php } ?>
 <input type="hidden" name="matter-caseref-id" id="matter-caseref-id" value="<?=$this->caseref?>" />
 
 <label for="matter-responsible"><span class="required-field">*</span>Responsible</label>
-<input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->username?>" class="required" />
+<input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->username?>" class="required" onfocus="this.select()" />
 
 <?php if(isset($this->child)){ ?>
 <div id="child-matter-options" >

@@ -79,7 +79,6 @@ vertical-align: top;
     });
 
     $('#event_date').datepicker({
-        //minDate: +0,
         dateFormat: 'dd/mm/yy',
     });
 
@@ -142,7 +141,7 @@ vertical-align: top;
         type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-          minLength : 0,
+          minLength : 3,
           source : "/matter/get-all-refers",
           select: function( event, ui ) {
             $(this).val(ui.item.value);
@@ -226,7 +225,7 @@ vertical-align: top;
     });
 
     $( "#event_refers" ).autocomplete({
-            minLength: 1,
+            minLength: 3,
             source: "/matter/get-all-refers",
             focus: function( event, ui ) {
                     /*$( "#actor" ).val( ui.item.id );*/
@@ -261,7 +260,7 @@ vertical-align: top;
            alert('Select event name!');
            return;
        }
-
+       
        $.ajax({
            url: '/matter/add-event',
            type: 'POST',
@@ -310,7 +309,6 @@ vertical-align: top;
 <span class="eventlist-col-notes" >Notes</span>
 <span class="eventlist-col-refer" >Refers to</span>
 </div>
-<!-- <a href="javascript:void(0)" style="float:right;" id="add-event" class="button-style">Add Event</a> -->
 <button id="add-event" style="float: right;">Add Event</button>
 <div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
 <?php foreach($this->matter_events as $matter_event): 
@@ -321,8 +319,9 @@ vertical-align: top;
 <span class="eventlist-col-event_date date-editable" ><?=$matter_event['event_date']?></span>
 <span class="eventlist-col-detail editable" ><?=$matter_event['detail']?></span>
 <span class="eventlist-col-notes editable" ><?=$matter_event['notes']?></span>
-<span class="eventlist-col-refer refer-autocomplete" ><? if($matter_event['alt_matter_ID']){ ?>
-    	<?=$matter_event['alt_caseref'] ?> <?=$matter_event['country'] . " " . $matter_event['origin'] . " " . $matter_event['matter_type'];
+<span class="eventlist-col-refer refer-autocomplete" >
+<?php if($matter_event['alt_matter_ID']){ 
+    echo $matter_event['alt_caseref'], $matter_event['country'] , $matter_event['origin'] ? '/' . $matter_event['origin'] : '', $matter_event['matter_type'] ? '-' . $matter_event['matter_type'] : '';
     } ?></span>
 </div>
 <? endforeach; ?>
@@ -330,6 +329,7 @@ vertical-align: top;
 </div>
 <?php //endif; ?>
 <div id="add-event-popup" class="listrow">
+<b>Add event</b>
 <div id="add-event-wrap">
 <input type="hidden" name="matter_id" value="<?=$this->matter_id?>" id="matter_id" />
 <label for="event_name" ><span style="color: #f00;">*</span>Event Name </label>

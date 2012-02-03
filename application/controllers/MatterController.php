@@ -110,14 +110,18 @@ class MatterController extends Zend_Controller_Action
     $this->view->matter_actors = $matterModel->getMatterActors($matter_id, $this->view->matter_record[0]['container_ID']);
 
     if($this->view->matter_record[0]['parent_ID'] > 0 )
-    	$this->view->matter_parent = $matterModel->getMatterParent($this->view->matter_record[0]['parent_ID']);
+    	$this->view->matter_parent = $matterModel->getMatter($this->view->matter_record[0]['parent_ID']);
     else 
     	$this->view->matter_parent = 0;
+    	
+    if($this->view->matter_record[0]['container_ID'] > 0 )
+    	$this->view->matter_container = $matterModel->getMatter($this->view->matter_record[0]['container_ID']);
+    else 
+    	$this->view->matter_container = 0;
 
     $this->view->matter_events = $matterModel->getMatterEvents($matter_id);
     $this->view->matter_open_tasks = $matterModel->getOpenTasks($matter_id);
     $this->view->matter_open_tasks_ren = $matterModel->getOpenTasksREN($matter_id);
-    //$this->view->matter_events_expired = $matterModel->getMatterEventsExpired($matter_id);
     $this->view->matter_expiry = $matterModel->getMatterExpiry($matter_id);
     $this->view->matter_classifier = $matterModel->getClassifier($matter_id);
     $this->view->matter_classifier_main = $matterModel->getClassifier($matter_id, 1);
@@ -190,11 +194,11 @@ class MatterController extends Zend_Controller_Action
       $this->view->type_code = $type_arr['code'];
 
       if($matterInfo[0]['parent_ID']){
-        $this->view->parent = "(".$matterInfo[0]['parent_ID'].")".$matterModel->getMatterUID($matterInfo[0]['parent_ID']);
+        $this->view->parent = $matterModel->getMatterUID($matterInfo[0]['parent_ID']) . " (".$matterInfo[0]['parent_ID'].")";
         $this->view->parent_id = $matterInfo[0]['parent_ID'];
       }
       if($matterInfo[0]['container_ID']){
-        $this->view->container = "(".$matterInfo[0]['container_ID'].")".$matterModel->getMatterUID($matterInfo[0]['container_ID']);
+        $this->view->container = $matterModel->getMatterUID($matterInfo[0]['container_ID']) . " (".$matterInfo[0]['container_ID'].")";
         $this->view->container_id = $matterInfo[0]['container_ID'];
       }
 

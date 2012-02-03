@@ -94,7 +94,7 @@ $(document).ready(function(){
                    }
             return false;
         }
-    });
+    }).select();
 
     $('#matter-parent').autocomplete({
         minLength: 3,
@@ -389,14 +389,14 @@ $selected = "selected=selected";
 
 <label for="matter-country"><span class="required-field">*</span>Country</label>
 <?php if($this->country_edit){ ?>
-<input type="text" name="matter-country" id="matter-country" value="<?=$this->matter['country_name']?>" class="required" />
+<input type="text" name="matter-country" id="matter-country" value="<?=$this->matter['country_name']?>" class="required" onfocus="this.select()" />
 <?php } else{ ?>
 <span id="matter-country" class="display-field" ><?=$this->matter['country_name']?></span>
 <?php } ?>
 <input type="hidden" name="matter-country-id" id="matter-country-id" value="<?=$this->matter['country']?>" />
 
 <label for="matter-origin">Origin</label>
-<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>" />
+<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>"  onfocus="this.select()"/>
 <input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->origin_code?>" />
 
 <label for="matter-type">Type</label>
@@ -412,22 +412,22 @@ if($type['id'] == $this->matter['type_code'])
 </select>
 
 <label for="matter-caseref"><span class="required-field">*</span>Caseref</label>
-<input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->matter['caseref']?>" class="required" />
+<input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->matter['caseref']?>" class="required" onfocus="this.select()" />
 <input type="hidden" name="matter-caseref-prev" id="matter-caseref-prev" value="<?=$this->matter['caseref']?>"/>
 
 <label for="matter-responsible"><span class="required-field">*</span>Responsible</label>
-<input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->matter['responsible']?>" class="required" />
+<input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->matter['responsible']?>" class="required" onfocus="this.select()" />
 
 <label for="matter-parent-id">Parent</label>
-<input type="text" name="matter-parent" id="matter-parent" value="<?=$this->parent?>" />
+<input type="text" name="matter-parent" id="matter-parent" value="<?=$this->parent?>" onfocus="this.select()" />
 <input type="hidden" name="matter-parent-id" id="matter-parent-id" value="<?=$this->parent_id?>" />
 
 <label for="matter-container-id">Container</label>
-<input type="text" name="matter-container" id="matter-container" value="<?=$this->container?>" />
+<input type="text" name="matter-container" id="matter-container" value="<?=$this->container?>" onfocus="this.select()" />
 <input type="hidden" name="matter-container-id" id="matter-container-id" value="<?=$this->container_id?>" />
 
 <label for="matter-idx">Idx</label>
-<input type="text" name="matter-idx" id="matter-idx" value="<?=$this->matter['idx']?>" />
+<input type="text" name="matter-idx" id="matter-idx" value="<?=$this->matter['idx']?>" onfocus="this.select()" />
 
 <label for="matter-dead">Dead</label>
 <span id="matter-dead" class="display-field" title="This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status" style="cursor:help;" ><?php echo ($this->matter['dead'])? "Yes":"No" ;?></span>

@@ -465,7 +465,7 @@ WHERE e2.matter_id IS NULL
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array('m.*', 'if(isnull(m.container_ID),(select value from classifier where classifier.matter_ID=m.ID and type_code="TIT" LIMIT 1),(select value from classifier where classifier.matter_ID=m.container_ID and type_code="TITOF" LIMIT 1)) AS Title', "concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID",))
+    $selectQuery = $dbSelect->from(array('m' => 'matter'), array('m.*', "concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID",))
                             ->joinLeft(array('c' => 'country'), 'c.iso = m.country', array('country_name' => 'c.name'))
                             ->joinLeft(array('mc' => 'matter_category'), 'm.category_code = mc.code', array('category' => 'mc.category'))
                             ->where('ID = ?', $matter_id);
@@ -474,9 +474,9 @@ WHERE e2.matter_id IS NULL
   }
 
 /**
- * retrieves parent matters of a given matter
+ * retrieves parent matters of a given matter ----> this is superseded by getMatter() above
 **/
-  public function getMatterParent($matter_id = 0)
+/* public function getMatterParent($matter_id = 0)
   {
 
     if(!$matter_id)
@@ -491,7 +491,7 @@ WHERE e2.matter_id IS NULL
                             ->where('ID = ?', $matter_id);
 
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
+  }*/
 
 /**
  * returns container_ID of a matter
@@ -1231,7 +1231,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   public function getAllMatterRefers($term = null)
   {
     $dbSelect = $this->getDbTable()->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref,'-', country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
+    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref, country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
                             ->joinLeft(array('e' => 'event'), "m.ID=e.matter_ID AND e.code='FIL'", array('e.detail as number', 'e.event_date as filing_date'))
                             ->where("m.type_code IS NULL AND caseref LIKE '".$term."%'");
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
@@ -1244,7 +1244,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   public function getContainerRefers($caseref = null, $term = null, $matter_id = null)
   {
     $dbSelect = $this->getDbTable()->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref,'-', country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
+    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref, country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
                             ->joinLeft(array('e' => 'event'), "m.ID=e.matter_ID AND e.code='FIL'", array('e.detail as number', 'e.event_date as filing_date'))
                             ->where("m.caseref = '".$caseref."' AND m.ID != '".$matter_id."' AND container_ID IS NULL AND caseref LIKE '".$term."%'");
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);

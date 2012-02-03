@@ -1,0 +1,142 @@
+These instructions are provided for Ubuntu Server 10.04 LTS. You may need to adapt them for other 
+Linux distributions.
+
+1. Installing the required packages
+
+1.1. Apache, PHP and MySQL
+
+Install these as follows:
+
+    In a console, type:
+    	sudo tasksel
+
+    Select "LAMP", then "OK". This will download and install the required packages. You will be 
+    prompted to create a new password for the MySQL administrator (root) - you will need that 
+    password later
+    
+    Enable mod_rewrite in Apache:
+    	sudo a2enmod rewrite
+
+1.2. Zend Framework
+
+    In the console, type:
+    	sudo apt-get install zend-framework-bin
+
+    Uncomment the line in /etc/php5/apache2/conf.d/zend-framework.ini. Use for instance the 
+    nano editor:
+    	sudo nano /etc/php5/apache2/conf.d/zend-framework.ini
+
+    Reload Apache:
+    	sudo apache2ctl restart
+
+This will install the Zend Framework version packaged for your current Ubuntu distribution. If 
+you are using Ubuntu 10.04 LTS, you won't get the latest. If you want the latest, you may download 
+it from http://framework.zend.com (I haven't seen the need for this, yet).
+
+1.3. phpIP
+
+The code goes in folder /var/www/phpip.
+
+In the console:
+	cd /var/www
+	sudo tar zxpvf <path to phpip.tar.gz>
+
+This is if you have downloaded a release package.
+
+Otherwise you can get the bleeding edge code using Git. You may need to install Git first:
+sudo apt-get install git-core
+
+Then:
+	cd /var/www
+	sudo git clone https://code.google.com/p/phpip/
+
+2. Configuring
+
+2.1 Quick start and check
+
+The tool is now accessible by pointing your browser to: http://<your server>/phpip/public
+
+You should see a login screen. You won't get past that, because no tables or users have been 
+installed yet in MySQL.
+
+If you see "Application error", you've done something wrong. To make the error messages 
+more verbose:
+	sudo nano /etc/apache2/sites-enabled/phpip
+
+and change "live" to "development" in line 
+	SetEnv APPLICATION_ENV "live"
+
+
+2.2 Virtual host in Apache for Zend
+
+This is maybe the most complex configuration section.
+
+    In the console, type:
+    sudo nano /etc/apache2/sites-enabled/phpip
+
+    Paste the following in nano's edit window:
+
+    <VirtualHost *:80>
+        ServerName phpip.local
+        DocumentRoot /var/www/phpip/public
+        SetEnv APPLICATION_ENV "live"
+        <Directory /var/www/phpip/public>
+            Options Indexes MultiViews FollowSymLinks
+            DirectoryIndex index.php
+            AllowOverride All
+            Order allow,deny
+            Allow from all
+        </Directory>
+        ErrorLog /var/log/apache2/error.log
+        CustomLog /var/log/apache2/access.log combined
+    </VirtualHost>
+
+You then need to create a DNS entry mapping name "phpip.local", i.e. the value of parameter 
+ServerName in the above VirtualHost? definition, to the IP address of your server. If this is 
+obscure to you, the simplest is to add the following line in the "hosts" file of the workstations 
+that will access phpIP:
+	<your server's IP address>    phpip.local
+
+On Windows workstations, the "hosts" file is usually in: c:\windows\system32\drivers\etc\hosts
+
+On Macs and Linux workstations, it is located in /etc/hosts.
+
+Now point your browser to http://phpip.local.
+
+
+2.3. MySQL
+
+You need to import the phpIP tables into MySQL. You should find a script named phpip_skel.sql for 
+that in /var/www/phpip/install. It will probably be compressed and have a date tag (e.g.
+phpip_skel-YYYYMMDD.sql.gz). In the console type:
+	cd /var/www/phpip/install
+	gunzip phpip_skel-YYYYMMDD.sql.gz
+	mysql -u root -p < phpip_skel-YYYYMMDD.sql
+
+You will be prompted for the MySQL root password, i.e. the one you provided upon installing the 
+LAMP package via tasksel.
+
+BEWARE: do not perform the above operation as an upgrade on a production system, because the 
+script will drop all tables before re-creating them.
+
+    Create an infrastructure user who has access to the phpip database with SELECT privileges, 
+    plus UPDATE privileges on the phpip.User table. The username ("phpip") and password 
+    ("changeme") are those set for parameters: resources.db.params.username and 
+    resources.db.params.password in the application/configs/application.ini file (check this 
+    file and change to suit your needs).
+    	mysql -u root -p -e "CREATE USER 'phpip'@'localhost' IDENTIFIED BY 'changeme'; GRANT SELECT ON phpip.* TO 'phpip'@'localhost'; GRANT UPDATE ON phpip.User TO 'phpip'@'localhost';"
+
+    Create at least one application user (you!) with all privileges on the phpip database:
+    	mysql -u root -p -e "CREATE USER 'myself'@'%' IDENTIFIED BY 'MYPASSWORD'; GRANT ALL ON phpip.* TO 'myself'@'%';"
+
+You need to add this user to the phpip.User table so that he can login to the application:
+	mysql -u root -p -e "INSERT INTO phpip.User (Username, Firstname, Email, Password, PasswordSalt) VALUES ('myself', 'My name', 'MY@email.address', md5('MYPASSWORDsalt'), 'salt');"
+
+In a more secure environment, you'll want to assign different "salt" values to the different users.
+
+Finally, you need to add this user to the actor table of the database:
+	mysql -u root -p -e "INSERT INTO phpip.actor (name, login) VALUES ('My Name', 'myself');"
+
+(These three steps for adding an application user are rather tedious and it's something that needs 
+to be improved. There is no utility in the user interface yet - volunteers for developing one 
+are welcome.)
