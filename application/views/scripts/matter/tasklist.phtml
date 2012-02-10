@@ -1,27 +1,3 @@
-<?php
-/**
- *
- * @param string $str The text string to split
- * @param integer $words The number of words to extract. Defaults to 15
- */
-function word_split($str,$words=15) {
-        $string_add = "";
-	$word_count = preg_split("/[\s]+/", $str);
-	$arr = preg_split("/[\s]+/", $str,$words+1);
-	$arr = array_slice($arr,0,$words);
-       	if(count($word_count) > 3)
-	    $string_add = "..."; 
-	return array( join(' ',$arr) . $string_add, $string_add);
-}
-//Usage
-/*$input = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna liqua. Ut enim ad minim
-veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat.';*/
-//echo word_split($input,10);
-//Will output
-//Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-?>
 <style type="text/css">
 .status-row{
 display:block;

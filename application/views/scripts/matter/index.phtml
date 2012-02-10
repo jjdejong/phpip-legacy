@@ -18,11 +18,12 @@
   height:10px;
 }
 .head-tab{
-  color: #FFFFFF;
-  background-color: #1E4262;
+  color: #1E4262;
+  /*background-color: #1E4262;*/
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   padding:5px 10px;
+  border: 1px inset #CCC;
 }
 
 .row-tab{
@@ -42,7 +43,8 @@
 }
 .head-tab div{
   display:inline-block;
-  font-size: 10px;
+  /*font-size: 10px;*/
+  font-weight: bold;
 }
 
 .row-tab div{
@@ -120,29 +122,31 @@
 }
 
 .sorting-dirs{
-  color: white;
+  /*color: white;
   font-size: 1em;
-  padding: 1px 2px;
+  padding: 1px 2px;*/
   cursor: pointer;
-  vertical-align: center;
+  /*vertical-align: center;*/
 }
-#matter-filters{
+/*#matter-filters{
     float: left;
-    color: #FFFFFF;
-    background-color: #1E4262;
+    color: #1E4262;
+    /*background-color: #1E4262;*/
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     font-size: 11px;
     font-weight: normal;
-    padding: 1px 4px 1px 1px;
+    padding: 1px 4px 2px 1px;
     display: inline-block;
     margin-right: 20px;
+    border: 1px inset #AAA;
 }
 #matter-filters label{
     vertical-align: middle;
-}
+}*/
+
 #matter-results-bg{
-  /*width: 958px;*/
+  width: 100%;
 }
 .filter-input{
   -moz-border-radius: 4px;
@@ -403,6 +407,15 @@ $(document).ready(function(){
              }
          });
      });
+                  
+     $('#clear-matter-filters').click(function(){
+         $(location).attr('href', '/matter');
+     });
+                  
+     $( "button, input:submit, input:button").button();
+     $( "#container-all" ).buttonset();
+     $( "#actor-status" ).buttonset();
+     $( "#mine-all" ).buttonset();
 
 });
 
@@ -419,25 +432,28 @@ if(isset($this->containers)){
     }
 }
 ?>
-<div id="matter-filters">
-  <input type="radio" id="show-containers" name="container-filter" value=1 <?=$show_conts?> />
-  <label for="show-containers" >Show Containers</label>
+<div id="container-all" style="float: left;">
   <input type="radio" id="show-all" name="container-filter" value=0 <?=$show_all?> />
   <label for="show-all" >Show All</label>
+  <input type="radio" id="show-containers" name="container-filter" value=1 <?=$show_conts?> />
+  <label for="show-containers" >Show Containers</label>
 </div>
 
 
-<div id="matter-filters">
+<div id="actor-status" style="float: left; margin-left: 20px;">
   <input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?if (!$this->display_style){?>checked<?}?>/>
   <label for="show-actor" >Actor View</label>
   <input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?if ($this->display_style){?>checked<?}?>/>
   <label for="show-status" >Status View</label>
 </div>
 
-<div id="matter-filters">
+<div id="mine-all" style="float: left; margin-left: 20px;">
   <input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?if ($this->responsible){?>checked<?}?>/>
   <label for="show-responsible" >Show Mine</label>
-</div><br><br>
+</div>
+
+  <button id="clear-matter-filters" name="clear-filters" style="float: right;"><span class="ui-icon ui-icon-close" style="float: left;"></span> Clear filters</button>
+<br><br>
 
 <div class="head-tab">
 <div  class="display_actor display_status column column-case"><a class="sorting-dirs" id="caseref-desc" >UID</a><span class="sorting-img" id="caseref-sort">&nbsp;</span><br>
@@ -507,7 +523,7 @@ $rindex = 0;
 foreach($this->paginator as $matter):?>
 
 <?php //print_r($matter);?>
-<div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: #<?php echo ($matter['Ctnr'])?'89A1C7':'FFF'; ?>" >
+<div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: <?php echo ($matter['Ctnr'])?'lightcyan':'white'; ?>" >
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-cat"><?php echo $matter['Cat']; ?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-status"><?php echo $matter['Status'];?></div>

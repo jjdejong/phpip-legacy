@@ -661,8 +661,8 @@ WHERE e2.matter_id IS NULL
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
     $selectQuery = $dbSelect->from(array('tl' => "task_list"),array('tl.trigger_ID', 'DATE_FORMAT(`tl`.`due_date`,"%d/%m/%Y") as due_date', 'task_name' => 'tl.name'))
-                            ->joinInner(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID'))
-                            ->joinInner(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code'))
+                            ->joinInner(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID', 't.notes'))
+                            ->joinInner(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code', 'trigger_detail' => 'e.detail'))
                             ->joinInner(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
                             ->where('tl.matter_ID = ?  AND t.code != "REN" AND t.done=0', $matter_id)
                             ->order(array('tl.trigger_ID', 'tl.due_date asc'));
@@ -764,34 +764,6 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
     return $dbStmt->fetchAll();
   }
-
-/**
- * retrieves all tasks for a given matter
- * $ren = 0 retrives non renewal
- * $ren = 1 retrives renewal
-**/
-/*  public function getMatterAllTask($matter_id = 0, $ren = 0)  // NOT RENewal
-  {
-    if(!$matter_id)
-      return;
-
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-   if ($ren == 0)
-       $ren_condition = "  AND t.code != 'REN'";
-   else if ($ren == 1)
-       $ren_condition = "  AND t.code = 'REN'";
-
-    $selectQuery = $dbSelect->from(array('tl' => "task_list"), array('tl.trigger_ID', 'task_name' => 'tl.name'))
-                            ->joinInner(array('t' => 'task'), 't.ID = tl.ID', array('*', 'DATE_FORMAT(`tl`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`tl`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
-                            ->joinInner(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code as event_code', 'DATE_FORMAT(`e`.`event_date`, "%d/%m/%Y") as event_date'))
-                            ->joinInner(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
-                            ->where("tl.matter_ID = ?  $ren_condition", $matter_id)
-                            ->order(array('e.event_date', 'tl.due_date'));
-
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }*/
 
 /**
  * retrieves all tasks for a matter with event details 

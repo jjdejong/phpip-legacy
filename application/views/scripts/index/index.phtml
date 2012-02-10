@@ -126,9 +126,10 @@
 }
 #tasklist-pop-up{
     display: none;
-    position: absolute;
-    background: transparent; 
-    -moz-box-shadow: 0px;
+    z-index: 101;
+    position: fixed;
+    background: transparent;
+    top: 200px;
 }
 #add-matter-popup{
   display: none;
@@ -220,8 +221,8 @@ $(document).ready(function(){
          type: 'POST',
          data: {},
          success: function(data){
-             $('#task-pop-up').html(data);
-             $('#task-pop-up').css('display', 'block');
+             $('#tasklist-pop-up').html(data);
+             $('#tasklist-pop-up').css('display', 'block');
          }
        });
     });
@@ -450,6 +451,7 @@ $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
 </div>
 
 <div id="task-pop-up" class="place-card" ></div>
+<div id="tasklist-pop-up"></div>
 <div id="add-matter-popup" class="" ></div>
 <div id="facade"></div>
 

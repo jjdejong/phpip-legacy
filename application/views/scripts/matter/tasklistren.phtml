@@ -1,45 +1,16 @@
-<?php
-/**
- *
- * @param string $str The text string to split
- * @param integer $words The number of words to extract. Defaults to 15
- */
-function word_split($str,$words=15) {
-        $string_add = "";
-	$word_count = preg_split("/[\s]+/", $str);
-	$arr = preg_split("/[\s]+/", $str,$words+1);
-	$arr = array_slice($arr,0,$words);
-       	if(count($word_count) > 3)
-	    $string_add = "..."; 
-	return array( join(' ',$arr) . $string_add, $string_add);
-}
-//Usage
-/*$input = 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna liqua. Ut enim ad minim
-veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-consequat.';*/
-//echo word_split($input,10);
-//Will output
-//Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-?>
 <style type="text/css">
 .status-row{
 display:block;
 }
 .tasklist-col-name{
 display:inline-block;
-width: 220px;
-vertical-align: top;
-}
-.tasklist-col-date{
-display:inline-block;
-width: 120px;
+width: 150px;
 vertical-align: top;
 }
 
 .tasklist-col-due_date, .tasklist-col-done_date, .tasklist-col-assigned_to{
 display:inline-block;
-width: 78px;
+width: 80px;
 vertical-align: top;
 }
 
@@ -52,20 +23,13 @@ text-align: center;
 
 .tasklist-col-cost, .tasklist-col-fee{
 display:inline-block;
-width: 40px;
+width: 60px;
 vertical-align: top;
 }
-
 
 .tasklist-col-currency{
 display:inline-block;
 width: 36px;
-vertical-align: top;
-}
-
-.tasklist-col-time_spent{
-display:inline-block;
-width: 65px;
 vertical-align: top;
 }
 
@@ -233,8 +197,8 @@ $(document).ready(function(){
                      var field_name = (fclass[0]).split('-');
                      return { task_id : tid , field : field_name[2]}
                 },
-          cancel : 'X',
-          submit : 'Ok',
+          //cancel : 'X',
+          //submit : 'Ok',
           placeholder: '...',
           select : true,
           indicator : '<img src="/images/indicator.gif" />',
@@ -424,60 +388,16 @@ $(document).ready(function(){
                    url: "/matter/tasklistren/id/<?=$this->matter_id?>",
                    data: {},
                    success: function(data){
-                    $('#tasklist-pop-up').empty();
-                    $('#tasklist-pop-up').html(data);
+                       $('#tasklist-pop-up').empty();
+                       $('#tasklist-pop-up').html(data);
                    }
-              });
+                   });
                }
            }); 
         }
     });
-
-    $('.delete-event').click(function(){
-        var eid = $(this).attr('id');
-        var conf_event_del = confirm("Deleting the event will also delete the linked tasks");
-        if(conf_event_del){
-            $('#event-box-'+eid).hide();
-            conf_event_del = confirm("Are you satisfied with the deletion?");
-            if(conf_event_del){
-               var arr = $('#event-box-' + eid + ' > div').map(function(){
-                            var tid = this.id
-                            $.ajax({
-                               url: '/matter/delete-task',
-                               type: 'post',
-                               data: { tid: tid },
-                               success: function(data){
-                                    if(isNaN(parseInt(data)))
-                                       alert(data);
-                                }
-                            });
-                            return tid;
-                         }).get();
-               $.ajax({
-                   url: '/matter/delete-event',
-                   type: 'post',
-                   data: { eid: eid },
-                   success: function(data){
-                           if(!isNaN(parseInt(data))){
-                                   $.ajax({
-                                       type: "POST",
-                                       url: "/matter/tasklistren/id/<?=$this->matter_id?>",
-                                       data: {},
-                                       success: function(data){
-                                         $('#tasklist-pop-up').empty();
-                                         $('#tasklist-pop-up').html(data);
-                                       }
-                                    });
-                            }else{
-                              alert(data);
-                            }
-                   }
-               }); 
-            }else{
-                $('#event-box-'+eid).show();
-            }
-        }
-    });
+                  
+    $("input:button").button();
 });
 
 </script>
@@ -521,10 +441,8 @@ if($close_event_box)
 <div style="height:15px;"></div>
 <? } ?>
 <div class="status-row event-head" style="border-bottom: 1px solid #DDD;">
-<span class="tasklist-col-name"><b><?=$event_task['event_name'] . " - " . $event_task['event_date'] ?></b>
-</span>
-<div class="event-actions" style="width:48px"><span class="add-task-toevent" id="<?=$event_id?>" title="Add task to event"><span class="ui-icon ui-icon-plusthick" style="float:left;"></span></span>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete-event" style="cursor:pointer;" id="<?=$event_id?>" title="Delete event"><span class="ui-icon ui-icon-trash" style="float:right;"></span></span></div>
+<span class="tasklist-col-name"><b><?=$event_task['event_name'] . " - " . $event_task['event_date'] ?></b></span>
+<div class="event-actions" style="width:48px"><span class="add-task-toevent" id="<?=$event_id?>" title="Add task to event"><span class="ui-icon ui-icon-plusthick" style="float:left;"></span></span></div>
 </div>
 <?php $close_event_box = 1; }
     if($event_id == $event_task['trigger_ID']){
@@ -549,7 +467,7 @@ if($close_event_box)
 <? } else { ?>
 <span class="tasklist-col-notes notes editable" title="<?=$event_task['task_notes'];?>"><? echo substr($event_task['task_notes'], 0, 25) . "...";?></span>
 <? } ?>
-<span class="delete-task"><span class="delete-task" title="Delete task"><span class="ui-icon ui-icon-trash" style="float:right;"></span></span>
+<span class="delete-task" title="Delete task"><span class="ui-icon ui-icon-trash" style="float:right;"></span></span>
 </div>
 <?php }
 	$add_empty_row = 1;
@@ -577,12 +495,10 @@ if($close_event_box)
 <input type="text" name="task_fee" id="task_fee" value=""/>
 <label for="task_currency" >Currency </label>
 <input type="text" name="task_currency" id="task_currency" value=""/>
-<label for="task_time" >Time spent</label>
-<input type="text" name="task_time" id="task_time" value="" />
 <label for="task_assigned_to" >Assigned to </label>
 <input type="text" name="task_assigned_to" id="task_assigned_to" value="" /><br>
 <label for="task_notes" >Notes </label><textarea name="task_notes" id="task_notes" rows=2 cols=40></textarea><br>
-<input type="button" name="add_task_submit" id="add-task-submit" value="Add task" class="button-style" />
-<input type="button" name="add_task_cancel" id="add-task-cancel" value="Cancel" class="button-style" />
+<input type="button" name="add_task_cancel" id="add-task-cancel" value="Cancel" style="margin-top: 10px; margin-left: 4px; float: right;"/>
+<input type="button" name="add_task_submit" id="add-task-submit" value="Add task" style="margin-top: 10px; float: right;"/>
 </div>
 </div>

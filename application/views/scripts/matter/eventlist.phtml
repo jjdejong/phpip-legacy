@@ -113,8 +113,8 @@ vertical-align: top;
                      var field_name = (field_class[0]).split('-');
                      return { event_id: evid, field: field_name[2] }
                },
-          cancel : 'X',
-          submit : 'Ok',
+          //cancel : 'X',
+          //submit : 'Ok',
           placeholder: '...',
           select : true,
           indicator : '<img src="/images/indicator.gif" />',
@@ -293,7 +293,7 @@ vertical-align: top;
            }
        });
     });
-    $( "button, input:button").button();
+    $( "button").button();
 </script>
 
 <?php // Matter Open Tasks ?> 
@@ -309,7 +309,7 @@ vertical-align: top;
 <span class="eventlist-col-notes" >Notes</span>
 <span class="eventlist-col-refer" >Refers to</span>
 </div>
-<button id="add-event" style="float: right;">Add Event</button>
+<button id="add-event" style="float: right; margin-top: -2px;">Add Event</button>
 <div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
 <?php foreach($this->matter_events as $matter_event): 
 //print_r($matter_event); exit();

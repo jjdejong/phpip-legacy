@@ -29,7 +29,7 @@ $(document).ready(function(){
 $rindex = 0;
 foreach($this->paginator as $matter):?>
 
-<div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: #<?php echo ($matter['Ctnr'])?'89A1C7':'FFF'; ?>" >
+<div class="row-tab" id="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex++?>" style="background: <?php echo ($matter['Ctnr'])?'lightcyan':'white'; ?>" >
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-case"><span class="<?php echo ($matter['dead'])?"matter-dead": "";?>"><?php echo $matter['Ref']; ?></span></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-cat"><?php echo $matter['Cat']; ?></div>
 <div mid="edit-matter-<?php echo $matter['ID'] ?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-status"><?php echo $matter['Status'];?></div>

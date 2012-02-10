@@ -12,9 +12,8 @@
 }
 .classifier-col-url{
   display:inline-block;
-  width: 420px;
-  vertical-align: top;
-  overflow: hidden;
+  width: 350px;
+  vertical-align: top; 
 }
 .classifier-col-lnkto{
   display:inline-block;
@@ -169,7 +168,7 @@ var nterm = '';
     $('.url-editable').editable('/matter/update-classifier', {
       placeholder: '...',
       select : true,
-      indicator : '<img src="/images/indicator.gif" />',
+      indicator : '<span class="icon-busy" />',
       tooltip: 'Click to edit....',
       submitdata: function(value, settings){
         var cid = $(this).parent().attr('id');
@@ -302,12 +301,12 @@ var nterm = '';
 
 <div id="MatterAllClassifiers" class="listrow" ><div id="classifiers-list-head" class="status-row" style="padding-bottom:4px;">
 <span class="classifier-col-value" style="margin-left: 5px;">All classifiers</span>
-<span class="classifier-col-url" style="margin-left: 5px;">url</span>
-<span class="classifier-col-lnkto" style="margin-left: 5px;">lnkTo</span>
+<span class="classifier-col-url" style="margin-left: 10px;">URL</span>
+<span class="classifier-col-lnkto" style="margin-left: 10px;">Link to matter</span>
 <button class="add-classifier-totype" style="float:right;margin: 0px 5px 3px 0px;vertical-align:top;">Add classifier</button>
 </div>
 
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto;" >
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
 <?php 
 $type = '';
 $close_type = 0;
@@ -341,8 +340,8 @@ foreach($this->classifiers as $classifier){
 <span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float:left; cursor: move;" ></span>
 <div class="status-row classifier-row" id="<?=$classifier['ID']?>" typc="<?=$classifier['type_code']?>">
   <span class="classifier-col-value <?=$vclass?>" id="<?=$classifier['type_code']?>" ><?=$classifier['value']?></span>
-  <span class="classifier-col-url url-editable"><?=$classifier['url']?></span>
-  <span class="classifier-col-lnkto lnk-editable"><?=$classifier['lnkTo']?></span>
+<span class="classifier-col-url url-editable" style="overflow: hidden; white-space: nowrap; margin-left: 10px;"><?=$classifier['url']?></span>
+  <span class="classifier-col-lnkto lnk-editable" style="margin-left: 10px;"><?=$classifier['lnkTo']?></span>
   <span class="delete-classifier"><span class="ui-icon ui-icon-trash" title="Delete classifier" style="float: right;"></span></span>
 </div></li>
 <?php } 

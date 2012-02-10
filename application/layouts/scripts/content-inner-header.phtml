@@ -20,52 +20,37 @@ $action = strtolower($action);
        $header .= "<a href=\"/$module/$controller\">$controller</a>";
    }
 
-   if($action != 'index'){
+   //if($action != 'index'){
        if($header != ''){
            $header .= " - ";
        }
        $header .= ' <a href="">' . $action . '</a>';
-   }
+   //}
 
        #echo "$module - $controller - $action"; 
-?>
-<? if($header != ''){ ?>
-<div id="inner-header">
-<div id="inner-header-title"><?echo "$header"; ?></div>
-<? if($controller == "matter"){ ?>
-<?php if($module == 'default' && $controller == 'matter' && $action == 'view'){ ?>
-<div id="inner-header-navigation">
-<div id="matter-head-navigation" style="float:left;">
-<button title="Previous" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)-1;}else{echo "matter-previous-" . $this->matter_id;} ?>"><span class=" ui-icon ui-icon-seek-prev"/></button>
-<button title="Next" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)+1;}else{echo "matter-next-" . $this->matter_id;} ?>"><span class="ui-icon ui-icon-seek-next"/></button>
-</div>
-    
-<div id="inner-header-search">
-<input id="matter-search" type="text" name="matter_search" />
-<select style="height:20px;width:100px;" id="matter-option" name="search_field">
-  <option value="caseref" selected>caseref</option>
-  <option value="Responsible">Responsible</option>
-</select>
-<input id="matter-ref-search" type="button" name="search" value="search" />
-</div>
-</div>
-<?php } ?>
 
-<?php if($module == 'default' && $controller == 'matter' && ($action == 'index' || $action == 'filter')){ ?>
-<div style="float:right">
+    if($header != ''){ ?>
+<div id="inner-header" style="font-size: 1em;">
+<div id="inner-header-title"><?echo "$header"; ?></div>
+<?php 
+        if($module == 'default' && ($controller == 'index' || $controller == 'matter')){ ?>
 <div id="inner-header-search">
 <input id="matter-search" type="text" name="matter_search" />
-<select style="height:20px;width:100px;" id="matter-option" name="search_field">
-    <option value="caseref" selected>caseref</option>
+<select style="width:100px;" id="matter-option" name="search_field">
+    <option value="Ref" selected>caseref</option>
     <option value="Responsible"d>Responsible</option>
 </select>
-<input id="matter-ref-search" type="button" name="search" value="search"/>
+<input id="matter-ref-search" type="button" name="search" value="Quick Search"/>
 </div>
-<input type="button" id="clear-matter-filters" name="clear-filters" value="Clear filters" />
+<?php 
+        }
+        if($module == 'default' && $controller == 'matter' && $action == 'view'){ ?>
+<div id="matter-head-navigation">
+<button title="Previous" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)-1;}else{echo "matter-previous-" . $this->matter_id;} ?>"><span class="ui-icon ui-icon-seek-prev"/></button>
+<button title="Next" class="matter-navigation" id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)+1;}else{echo "matter-next-" . $this->matter_id;} ?>"><span class="ui-icon ui-icon-seek-next"/></button>
 </div>
-<?php } ?>
-
-<?php }?>
-
-</div>
-<? } ?>
+<?php 
+        } 
+        echo "</div>";
+    } 
+?>
