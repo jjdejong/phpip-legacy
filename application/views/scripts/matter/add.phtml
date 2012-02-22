@@ -150,7 +150,6 @@ $(document).ready(function(){
 
    $('#add-matter-submit').click(function(){
         var invalid = false;
-        $( this ).html('<img src="/images/indicator.gif" />');
         $('.validation-errors').empty();
         if($('#matter-category').val() == ""){
             $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
@@ -196,7 +195,6 @@ $(document).ready(function(){
    });
    $('#clone-matter-submit').click(function(){
         var invalid = false;
-        $( this ).html('<img src="/images/indicator.gif" />');
         $('.validation-errors').empty();
         if($('#matter-category').val() == ""){
             $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
@@ -243,7 +241,6 @@ $(document).ready(function(){
    });
    $('#child-matter-submit').click(function(){
         var invalid = false;
-        $( this ).html('<img src="/images/indicator.gif" />');
         $('.validation-errors').empty();
         if($('#matter-country').val() == ""){
             $('.validation-errors').append('<span class="errors">* Country requires a value</span>');

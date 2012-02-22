@@ -92,12 +92,10 @@ $(document).ready(function(){
 
     $("#submit").click(function(){
       var role_val = $('#rolebox').val().split('-');
-      $( this ).html('<img src="/images/indicator.gif" />');
       $.ajax({
         type: "POST",
         url: '/matter/add-matter-actor/',
         data: { matter_ID : $('#matter-id').val(), actor_ID : $('#actor-id').val(), role : role_val[0], add_container : $('input[name=matter_container]:checked').val(), role_shareable : role_val[1], actor_ref : $('#actor-ref').val() },
-        //indicator: '<img src="/images/indicator.gif" />',
         success: function(data){
           message = "'" +data + "'";
           if(data.match(/SQLSTATE/)){

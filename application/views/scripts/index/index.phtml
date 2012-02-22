@@ -144,7 +144,7 @@
   margin-left: 5px;
   -moz-border-radius: 4px 4px 0px 0px;
   -webkit-border-radius: 4px 4px 0px 0px;
-  width:auto;
+  width:240px;
   display:block; 
 }
 .home-box{
@@ -260,7 +260,6 @@ $(document).ready(function(){
              alert("No tasks selected for clearing!");
              return;
         }
-        $( this ).html('<img src="/images/indicator.gif" />');
         $.ajax({
           url: '/matter/clear-tasks',
           type: 'POST',
@@ -284,7 +283,6 @@ $(document).ready(function(){
              alert("No tasks selected for clearing!");
              return;
         }
-        $( this ).html('<img src="/images/indicator.gif" />');
         $.ajax({
           url: '/matter/clear-tasks',
           type: 'POST',
@@ -342,6 +340,8 @@ $(document).ready(function(){
         });
     });
     $( "button, input:button").button();
+    $("#radio-tasks").buttonset();
+    $("#radio-renewals").buttonset();
 });
 </script>
 <div id="home-wrap">
@@ -367,14 +367,16 @@ $(document).ready(function(){
 <div id="open-tasks-box" class="home-box">
 <div class="home-box-header">
 <div class="list-header">Open tasks
+<span id="radio-tasks" style="float: right;">
 <input type="radio" name="open-tasks-filter" id="open-tasks-all" value="0" checked="checked" />
-<label for="open-tasks-all" >All</label>
+<label for="open-tasks-all" style="width: 50px;">All</label>
 <input type="radio" name="open-tasks-filter" id="open-tasks-assigned" value="1" />
-<label for="open-tasks-assigned" >Assigned to me</label>
+<label for="open-tasks-assigned" style="width: 50px;">Mine</label>
+</span>
 </div>
 
  <div class="clear-tasks-box">
-<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 0px 8px;" />
+<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 2px 8px;" />
 <label for="open-done-date" ></label><input type="text" value="" id="open-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
 </div>
 </div>
@@ -420,13 +422,15 @@ if($user['no_of_tasks'] > 0){
 <div id="open-renewals-box" class="home-box">
 <div class="home-box-header">
 <div class="list-header">Open renewals
+<span id="radio-renewals" style="float: right;">
 <input type="radio" name="open-rens-filter" id="open-rens-all" value="0" checked="checked" />
-<label for="open-rens-all" >All</label>
+<label for="open-rens-all" style="width: 50px;">All</label>
 <input type="radio" name="open-rens-filter" id="open-rens-assigned" value="1" />
-<label for="open-rens-assigned" >Assigned to me</label>
+<label for="open-rens-assigned" style="width: 50px;">Mine</label>
+</span>
 </div>
 <div class="clear-tasks-box">
-<input type="button" id="clear-ren-tasks" value="Clear selected on" style="padding: 0px 8px;" />
+<input type="button" id="clear-ren-tasks" value="Clear selected on" style="padding: 2px 8px;" />
 <label for="ren-done-date" ></label><input type="text" value="" id="ren-done-date" class="done-date" /><input type="hidden" value="" id="alt-date" />
 </div>
 </div>

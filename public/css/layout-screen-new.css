@@ -1022,3 +1022,5 @@ div.selectbox-wrapper ul li {
   float: right;
   margin-right: 100px;
 }
+
+textarea.text { font-family: Arial, sans-serif; }

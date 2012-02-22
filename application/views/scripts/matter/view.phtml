@@ -489,7 +489,7 @@ $(document).ready(function(){
             select: true,
             submit: 'OK',
             cancel: 'X',
-            indicator : '<img src="/images/indicator.gif" />',
+            indicator: '<span class="icon-busy" />',
             placeholder: '',
             tooltip: 'Click to edit...',
         });
@@ -502,7 +502,7 @@ $(document).ready(function(){
             submit: 'OK',
             cancel: 'X',
             select: true,
-            indicator : '<img src="/images/indicator.gif" />',
+            indicator : '<span class="icon-busy" />',
             placeholder: '...',
             tooltip: 'Click to edit...',
             data: function(value, settings){
@@ -689,13 +689,15 @@ if(count($this->matter_actors))
     else $CC = $this->matter_record[0]['country'];
     $country_code = $this->matter_record[0]['country'];
     $removethese = array("/^$country_code/",'/ /', '/,/', '/-/', '/\//', '/\.[0-9]/');
-    //print_r($removethese);
     $cleanednumber = preg_replace($removethese, '', $event['detail']);
     $href = '';
     if($event['alt_matter_ID'] !=  "")
         $href = '/matter/view/id/' . $event['alt_matter_ID'];
-    else if ($event['code'] == 'PUB' || $event['code'] == 'GRT')
+    else if ($event['code'] == 'PUB' || $event['code'] == 'GRT') {
+        // Fix US pub number for Espacenet by keeping the last 6 digits after the year
+        if ($CC == 'US' && $event['code'] == 'PUB') $cleanednumber = substr($cleanednumber, 0, 4) . substr($cleanednumber, -6);
         $href = 'http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=' . $CC . '&NR=' . $cleanednumber;
+    }
     else if ($event['code'] == 'FIL' && $country_code == 'EP')
         $href = 'https://register.epo.org/espacenet/application?number=EP' . $cleanednumber;
     else if($event['code'] == 'FIL' && $country_code == 'FR')

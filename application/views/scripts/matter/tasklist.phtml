@@ -180,7 +180,7 @@ $(document).ready(function(){
            cancel : false,
            submit : false,
            placeholder: '...',
-           indicator : '<img src="/images/indicator.gif" />',
+           indicator : '<span class="icon-busy" />',
            tooltip: 'Click to edit...',
            select: true
     });
@@ -213,7 +213,7 @@ $(document).ready(function(){
           //submit : 'Ok',
           placeholder: '...',
           select : true,
-          indicator : '<img src="/images/indicator.gif" />',
+          indicator : '<span class="icon-busy" />',
           // This is to diplay only the "detail" portion of the task in the edit field when clicking on a task name for edition                 
           data: function(value, settings){
              var fclass = $(this).attr('class').split(" ");
@@ -240,7 +240,7 @@ $(document).ready(function(){
             },
             type: 'datepicker',
             select: true,
-            indicator : '<img src="/images/indicator.gif" />',
+            indicator : '<span class="icon-busy" />',
             placeholder: '...',
             tooltip: 'Click to edit...',
     });
@@ -253,7 +253,7 @@ $(document).ready(function(){
           },
           type: 'datepicker',
           select : true,
-          indicator : '<img src="/images/indicator.gif" />',
+          indicator : '<span class="icon-busy" />',
           placeholder: '...',
           tooltip: 'Click to edit...',
           callback: function(data){
@@ -350,7 +350,6 @@ $(document).ready(function(){
     });
 
     $('#task_duedate').datepicker({
-        //minDate: +0,
         dateFormat: 'dd/mm/yy',
     });
 
@@ -375,8 +374,7 @@ $(document).ready(function(){
                    notes: $('#task_notes').val(),
                    cost: $('#task_cost').val(),
                    fee: $('#task_fee').val(),
-                   currency: $('#task_currency').val(),
-                   //tmpmatterID: $('#tmpmatterID').val()
+                   currency: $('#task_currency').val()
                   },
            success: function(data){
               if(!data.match(/SQLSTATE/)){
