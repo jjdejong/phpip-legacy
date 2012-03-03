@@ -38,10 +38,10 @@
   vertical-align: top;
 }
 
-/*.row-tab:hover {
+.row-tab:hover {
   background-color: #AFB5C4;
   cursor: pointer;
-}*/
+}
 .head-tab div{
   display:inline-block;
   text-align: center;
@@ -52,6 +52,7 @@
   vertical-align:top;
 /*  text-align: left; */
 }
+
 /* added for display*/
 
 .matter-title{
@@ -199,12 +200,14 @@ text-align:left;
 #mapactor-pop-up, #tasklist-pop-up, #event-pop-up, #classifier-popup{
     display: none;
     position: absolute;
-    background: transparent; 
+    background: transparent;
+    z-index: 101; 
     -moz-box-shadow: 0px;
 }
 
 #mapactor-pop-up{
   position: fixed;
+  margin: auto;
 }
 
 .help_cursor:hover {
@@ -215,7 +218,7 @@ text-align:left;
     cursor: pointer;
 }
 
-#facade{
+/*#facade{
     position: absolute;
     top:0px;
     left:0px;
@@ -227,7 +230,7 @@ text-align:left;
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     display:none;
     z-index: 100;
-}
+}*/
 .matter-role{
     font-weight: bold;
 }
@@ -286,6 +289,7 @@ text-align:left;
   display: none;
   z-index: 101;
   position: absolute;
+  width: 670px;
 }
 #actor-details-nav{
   text-align:center;
@@ -305,59 +309,59 @@ text-align:left;
 $(document).ready(function(){
         $("#MatterStatus").click(function(event){
             ren_top = $(this).offset().top;
-            $('#event-pop-up').css('top',ren_top - 5);
             $.ajax({
                 type: "POST",
                 url: "/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>",
                 data: {},
                 success: function(data){
+                	$('#event-pop-up').empty();
                     $('#event-pop-up').html(data);
+                    $('#event-pop-up').css('top',ren_top - 5);
                 }
             });
-
             $('#event-pop-up').css('display','block');
         }); 
 
-        $("#MatterOpenTasks").click(function(event){
-            $('#tasklist-pop-up').empty();
+        $("#MatterOpenTasks").click(function(event){   
             ren_top = $(this).offset().top;
-            $('#tasklist-pop-up').css('top',ren_top - 5);
             $.ajax({
                 type: "POST",
                 url: "/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>",
                 data: {},
                 success: function(data){
+                	$('#tasklist-pop-up').empty();
                     $('#tasklist-pop-up').html(data);
+                    $('#tasklist-pop-up').css('top',ren_top - 5);
                 }
             });
             $('#tasklist-pop-up').css('display','block');
         }); 
 
         $("#MatterRenTasks").click(function(event){
-            $('#tasklist-pop-up').empty();
             ren_top = $(this).offset().top;
-            $('#tasklist-pop-up').css('top',ren_top - 5);
             $.ajax({
                 type: "POST",
                 url: "/matter/tasklistren/id/<?=$this->matter_record[0]['ID']?>",
                 data: {},
                 success: function(data){
+                	$('#tasklist-pop-up').empty();
                     $('#tasklist-pop-up').html(data);
+                    $('#tasklist-pop-up').css('top',ren_top - 5);
                 }
             });
             $('#tasklist-pop-up').css('display','block');
         }); 
 
         $("#MatterClassifier").click(function(event){
-            $('#classifier-popup').empty();
             ren_top = $(this).offset().top;
-            $('#classifier-popup').css('top',ren_top - 5);
             $.ajax({
                 type: "POST",
                 url: "/matter/classifierlist/id/<?=$this->matter_record[0]['ID']?>",
                 data: {},
                 success: function(data){
+                	$('#classifier-popup').empty();
                     $('#classifier-popup').html(data);
+                    $('#classifier-popup').css('top',ren_top - 5);
                 }
             });
             $('#classifier-popup').css('display','block');
@@ -365,39 +369,40 @@ $(document).ready(function(){
  
         $(".add-actor").click(function(event){
             role = $(this).attr('id').split('-');
-
             $('#facade').css('height',$(document).height());
             $('#facade').css('display','block');
-            $('#mapactor-pop-up').css('top',200);
-            $('#mapactor-pop-up').css('left',200);
             $.ajax({
                 type: "POST",
                 url: "/matter/map-actor-role/id/<?=$this->matter_record[0]['ID']?>/role/" + role[2],
                 data: {},
                 success: function(data){
+                	$('#mapactor-pop-up').empty();
                     $('#mapactor-pop-up').html(data);
+                    $('#mapactor-pop-up').css('top',200);
+                    $('#mapactor-pop-up').css('left',200);
                 }
             });
             $('#mapactor-pop-up').css('display','block');
         });
 
         $(".matter-role").click(function(){
-            $('#mapactor-pop-up').css('width','840px');
-            ren_left = Math.round($(window).width()/2) - Math.round($('#mapactor-pop-up').width()/2);
+            //ren_left = Math.round($(window).width()/2) - Math.round($('#mapactor-pop-up').width()/2);
             matter_role_id = $(this).attr('id').split('-');
             container_id = matter_role_id[2];
             role_id = matter_role_id[3];
             matter_id = $('input[name=matterId]').val();
             $('#facade').css('height',$(document).height());
             $('#facade').css('display','block');
-            $('#mapactor-pop-up').css('top',150);
-            $('#mapactor-pop-up').css('left', ren_left);
             $.ajax({
                 type: "POST",
                 url:"/matter/role-actors/",
                 data: { matter_id:matter_id , container_id:container_id, role_id:role_id },
                 success: function(data){
+                	$('#mapactor-pop-up').empty();
                     $('#mapactor-pop-up').html(data);
+                    $('#mapactor-pop-up').css('width','840px');
+                    $('#mapactor-pop-up').css('top',150);
+                    $('#mapactor-pop-up').css('left', 50);
                 }
             });
             $('#mapactor-pop-up').css('display','block');
@@ -412,12 +417,13 @@ $(document).ready(function(){
                 url: "/matter/add-title/cat_code/"+cat_code,
                 data: {},
                 success: function(data){
+                	$('#add-classifier-popup').empty();
                     $('#add-classifier-popup').html(data);
-                    var ren_left = Math.round($(window).width()/2) - Math.round($('#add-classifier-popup').width()/2);
-                    $('#add-classifier-popup').css('left', ren_left);
-                    $('#add-classifier-popup').css('display', 'block');
+                    //var ren_left = Math.round($(window).width()/2) - Math.round($('#add-classifier-popup').width()/2);
+                    $('#add-classifier-popup').css('left', 200);
                 }
             });
+            $('#add-classifier-popup').css('display', 'block');
         });
 
         $('#clone-matter-link').click(function(){
@@ -428,13 +434,14 @@ $(document).ready(function(){
 
           $('#facade').css('height', $(document).height());
           $('#facade').css("display", "block");
-          $('#add-matter-popup').css('left', 200);
           $.ajax({
             url: '/matter/clone',
             type: 'GET',
             data: { category_id : catid, country: country, origin: origin, type: type },
             success: function(data){
-              $('#add-matter-popup').html(data);
+            	$('#add-matter-popup').empty();
+              	$('#add-matter-popup').html(data);
+            	$('#add-matter-popup').css('left', 200);
             }
           });
           $('#add-matter-popup').css('display', 'block');
@@ -449,13 +456,14 @@ $(document).ready(function(){
 
           $('#facade').css('height', $(document).height());
           $('#facade').css("display", "block");
-          $('#add-matter-popup').css('left', 200);
           $.ajax({
             url: '/matter/child',
             type: 'GET',
             data: { caseref : caseref, category_id : catid, country: country, origin: origin, type: type },
             success: function(data){
-              $('#add-matter-popup').html(data);
+            	$('#add-matter-popup').empty();
+              	$('#add-matter-popup').html(data);
+            	$('#add-matter-popup').css('left', 200);
             }
           });
           $('#add-matter-popup').css('display', 'block');
@@ -468,13 +476,14 @@ $(document).ready(function(){
 
           $('#facade').css('height', $(document).height());
           $('#facade').css('display', 'block');
-          $('#add-matter-popup').css('left', 200);
           $.ajax({
             url: '/matter/national',
             type: 'GET',
             data: { caseref: caseref, category_id : catid, country : country },
             success: function(data){
-              $('#add-matter-popup').html(data);
+            	$('#add-matter-popup').empty();
+              	$('#add-matter-popup').html(data);
+            	$('#add-matter-popup').css('left', 200);
             }
           });
           $('#add-matter-popup').css('display', 'block');
@@ -520,12 +529,13 @@ $(document).ready(function(){
         url: "/matter/edit/mid/"+mid,
         data: {},
         success: function(data){
-          $('#add-matter-popup').html(data);
-          var ren_left = Math.round($(window).width()/2) - Math.round($('#add-matter-popup').width()/2);
-          $('#add-matter-popup').css('left', ren_left);
-          $('#add-matter-popup').css('display', 'block');
+        	$('#add-matter-popup').empty();
+          	$('#add-matter-popup').html(data);
+          	//var ren_left = Math.round($(window).width()/2) - Math.round($('#add-matter-popup').width()/2);
+          	$('#add-matter-popup').css('left', 200);
         }
       });
+      $('#add-matter-popup').css('display', 'block');
     });
 
     $('#add-classifier-link').hide();
@@ -537,21 +547,21 @@ $(document).ready(function(){
 
     $('.matter-actor').click(function(){
     var actor_id = $(this).attr('id');
-      $('#facade').css('height',$(document).height()+200);
+      $('#facade').css('height',$(document).height());
       $('#facade').css('display','block');
       $.ajax({
         url: '/matter/actor/',
         type: 'POST',
         data: { actor_id:actor_id },
         success: function(data){
-          $('#actor-details-content').empty();
-          $('#actor-details-content').html(data);
-          ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
-          $('#actor-details-popup').css('left', ren_left);
-          $('#actor-details-popup').css('top', '50px');
-          $('#actor-details-popup').css('display', 'block');
+          $('#actor-details-popup').empty();
+          $('#actor-details-popup').html(data);
+          //ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
+          $('#actor-details-popup').css('left', 200);
+          $('#actor-details-popup').css('top', 50);
         }
       });
+      $('#actor-details-popup').css('display', 'block');
     });
                   
     $( "button, input:submit, input:button").button();
@@ -827,11 +837,10 @@ if(strlen($classifier['value']) > 80){
 </div>
 </div>
 
-<div id="facade"></div>
 <div id="event-pop-up"></div>
 <div id="tasklist-pop-up"></div>
 <div id="classifier-popup"></div>
-<div id="mapactor-pop-up" style="width: 400px; margin: auto; z-index:101;"></div>
+<div id="mapactor-pop-up"></div>
 
 <div id="add-classifier-popup">
     <input type="hidden" value="<?=$this->matter_id?>" id="matter-id" />
@@ -839,6 +848,5 @@ if(strlen($classifier['value']) > 80){
 <div id="add-matter-popup"></div>
 
 <div id="actor-details-popup" class="place-card" >
-
-<div id="actor-details-content"></div>
 </div>
+<div id="facade"></div>

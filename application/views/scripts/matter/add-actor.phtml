@@ -1,6 +1,6 @@
 <style type="text/css" >
 #add-actor-content{
-  width: 675px;
+  width: 99%;
   background: #FFF;
   display: block;
   border: 1px inset #888;
@@ -35,7 +35,7 @@
 }
 #add-actor-head{
   display:block;
-  width: 675px;
+  width: 99%;
   background: #1E4262;
   color: #FFF;
   padding: 5px;
@@ -288,14 +288,16 @@ $(document).ready(function(){
     });
 
     $('.close-button').click(function(){
-        $('#add-new-actor').css('display', 'none');
+        $('#actor-details-popup').css('display', 'none');
     });
 
     $('#add-actor-cancel').click(function(){
-        $('#add-new-actor').css('display', 'none');
+        $('#actor-details-popup').css('display', 'none');
     });
 
     $('#add-actor-submit').click(function(){
+        $('#facade').css('height',$(document).height());
+        $('#facade').css('display','block');
         $.ajax({
             url: '/matter/add-actor',
             type: 'POST',
@@ -329,19 +331,21 @@ $(document).ready(function(){
                     var resObj = $.parseJSON(''+response);
                     $( "#actor" ).val( resObj.actor_name );
                     $( "#actor-id" ).val( resObj.actor_id );
-                    $('#add-new-actor').css('display', 'none');
+                    $('#actor-details-popup').css('display', 'none');
                 }else{
-                    $('#add-new-actor').html(response);
+                    $('#actor-details-popup').html(response);
                 }
+                $('#facade').css('display','none');
             }
         });
     });
+    $('#name').val($('#actor-name').val().toUpperCase());
     $("input:button").button();
 });
 </script>
 
 <div id="add-actor-head">
-Create new Actor <span class="close-button">X</span>
+Create Actor <span class="close-button">X</span>
 </div>
 <div id="add-actor-content">
 <?php if(isset($this->formErrors)){ ?>

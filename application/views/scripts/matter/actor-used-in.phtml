@@ -26,30 +26,31 @@ $(document).ready(function(){
   $('.actor-list-row-1').click(function(){
 
     var actor_id = $(this).attr('id');
-    $('#facade').css('height',$(document).height()+200);
+    $('#facade').css('height',$(document).height());
     $('#facade').css('display','block');
     $.ajax({
       url: '/matter/actor/',
       type: 'POST',
       data: { actor_id:actor_id },
       success: function(data){
-        $('#actor-details-content').empty();
-        $('#actor-details-content').html(data);
-        ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
-        $('#actor-details-popup').css('left', ren_left);
-        $('#actor-details-popup').css('top', '50px');
+        $('#actor-details-popup').empty();
+        $('#actor-details-popup').html(data);
         $('#actor-details-popup').css('display', 'block');
+        $('#facade').css('display','none');
       }
     });
   });
 
-
+  $('.close-used-in').click(function(){
+      $('#actor-details-used-in').css('display', 'none');
+  });
 
 });
 </script>
 
 <div class="listrow" style="margin: 0 5px 1px;">
 <span >Matter Dependencies</span>
+<span class="close-used-in ui-icon ui-icon-close" style="float: right;" title="Close"></span>
 <div class="list-row"  >
 <div class="col">Ref</div>
 <div class="col">Role</div>
@@ -72,6 +73,7 @@ foreach($this->matter_dependencies as $matter){
 
 <div class="listrow" >
 <span >Other Actor Dependencies</span>
+<span class="close-used-in ui-icon ui-icon-close" style="float: right;" title="Close"></span>
 <div class="list-row"  >
 <div class="col">Actor</div>
 <div class="col">Dependency</div>

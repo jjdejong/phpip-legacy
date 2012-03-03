@@ -2,25 +2,38 @@
 $(document).ready(function(){
   $('.actor-list-row').click(function(){
     var actor_id = $(this).attr('id');
-    $('#facade').css('height',$(document).height());
+    //$('#facade').css('height',$(document).height());
     $('#facade').css('display','block');
-    $.ajax({
-      url: '/matter/actor/',
-      type: 'POST',
-      data: { actor_id:actor_id },
-      success: function(data){
-        $('#actor-details-content').empty();
-        $('#actor-details-content').html(data);
-        ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
-        $('#actor-details-popup').css('left', ren_left);
-        $('#actor-details-popup').css('top', '100px');
-        $('#actor-details-popup').css('display', 'block');
-      }
-    });
+    if(actor_id == 'nomatch'){
+        $.ajax({
+            type: "GET",
+            url: '/matter/add-actor',
+            success: function(data){
+            	$('#actor-details-popup').empty();
+    	        $('#actor-details-popup').html(data);
+    	        $('#actor-details-popup').css('display', 'block');
+    	        $('#facade').css('display','none');
+    	        $('#name').focus();
+            }
+        });
+    } else {
+	    $.ajax({
+	      url: '/matter/actor/',
+	      type: 'POST',
+	      data: { actor_id:actor_id },
+	      success: function(data){
+	        $('#actor-details-popup').empty();
+	        $('#actor-details-popup').html(data);
+	        $('#actor-details-popup').css('display', 'block');
+	        $('#facade').css('display','none');
+	      }
+	    });
+    }
   });
-$('.actor-delete').click(function(){
+
+  $('.delete-from-list').click(function(){
     var del_conf = confirm("Deleting Actor from table. Are you sure?");
-if(del_conf == 1){
+	if(del_conf == 1){
     var aid = $(this).attr('id');
     $.ajax({
       url : '/matter/delete-actor',
@@ -28,8 +41,12 @@ if(del_conf == 1){
       data: { aid:aid },
       success: function(data){
          if(isNaN(parseInt(data)))
-          alert(data);      }    });
-}
+             alert(data);
+         else
+        	 location.reload();
+      }    
+      });
+	}
     return false;
   });
 });
@@ -37,6 +54,12 @@ if(del_conf == 1){
 
 <ul class="phpip-list" id="actors-list">
 <?php foreach($this->actors as $actor): ?>
-    <li class="actor-list-row" id="<?=$actor['id']?>"><div class="col-name"><?=htmlentities($actor['name'])?></div><div class="col-firstname"><?=htmlentities($actor['first_name'])?></div><div class="col-display"><?=htmlentities($actor['display_name'])?></div><div class="col-company"><?=htmlentities($actor['company_name'])?></div><div class="col-delete" ><img src="/images/Delete-32.png" width=16 height=16 border=0 class="actor-delete" id="<?=$actor['id']?>" /></div></li>
+    <li class="actor-list-row" id="<?=$actor['id']?>">
+    	<div class="col-name"><?=htmlentities($actor['name'])?></div>
+    	<div class="col-firstname"><?=htmlentities($actor['first_name'])?></div>
+    	<div class="col-display"><?=htmlentities($actor['display_name'])?></div>
+    	<div class="col-company"><?=htmlentities($actor['company_name'])?></div>
+    	<div class="col-delete" ><span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"/></div>
+    </li>
 <?php endforeach; ?>
 </ul>

@@ -7,7 +7,7 @@
 #actors-list{
   margin: 0px;
   padding: 0px;
-  max-height:400px;
+  max-height:250px;
   overflow:auto;
 }
 .phpip-lists{
@@ -80,8 +80,9 @@
 }
 #actor-details-popup{
   display: none;
-  z-index: 101;
-  position: absolute;
+  /*z-index: 101;
+  position: absolute;*/
+	width: 670px;
 }
 .filter-input{
   -moz-border-radius: 4px;
@@ -90,12 +91,22 @@
   font-size: 9px;
   padding: 2px 1px;
 }
+/*#actor-details-content{
+	width: 99.5%;
+}*/
 #actor-details-nav{
   text-align:center;
+  display: none;
 }
 #actor-details-nav img{
   margin-left: 10px;
   cursor: pointer;
+}
+.actor-list-row:hover .col-delete{
+	display: inline-block;
+}
+.actor-navigation{
+	margin-bottom: 5px;
 }
 
 </style>
@@ -103,24 +114,22 @@
 $(document).ready(function(){
   $('.actor-list-row').click(function(){
     var actor_id = $(this).attr('id');
-    $('#facade').css('height',$(document).height()+200);
+    //$('#facade').css('height',$(document).height());
     $('#facade').css('display','block');
     $.ajax({
       url: '/matter/actor/',
       type: 'POST',
       data: { actor_id:actor_id },
       success: function(data){
-        $('#actor-details-content').empty();
-        $('#actor-details-content').html(data);
-        ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
-        $('#actor-details-popup').css('left', ren_left);
-        $('#actor-details-popup').css('top', '50px');
+        $('#actor-details-popup').empty();
+        $('#actor-details-popup').html(data);
         $('#actor-details-popup').css('display', 'block');
+        $('#facade').css('display','none');
       }
     });
   });
 
-  $('#filter-actors').keyup(function(){
+  $('#actor-name').keyup(function(){
          var url = '/matter/actors-filter/term/'+$(this).val();
          $.ajax({
              url: url,
@@ -134,34 +143,53 @@ $(document).ready(function(){
   });
 
 
-  $('#delete-actor').click(function(){
+/*  $('#delete-actor').click(function(){
     var del_conf = confirm("Deleting Actor from table. Are you sure?");
-if(del_conf == 1){
-    var aid = $('#actor-id').val();
-    $.ajax({
-      url : '/matter/delete-actor',
-      type: 'POST',
-      data: { aid:aid },
-      success: function(data){
-        if(!data.match(/SQLSTATE/)){
-          $.ajax({
-          url: '/matter/actornav/nav/next/actor_id/'+aid,
-          type: 'get',
-          data: {},
-          success: function(data){
-            $('#actor-details-content').empty();
-            $('#actor-details-content').html(data);
-          }
-         });
-        }else
-          alert(data);
-      }
-    });
-  }
-    return false;
+	if(del_conf == 1){
+    	var aid = $('#actor-id').val();
+    		$.ajax({
+      			url : '/matter/delete-actor',
+      			type: 'POST',
+      			data: { aid:aid },
+      			success: function(data){
+        			if(!data.match(/SQLSTATE/)){
+          				$.ajax({
+          					url: '/matter/actornav/nav/next/actor_id/'+aid,
+          					type: 'get',
+          					data: {},
+          					success: function(data){
+            					$('#actor-details-content').empty();
+            					$('#actor-details-content').html(data);
+          					}
+         				});
+        			}else
+          				alert(data);
+      			}
+    		});
+  	}
+    	return false;
+  });*/
+
+  $('.delete-from-list').click(function(){
+	    var del_conf = confirm("Deleting Actor from table. Are you sure?");
+		if(del_conf == 1){
+	    	var aid = $(this).attr('id');
+	    	$.ajax({
+	      	url : '/matter/delete-actor',
+	      	type: 'POST',
+	      	data: { aid:aid },
+	      	success: function(data){
+	        	if(isNaN(parseInt(data)))
+	          		alert(data); 
+	        	else 
+		        	location.reload();     
+          	}
+			});
+		}
+	    return false;
   });
 
-  $('.actor-navigation').click(function(){
+/*  $('.actor-navigation').click(function(){
       var nav = $(this).attr('id');
       var url = '/matter/actornav/nav/'+nav+'/actor_id/'+$('#actor-id').val();
       $.ajax({
@@ -173,7 +201,8 @@ if(del_conf == 1){
             $('#actor-details-content').html(data);
           }
       });
-  });
+  });*/
+
   $( "button, input:button" ).button();
 
 });
@@ -181,25 +210,28 @@ if(del_conf == 1){
 <div id="actors-tab">Actors</div>
 <div id="actors-box" class="place-card">
 <?php if(count($this->actors)): ?>
-    <div class="list-headers"><div class="col-name">Name<br><input type="text" size=20 name="actor-name" id="filter-actors" class="filter-input" /></div><div class="col-firstname">Firstname</div><div class="col-display">Display name</div><div class="col-company">Company</div><div class="col-delete">Delete</div></div>
+    <div class="list-headers">
+    	<div class="col-name">Name<br><input type="text" size=20 name="actor-name" id="actor-name" class="filter-input" /></div>
+    	<div class="col-firstname">Firstname</div>
+    	<div class="col-display">Display name</div>
+    	<div class="col-company">Company</div>
+    	<div class="col-delete" >Delete</div>
+    </div>
 <div id="actor-table-list">
 <ul class="phpip-list" id="actors-list">
 <?php foreach($this->actors as $actor): ?>
-    <li class="actor-list-row" id="<?=$actor['id']?>"><div class="col-name"><?=htmlentities($actor['name'])?></div><div class="col-firstname"><?=htmlentities($actor['first_name'])?></div><div class="col-display"><?=htmlentities($actor['display_name'])?></div><div class="col-company"><?=htmlentities($actor['company_name'])?></div><div class="col-delete" ><img src="/images/Delete-32.png" width=16 height=16 border=0 class="actor-delete" id="<?=$actor['id']?>" /></div></li>
+    <li class="actor-list-row" id="<?=$actor['id']?>">
+    	<div class="col-name"><?=htmlentities($actor['name'])?></div>
+    	<div class="col-firstname"><?=htmlentities($actor['first_name'])?></div>
+    	<div class="col-display"><?=htmlentities($actor['display_name'])?></div>
+    	<div class="col-company"><?=htmlentities($actor['company_name'])?></div>
+    	<div class="col-delete" ><span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"/></div>
+    </li>
 <?php endforeach; ?>
 </ul>
 </div>
 <?php   endif; ?>
 </div>
-
-<div id="actor-details-popup" class="place-card" >
-<div id="actor-details-nav" >
-<button title="Backward 10" class="actor-navigation" id="backward"><span class="ui-icon ui-icon-seek-first"/></button>
-<button title="Previous" class="actor-navigation" id="prev"><span class="ui-icon ui-icon-seek-prev"/></button>
-<button title="Next" class="actor-navigation" id="next"><span class="ui-icon ui-icon-seek-next"/></button>
-<button title="Forward 10" class="actor-navigation" id="forward"><span class="ui-icon ui-icon-seek-end"/></button>
-<button title="Delete actor" id="delete-actor" style="float: right;"><span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete</button>
-</div>
-<div id="actor-details-content"></div>
+<div id="actor-details-popup" class="place-card">
 </div>
 <div id="facade"></div>

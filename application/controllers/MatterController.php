@@ -296,6 +296,8 @@ class MatterController extends Zend_Controller_Action
     $term = $this->_getParam('term');
     $matterModel = new Application_Model_Matter();
     $this->view->actors = $matterModel->getAllActors($term);
+    if(count($this->view->actors) == 0)
+    	array_push($this->view->actors, array('id' => 'nomatch', 'name' => 'No match. Create Actor?'));
   }
 
 /**
@@ -332,7 +334,7 @@ class MatterController extends Zend_Controller_Action
     $this->view->role = $this->_getParam('role');
     $matterModel = new Application_Model_Matter();
     $matter_actors = $matterModel->getAllActors($this->view->term);
-    array_push($matter_actors, array('id' => 'cna786', 'value' => 'Create New Actor'));
+    array_push($matter_actors, array('id' => 'cna786', 'value' => '<font color="red">Create Actor</font>'));
 
     $this->view->matter_actor = $matter_actors;
     echo @json_encode($matter_actors);

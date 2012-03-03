@@ -324,6 +324,10 @@ $(document).ready(function(){
     if(actors_count == 1){
        $('.sort-icon').hide();
     }
+
+    $('button, input:button').button();
+    $('#check').button();
+    $('#flag').buttonset();
 });
 </script>
 
@@ -338,11 +342,13 @@ $(document).ready(function(){
 <div style="width:160px"><?php echo $this->actor_role['name'] . " (" .$this->actor_role['code'].")"?><a href="javascript:void(0);" id="edit-role-info" title="Configure fields to display for this role"><span class="ui-icon ui-icon-wrench" style="float: right;"></span></a></div>
 <input type="hidden" value="<?=$this->actor_role['code']?>" name="role_code"/>
 <div id="role-info">
+<div id="flag">
 <input type="checkbox" name="shareable" id="shareable" <?php echo ($this->actor_role['shareable'])? 'checked="checked"': ''; ?>></input><label for="shareable">Shareable</label>
 <input type="checkbox" name="show_ref" id="show_ref" <?php echo ($this->actor_role['show_ref'])? 'checked="checked"': ''; ?>></input><label for="show_ref">Show ref</label>
 <input type="checkbox" name="show_company" id="show_company" <?php echo ($this->actor_role['show_company'])? 'checked="checked"': ''; ?>></input><label for="show_company">Show company</label>
 <input type="checkbox" name="show_rate" id="show_rate" <?php echo ($this->actor_role['show_rate'])? 'checked="checked"': ''; ?> ></input><label for="show_rate">Show rate</label>
 <input type="checkbox" name="show_date" id="show_date" <?php echo ($this->actor_role['show_date'])? 'checked="checked"': ''; ?> ></input><label for="show_date">Show date</label>
+</div>
 <br><br><label style="vertical-align:top;">Notes :</label><textarea name="role_notes" cols="80" rows="2"><?=$this->actor_role['notes']?></textarea>
 <br><br><input type="button" value="Save" name="save_role" />&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" value="Cancel" name="cancel_role" />
 </div>

@@ -411,7 +411,7 @@ clilnk.actor_ref AS ClRef,
 IFNULL(agt.display_name, agt.name) AS Agent,
 agtlnk.actor_ref AS AgtRef,
 classifier.value AS Title,
-CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
+CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
 fil.event_date AS Filed,
 fil.detail AS FilNo,
 pub.event_date AS Published,
@@ -1850,7 +1850,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
         return;
 
      $this->setDbTable('Application_Model_DbTable_Actor');
-     $other_actor_dependencies_stmt = $this->_dbTable->getAdapter()->query("select id, concat(name,' ',ifnull(first_name,'')) as Actor,
+     $other_actor_dependencies_stmt = $this->_dbTable->getAdapter()->query("select id, concat_ws(' ', name, first_name) as Actor,
          (case $actor_id
            when parent_id then 'Parent'
            when company_id then 'Company'
@@ -2148,7 +2148,7 @@ clilnk.actor_ref AS ClRef,
 IFNULL(agt.display_name, agt.name) AS Agent,
 agtlnk.actor_ref AS AgtRef,
 classifier.value AS Title,
-CONCAT(inv.name,' ',ifnull(inv.first_name, '')) as Inventor1,
+CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
 fil.event_date AS Filed,
 fil.detail AS FilNo,
 pub.event_date AS Published,

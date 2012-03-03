@@ -10,10 +10,11 @@
     text-align: right;
     margin-bottom: 10px;
 }
-#add-new-actor{
+#actor-details-popup{
     position: fixed;
     z-index: 110;
     display:none;
+    width: 670px;
 }
 </style>
 
@@ -46,15 +47,17 @@ $(document).ready(function(){
 
     $("#cancel").click(function(event){
         $('#mapactor-pop-up').css('display','none');
+        $('#mapactor-pop-up').empty();
         $('#facade').css('display','none');
     });
 
     $("#MatterAddActor").click(function(event){
         $('#mapactor-pop-up').css('display','none');
+        $('#mapactor-pop-up').empty();
         $('#facade').css('display','none');
     });
     
-    $( "#actor" ).autocomplete({
+    $( "#actor-name" ).autocomplete({
             minLength: 1,
             source: "/matter/get-all-actors/role/1",
             focus: function( event, ui ) {
@@ -67,23 +70,23 @@ $(document).ready(function(){
                         type: "GET",
                         url: '/matter/add-actor/role/'+drole[0],
                         success: function(data){
-                            $('#add-new-actor').html(data);
-                            var ren_left = Math.round($(window).width()/2) - Math.round($('#add-new-actor').width()/2);
-                            $('#add-new-actor').css('left', ren_left);
-                            $('#add-new-actor').css('top', '10px');
-                            $('#add-new-actor').css('display', 'block');
+                            $('#actor-details-popup').html(data);
+                            var ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
+                            $('#actor-details-popup').css('left', ren_left);
+                            $('#actor-details-popup').css('top', '10px');
+                            $('#name').focus();
                         }
                     });
+                    $('#actor-details-popup').css('display', 'block');
                 }else{
                     Encoder.EncodeType = "entity";
-                    $( "#actor" ).val(Encoder.htmlDecode(ui.item.label.replace(/&amp;/i, '&')));
+                    $( "#actor-name" ).val(Encoder.htmlDecode(ui.item.label.replace(/&amp;/i, '&')));
                     $( "#actor-id" ).val( ui.item.id );
                 }
                 return false;
             },
             autoFocus: true,
     }).data( "autocomplete" )._renderItem = function( ul, item ) {
-        //alert(item);
         return $( "<li></li>" )
             .data( "item.autocomplete", item )
             .append( "<a>" + item.label.replace(/&amp;/i, '&')  + "</a>" )
@@ -91,6 +94,8 @@ $(document).ready(function(){
     };
 
     $("#submit").click(function(){
+      $('#facade').css('height',$(document).height());
+      $('#facade').css('display','block');
       var role_val = $('#rolebox').val().split('-');
       $.ajax({
         type: "POST",
@@ -101,28 +106,29 @@ $(document).ready(function(){
           if(data.match(/SQLSTATE/)){
                alert(message);
           } else {
-             // alert(message);
              $('#mapactor-pop-up').css('display','none');
+             $('#mapactor-pop-up').empty();
              $('#facade').css('display','none');
              location.reload();
           }
         }
       });
     });
+    
     $( "button, input:submit").button();
 });
 
-$( "#actor" ).focus();
+$( "#actor-name" ).focus();
 
 </script>  
-<div class="listrow" style="width:100%"><div id="MatterAddActor" class="status-row">
+<div class="listrow" style="width:350px"><div id="MatterAddActor" class="status-row">
 <span class="eventlist-col-name" style="margin-left: 5px;">Add Actor</span>
 </div>
 <div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto; background: whitesmoke;" >
 
 <span class="formtitle">Role</span> <select id="rolebox" name="role_select">
         <option value='0-0'>Select</option> 
-<?
+<?php
         $cont_yes = ""; $cont_no = "";
         foreach ($this->all_roles as $role){
             if ($role['code'] == $this->role_search){
@@ -140,7 +146,7 @@ $( "#actor" ).focus();
         ?>
       </select>
 <br>
-<span class="formtitle">Name</span> <input id="actor" size="30"/>
+<span class="formtitle">Name</span> <input id="actor-name" size="30"/>
 <input type="hidden" id="actor-id" />
 <br>
 <span class="formtitle">Ref.</span> <input id="actor-ref" size="30"/>
@@ -160,4 +166,4 @@ $( "#actor" ).focus();
 </div>
 </div>
 
-<div id="add-new-actor" class="place-card"></div>
+<div id="actor-details-popup" class="place-card"></div>
