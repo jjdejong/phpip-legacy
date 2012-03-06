@@ -1494,12 +1494,18 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("ifnull(concat(mid(caseref,1,3), max(mid(caseref,4))+1),'".$term."') as id","ifnull(concat(mid(caseref,1,3), max(mid(caseref,4))+1),'".$term."') as value"))
+    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("max(caseref) as id","max(caseref) as value"))
                             ->where("caseref like  '". $term . "%' AND container_ID is NULL");
     $returnval = $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-    if (count($returnval) == 0) {
+    if ($returnval[0]['value'] == NULL) {
     	$returnval[0]['id'] = $term;
     	$returnval[0]['value'] = $term;
+    } else {
+    	$suffix = preg_replace ('#\D#' , '' , $returnval[0]['value']);
+    	$suffix = str_pad($suffix + 1, strlen($suffix), '0', STR_PAD_LEFT);
+    	$prefix = preg_replace ('#\d#' , '' , $returnval[0]['value']);
+    	$returnval[0]['value'] = $prefix . $suffix;
+    	$returnval[0]['id'] = $returnval[0]['value'];
     }
     return $returnval;
   }
