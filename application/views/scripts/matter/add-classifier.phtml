@@ -101,10 +101,9 @@ $(document).ready(function(){
                       },
                 success: function(data){
                     if( !data.match(/SQLSTATE/) ){
-                    //alert("Classifier added Successfully!");
                     $('#add-classifier-popup').css('display', 'none');
                     $('#facade').css('display', 'none');
-                    $(location).attr("href", '/matter/view/id/'+$('#this-matter-id').val());
+                    $(location).attr("href", '/matter/view/id/' + container_ID);
                    }else
                       alert(data);
                 }
@@ -211,18 +210,17 @@ if($classifier['code'] == $this->type_code)
 </select>
 
 <label for="classifier-value">Value</label>
-<!-- <input type="text" name="classifier-value" id="classifier-value" value="" /> -->
-<textarea name="classifier-value" id="classifier-value" style="vertical-align: top;width:200px;" ></textarea>
-<input type="hidden" name="classifier-value-id" id="classifier-value-id" value="" />
+<textarea id="classifier-value" style="vertical-align: top;width:200px;" ></textarea>
+<input type="hidden" id="classifier-value-id" value="" />
 <label for="classifier-url">URL</label>
-<input type="text" name="classifier-url" id="classifier-url" value="" />
+<input type="text" id="classifier-url" value="" />
 <label for="classifier-refers">Refers to</label>
-<input type="text" name="classifier-refers" id="classifier-refers" value="" />
-<input type="hidden" name="classifier-refers-id" id="classifier-refers-id" value="" />
+<input type="text" id="classifier-refers" value="" />
+<input type="hidden" id="classifier-refers-id" value="" />
 
 <div id="add-classifier-actions">
-  <input type="button" name="add-classifier-cancel" id="add-classifier-cancel" value="Cancel" />
-  <input type="button" name="add-classifier-submit" id="add-classifier-submit" value="Add Classifier" />
+  <input type="button" id="add-classifier-cancel" value="Cancel" />
+  <input type="button" id="add-classifier-submit" value="Add Classifier" />
 </div>
 
 </form>

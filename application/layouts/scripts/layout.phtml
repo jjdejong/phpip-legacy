@@ -5,10 +5,10 @@
 <?= $this->doctype() ?>
 <html>
 <head>
-<?= $this->headTitle() ?>
+<?= $this->headTitle('phpIP - IP portfolio management') ?>
 <?= $this->headMeta() ?>
-<?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen'); ?>
-<?= $this->headLink()->appendStylesheet($this->baseUrl('/js/css/custom-theme/jquery-ui-1.8.17.custom.css'), 'screen'); ?>
+<?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen')
+	->headLink()->prependStylesheet($this->baseUrl('/js/css/custom-theme/jquery-ui-1.8.17.custom.css'), 'screen'); ?>
 
 <? $this->headScript()->appendFile(
     '/js/jquery-1.7.1.min.js',

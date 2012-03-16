@@ -37,17 +37,18 @@ $(document).ready(function(){
                         value: $('#classifier-value').val(),
                       },
                 success: function(data){
-                   if(isNaN(parseInt(data))){
+                   if( data.match(/SQLSTATE/) ){
                      alert(data);
                    }else{
                      $('#add-classifier-popup').css('display', 'none');
                      $('#facade').css('display', 'none');
-                     $(location).attr("href", '/matter/view/id/'+$('#this-matter-id').val());
+                     $(location).attr("href", '/matter/view/id/' + matter_ID);
                    }
                 }
             });
         }
    });
+   $('input:button').button();
 });
 </script>
 <style type="text/css" >
@@ -145,11 +146,11 @@ foreach($this->classifier_types as $classifier){
 </select>
 
 <label for="classifier-value">Value</label>
-<textarea name="classifier-value" id="classifier-value" value=""/>
+<textarea id="classifier-value" value=""/>
 
 <div id="add-classifier-actions">
-  <button name="add-classifier-submit" id="add-classifier-submit">Add Classifier</button>
-  <button name="add-classifier-cancel" id="add-classifier-cancel">Cancel</button>
+  <input type="button" id="add-classifier-submit" value="Add Item" />
+  <input type="button" id="add-classifier-cancel" value="Cancel" />
 </div>
 
 </form>
