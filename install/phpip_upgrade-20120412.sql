@@ -18,7 +18,6 @@ ADD COLUMN last_login datetime DEFAULT NULL AFTER password_salt;
 update actor join User on (User.username=actor.login) set actor.password=User.Password, actor.password_salt=User.PasswordSalt, actor.last_login=User.LastLogin; 
 
 -- Update privileges of the system user "phpip"
-REVOKE Update (LastLogin) ON TABLE User FROM `phpip`@`localhost`;
 REVOKE Update ON TABLE User FROM `phpip`@`localhost`;
 GRANT Update (last_login) ON TABLE actor TO `phpip`@`localhost`;
 
