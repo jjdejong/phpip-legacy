@@ -23,7 +23,7 @@ class AuthController extends Zend_Controller_Action
         if ($identity && $identity !="") {
             $this->_helper->redirector('index','index');
         }else{
-            $authTable = new Application_Model_DbTable_User();
+            $authTable = new Application_Model_DbTable_Actor();
             $loginForm = new Application_Form_Auth_Login($_POST);
             $modelUser = new Application_Model_User();
             
@@ -32,10 +32,10 @@ class AuthController extends Zend_Controller_Action
             if ($loginForm->isValid($_POST)){
                 $adapter = new Zend_Auth_Adapter_DbTable(
                     $authTable->getAdapter(),
-                    'User',
-                    'Username',
-                    'Password',
-                    'MD5(CONCAT(?, PasswordSalt))'
+                    'actor',
+                    'login',
+                    'password',
+                    'MD5(CONCAT(?, password_salt))'
                 );
                     
 
@@ -54,8 +54,8 @@ class AuthController extends Zend_Controller_Action
                     $modelUser->updateLastLogin($userInfo['ID']);
                     
                     $siteInfoNamespace->userId = $userInfo['ID'];
-                    $siteInfoNamespace->Firstname = $userInfo['Firstname'];
-                    $siteInfoNamespace->username = $userInfo['Username'];
+                    $siteInfoNamespace->Firstname = $userInfo['name'];
+                    $siteInfoNamespace->username = $userInfo['login'];
                     $siteInfoNamespace->password = $loginForm->getValue('Password');
                                         
                     if($siteInfoNamespace->requestURL){
