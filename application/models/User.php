@@ -7,8 +7,6 @@ class Application_Model_User
 	protected $_lastname;
 	protected $_password;
 	protected $_passwordsalt;
-	protected $_question;
-	protected $_secretanswer;
 	protected $_lastlogin;
 	protected $_ip;
 	protected $_ipnum;
@@ -82,7 +80,7 @@ class Application_Model_User
         return $this;
     }
  
-    public function getDbTable($tableName = 'Application_Model_DbTable_User')
+    public function getDbTable($tableName = 'Application_Model_DbTable_Actor')
     {
         $this->setDbTable($tableName);
         #Reflection::export(new ReflectionObject($this->_dbTable));
@@ -92,11 +90,11 @@ class Application_Model_User
     
     public function getAll($username)
     {
-    	$this->setDbTable('Application_Model_DbTable_User');
+    	$this->setDbTable('Application_Model_DbTable_Actor');
     	$dbSelect = $this->_dbTable->getAdapter()->select();
     	
-    	$selectQuery = $dbSelect->from(array('u'=>'User'))
-        						->where('u.Username = ?', $username);
+    	$selectQuery = $dbSelect->from(array('u'=>'actor'))
+        						->where('u.login = ?', $username);
         						
       return $this->_dbTable->getAdapter()->fetchRow($selectQuery);
     }
@@ -115,33 +113,30 @@ class Application_Model_User
     
     public function updateLastLogin($userID)
     {
-    	$this->setDbTable('Application_Model_DbTable_User');
+    	$this->setDbTable('Application_Model_DbTable_Actor');
     	
     	$where = $this->_dbTable->getAdapter()->quoteInto('ID = ?', $userID);
-    	$data = array('LastLogin' => date('Y-m-d H:i:s'));
+    	$data = array('last_login' => date('Y-m-d H:i:s'));
     	
     	$this->_dbTable->update($data, $where);    	
     }
     
+    // Not used yet
     public function save($post = array())
     {
     	if(!empty($post))
     	{
-    		$this->setDbTable('Application_Model_DbTable_User');
-    		$passwordSalt = "prtouch.".$post['Email'];
+    		$this->setDbTable('Application_Model_DbTable_Actor');
+    		$passwordSalt = 'phpip' . $post['Email'];
     		$password = md5($post['Password'].$passwordSalt);
     		$data = array(
-    		          'Email' => $post['Email'],
-    		          'Firstname' => $post['Firstname'],
-    		          'Lastname' => $post['Lastname'],
-    		          'Mobile' => $post['Mobile'],
-    		          'Password' => $password,
-    		          'PasswordSalt' => $passwordSalt,
-    		          'ActivationKey' => $post['ActivationKey'],
-                          'AccountType' => 1, //free user TODO
-    		          'Question' => $post['Question'],
-    		          'SecretAnswer' => $post['SecretAnswer'],
-    		          'LastLogin' => date('Y-m-d H:i:s')
+    		          'email' => $post['Email'],
+    		          'first_name' => $post['Firstname'],
+    		          'name' => $post['Lastname'],
+    		          'phone' => $post['Mobile'],
+    		          'password' => $password,
+    		          'password_salt' => $passwordSalt,
+    		          'last_login' => date('Y-m-d H:i:s')
     		        );
     		        
     		$this->_dbTable->insert($data);
@@ -184,40 +179,9 @@ class Application_Model_User
     	return false;
     }
     
-    public function activateUser($actKey = null)
-    {
-    	if($actKey)
-    	{
-    		$this->setDbTable('Application_Model_DbTable_User');
-    		$dbSelect = $this->_dbTable->getAdapter()->select();
-    		
-    		$selectQuery = $dbSelect->from('User', array('ID'))
-    		                        ->where('ActivationKey = ?', $actKey);
-    		                        
-    		$result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
-    		
-    		if($result['ID']){
-    			$data = array('Active' => 1);
-    			$this->getDbTable()->update($data, array('ID = ?' => $result['ID']));
-    			$this->initMemberCount($result['ID']);
-    			return $result['ID'];
-    		}
-    	}
-    	
-    	return null;
-    }
-    
-    public function initMemberCount($userID)
-    {
-    	if($userID){
-    		$data = array('UserID' => $userID);
-    		$this->getDbTable('Application_Model_DbTable_MemberCount')->insert($data);
-    	}    	
-    }
-    
     public function initCredits($userID)
     {
-    	$this->setDbTable('Application_Model_DbTable_User');
+    	$this->setDbTable('Application_Model_DbTable_Actor');
     	$dbSelect = $this->_dbTable->getAdapter()->select();
     	$selectQuery = $dbSelect->from('User')
     	                        ->where('ID = ?', $userID);

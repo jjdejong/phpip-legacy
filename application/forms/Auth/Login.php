@@ -15,7 +15,6 @@ class Application_Form_Auth_Login extends Zend_Form
  
         $this->addElement('password', 'Password', array(
             'label' => 'Password',
-            'required' => true,
             ));
  
         $this->addElement('submit', 'submit', array(
