@@ -70,7 +70,6 @@ CREATE TABLE `actor` (
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updater` char(16) DEFAULT NULL,
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `uqtmpcode` (`tmpcode`) USING HASH,
   UNIQUE KEY `uqdisplay_name` (`display_name`) USING BTREE,
   UNIQUE KEY `uqlogin` (`login`) USING HASH,
   KEY `name` (`name`) USING BTREE,
