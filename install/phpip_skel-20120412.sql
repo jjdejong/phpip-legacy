@@ -2163,7 +2163,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `actor` WRITE;
 /*!40000 ALTER TABLE `actor` DISABLE KEYS */;
-INSERT INTO `actor` VALUES (119,'Client handled',NULL,'CLIENT',NULL,NULL,NULL,NULL,'ANN','',NULL,NULL,NULL,0,NULL,0,'',NULL,'',NULL,'',NULL,NULL,NULL,NULL,NULL,'0','DO NOT DELETE - Special actor used for removing renewal tasks that are handled by the client',NULL,'root','2011-12-14 16:26:16','root','CLIENT');
+INSERT INTO `actor` VALUES (119,'Client handled',NULL,'CLIENT',NULL,NULL,NULL,NULL,'ANN','',NULL,NULL,NULL,0,NULL,0,'',NULL,'',NULL,'',NULL,NULL,NULL,NULL,NULL,'0','DO NOT DELETE - Special actor used for removing renewal tasks that are handled by the client',NULL,'root','2011-12-14 16:26:16','root');
 /*!40000 ALTER TABLE `actor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
