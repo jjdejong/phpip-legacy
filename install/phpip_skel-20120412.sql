@@ -2177,3 +2177,12 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2012-04-14 17:02:00
+
+-- User creation
+CREATE USER 'phpip'@'localhost' IDENTIFIED BY 'changeme'; 
+GRANT SELECT ON phpip.* TO 'phpip'@'localhost'; 
+GRANT UPDATE (last_login) ON TABLE actor TO 'phpip'@'localhost';
+CREATE USER 'phpipuser'@'%' IDENTIFIED BY 'changeme'; 
+GRANT ALL ON phpip.* TO 'phpipuser'@'%';
+INSERT INTO phpip.actor (login, name, email, password, password_salt) VALUES ('phpipuser', 'phpIP User', 'root@localhost', md5('changemesalt'), 'salt');
+
