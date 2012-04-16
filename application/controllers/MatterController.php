@@ -709,8 +709,8 @@ class MatterController extends Zend_Controller_Action
     $post_data = $this->getRequest()->getPost();
 
     
-    $date = explode("/",$post_data[due_date]);
-    $post_data[due_date] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
+    $date = explode("/",$post_data['due_date']);
+    $post_data['due_date'] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
         
     foreach($post_data as $key=>$data){
         if($data == "")
@@ -744,8 +744,8 @@ class MatterController extends Zend_Controller_Action
             unset($post_data[$key]);
     }
     
-    $date = explode("/",$post_data[event_date]);
-    $post_data[event_date] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
+    $date = explode("/",$post_data['event_date']);
+    $post_data['event_date'] =  date("Y-m-d",mktime(0, 0, 0, $date[1], $date[0], $date[2]));
 
     $matterModel = new Application_Model_Matter();
     $result = $matterModel->addEvent($post_data);

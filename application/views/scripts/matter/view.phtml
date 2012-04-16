@@ -632,7 +632,7 @@ endif;
 
 ?>
 <div id="matter-main-titles">
-<?php if(count($classifier_arr)){ ?> 
+<?php if(count(@$classifier_arr)){ ?> 
 
 <?php foreach($classifier_arr as $type => $value): ?>
 <div class="" style="margin:5px 0px; display:block; text-align:left;"><span class="classifier-main-name"><b><?=$type?></b></span><span class="classifier-main-value" ><?php echo $value;?></span></div>

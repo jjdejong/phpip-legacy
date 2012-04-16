@@ -1341,7 +1341,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     if(empty($data))
       return null;
 
-    if($data['alt_matter_ID'] == '')
+    if(@$data['alt_matter_ID'] == '')
         $data['alt_matter_ID'] = NULL;
 
     try{
