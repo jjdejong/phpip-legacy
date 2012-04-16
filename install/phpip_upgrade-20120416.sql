@@ -23,7 +23,7 @@ proc: BEGIN
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
-  SELECT ID, event_date INTO vfiled_id, vfiled_date FROM event_lnk_list WHERE matter_ID=Pmatter_ID AND code='FIL';
+  SELECT ID, event_date INTO vfiled_id, vfiled_date FROM event_lnk_list WHERE matter_ID=Pmatter_ID AND code IN ('FIL', 'PRI');
   IF vfiled_id IS NULL THEN
     LEAVE proc;
   END IF;
