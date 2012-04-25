@@ -62,6 +62,8 @@ vertical-align: top;
 }
 
 #MatterAllTasksBlock{
+	margin-left: 30px;
+	margin-top: 10px;
     width: 941px;
 }
 
@@ -72,9 +74,9 @@ vertical-align: top;
   width: 500px;
   z-index: 101;
   height: auto;
-  top: 200px;
-  display:none;
-  position:fixed;
+  top: 220px;
+  display: none;
+  position: fixed;
 }
 #add-task-wrap{
   background: whitesmoke;
@@ -308,8 +310,6 @@ $(document).ready(function(){
         $('#popup-label').val( $(this).attr('title') );
         $('#facade').css("height", $(document).height());
         $('#facade').show();
-        var ren_left = Math.round($(window).width()/2) - Math.round($('#add-task-popup').width()/2);
-        $('#add-task-popup').css('left', ren_left);
         $('#add-task-popup').css('display', 'block');
         $('#task_name').focus();
     });
@@ -492,7 +492,7 @@ else
 <span class="tasklist-col-notes" >Notes</span>
 <span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"></span>
 </div>
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto; background: whitesmoke;" >
 
 <?php 
 $event_id = '';
@@ -555,25 +555,25 @@ foreach($this->matter_event_tasks as $event_task):
 <div id="add-task-wrap">
 <input type="hidden" name="trigger_id" value="" id="trigger_id" />
 <label for="task_name" ><span style="color: #f00;">*</span>Task Name </label>
-<input type="text" name="task_name" id="task_name" value=""/>
+<input type="text" name="task_name" id="task_name" value="" style="width: 120px;"/>
 <input type="hidden" name ="task_id" id="task_id" value="" />
 <label for="task_duedate" ><span style="color: #f00;">*</span>Due date </label>
-<input type="text" name="task_duedate" id="task_duedate" value=""/>
+<input type="text" name="task_duedate" id="task_duedate" value="" style="width: 120px;"/><br>
 <label for="task_detail" >Detail </label>
-<input type="text" name="task_detail" id="task_detail" value="" />
+<input type="text" name="task_detail" id="task_detail" value="" style="width: 120px;"/>
 <label for="task_cost" >Cost </label>
-<input type="text" name="task_cost" id="task_cost" value="" />
+<input type="text" name="task_cost" id="task_cost" value="" style="width: 120px;"/><br>
 <label for="task_fee" >Fee </label>
-<input type="text" name="task_fee" id="task_fee" value=""/>
+<input type="text" name="task_fee" id="task_fee" value="" style="width: 120px;"/>
 <label for="task_currency" >Currency </label>
-<input type="text" name="task_currency" id="task_currency" value=""/>
+<input type="text" name="task_currency" id="task_currency" value="" style="width: 120px;"/><br>
 <label for="task_time" >Time spent</label>
-<input type="text" name="task_time" id="task_time" value="" />
+<input type="text" name="task_time" id="task_time" value="" style="width: 120px;"/>
 <label for="task_assigned_to" >Assigned to </label>
-<input type="text" name="task_assigned_to" id="task_assigned_to" value="" /><br>
+<input type="text" name="task_assigned_to" id="task_assigned_to" value="" style="width: 120px;"/><br>
 <label for="task_notes" >Notes</label>
 <textarea name="task_notes" id="task_notes" rows=2 cols=45></textarea><br>
-<input type="button" name="add_task_cancel" id="add-task-cancel" value="Cancel" style="margin-top: 10px; margin-left: 4px; float: right;"/>
-<input type="button" name="add_task_submit" id="add-task-submit" value="Add task" style="margin-top: 10px; float: right;"/>
+<button name="add_task_cancel" id="add-task-cancel" style="float: right;">Cancel</button>
+<button name="add_task_submit" id="add-task-submit" style="float: right;">Add task</button>
 </div>
 </div>

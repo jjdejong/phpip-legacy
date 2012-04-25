@@ -21,7 +21,7 @@ vertical-align: top;
 
 .eventlist-col-refer{
 display:inline-block;
-width: 170px;
+width: 120px;
 vertical-align: top;
 }
 
@@ -42,19 +42,21 @@ vertical-align: top;
 }
 
 #MatterAllEventBlock{
-    width: 941px;
+	margin-left: 10px;
+	margin-top: 10px;
+    width: 900px;
 }
 
 #add-event-popup{
   width: 530px;
   z-index: 101;
+  top: 300px;
   height: auto;
-  top: 0px;
   display:none;
-  position:absolute;
+  position: fixed;
 }
 #add-event-wrap{
-  background: #FFF;
+  background: whitesmoke;
   padding: 5px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
@@ -75,7 +77,11 @@ vertical-align: top;
 <script type="text/javascript">
     $("#MatterAllEvent").click(function(event){
         $('#event-pop-up').css('display','none');
+        var height = $(document).height();
+        $('#facade').css("height", height);
+        $('#facade').show();
         location.reload();
+        $('#facade').hide();
     });
 
     $('#event_date').datepicker({
@@ -182,8 +188,7 @@ vertical-align: top;
         var height = $(document).height();
         $('#facade').css("height", height);
         $('#facade').show();
-        ren_left = Math.round($(window).width()/2) - Math.round($('#add-event-popup').width());
-        $('#add-event-popup').css('left', ren_left);
+        $('#add-event').hide();
         $('#add-event-popup').css('display', 'block');
         $('#event_name').focus();
     });
@@ -191,13 +196,13 @@ vertical-align: top;
     $('#add-event-cancel').click(function(){
         $('#add-event-popup').css('display', 'none');
         $('#facade').hide();
+        $('#add-event').show();
     });
 
     $( "#event_name" ).autocomplete({
             minLength: 1,
             source: "/matter/get-all-events",
             focus: function( event, ui ) {
-                    /*$( "#actor" ).val( ui.item.id );*/
                     return false;
             },
             select: function( event, ui ) {
@@ -228,7 +233,6 @@ vertical-align: top;
             minLength: 3,
             source: "/matter/get-all-refers",
             focus: function( event, ui ) {
-                    /*$( "#actor" ).val( ui.item.id );*/
                     return false;
             },
             select: function( event, ui ) {
@@ -273,7 +277,6 @@ vertical-align: top;
                   },
            success: function(data){
               if(!data.match(/SQLSTATE/)) {
-                 //alert(data);
                  $('#event-pop-up').empty();
                  $('#event-pop-up').html(data);
 
@@ -288,6 +291,7 @@ vertical-align: top;
                  });
                  $('#add-event-popup').css('display', 'none');
                  $('#facade').hide();
+                 $('#add-event').show();
               } else
                  alert(data);
            }
@@ -296,9 +300,7 @@ vertical-align: top;
     $( "button").button();
 </script>
 
-<?php // Matter Open Tasks ?> 
-<?php //if(isset($this->matter_open_tasks)):
-//print_r($this->matter_open_tasks);
+<?php // Matter Open Tasks
    $trigger_id = "";
    $add_empty_row = 0;
  ?>
@@ -310,7 +312,7 @@ vertical-align: top;
 <span class="eventlist-col-refer" >Refers to</span>
 </div>
 <button id="add-event" style="float: right; margin-top: -2px;">Add Event</button>
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
+<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto; background: whitesmoke;" >
 <?php foreach($this->matter_events as $matter_event): 
 //print_r($matter_event); exit();
 ?> 
@@ -336,11 +338,11 @@ vertical-align: top;
 <input type="text" name="event_name" id="event_name" value=""/>
 <input type="hidden" name ="event_id" id="event_id" value="" />
 <label for="event_date" >Event date </label>
-<input type="text" name="event_date" id="event_date" value=""/>
+<input type="text" name="event_date" id="event_date" value=""/><br>
 <label for="event_detail" >Number </label>
 <input type="text" name="event_detail" id="event_detail" value="" />
 <label for="event_notes" >Notes </label>
-<input type="text" name="event_notes" id="event_notes" value="" />
+<input type="text" name="event_notes" id="event_notes" value="" /><br>
 <label for="event_refers" >Refers to </label>
 <input type="text" name="event_refers" id="event_refers" value=""/><br>
 <input type="hidden" name ="alt_matter_id" id="alt_matter_id" value="" />
