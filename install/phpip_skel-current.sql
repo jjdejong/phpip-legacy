@@ -187,7 +187,7 @@ CREATE TABLE `classifier` (
   `value` text COMMENT 'A free-text value used when classifier_values has no record linked to the classifier_types record',
   `url` varchar(256) DEFAULT NULL COMMENT 'Display value as a link to the URL defined here',
   `value_ID` int(11) DEFAULT NULL COMMENT 'Links to the classifier_values table if it has a link to classifier_types',
-  `display_order` tinyint(4) DEFAULT NULL,
+  `display_order` tinyint(4) NOT NULL DEFAULT '1',
   `lnk_matter_ID` int(11) DEFAULT NULL COMMENT 'Matter this case is linked to',
   `creator` varchar(20) DEFAULT NULL,
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -828,7 +828,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
 	IF OLD.code IN ('PRI','PFIL') THEN
-		CALL recalculate_tasks_from_filed(OLD.matter_ID);
+		CALL recalculate_tasks(OLD.matter_ID,'FIL');
 	END IF;
 
 	IF OLD.code='FIL' THEN
@@ -1618,7 +1618,7 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trules_after_update` AFTER UPDATE ON `task_rules` FOR EACH ROW BEGIN
 	
 	IF (NEW.fee != OLD.fee OR NEW.cost != OLD.cost) THEN
-		UPDATE task SET fee=NEW.fee, cost=NEW.cost WHERE rule_used=NEW.id AND due_date > Now() AND done=0;
+		UPDATE task SET fee=NEW.fee, cost=NEW.cost WHERE rule_used=NEW.id AND done=0;
 	END IF;
 END */;;
 DELIMITER ;
@@ -1780,7 +1780,7 @@ USE `phpip`;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `event_list` AS select `event`.`ID` AS `event_ID`,`event_name`.`status_event` AS `status_event`,`event`.`code` AS `code`,`event_name`.`name` AS `name`,`event`.`event_date` AS `event_date`,`event`.`detail` AS `detail`,`matter`.`ID` AS `matter_ID`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx` from ((`matter` join `event`) join `event_name`) where ((`event`.`matter_ID` = `matter`.`ID`) and (`event`.`code` = `event_name`.`code`)) order by `matter`.`ID` */;
+/*!50001 VIEW `event_list` AS select `event`.`ID` AS `event_ID`,`event_name`.`status_event` AS `status_event`,`event`.`code` AS `code`,`event_name`.`name` AS `name`,`event`.`event_date` AS `event_date`,`event`.`detail` AS `detail`,`matter`.`ID` AS `matter_ID`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,`matter`.`container_id` AS `container_id`,`matter`.`dead` AS `dead` from ((`matter` join `event`) join `event_name`) where ((`event`.`matter_ID` = `matter`.`ID`) and (`event`.`code` = `event_name`.`code`)) order by `matter`.`ID` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1818,7 +1818,7 @@ USE `phpip`;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `filing_info` AS select `matter`.`ID` AS `ID`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`event`.`event_date` AS `filing_date`,`event`.`detail` AS `filing_number` from (`matter` join `event`) where ((`matter`.`ID` = `event`.`matter_ID`) and (`event`.`code` = 'FIL') and (`matter`.`category_code` = 'PAT')) */;
+/*!50001 VIEW `filing_info` AS select `matter`.`ID` AS `ID`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,`matter`.`container_id` AS `container_id`,`matter`.`dead` AS `dead`,`event`.`event_date` AS `filing_date`,`event`.`detail` AS `filing_number` from (`matter` join `event`) where ((`matter`.`ID` = `event`.`matter_ID`) and (`event`.`code` = 'FIL') and (`matter`.`category_code` = 'PAT')) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
