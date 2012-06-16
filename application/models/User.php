@@ -122,7 +122,7 @@ class Application_Model_User
     }
     
     // Not used yet
-    public function save($post = array())
+    /*public function save($post = array())
     {
     	if(!empty($post))
     	{
@@ -188,5 +188,5 @@ class Application_Model_User
     	$userInfo = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
     	
     	
-    }
+    }*/
 }

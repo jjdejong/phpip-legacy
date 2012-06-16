@@ -149,7 +149,7 @@ class MatterController extends Zend_Controller_Action
     $this->view->matter_id = $matter_id;
     $this->view->matter_index = $matter_index;
     $this->view->national_phase = 0;
-    if(in_array($this->view->matter_record[0]['country'], array('EP', 'WO', 'OA'))){
+    if(in_array($this->view->matter_record[0]['country'], array('EP', 'WO', 'OA', 'EM'))){
       $this->view->national_phase = 1;
     }
   }

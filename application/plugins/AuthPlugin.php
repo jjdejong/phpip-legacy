@@ -7,6 +7,7 @@ class Application_Plugins_AuthPlugin extends Zend_Controller_Plugin_Abstract
         $result = $auth->getStorage();
         $identity = $auth->getIdentity();
         $registry = Zend_Registry::getInstance();
+        $config = Zend_Registry::get('config');
         
         $module = strtolower($this->_request->getModuleName());
         $controller = strtolower($this->_request->getControllerName());
@@ -14,26 +15,26 @@ class Application_Plugins_AuthPlugin extends Zend_Controller_Plugin_Abstract
         
         
         if ($identity && $identity !="") {
-       	  $layout = Zend_Layout::getMvcInstance();
-	  $view = $layout->getView();
-	  $view->login = $identity;
+       	 	$layout = Zend_Layout::getMvcInstance();
+	  		$view = $layout->getView();
+	  		$view->login = $identity;
 
-	  $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
+	  		$siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
 	       	
-	  $id = $siteInfoNamespace->userId;
-	  $view->firstname = $siteInfoNamespace->Firstname;
-	  $username = $siteInfoNamespace->username;
-	  $password = $siteInfoNamespace->password;
+			$id = $siteInfoNamespace->userId;
+			$view->firstname = $siteInfoNamespace->Firstname;
+			$username = $siteInfoNamespace->username;
+			$password = $siteInfoNamespace->password;
 
-        $db = new Zend_Db_Adapter_Pdo_Mysql(array(
-                            'host'      => '127.0.0.1',
+        	$db = new Zend_Db_Adapter_Pdo_Mysql(array(
+                            'host'      => $config->resources->db->params->host,
                             'username'  => $username,
                             'password'  => $password,
-                            'dbname'    => 'phpip'
+                            'dbname'    => $config->resources->db->params->dbname
                         ));
-        Zend_Db_Table_Abstract::setDefaultAdapter($db);
+        	Zend_Db_Table_Abstract::setDefaultAdapter($db);
 	   	
-         return;
+         	return;
 	}else{
 	  $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
 	  $siteInfoNamespace->requestURL = $this->_request->getParams();

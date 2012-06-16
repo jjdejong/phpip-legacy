@@ -1,5 +1,6 @@
 <?php
 /************************************************************************
+
 phpIP, a patent and other IP matters management system
 Copyright (C) 2011 Omnipat <http://www.omnipat.fr>
 
@@ -15,6 +16,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 *************************************************************************/
 
 class Application_Model_Matter
@@ -1675,7 +1677,8 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
      }
 
      $infoDb = $this->getInfoDb();
-     $query = "select column_name, column_comment from columns where table_schema='phpip' AND table_name='".$table_name."'";
+     $db_detail = $this->_dbTable->getAdapter()->getConfig();
+     $query = "select column_name, column_comment from columns where table_schema='".$db_detail["dbname"]."' AND table_name='".$table_name."'";
      $result = $infoDb->fetchAll($query);
      $comments = array();
      foreach($result as $row){
@@ -1694,7 +1697,8 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       return false;
 
     $infoDb = $this->getInfoDb();
-    $query = "select substring(column_type, 5) as enumset from columns where table_schema='phpip' AND table_name='".$table_name."' and column_name='".$column_name."'";
+    $db_detail = $this->_dbTable->getAdapter()->getConfig();
+    $query = "select substring(column_type, 5) as enumset from columns where table_schema='".$db_detail["dbname"]."' AND table_name='".$table_name."' and column_name='".$column_name."'";
     $result = $infoDb->fetchRow($query);
     $enumSet = substr($result['enumset'], 1, -1);
     $enumArr = explode(",", $enumSet);
@@ -1715,7 +1719,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $db_detail = $this->_dbTable->getAdapter()->getConfig(); 
       
       $db = new Zend_Db_Adapter_Pdo_Mysql(array(
-                                 'host' => '127.0.0.1',
+                                 'host' => $db_detail["host"],
                                  'username' => $db_detail["username"],
                                  'password' => $db_detail["password"],
                                  'dbname' => 'information_schema',
