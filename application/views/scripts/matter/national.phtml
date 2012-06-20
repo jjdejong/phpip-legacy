@@ -35,7 +35,7 @@ $(document).ready(function(){
    $('.matter-country').live('change', function(){
      if($(this).val() == 0){
        var tname = $(this).attr('name');
-       var inputObj = $('<input name="dis_'+ tname +'" class="matter-country required" id="" style="width:140px;border:1px solid #888;-moz-border-radius:3px;-webkit-border-radius:3px;padding:3px 2px;" /><input name="'+tname+'" type="hidden" value="" />');
+       var inputObj = $('<input name="dis_'+ tname +'" class="matter-country required" id="" style="width:140px;border:1px solid #888;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;padding:3px 2px;" /><input name="'+tname+'" type="hidden" value="" />');
        $(this).replaceWith( inputObj );
 //       tobj = $('input[name='+tname+']');
         inputObj.autocomplete({
@@ -110,6 +110,7 @@ $(document).ready(function(){
   border: 1px solid #1E4262;
   -moz-border-radius: 5px 5px 0px 0px;
   -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
 }
 
 #add-matter{
@@ -120,6 +121,7 @@ $(document).ready(function(){
   padding: 5px;
   -moz-border-radius: 0px 0px 5px 5px;
   -webkit-border-radius: 0px 0px 5px 5px;
+  border-radius: 0px 0px 5px 5px;
 }
 #add-matter label{
   display: inline-block;
@@ -144,6 +146,7 @@ $(document).ready(function(){
   width: 140px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  border-radius: 3px;
   border: 1px inset #888;
   padding: 3px 2px;
 }
@@ -166,6 +169,7 @@ width: auto;
 margin-bottom: 10px;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
+  border-radius: 5px;
 }
 .validation-errors span{
     display: block;
@@ -177,6 +181,7 @@ margin-bottom: 10px;
   width: 140px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
+  border-radius: 3px;
   border: 1px solid #888;
   padding: 1px 2px;
   vertical-align: top;
