@@ -895,7 +895,7 @@ class MatterController extends Zend_Controller_Action
         if(!isset($post_data['value_ID'])){
            $cvs = $matterModel->getClassifierValues($post_data['type_code']);
            if(count($cvs) > 0){
-             $data = array( 'value' => $post_data['value'], 'type_code' => $post_data['type_code'] );
+             $data = array( 'value' => $post_data['value'], 'type_code' => $post_data['type_code'], 'notes' => $post_data['notes'] );
              $post_data['value_ID'] = $matterModel->addClassifierValue($data);
            }
         }

@@ -1,9 +1,9 @@
 <script type="text/javascript">
 $(document).ready(function(){
-    var typeId = "";
+    /*var typeId = "";
     $('#classifier-type').change(function(){
       typeId = $(this).val();
-    });
+    });*/
     $('#add-classifier-cancel').click(function(){
         $('#add-classifier-popup').css('display', 'none');
         $('#facade').css('display', 'none');
@@ -17,12 +17,12 @@ $(document).ready(function(){
         minLength: 1,
        // source: "/matter/get-classifier-values",
         source : function(request, response){
-          nterm = request.term;
+          //nterm = request.term;
           $.ajax({
             url: "/matter/get-classifier-values",
             dataType: 'json',
             data: { 
-                    type_code: typeId,
+                    type_code: $('#classifier-type').val(),
                     term: request.term
                   },
             success: function(data){
@@ -204,7 +204,7 @@ Add new Classifier <span class="close-button">X</span>
 <form type="post" action="" id="add-classifier-form" >
 <label for="classifier-type" >Classifier Type</label>
 <select id="classifier-type">
-<option value=""> select type </option>
+<option value="">Select type</option>
 <?php if($this->classifier_types) { 
 foreach($this->classifier_types as $classifier){
 $selected = "";

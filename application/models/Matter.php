@@ -1553,7 +1553,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   }
 
 /**
- * retrieves classifier types whose classifiery_type.main_display=0
+ * retrieves classifier types whose classifier_type.main_display=0
 **/
   public function getClassifierTypes()
   {
@@ -2061,7 +2061,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
   }
 
 /**
- * retrives list of classifier values for a type_code and a search term
+ * retrieves list of classifier values for a type_code and a search term
 **/
   public function getClassifierValues($type_code = null, $term = '')
   {
