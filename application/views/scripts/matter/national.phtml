@@ -20,8 +20,7 @@ $(document).ready(function(){
                         matter_ID :$('#this-matter-id').val(),
                       },
                 success: function(data){
-                    if( data > 0 ){
-                      //  alert("Matter added!");
+                    if( data != '' ){
                     $('#add-matter-popup').css('display', 'none');
                     $('#facade').css('display', 'none');
                     $(location).attr("href", '/matter/filter/Ref/' + $('#matter-caseref-id').val() + '/origin/' + $('#matter-origin-id').val());
@@ -72,9 +71,7 @@ $(document).ready(function(){
       var alt_id = 'alt-entered-date-'+aid;
       $(this).datepicker({
         showOn: 'focus',
-        //minDate: +0,
         dateFormat: 'dd/mm/yy',
-        defaultDate: '<?php echo date('d/m/Y');?>',
         altField: '#'+alt_id,
         altFormat: 'yy-mm-dd',
       }).focus();

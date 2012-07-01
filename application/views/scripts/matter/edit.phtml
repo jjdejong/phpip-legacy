@@ -78,7 +78,6 @@ $(document).ready(function(){
         },
         select: function( event, ui ) {
                     $( "#matter-responsible" ).val( ui.item.value );
-                    //$( "#matter-responsible-id" ).val( ui.item.id );
                  return false;
         },
         change: function( event, ui ){
@@ -159,15 +158,6 @@ $(document).ready(function(){
         $('#facade').css('display', 'none');
     });
 
-   $('#matter-idx').keydown(function(event){
-     if(event.keyCode == 46 || event.keyCode == 8){}
-     else{
-       if(event.keyCode < 48 || event.keyCode > 57){
-         event.preventDefault();
-       }
-     }
-   });
-
    $('#edit-matter-submit').click(function(){
         var invalid = false;
         $('.validation-errors').empty();
@@ -180,20 +170,24 @@ $(document).ready(function(){
         }
         <?php }?>
 
-        if($('#matter-category-code').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
-            invalid = true;
-        }
         if($('#matter-country-id').val() == ""){
             $('.validation-errors').append('<span class="errors">* Country requires a value</span>');
+            $('#matter-country').focus();
             invalid = true;
         }
         if($('#matter-caseref').val() == ""){
             $('.validation-errors').append('<span class="errors">* Caseref requires a value</span>');
+            $('#matter-caseref').focus();
             invalid = true;
         }
         if($('#matter-responsible').val() == ""){
             $('.validation-errors').append('<span class="errors">* Responsible requires a value</span>');
+            $('#matter-responsible').focus();
+            invalid = true;
+        }
+        if (isNaN($('#matter-idx').val())){
+        	$('.validation-errors').append('<span class="errors">Index (Idx) should be a number</span>');
+        	$('#matter-idx').focus();
             invalid = true;
         }
         if(invalid)
@@ -250,6 +244,7 @@ $(document).ready(function(){
 
    $('#delete-matter').click(function(){
         var mid = $(this).attr('mid');
+        var caseref = $('#matter-caseref').val();
         var conf = confirm("Do you really want to delete this Matter?");
         if(conf == 1){
           $.ajax({
@@ -258,7 +253,7 @@ $(document).ready(function(){
             data: { matter_id: mid },
             success: function(data){
               if(!isNaN(parseInt(data))){
-                $(location).attr("href", '/matter');
+                $(location).attr("href", '/matter/filter/Ref/' + caseref);
               }else{
                 alert(data);
               }
