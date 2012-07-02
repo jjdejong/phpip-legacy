@@ -567,7 +567,7 @@ $(document).ready(function(){
 ?>
 	<div class="matter-title">
     <?php echo $this->matter_record[0]['category'] ."</br>";?>
-    <span style="color: white; font-size: 16px; margin-right: 5px; float: left;" class="<?=$matter_dead?>"><?php echo $this->matter_record[0]['UID']; ?> <button id="current-matter-edit" title="Advanced edit" style="background: transparent; border: transparent;"><span class="ui-icon ui-icon-wrench"></span></button></span>
+    <span style="color: white; font-size: 16px; margin-right: 5px; float: left;" class="<?=$matter_dead?>"><?php echo '<a href="/matter/filter/Ref/'. $this->matter_record[0]['caseref']. '" style="color: white;" title="See family">'. $this->matter_record[0]['UID'] .'</a>'; ?> <button id="current-matter-edit" title="Advanced edit" style="background: transparent; border: transparent;"><span class="ui-icon ui-icon-wrench"></span></button></span>
 
 	<?php
 	if($this->matter_parent){
