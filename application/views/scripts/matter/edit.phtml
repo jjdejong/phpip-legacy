@@ -328,7 +328,6 @@ $(document).ready(function(){
   font-family: arial;
 }
 .required-field{
-  color: #f00;
   font-weight: bold;
   margin-right:4px;
 }
@@ -370,9 +369,9 @@ Advanced Matter edition <span class="close-button">X</span>
 
 </div>
 <input type="hidden" name="current-matter-id" id="current-matter-id" value="<?=$this->matter['ID']?>" />
-<label for="matter-category"><span class="required-field">*</span>Category</label>
+<label for="matter-category" class="required-field">Category</label>
 <?php if($this->cat_edit){?>
-<select name="matter-category" id="matter-category" style="width:170px;">
+<select name="matter-category" id="matter-category" style="width:176px;">
 <?php foreach($this->cats as $cat){
 $selected = "";
 if($cat['id'] == $this->matter['category_code']){
@@ -388,7 +387,7 @@ $selected = "selected=selected";
 <?php } ?>
 <input type="hidden" name="matter-category-code" id="matter-category-code" value="<?=$this->matter['category_code']?>" />
 
-<label for="matter-country"><span class="required-field">*</span>Country</label>
+<label for="matter-country" class="required-field">Country</label>
 <?php if($this->country_edit){ ?>
 <input type="text" name="matter-country" id="matter-country" value="<?=$this->matter['country_name']?>" class="required" onfocus="this.select()" />
 <?php } else{ ?>
@@ -401,7 +400,7 @@ $selected = "selected=selected";
 <input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->origin_code?>" />
 
 <label for="matter-type">Type</label>
-<select name="matter-type" id="matter-type" style="width:170px;" >
+<select name="matter-type" id="matter-type" style="width:176px;" >
 <option value=""></option>
 <?php foreach($this->types as $type){ 
 $select = "";
@@ -412,11 +411,11 @@ if($type['id'] == $this->matter['type_code'])
 <?php } ?>
 </select>
 
-<label for="matter-caseref"><span class="required-field">*</span>Caseref</label>
+<label for="matter-caseref" class="required-field">Caseref</label>
 <input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->matter['caseref']?>" class="required" onfocus="this.select()" />
 <input type="hidden" name="matter-caseref-prev" id="matter-caseref-prev" value="<?=$this->matter['caseref']?>"/>
 
-<label for="matter-responsible"><span class="required-field">*</span>Responsible</label>
+<label for="matter-responsible" class="required-field">Responsible</label>
 <input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->matter['responsible']?>" class="required" onfocus="this.select()" />
 
 <label for="matter-parent-id">Parent</label>
@@ -436,7 +435,7 @@ if($type['id'] == $this->matter['type_code'])
 <div id="edit-matter-actions">
   <button name="edit-matter-cancel" id="edit-matter-cancel" style="float: right;"><span class="ui-icon ui-icon-cancel" style="float: left;"></span>Cancel</button>
   <button name="edit-matter-submit" id="edit-matter-submit" style="float: right;"><span class="ui-icon ui-icon-disk" style="float: left;"></span>Save</button>
-  <button id="delete-matter" mid="<?=$this->matter['ID']?>"><span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete Matter</button>
+  <button id="delete-matter" mid="<?=$this->matter['ID']?>" style="color: red;"><span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete Matter</button>
 </div>
 
 </div>

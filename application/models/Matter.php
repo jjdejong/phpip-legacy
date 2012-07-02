@@ -116,7 +116,7 @@ class Application_Model_Matter
     }
 
 /**
- * saves new matter record upon adding a matter [and adds a delegate matter]
+ * saves new matter record upon adding a matter
 **/
   public function save($matter = array())
   {
@@ -135,28 +135,14 @@ try{
     $this->_dbTable->insert($matter);
     $this->setID($this->_adapter->lastInsertID());
     $this->receivedEvent($this->getID());
-    /*$siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
-    $username = $siteInfoNamespace->username;
-    if($matter['responsible'] != $username)
-    {
-       $this->setDbTable('Application_Model_DbTable_Actor');
-       $dbSelect = $this->_dbTable->getAdapter()->select();
-       $selectQuery = $dbSelect->from(array('a' => 'actor'))
-                               ->where('login = ?', $username);
-
-       $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
-       if(isset($result['ID']))
-         $this->addDelegateActor($this->getID(), $result);
-    }*/
   }catch (Exception $e){
-  // echo $e->getMessage();
     return $e->getMessage();
   } 
     return $this->getID();
   }
 
 /**
- * creates a new child matter [and add a delegate actor]
+ * creates a new child matter
 **/
   public function child($matter = array())
   {
@@ -179,20 +165,7 @@ try{
     $this->_dbTable->insert($matter);
     $this->setID($this->_adapter->lastInsertID());
     $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
-    /*$username = $siteInfoNamespace->username;
-    if($matter['responsible'] != $username)
-    {
-       $this->setDbTable('Application_Model_DbTable_Actor');
-       $dbSelect = $this->_dbTable->getAdapter()->select();
-       $selectQuery = $dbSelect->from(array('a' => 'actor'))
-                               ->where('login = ?', $username);
-
-       $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
-       if(isset($result['ID']))
-         $this->addDelegateActor($this->getID(), $result);
-    }*/
   }catch (Exception $e){
-  // echo $e->getMessage();
     return false;
   }
    return $this->getID();
@@ -286,30 +259,6 @@ try{
     $data['event_date'] = date('Y-m-d');
     $this->_dbTable->insert($data);
   }
-
-/**
- * adds a delegate actor for a matter
-**/
-/*  public function addDelegateActor($matter_id = null, $actor = null)
-  {
-    if(!isset($matter_id) || !isset($actor['ID']))
-      return;
-
-    $this->setDbTable('Application_Model_DbTable_ActorRole');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('ar' => 'actor_role'))
-                            ->where("code = 'DEL'");
-    $actor_role = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
-
-    $this->setDbTable('Application_Model_DbTable_MatterActorLink');
-    $data['matter_ID'] = $matter_id;
-    $data['actor_ID'] = $actor['ID'];
-    $data['role'] = 'DEL';
-    $data['company_ID'] = $actor['company_ID'];
-    $data['shared'] = $actor_role['shareable'];
-    $data['date'] = date('Y-m-d');
-    $this->_dbTable->insert($data);
-  }*/
 
 /**
  * creates Filed, Published, Granted events copied from current matter to a new matter
@@ -1983,26 +1932,6 @@ from event where matter_id=".$matter_ID." and code='PRI';";
       return false;
     else
       return true;
-  }
-
-/**
- * determines whether a matter has automatic tasks
-**/
-  public function hasAutomaticTasks($matter_id = null)
-  {
-    if(!isset($matter_id))
-      return false;
-
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $dbStmt = $this->_dbTable->getAdapter()->query("SELECT 1 FROM task, event WHERE event.matter_id=".$matter_id." AND task.trigger_id=event.id AND task.rule_used IS NOT NULL");
-    $result = $dbStmt->fetchAll();
-
-    if(count($result))
-      return true;
-    else
-      return false;
   }
 
 /**

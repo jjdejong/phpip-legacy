@@ -191,15 +191,13 @@ class MatterController extends Zend_Controller_Action
       $matter_id = $this->_getParam('mid');
       $matterInfo = $matterModel->getMatter($matter_id);
 
-      if($matterModel->hasFiledEvent($matter_id))
+      if($matterModel->hasFiledEvent($matter_id)) {
         $this->view->cat_edit = 0;
-      else
-        $this->view->cat_edit = 1;
-
-      if($matterModel->hasAutomaticTasks($matter_id))
         $this->view->country_edit = 0;
-      else
+      } else {
+        $this->view->cat_edit = 1;
         $this->view->country_edit = 1;
+      }
 
       $this->view->matter = $matterInfo[0];
 
