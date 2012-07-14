@@ -487,15 +487,12 @@ class MatterController extends Zend_Controller_Action
   	if(!$this->getRequest()->isPost())
   	  return;
   	  
-//  	print_r($this->getRequest()->getPost()); exit();
-        $post_data = $this->getRequest()->getPost();
-        $display_val = $post_data['value'];
-        if(strcmp(substr($post_data['id'], 0, 10), 'company_ID') == 0)
-        {
-            $post_data['id'] = 'company_ID';
-            $post_data['value'] = isset($post_data['company_id']) ? $post_data['company_id'] : NULL;
-        }
-  	$data[$post_data['id']] = $post_data['value'];
+    $post_data = $this->getRequest()->getPost();
+    $display_val = $post_data['value'];
+    if (isset($post_data['field']))
+  		$data[$post_data['field']] = $post_data['val'];
+    else 
+    	$data[$post_data['id']] = $post_data['value'];
     $matter_actor_id = $post_data['matter_actor_id'];
   	$matterModel = new Application_Model_Matter();
   	$matterModel->saveMatterActor($matter_actor_id, $data);

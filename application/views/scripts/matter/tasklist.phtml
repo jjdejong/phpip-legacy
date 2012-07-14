@@ -534,7 +534,7 @@ foreach($this->matter_event_tasks as $event_task):
 <? if ($this->renewal == 0) {?>
 <span class="tasklist-col-time_spent editable" title="Click to edit (HH:MM:SS)"><?=$event_task['time_spent']?></span>
 <?}?>
-<span class="tasklist-col-assigned_to edit-assigned-to" "Click to edit"><?=$event_task['assigned_to']?></span>
+<span class="tasklist-col-assigned_to edit-assigned-to" title="Click to edit"><?=$event_task['assigned_to']?></span>
 <? if(strlen($event_task['task_notes']) < 25){?>
 <span class="tasklist-col-notes editable" title="Click to edit notes"><?=$event_task['task_notes'];?></span>
 <? } else { ?>

@@ -413,7 +413,7 @@ Actor Information <span class="close-button">X</span>
 <div id="edit-actor-content">
 <input type="hidden" name="actor_id" id="actor-id" value="<?=$this->actor['ID']?>" />
 <fieldset class="actor-info-set" >
-<legend>Actor details</legend>
+<legend>Actor details - ID: <?=$this->actor['ID']?></legend>
 <label for="name" title="<?=$this->actorComments['name']?>" >Name <span class="required-field">*</span></label>
 <span class="actor-input-wide editable" id="name"><?=htmlentities($this->actor['name'])?></span>
 <label for="first_name" title="<?=$this->actorComments['first_name']?>" >Firstname</label>

@@ -106,13 +106,12 @@ $(document).ready(function(){
 
 	$('.editable').editable('/matter/save-matter-actor/', {
 		submitdata: function(value,settings){
-		//  return {matter_id : $('input[name=matter_id]').val(), role_code : $('input[name=role_code]').val()}
-                reorder_actors = 1;
-		var mal_id = $(this).parent().attr('id').split('-');
-			return { matter_actor_id : mal_id[2] }
+            reorder_actors = 1;
+			var mal_id = $(this).parent().attr('id').split('-');
+			return { matter_actor_id: mal_id[2] }
 		},
-          //cancel : 'X',
-          //submit : 'Ok',
+          cancel : false,
+          submit : false,
           select : true,
           indicator : '<span class="icon-busy" />',
           tooltip: 'Click to edit...'
@@ -125,21 +124,16 @@ $(document).ready(function(){
 	  }
 	});
 
-        var company_input = '';
+    var company_id = 0;
 	$('.editable_comp').editable("/matter/save-matter-actor/", {
 		 type : "autocomplete",
 		 onblur : "submit",
 		 autocomplete : {
-		   minLength : 1,
-		   source : "/matter/get-all-actors/role/1",
+		   source : "/matter/get-all-actors/",
 		   select: function( event, ui ) {
-         //      $( "#editable_comp" ).val( ui.item.value );
-           //      alert(ui.item.id);
-                 var cid = $(this).attr('id');
-                 $(this).val(ui.item.value);
-                 company_input = '"input[name='+cid+']"';
-                 $(company_input).val(ui.item.id);
-//               alert($(company_input ).val());
+               var valid = true;
+               $(this).val(ui.item.value);
+               company_id = ui.item.id;
                if ( !ui.item ) {
                    var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
                    valid = false;
@@ -157,25 +151,64 @@ $(document).ready(function(){
                    return false;
                }
                return true;
-              }
+           }
  	   },
 	   submitdata: function(value,settings){
              var mal_id = $(this).attr('id').split('-');
-          //   var comp_input = '"input[name='+cid+']"';
-          //   alert($(company_input).val());
              reorder_actors = 1;
-	     return { matter_actor_id: mal_id[2], company_id : $(company_input).val()};
+	         return { matter_actor_id: mal_id[2], field: 'company_ID', val: company_id};
 	   },
-           cancel : 'X',
-           submit : 'Ok',
-           indicator : '<span class="icon-busy" />',
-           tooltip: 'Click to edit...',
-           select: true
+       cancel : false,
+       submit : false,
+       indicator : '<span class="icon-busy" />',
+       tooltip: 'Click to edit...',
+       select: true
+	});
+
+    var actor_id = 0;
+	$('.editable_actor').editable("/matter/save-matter-actor/", {
+		 type : "autocomplete",
+		 onblur : "submit",
+		 autocomplete : {
+		   source : "/matter/get-all-actors/",
+		   select: function( event, ui ) {
+               var valid = true;
+               $(this).val(ui.item.value);
+               actor_id = ui.item.id;
+               if ( !ui.item ) {
+                   var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
+                   valid = false;
+                   ui.item.each(function(value) {
+                     if ( value.match( matcher ) ) {
+                       valid = true;
+                       return true;
+                     }
+                   });
+               }
+               if ( !valid ) {
+                   // remove invalid value, as it didn't match anything
+                   $( this ).val( "" );
+                   input.data( "autocomplete" ).term = "";
+                   return false;
+               }
+               return true;
+           }
+ 	   },
+	   submitdata: function(value,settings){
+             var mal_id = $(this).parent().parent().parent().attr('id');
+             reorder_actors = 1;
+	         return { matter_actor_id: mal_id, field: 'actor_ID', val: actor_id};
+	   },
+       cancel : false,
+       submit : false,
+       indicator : '<span class="icon-busy" />',
+       tooltip: 'Click to edit...',
+       select: true
 	});
 
 	$('#edit-role-info').click(function(){
 		$('#role-actors-block').css('display', 'none');
-                $('#actor-role-title').html("Edit general role information");
+        $('#actor-role-title').html("Edit general role information");
 		$('#role-info').css('display', 'block');
 	});
 
@@ -261,10 +294,8 @@ $(document).ready(function(){
 	$('.delete-matter-actor').click(function(){
 		var actor_list = $(this).parent();
 		var mal_id = $(this).parent().attr('id').split('-');
-                var matter_id = $('#matter-id').val();
-                var actor_mid = $(this).attr('id');
-                //alert(matter_id + " -- " + actor_mid);
-	//	alert(mal_id[2]);
+        var matter_id = $('#matter-id').val();
+        var actor_mid = $(this).attr('id');
 		$('#pr-confirm').dialog({
 			autoOpen: false,
 			width: 400,
@@ -278,32 +309,32 @@ $(document).ready(function(){
 				     url: "/matter/delete-matter-actor",
 				     data: { 'mal_id':mal_id[2] },
 				     success: function(data){
-                                           if(!isNaN(parseInt(data))){
+                       if(!isNaN(parseInt(data))){
 					     $('#pr-confirm').dialog("close");
 					     $('#'+mal_id[2]).hide();
-                                             reorder_actors = 1;
-                                             actors_count = actors_count - 1;
-                                             if(actors_count < 2)
-                                               $('#sortable-role-actors').sortable({disabled: true});
-                                           }else{
-                                             alert(data);
-                                           }
+                         reorder_actors = 1;
+                         actors_count = actors_count - 1;
+                         if(actors_count < 2)
+                           $('#sortable-role-actors').sortable({disabled: true});
+                         }else{
+                           alert(data);
+                         }
 				     }
-				   });
-		     },
-	       "Cancel": function(){
+				 });
+		       },
+	       	   "Cancel": function(){
 			       $(this).dialog("close");
-		     }
-		  }
+		       }
+		    }
 		});
-                if(matter_id == actor_mid)
+        if(matter_id == actor_mid)
 		    $('#pr-confirm').text("The actor will be deleted from the current matter only");
-                else
+        else
 		    $('#pr-confirm').text("The actor will be deleted from all matters in the family");
 		$('#pr-confirm').dialog("open");
 	});
 
-      if(actors_count > 1){
+    if(actors_count > 1){
 	$('#sortable-role-actors').sortable({
             update : function(event, ui){
               var order = $(this).sortable('serialize');
@@ -321,7 +352,7 @@ $(document).ready(function(){
               });
             }
         });
-	$('#sortable-role-actors').disableSelection();
+	    $('#sortable-role-actors').disableSelection();
       }
 
     if(actors_count == 1){
@@ -378,18 +409,16 @@ if($i%2 == 0)
 ?>
 <li class="role-actors-list <?=$row_class?>" id="<?=$actor['ID']?>">
 <ul id="matter-actor-<?=$actor['ID']?>" class="<?php echo ($actor['inherited'])?"actor-inherit":"";?>">
-<!-- <li class="editable" style="width:10px;" id="display_order" ><?=$actor['display_order']?> </li> -->
 <?php 
 $actor_display_name = ($actor['display_name'] == "" ) ? $actor['name'] .  (($actor['first_name']) ? (", " . $actor['first_name']) : "") : $actor['display_name'];
 ?>
-<li style="width: 156px;"><span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float:left; cursor: move;" ></span><?php echo htmlentities($actor_display_name); ?></li>
+<li style="width: 156px;"><span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float:left; cursor: move;" ></span><span class="editable_actor" id="actor_ID"><?php echo htmlentities($actor_display_name); ?></span></li>
 <li class="editable actor_ref" <?php echo ($actor['show_ref'])? '' : 'style="display:none;"';?> id="actor_ref" ><?=$actor['actor_ref']?></li>
-<li class="actor_comp editable_comp" <?php echo ($actor['show_company'])? '' : 'style="display:none;"';?> id="company_ID-<?=$actor['company_ID']?>-<?=$actor['ID']?>" ><?=$actor['company_name']?></li>
+<li class="editable_comp actor_comp" <?php echo ($actor['show_company'])? '' : 'style="display:none;"';?> id="company_ID-<?=$actor['company_ID']?>-<?=$actor['ID']?>" ><?=$actor['company_name']?></li>
 <li class="editable actor_rate" <?php echo ($actor['show_rate'])? 'style="width:70px;"' : 'style="display:none;"';?> id="rate" ><?=$actor['rate']?></li>
 <li class="editable actor_date" <?php echo ($actor['show_date'])? 'style="width:70px;"' : 'style="display:none;"';?> id="date" ><?=$actor['date']?></li>
 <li class="delete-matter-actor" id="<?=$actor['matter_ID']?>"><span class="ui-icon ui-icon-trash" style="float:right;"></span></li>
 </ul>
-<input type="hidden" name="company-<?=$actor['company_ID']?>-<?=$actor['ID']?>" value="<?=$actor['company_ID']?>" />
 </li>
 <?php 
 endforeach;
