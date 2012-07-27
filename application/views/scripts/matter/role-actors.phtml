@@ -129,6 +129,7 @@ $(document).ready(function(){
 		 type : "autocomplete",
 		 onblur : "submit",
 		 autocomplete : {
+		   minLength: 1,
 		   source : "/matter/get-all-actors/",
 		   select: function( event, ui ) {
                var valid = true;
