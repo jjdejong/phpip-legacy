@@ -1058,7 +1058,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
         return false;
 
       $data = array();
-      $data["$field_name"] = $field_value;
+      $data["$field_name"] = $field_value != "" ? $field_value : NULL;
 
       $dbTable = $this->getDbTable('Application_Model_DbTable_Actor');
       $dbTable->getAdapter()->query('SET NAMES utf8');

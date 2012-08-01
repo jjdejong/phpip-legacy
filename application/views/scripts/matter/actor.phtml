@@ -137,7 +137,7 @@ $(document).ready(function(){
                      var field_name = $(this).attr('id');
                      return { actor_id : actor_id , field : field_name}
                 },
-          placeholder: '...',
+          placeholder: '',
           select : true,
           indicator : '<span class="icon-busy" />',
           tooltip: 'Click to edit...',
@@ -152,7 +152,7 @@ $(document).ready(function(){
                      return { actor_id : actor_id , field : field_name }
                 },
           type: 'textarea',
-          placeholder: '...',
+          placeholder: '',
           select : true,
           indicator : '<span class="icon-busy" />',
           tooltip: 'Click to edit...',
@@ -171,7 +171,7 @@ $(document).ready(function(){
                 },
           data: { <?php foreach($this->enumOpts as $key => $value){ echo "'".$value."' : '".$value."',"; }?> },
           type: 'select',
-          placeholder: '...',
+          placeholder: '',
           select : true,
           indicator : '<span class="icon-busy" />',
           tooltip: 'Click to edit...',
@@ -219,7 +219,7 @@ var dvalue = '';
              var field_name = $(this).attr('id');
              return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
            },
-           placeholder: '...',
+           placeholder: '',
            indicator : '<span class="icon-busy" />',
            tooltip: 'Click to edit...',
            select: true
@@ -264,7 +264,7 @@ var dvalue = '';
              var field_name = $(this).attr('id');
              return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
            },
-           placeholder: '...',
+           placeholder: '',
            indicator : '<span class="icon-busy" />',
            tooltip: 'Click to edit...',
            select: true
@@ -309,7 +309,7 @@ var dvalue = '';
              var field_name = $(this).attr('id');
              return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
            },
-           placeholder: '...',
+           placeholder: '',
            indicator : '<span class="icon-busy" />',
            tooltip: 'Click to edit...',
            select: true
@@ -318,7 +318,7 @@ var dvalue = '';
         type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-          minLength : 0,
+          minLength : 1,
           source : "/matter/get-actor-roles",
           autoFocus: true,
           select: function( event, ui ) {
@@ -352,7 +352,7 @@ var dvalue = '';
              var field_name = $(this).attr('id');
              return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
            },
-           placeholder: '...',
+           placeholder: '',
            indicator : '<span class="icon-busy" />',
            tooltip: 'Click to edit...',
            select: true
