@@ -1029,7 +1029,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $this->setDbTable('Application_Model_DbTable_Matter');
       $dbSelect = $this->_dbTable->getAdapter()->select();
 
-      $selectQuery = $dbSelect->from(array('m' => 'matter'), array('ID', 'DATE_FORMAT(`expire_date`, "%d/%m/%Y") as expire_date', 'term_adjust', 'date_format(date_add(`expire_date`, INTERVAL `term_adjust` DAY), "%d/%m/%Y") as expire_term'))
+      $selectQuery = $dbSelect->from(array('m' => 'matter'), array('ID', 'DATE_FORMAT(`expire_date`, "%d/%m/%Y") as expire_date', 'term_adjust'))
                               ->where('ID = ?', $matter_id);
       return $this->_dbTable->getAdapter()->fetchRow($selectQuery);
     }

@@ -758,8 +758,8 @@ $trigger_id = "";
       
 endforeach; ?>
 <div class="status-row">&nbsp;</div>
-<?php if(isset($this->matter_expiry)):
-echo "Expiry: ".$this->matter_expiry['expire_term']; echo ($this->matter_expiry['term_adjust'] > 0)? " ( PTA: ".$this->matter_expiry['term_adjust']." days )" : "" ;
+<?php if(isset($this->matter_expiry['expire_date'])):
+echo "Expiry: ".$this->matter_expiry['expire_date']; echo ($this->matter_expiry['term_adjust'] > 0)? "<br>(PTA: ".$this->matter_expiry['term_adjust']." days)" : "" ;
 endif; ?>
 
 </div>
