@@ -908,7 +908,7 @@ CREATE TABLE `event_name` (
   `default_responsible` char(16) DEFAULT NULL COMMENT 'Login of the user who is systematically responsible for this type of task',
   `use_matter_resp` tinyint(1) DEFAULT '0' COMMENT 'Set if the matter responsible should also be set as responsible for the task. Overridden if default_responsible is set',
   `unique` tinyint(1) DEFAULT '0' COMMENT 'Only one such event can exist',
-  `uqtrigger` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Can only be triggered by one event'
+  `uqtrigger` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Can only be triggered by one event',
   `killer` tinyint(1) DEFAULT '0' COMMENT 'Indicates whether this event kills the patent (set patent.dead to 1)',
   `notes` varchar(160) DEFAULT NULL,
   `creator` char(16) DEFAULT NULL,

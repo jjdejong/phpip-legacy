@@ -271,41 +271,11 @@ END;;
 
 CREATE TRIGGER `matter_after_update` AFTER UPDATE ON `matter` FOR EACH ROW BEGIN
 
-INSERT INTO `phpip`.`event_name`
-(`code`,
-`name`,
-`category`,
-`country`,
-`is_task`,
-`status_event`,
-`default_responsible`,
-`use_matter_resp`,
-`unique`,
-`uqtrigger`,
-`killer`,
-`notes`,
-`creator`,
-`updated`,
-`updater`)
-VALUES
-(
-<{code: }>,
-<{name: }>,
-<{category: }>,
-<{country: }>,
-<{is_task: 0}>,
-<{status_event: 0}>,
-<{default_responsible: }>,
-<{use_matter_resp: 0}>,
-<{unique: 0}>,
-<{uqtrigger: 0}>,
-<{killer: 0}>,
-<{notes: }>,
-<{creator: }>,
-<{updated: CURRENT_TIMESTAMP}>,
-<{updater: }>
-);
-
+-- Propagate updated matter responsible to tasks
+IF NEW.responsible != OLD.responsible THEN
+	UPDATE task JOIN event ON (task.trigger_id=event.id AND event.matter_id=NEW.id) SET task.assigned_to=NEW.responsible
+	WHERE task.done=0 AND task.assigned_to=OLD.responsible;
+END IF;
 
 END;
 DELIMITER ;
