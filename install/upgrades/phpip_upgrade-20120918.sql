@@ -58,7 +58,7 @@ CREATE TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
 	UPDATE matter, event_name SET matter.dead=0 WHERE matter.ID=OLD.matter_ID AND OLD.code=event_name.code AND event_name.killer=1 
 		AND (matter.expire_date > Now() OR matter.expire_date IS NULL)
 		AND NOT EXISTS (SELECT 1 FROM event, event_name ename WHERE event.matter_ID=OLD.matter_ID AND event.code=ename.code AND ename.killer=1);
-END;
+END;;
 DELIMITER ;
 
 
@@ -82,7 +82,7 @@ CREATE TRIGGER `matter_after_insert` AFTER INSERT ON `matter` FOR EACH ROW BEGIN
 	IF (vactorid is NOT NULL AND (vshared=0 OR (vshared=1 AND NEW.container_ID IS NULL))) THEN
 		INSERT INTO matter_actor_lnk (matter_id, actor_id, role, shared) VALUES (NEW.id, vactorid, vrole, vshared);
 	END IF;
-END;
+END;;
 DELIMITER ;
 
 
@@ -234,7 +234,7 @@ CREATE TRIGGER `event_after_insert` AFTER INSERT ON `event` FOR EACH ROW trig: B
     UPDATE matter SET dead=1 WHERE matter.ID=NEW.matter_ID;
   END IF;
 
-END trig;
+END trig;;
 DELIMITER ;
 
 
@@ -277,5 +277,5 @@ IF NEW.responsible != OLD.responsible THEN
 	WHERE task.done=0 AND task.assigned_to=OLD.responsible;
 END IF;
 
-END;
+END;;
 DELIMITER ;
