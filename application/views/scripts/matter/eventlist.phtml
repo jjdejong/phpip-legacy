@@ -88,6 +88,7 @@ vertical-align: top;
     $('#event_date').datepicker({
         dateFormat: 'dd/mm/yy',
     });
+    $('#event_date').datepicker('setDate', new Date());
 
     $.editable.addInputType("datepicker", {
         element:  function(settings, original) {

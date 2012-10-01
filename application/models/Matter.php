@@ -629,7 +629,7 @@ WHERE e2.matter_id IS NULL
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
-    $selectQuery = $dbSelect->from(array('tl' => "task_list"),array('tl.trigger_ID', 'DATE_FORMAT(`tl`.`due_date`,"%d/%m/%Y") as due_date', 'task_name' => 'tl.name'))
+    $selectQuery = $dbSelect->from(array('tl' => "task_list"),array('tl.trigger_ID', 'DATE_FORMAT(tl.due_date,"%d/%m/%Y") as due_date', 'tl.due_date AS posix_due_date', 'task_name' => 'tl.name'))
                             ->joinInner(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID', 't.notes'))
                             ->joinInner(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code', 'trigger_detail' => 'e.detail'))
                             ->joinInner(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
@@ -642,7 +642,7 @@ WHERE e2.matter_id IS NULL
 /**
  * retrieves all renewal tasks for a matter
 **/
-  public function getOpenTasksREN($matter_id = 0)  // NOT RENewal
+  public function getOpenTasksREN($matter_id = 0)  // RENewal
   {
     if(!$matter_id)
       return;
@@ -650,7 +650,7 @@ WHERE e2.matter_id IS NULL
     $this->setDbTable('Application_Model_DbTable_Matter');
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
-    $selectQuery = $dbSelect->from(array('tl' => "task_list"), array('tl.trigger_ID', 'DATE_FORMAT(tl.due_date,"%d/%m/%Y") as due_date', 'task_name' => 'tl.name'))
+    $selectQuery = $dbSelect->from(array('tl' => "task_list"), array('tl.trigger_ID', 'DATE_FORMAT(tl.due_date,"%d/%m/%Y") as due_date', 'tl.due_date AS posix_due_date', 'task_name' => 'tl.name'))
                             ->joinInner(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID'))
                             ->joinInner(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code'))
                             ->joinInner(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
@@ -737,7 +737,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 /**
  * retrieves all tasks for a matter with event details 
 **/
-  public function getMatterEventTasks($matter_id = 0, $renewal = 0, $event_id = 0) // not RENewal
+  public function getMatterEventTasks($matter_id = 0, $renewal = 0, $event_id = 0)
   {
     if(!$matter_id && !$event_id)
       return;
@@ -747,7 +747,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
      if($renewal == 0 && $event_id == 0){
      $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'e.detail as event_detail', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
+                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(t.done_date,"%d/%m/%Y") as done_date', 'DATE_FORMAT(t.due_date,"%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail', 't.ID', 't.notes as task_notes'))
                              ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
                              ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
                              ->where('e.matter_ID = ?', $matter_id)
@@ -756,7 +756,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
      if($renewal == 1 && $event_id == 0){
      $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->join(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code = 'REN'", array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
+                             ->join(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code = 'REN'", array('*', 'DATE_FORMAT(t.done_date,"%d/%m/%Y") as done_date', 'DATE_FORMAT(t.due_date,"%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail', 't.ID', 't.notes as task_notes'))
                              ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
                              ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
                              ->where('e.matter_ID = ?', $matter_id)
@@ -766,7 +766,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
      // Retrieve tasks linked to a specific event
      if($event_id != 0){
      $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'e.detail as event_detail', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(`t`.`done_date`,"%d/%m/%Y") as done_date', 'DATE_FORMAT(`t`.`due_date`,"%d/%m/%Y") as due_date', 't.detail', 't.ID', 't.notes as task_notes'))
+                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(t.done_date,"%d/%m/%Y") as done_date', 'DATE_FORMAT(t.due_date,"%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail', 't.ID', 't.notes as task_notes'))
                              ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
                              ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
                              ->where('e.ID = ?', $event_id)
@@ -1365,7 +1365,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
       $this->setDbTable('Application_Model_DbTable_Task');
       $dbSelect = $this->_dbTable->getAdapter()->select();
-      $selectQuery = $dbSelect->from(array('t' => 'task'), array('t.ID as task_ID', 't.code', 'DATE_FORMAT(t.due_date, "%d/%m/%Y") as due_date', 't.detail as task_detail', 't.trigger_ID'))
+      $selectQuery = $dbSelect->from(array('t' => 'task'), array('t.ID as task_ID', 't.code', 'DATE_FORMAT(t.due_date, "%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail as task_detail', 't.trigger_ID'))
                               ->join(array('e' => 'event'), 't.trigger_ID = e.ID', array('e.matter_ID as MID'))
                               ->join(array('en' => 'event_name'), 't.code=en.code', array('en.name as task_name'))
                               ->join(array('m' => 'matter'), 'e.matter_ID = m.ID', array('m.caseref', 'm.country', 'm.origin', 'm.type_code', "concat(m.caseref,m.country,if(m.origin IS NULL,'',concat('/',m.origin)),if(m.type_code IS NULL,'',concat('-',m.type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID"))
@@ -1385,7 +1385,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $this->setDbTable('Application_Model_DbTable_Task');
       $dbSelect = $this->_dbTable->getAdapter()->select();
 
-      $selectQuery = $dbSelect->from(array('t' => 'task', 'm'=> 'matter', 'e' => 'event'), array('count(*) as no_of_tasks', 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y") as urgent_date'))
+      $selectQuery = $dbSelect->from(array('t' => 'task', 'm'=> 'matter', 'e' => 'event'), array('count(*) as no_of_tasks', 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y") as urgent_date', 'MIN(t.due_date) as posix_urgent_date'))
                                ->join(array('e' => 'event'), 't.trigger_id=e.id')
                                ->join(array('m' => 'matter'), 'e.matter_id=m.id', array('ifnull(t.assigned_to, m.responsible) as login'))
                                ->where('m.dead=0 AND t.done=0')
