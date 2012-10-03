@@ -395,9 +395,9 @@ $(document).ready(function(){
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
 if ($open_task['posix_due_date'] < date('Y-m-d'))
-$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
+	$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
 else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
-$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
+	$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
 ?>
    <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>"><?=$task_name?></a></div>
 <div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div>
@@ -423,9 +423,9 @@ $open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date'].
 <?php foreach($this->users_list as $user){ 
 if($user['no_of_tasks'] > 0){
 if ($user['posix_urgent_date'] < date('Y-m-d'))
-$user['urgent_date'] = '<span style="color:red; text-decoration:blink;">' .$user['urgent_date']. '</span>';
+	$user['urgent_date'] = '<span style="color:red; text-decoration:blink;">' .$user['urgent_date']. '</span>';
 else if ($user['posix_urgent_date'] < date('Y-m-d', strtotime('+1 week')))
-$user['urgent_date'] = '<span style="color:tomato;">' .$user['urgent_date']. '</span>';
+	$user['urgent_date'] = '<span style="color:tomato;">' .$user['urgent_date']. '</span>';
 ?>
 <li><div class="col-user-login"><a href="/index/user-page/username/<?=$user['login']?>"><?=$user['login']?></a></div><div class="col-open-count"><a href="/index/user-open-tasks/username/<?=$user['login']?>"><?=$user['no_of_tasks']?></a></div><div class="col-most-urgent"><?=$user['urgent_date']?></div></li>
 <?php }} ?>
@@ -457,9 +457,9 @@ $user['urgent_date'] = '<span style="color:tomato;">' .$user['urgent_date']. '</
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
 if ($open_task['posix_due_date'] < date('Y-m-d'))
-$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
+	$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
 else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
-$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
+	$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
 ?>
  <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-ren" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div>
 <div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-ren-task button-style" value="Clear"></div></li>

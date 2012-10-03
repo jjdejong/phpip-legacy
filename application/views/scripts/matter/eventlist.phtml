@@ -115,32 +115,37 @@ vertical-align: top;
     });
 
     $('.editable').editable('/matter/update-event', {
-          submitdata: function(value,settings){
-                     var evid = $(this).parent().attr('id');
-                     var field_class = $(this).attr('class').split(' ');
-                     var field_name = (field_class[0]).split('-');
-                     return { event_id: evid, field: field_name[2] }
-               },
-          //cancel : 'X',
-          //submit : 'Ok',
-          placeholder: '...',
-          select : true,
-          indicator : '<span class="icon-busy" />',
-          tooltip: 'Click to edit....'
+		submitdata: function(value,settings){
+			var evid = $(this).parent().attr('id');
+			var field_class = $(this).attr('class').split(' ');
+			var field_name = (field_class[0]).split('-');
+			return { 
+				event_id: evid, 
+				field: field_name[2] 
+			}
+		},
+		//cancel : 'X',
+		//submit : 'Ok',
+		placeholder: '...',
+		select : true,
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit....'
     });
 
     $('.date-editable').editable('/matter/update-event', {
-          submitdata: function(value,settings){
-                     var evid = $(this).parent().attr('id');
-                     return { event_id: evid, field: 'event_date' }
-                 },
-            type: 'datepicker',
-            select: true,
-            indicator : '<span class="icon-busy" />',
-            placeholder: '...',
-            tooltip: 'Click to edit...',
-            callback: function(data){
-          }
+		submitdata: function(value,settings){
+			var evid = $(this).parent().attr('id');
+			return { 
+				event_id: evid, 
+				field: 'event_date' 
+			}
+		},
+		type: 'datepicker',
+		select: true,
+		indicator : '<span class="icon-busy" />',
+		placeholder: '...',
+		tooltip: 'Click to edit...',
+		callback: function(data) {}
     });
 
     var alt_matter_id = '';
@@ -149,41 +154,27 @@ vertical-align: top;
         type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-          minLength : 3,
-          source : "/matter/get-all-refers",
-          select: function( event, ui ) {
-            $(this).val(ui.item.value);
-            alt_matter_id = ui.item.id;
-            var valid = true;
-            if ( !ui.item ) {
-              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-              valid = false;
-              ui.item.each(function(value) {
-                if ( value.match( matcher ) ) {
-                  valid = true;
-                  return true;
-                }
-              });
-            }
-            if ( !valid ) {
-              // remove invalid value, as it didn't match anything
-              $( this ).val( "" );
-              input.data( "autocomplete" ).term = "";
-              return false;
-            }
-            return true;
-          }
+			minLength : 3,
+			source : "/matter/get-all-refers",
+			autoFocus: true,
+			select: function( event, ui ) {
+				alt_matter_id = ui.item.id;
+			}
         },
         submitdata: function(value,settings){
              var eid = $(this).parent().attr('id').split('-');
-             return { event_id : eid, field : 'alt_matter_ID', alt_matter: alt_matter_id };
-           },
-           cancel : false,
-           submit : false,
-           placeholder: '...',
-           indicator : '<span class="icon-busy" />',
-           tooltip: 'Click to edit...',
-           select: true
+             return { 
+                 event_id : eid, 
+                 field : 'alt_matter_ID', 
+                 alt_matter: alt_matter_id 
+             };
+		},
+		cancel : false,
+		submit : false,
+		placeholder: '...',
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		select: true
    });
 
    $('#add-event').click(function(){
@@ -204,60 +195,20 @@ vertical-align: top;
     $( "#event_name" ).autocomplete({
             minLength: 1,
             source: "/matter/get-all-events",
-            focus: function( event, ui ) {
-                    return false;
-            },
+            autoFocus: true,
             select: function( event, ui ) {
-                    $( "#event_name" ).val( ui.item.value );
-                    $( "#event_id" ).val( ui.item.id );
-                    var valid = true;
-                    if ( !ui.item ) {
-                      valid = false;
-                      var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-                      ui.item.each(function(value) {
-                        if ( value.match( matcher ) ) {
-                          valid = true;
-                          return true;
-                        }
-                      });
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $( this ).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                    return true;
+				$( "#event_name" ).val( ui.item.value );
+				$( "#event_id" ).val( ui.item.id );
             }
     });
 
     $( "#event_refers" ).autocomplete({
             minLength: 3,
             source: "/matter/get-all-refers",
-            focus: function( event, ui ) {
-                    return false;
-            },
+            autoFocus: true,
             select: function( event, ui ) {
-                    $( "#event_refers" ).val( ui.item.value );
-                    $( "#alt_matter_id" ).val( ui.item.id );
-                    var valid = true;
-                    if ( !ui.item ) {
-                      valid = false;
-                      var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-                      ui.item.each(function(value) {
-                        if ( value.match( matcher ) ) {
-                          valid = true;
-                          return true;
-                        }
-                      });
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $( this ).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                    return true;
+				$( "#event_refers" ).val( ui.item.value );
+				$( "#alt_matter_id" ).val( ui.item.id );
             }
     });
 

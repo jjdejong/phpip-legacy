@@ -56,9 +56,9 @@ $(document).ready(function(){
 <?php foreach($this->actors as $actor): ?>
     <li class="actor-list-row" id="<?=$actor['id']?>">
     	<div class="col-name"><?=htmlentities($actor['name'])?></div>
-    	<div class="col-firstname"><?=htmlentities($actor['first_name'])?></div>
-    	<div class="col-display"><?=htmlentities($actor['display_name'])?></div>
-    	<div class="col-company"><?=htmlentities($actor['company_name'])?></div>
+    	<div class="col-firstname"><?=htmlentities(@$actor['first_name'])?></div>
+    	<div class="col-display"><?=htmlentities(@$actor['display_name'])?></div>
+    	<div class="col-company"><?=htmlentities(@$actor['company_name'])?></div>
     	<div class="col-delete" ><span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"/></div>
     </li>
 <?php endforeach; ?>

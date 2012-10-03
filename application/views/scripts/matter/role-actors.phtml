@@ -126,85 +126,56 @@ $(document).ready(function(){
 
     var company_id = 0;
 	$('.editable_comp').editable("/matter/save-matter-actor/", {
-		 type : "autocomplete",
-		 onblur : "submit",
-		 autocomplete : {
-		   minLength: 1,
-		   source : "/matter/get-all-actors/",
-		   select: function( event, ui ) {
-               var valid = true;
-               $(this).val(ui.item.value);
-               company_id = ui.item.id;
-               if ( !ui.item ) {
-                   var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-                   valid = false;
-                   ui.item.each(function(value) {
-                     if ( value.match( matcher ) ) {
-                       valid = true;
-                       return true;
-                     }
-                   });
-               }
-               if ( !valid ) {
-                   // remove invalid value, as it didn't match anything
-                   $( this ).val( "" );
-                   input.data( "autocomplete" ).term = "";
-                   return false;
-               }
-               return true;
-           }
- 	   },
-	   submitdata: function(value,settings){
-             var mal_id = $(this).attr('id').split('-');
-             reorder_actors = 1;
-	         return { matter_actor_id: mal_id[2], field: 'company_ID', val: company_id};
-	   },
-       cancel : false,
-       submit : false,
-       indicator : '<span class="icon-busy" />',
-       tooltip: 'Click to edit...',
-       select: true
+		type : "autocomplete",
+		onblur : "submit",
+		autocomplete : {
+			minLength: 1,
+			source : "/matter/get-all-actors/",
+			autoFocus: true,
+			select: function( event, ui ) {
+				company_id = ui.item.id;
+			}
+		},
+		submitdata: function(value,settings){
+			var mal_id = $(this).attr('id').split('-');
+			reorder_actors = 1;
+			return { 
+				matter_actor_id: mal_id[2], 
+				field: 'company_ID', 
+				val: company_id
+			};
+		},
+		cancel : false,
+		submit : false,
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		select: true
 	});
 
     var actor_id = 0;
 	$('.editable_actor').editable("/matter/save-matter-actor/", {
-		 type : "autocomplete",
-		 onblur : "submit",
-		 autocomplete : {
-		   source : "/matter/get-all-actors/",
-		   select: function( event, ui ) {
-               var valid = true;
-               $(this).val(ui.item.value);
-               actor_id = ui.item.id;
-               if ( !ui.item ) {
-                   var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-                   valid = false;
-                   ui.item.each(function(value) {
-                     if ( value.match( matcher ) ) {
-                       valid = true;
-                       return true;
-                     }
-                   });
-               }
-               if ( !valid ) {
-                   // remove invalid value, as it didn't match anything
-                   $( this ).val( "" );
-                   input.data( "autocomplete" ).term = "";
-                   return false;
-               }
-               return true;
-           }
- 	   },
-	   submitdata: function(value,settings){
-             var mal_id = $(this).parent().parent().parent().attr('id');
-             reorder_actors = 1;
-	         return { matter_actor_id: mal_id, field: 'actor_ID', val: actor_id};
-	   },
-       cancel : false,
-       submit : false,
-       indicator : '<span class="icon-busy" />',
-       tooltip: 'Click to edit...',
-       select: true
+		type: "autocomplete",
+		onblur: "submit",
+		autocomplete: {
+			source: "/matter/get-all-actors/",
+			autoFocus: true,
+			select: function( event, ui ) {
+				actor_id = ui.item.id;
+			}
+		},
+		submitdata: function(value,settings){
+			reorder_actors = 1;
+			return { 
+				matter_actor_id: $(this).parent().parent().parent().attr('id'), 
+				field: 'actor_ID', 
+				val: actor_id
+			};
+		},
+		cancel : false,
+		submit : false,
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		select: true
 	});
 
 	$('#edit-role-info').click(function(){

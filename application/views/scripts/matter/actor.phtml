@@ -102,278 +102,193 @@ input{
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
-   $('#actor-used-in').click(function(){
+	$('#actor-used-in').click(function(){
 	    $('#facade').css('height',$(document).height());
 	    $('#facade').css('display','block');
         var aid = $('#actor-id').val();
         $.ajax({
-          url: '/matter/actor-used-in',
-          type: 'POST',
-          data: { aid:aid },
-          success: function(data){
-            $('#actor-details-used-in').empty();
-            offset = $('#actor-details-popup').offset();
-            left_position = $('#actor-details-popup').width() + offset.left + 5;
-            top_position = offset.top;
-            $('#actor-details-used-in').css('top', top_position);
-            $('#actor-details-used-in').css('left', left_position);
-            $('#actor-details-used-in').html(data);
-            $('#actor-details-used-in').css("display", "block");
-            $('#facade').css('display','none');            
-          }
+			url: '/matter/actor-used-in',
+			type: 'POST',
+			data: { aid:aid },
+			success: function(data){
+				$('#actor-details-used-in').empty();
+				offset = $('#actor-details-popup').offset();
+				left_position = $('#actor-details-popup').width() + offset.left + 5;
+				top_position = offset.top;
+				$('#actor-details-used-in').css('top', top_position);
+				$('#actor-details-used-in').css('left', left_position);
+				$('#actor-details-used-in').html(data);
+				$('#actor-details-used-in').css("display", "block");
+				$('#facade').css('display','none');            
+			}
         });
-  });
+	});
 
     $.editable.addInputType('autocomplete', {
-                element : $.editable.types.text.element,
-                plugin : function(settings, original){
-                  $('input', this).autocomplete(settings.autocomplete);
-          }
+		element : $.editable.types.text.element,
+		plugin : function(settings, original){
+			$('input', this).autocomplete(settings.autocomplete);
+		}
     });
 
     $('.editable').editable('/matter/update-actor', {
-          submitdata: function(value,settings){
-                     var actor_id = $('#actor-id').val();
-                     var field_name = $(this).attr('id');
-                     return { actor_id : actor_id , field : field_name}
-                },
-          placeholder: '',
-          select : true,
-          indicator : '<span class="icon-busy" />',
-          tooltip: 'Click to edit...',
-          data: function(value, settings){
-              return $("<div/>").html(value).text();
-          }
+		submitdata: function(value,settings){
+			var actor_id = $('#actor-id').val();
+			var field_name = $(this).attr('id');
+			return { actor_id : actor_id , field : field_name}
+		},
+		placeholder: '',
+		select : true,
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		data: function(value, settings){
+			return $("<div/>").html(value).text();
+		}
     });
+    
     $('.teditable').editable('/matter/update-actor', {
-          submitdata: function(value,settings){
-                     var actor_id = $('#actor-id').val();
-                     var field_name = $(this).attr('id');
-                     return { actor_id : actor_id , field : field_name }
-                },
-          type: 'textarea',
-          placeholder: '',
-          select : true,
-          indicator : '<span class="icon-busy" />',
-          tooltip: 'Click to edit...',
-          submit: 'ok',
-          cancel: 'cancel',
-          data: function(value, settings){
-               var tval = value.replace(/(<br>)*/g, '');
-               return $("<div/>").html(tval).text();
-          }
+		submitdata: function(value,settings){
+			var actor_id = $('#actor-id').val();
+			var field_name = $(this).attr('id');
+			return { actor_id : actor_id , field : field_name }
+		},
+		type: 'textarea',
+		placeholder: '',
+		select : true,
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		submit: 'ok',
+		cancel: 'cancel',
+		data: function(value, settings){
+			var tval = value.replace(/(<br>)*/g, '');
+			return $("<div/>").html(tval).text();
+		}
     });
+    
     $('.select-editable').editable('/matter/update-actor', {
-          submitdata: function(value,settings){
-                     var actor_id = $('#actor-id').val();
-                     var field_name = $(this).attr('id');
-                     return { actor_id : actor_id , field : field_name}
-                },
-          data: { <?php foreach($this->enumOpts as $key => $value){ echo "'".$value."' : '".$value."',"; }?> },
-          type: 'select',
-          placeholder: '',
-          select : true,
-          indicator : '<span class="icon-busy" />',
-          tooltip: 'Click to edit...',
-          submit: 'ok',
-          cancel: 'cancel'
+		submitdata: function(value,settings){
+			var actor_id = $('#actor-id').val();
+			var field_name = $(this).attr('id');
+			return { 
+				actor_id : actor_id , 
+				field : field_name
+			}
+		},
+		data: { <?php foreach($this->enumOpts as $key => $value){ echo "'".$value."' : '".$value."',"; }?> },
+		type: 'select',
+		placeholder: '',
+		select : true,
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		submit: 'ok',
+		cancel: 'cancel'
     });
 
-var fvalue = '';
-var dvalue = '';
+	var fvalue = '';
+	var dvalue = '';
     $('.auto-editable').editable('/matter/update-actor', {
-        type: 'autocomplete',
+		type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-          minLength: 1,
-          source : "/matter/get-non-actors",
-          autoFocus: true,
-          select: function( event, ui ) {
-            $(this).val(ui.item.value);
-            fvalue = ui.item.id;
-            dvalue = ui.item.value;
-            var valid = true;
-            if ( !ui.item ) {
-              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-              valid = false;
-              ui.item.each(function(value) {
-                if ( value.match( matcher ) ) {
-                  valid = true;
-                  return true;
-                }
-              });
-            }
-            if ( !valid ) {
-              // remove invalid value, as it didn't match anything
-              $( this ).val( "" );
-              fvalue = "";
-              dvalue = "";
-              input.data( "autocomplete" ).term = "";
-              return false;
-            }
-            return true;
-          }
-        },
+			minLength: 1,
+			source : "/matter/get-non-actors",
+			select: function( event, ui ) {
+				$(this).val(ui.item.value);
+				fvalue = ui.item.id;
+				dvalue = ui.item.value;
+			}
+		},
         submitdata: function(value,settings){
-             var actor_id = $('#actor-id').val();
-             var field_name = $(this).attr('id');
-             return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
-           },
-           placeholder: '',
-           indicator : '<span class="icon-busy" />',
-           tooltip: 'Click to edit...',
-           select: true
+			var actor_id = $('#actor-id').val();
+			var field_name = $(this).attr('id');
+			return { 
+				actor_id : actor_id, 
+				field : field_name, 
+				value: fvalue, 
+				dvalue: dvalue 
+			}
+		},
+		placeholder: ' ',
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		select: true
     });
-
-    $('.nationality-editable').editable('/matter/update-actor', {
-        type: 'autocomplete',
-        onblur: 'submit',
-        autocomplete: {
-          minLength : 0,
-          source : "/matter/get-country-codes",
-          autoFocus: true,
-          select: function( event, ui ) {
-            $(this).val(ui.item.value);
-            fvalue = ui.item.id;
-            dvalue = ui.item.value;
-            var valid = true;
-            alert(ui);
-            if ( !ui.item ) {
-              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-              valid = false;
-              ui.item.each(function(value) {
-                if ( value.match( matcher ) ) {
-                  valid = true;
-                  return true;
-                }
-              });
-            }
-            if ( !valid ) {
-              // remove invalid value, as it didn't match anything
-              $( this ).val( "" );
-              fvalue = "";
-              dvalue = "";
-              input.data( "autocomplete" ).term = "";
-              return false;
-            }
-            return true;
-          }
-        },
-        submitdata: function(value,settings){
-             var actor_id = $('#actor-id').val();
-             var field_name = $(this).attr('id');
-             return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
-           },
-           placeholder: '',
-           indicator : '<span class="icon-busy" />',
-           tooltip: 'Click to edit...',
-           select: true
-    });
-
 
     $('.country-editable').editable('/matter/update-actor', {
         type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-          minLength : 0,
-          source : "/matter/get-country-codes",
-          autoFocus: true,
-          select: function( event, ui ) {
-            $(this).val(ui.item.value);
-            fvalue = ui.item.id;
-            dvalue = ui.item.value;
-            var valid = true;
-            if ( !ui.item ) {
-              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-              valid = false;
-              ui.item.each(function(value) {
-                if ( value.match( matcher ) ) {
-                  valid = true;
-                  return true;
-                }
-              });
-            }
-            if ( !valid ) {
-              // remove invalid value, as it didn't match anything
-              $( this ).val( "" );
-              fvalue = "";
-              dvalue = "";
-              input.data( "autocomplete" ).term = "";
-              return false;
-            }
-            return true;
-          }
+			minLength : 1,
+			source : "/matter/get-country-codes",
+			autoFocus: true,
+			select: function( event, ui ) {
+				$(this).val(ui.item.value);
+				fvalue = ui.item.id;
+				dvalue = ui.item.value;
+			}
         },
         submitdata: function(value,settings){
-             var actor_id = $('#actor-id').val();
-             var field_name = $(this).attr('id');
-             return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
-           },
-           placeholder: '',
-           indicator : '<span class="icon-busy" />',
-           tooltip: 'Click to edit...',
-           select: true
+			var actor_id = $('#actor-id').val();
+			var field_name = $(this).attr('id');
+			return { 
+				actor_id : actor_id, 
+				field : field_name, 
+				value: fvalue, 
+				dvalue: dvalue 
+			};
+		},
+		placeholder: '',
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		select: true
     });
+    
     $('.role-editable').editable('/matter/update-actor', {
         type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-          minLength : 1,
-          source : "/matter/get-actor-roles",
-          autoFocus: true,
-          select: function( event, ui ) {
-            $(this).val(ui.item.value);
-            fvalue = ui.item.id;
-            dvalue = ui.item.value;
-            var valid = true;
-            if ( !ui.item ) {
-              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-              valid = false;
-              ui.item.each(function(value) {
-                if ( value.match( matcher ) ) {
-                  valid = true;
-                  return true;
-                }
-              });
-            }
-            if ( !valid ) {
-              // remove invalid value, as it didn't match anything
-              $( this ).val( "" );
-              fvalue = "";
-              dvalue = "";
-              input.data( "autocomplete" ).term = "";
-              return false;
-            }
-            return true;
-          }
-        },
+			minLength : 1,
+			source : "/matter/get-actor-roles",
+			autoFocus: true,
+			select: function( event, ui ) {
+				$(this).val(ui.item.value);
+				fvalue = ui.item.id;
+				dvalue = ui.item.value;
+			}
+		},
         submitdata: function(value,settings){
-             var actor_id = $('#actor-id').val();
-             var field_name = $(this).attr('id');
-             return { actor_id : actor_id, field : field_name, value: fvalue, dvalue: dvalue };
-           },
-           placeholder: '',
-           indicator : '<span class="icon-busy" />',
-           tooltip: 'Click to edit...',
-           select: true
+			var actor_id = $('#actor-id').val();
+			var field_name = $(this).attr('id');
+			return { 
+				actor_id : actor_id, 
+				field : field_name, 
+				value: fvalue, 
+				dvalue: dvalue 
+			};
+		},
+		placeholder: '',
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		select: true
     });
 
     $('input[name=phy_person]').change(function(){
         var actor_id = $('#actor-id').val();
         $.ajax({
-          url: '/matter/update-actor',
-          type: 'POST',
-          data: { actor_id : actor_id, field : 'phy_person', value: $('input[name=phy_person]:checked').val()},
-          success: function(data){}
+			url: '/matter/update-actor',
+			type: 'POST',
+			data: { actor_id : actor_id, field : 'phy_person', value: $('input[name=phy_person]:checked').val()},
+			success: function(data){}
         });
     });
+    
     $('input[name=small_entity]').change(function(){
         var actor_id = $('#actor-id').val();
         $.ajax({
-          url: '/matter/update-actor',
-          type: 'POST',
-          data: { actor_id : actor_id, field : 'small_entity', value: $('input[name=small_entity]:checked').val()},
-          success: function(data){}
+			url: '/matter/update-actor',
+			type: 'POST',
+			data: { actor_id : actor_id, field : 'small_entity', value: $('input[name=small_entity]:checked').val()},
+			success: function(data){}
         });
     });
 
@@ -382,19 +297,19 @@ var dvalue = '';
 		if(del_conf == 1){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({
-	      	url : '/matter/delete-actor',
-	      	type: 'POST',
-	      	data: { aid:aid },
-	      	success: function(data){
-	        	if(isNaN(parseInt(data)))
-	          		alert(data); 
-	        	else 
-		        	location.reload();     
-          	}
+	      		url : '/matter/delete-actor',
+	      		type: 'POST',
+	      		data: { aid:aid },
+	      		success: function(data){
+	        		if(isNaN(parseInt(data)))
+	          			alert(data); 
+	        		else 
+		        		location.reload();     
+          		}
 			});
 		}
 	    return false;
-  });
+	});
 
     $('.close-button').click(function(){
         $('#actor-details-popup').css('display', 'none');

@@ -149,54 +149,32 @@ $(document).ready(function(){
     });
 
     $('.edit-assigned-to').editable('/matter/update-task', {
-        type: 'autocomplete',
+		type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-          minLength : 0,
-          source : "/matter/get-all-logins",
-          select: function( event, ui ) {
-            $(this).val(ui.item.value);
-            var valid = true;
-            if ( !ui.item ) {
-              var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-              valid = false;
-              ui.item.each(function(value) {
-                if ( value.match( matcher ) ) {
-                  valid = true;
-                  return true;
-                }
-              });
-            }
-            if ( !valid ) {
-              // remove invalid value, as it didn't match anything
-              $( this ).val( "" );
-              input.data( "autocomplete" ).term = "";
-              return false;
-            }
-            return true;
-          }
+			minLength : 1,
+			source : "/matter/get-all-logins",
         },
         submitdata: function(value,settings){
-             var tid = $(this).parent().attr('id');
-             return { task_id : tid, field : 'assigned_to' };
-           },
-           cancel : false,
-           submit : false,
-           placeholder: '...',
-           indicator : '<span class="icon-busy" />',
-           tooltip: 'Click to edit...',
-           select: true
+			var tid = $(this).parent().attr('id');
+			return { 
+				task_id : tid, 
+				field : 'assigned_to' 
+			};
+		},
+		cancel : false,
+		submit : false,
+		placeholder: '...',
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit...',
+		select: true
     });
 
     $('#task_assigned_to').autocomplete({
         minLength: 1,
         source: "/matter/get-all-logins",
-        focus: function( event, ui ) {
-            return false;
-        },
         select: function( event, ui ) {
             $( "#task_assigned_to" ).val( ui.item.value );
-            return false;
         }
     });
 

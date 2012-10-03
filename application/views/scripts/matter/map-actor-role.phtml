@@ -59,10 +59,7 @@ $(document).ready(function(){
     
     $( "#actor-name" ).autocomplete({
             minLength: 1,
-            source: "/matter/get-all-actors/role/1",
-            focus: function( event, ui ) {
-                return false;
-            },
+            source: "/matter/get-all-actors/",
             select: function( event, ui ) {
                 if(ui.item.id == 'cna786'){
                     var drole = $('#rolebox').val().split('-');
@@ -79,19 +76,13 @@ $(document).ready(function(){
                     });
                     $('#actor-details-popup').css('display', 'block');
                 }else{
-                    Encoder.EncodeType = "entity";
-                    $( "#actor-name" ).val(Encoder.htmlDecode(ui.item.label.replace(/&amp;/i, '&')));
+                    $( "#actor-name" ).val(Encoder.htmlDecode(ui.item.value));
                     $( "#actor-id" ).val( ui.item.id );
                 }
                 return false;
             },
             autoFocus: true,
-    }).data( "autocomplete" )._renderItem = function( ul, item ) {
-        return $( "<li></li>" )
-            .data( "item.autocomplete", item )
-            .append( "<a>" + item.label.replace(/&amp;/i, '&')  + "</a>" )
-            .appendTo( ul );
-    };
+    });
 
     $("#submit").click(function(){
       $('#facade').css('height',$(document).height());

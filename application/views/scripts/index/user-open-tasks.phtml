@@ -74,6 +74,10 @@
 <?php foreach($this->open_tasks as $open_task){
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
+if ($open_task['posix_due_date'] < date('Y-m-d'))
+	$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
+else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
+	$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
 ?>
     <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
 <?php } ?>
@@ -85,6 +89,10 @@ $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
 <?php foreach($this->ren_tasks as $open_task){
 $task_name  = $open_task['task_name'];
 $task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
+if ($open_task['posix_due_date'] < date('Y-m-d'))
+	$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
+else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
+	$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
 ?>
     <li id="<?=$open_task['task_ID']?>"><div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div><div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div><div class="col-task-due_date"><?=$open_task['due_date']?></div><div class="col-actions"><input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" /></div></li>
 <?php } ?>
