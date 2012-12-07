@@ -512,10 +512,11 @@ WHERE e2.matter_id IS NULL
 /**
  * retrieves all actors from actor table
 **/
+/* NOT USED
   public function getActors($matter_id = 0, $container_id = 0)
   {
 
-    if(!$matter_id)
+    //if(!$matter_id)
 	    //return;
 
     if(!$container_id)
@@ -530,7 +531,7 @@ WHERE e2.matter_id IS NULL
                             ->order(array('a.name', 'ar.display_order','ar.box','ar.box_color'));
 
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
+  }*/
   
 /**
  * retrives actors for a given role and linked to a matter
@@ -801,7 +802,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
 
 /**
- * retrieves all actors from actor table
+ * retrieves all actors from actor table filterted by name
  * $term --search term
  * $phy_person --whether physical actor or other
 **/
@@ -823,6 +824,25 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $result[$key]['value'] = htmlentities($actor_display);
     }
     return $result;
+  }
+  
+  /**
+   * retrieves all actors from actor table filtered by company
+   **/
+  public function getAllActorsByCo($term = null)
+  {
+  	$this->setDbTable('Application_Model_DbTable_Matter');
+  	$dbSelect = $this->_dbTable->getAdapter()->select();
+  	$selectQuery = $dbSelect->from(array('a' => 'actor'), array('a.id', 'a.name', 'a.first_name','a.display_name','a.login'))
+  	->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('aa.name as company_name'))
+  	->where("aa.name like '". $term . "%'")
+  	->order('a.name asc');
+  	$result = $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+  	foreach($result as $key => $actor){
+  		$actor_display = $actor['name'] . (($actor['first_name'] == '')?"":(", ".$actor['first_name'])).( ($actor['display_name'])?(" (".$actor['display_name'].")"):"" );
+  		$result[$key]['value'] = htmlentities($actor_display);
+  	}
+  	return $result;
   }
 
 /**

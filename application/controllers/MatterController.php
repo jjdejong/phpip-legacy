@@ -310,10 +310,15 @@ class MatterController extends Zend_Controller_Action
   {
     $this->_helper->layout->disableLayout();
     $term = $this->_getParam('term');
+    $co = $this->_getParam('co');
     $matterModel = new Application_Model_Matter();
-    $this->view->actors = $matterModel->getAllActors($term);
-    if(count($this->view->actors) == 0)
-    	array_push($this->view->actors, array('id' => 'nomatch', 'name' => 'No match. Create Actor?'));
+    if ($co == '0') {
+	    $this->view->actors = $matterModel->getAllActors($term);
+	    if(count($this->view->actors) == 0)
+	    	array_push($this->view->actors, array('id' => 'nomatch', 'name' => 'No match. Create Actor?'));
+    } else {
+    	$this->view->actors = $matterModel->getAllActorsByCo($term);
+    }
   }
 
 /**

@@ -137,7 +137,7 @@ $(document).ready(function(){
   });
 
   $('#actor-name').keyup(function(){
-         var url = '/matter/actors-filter/term/'+$(this).val();
+         var url = '/matter/actors-filter/co/0/term/'+$(this).val();
          $.ajax({
              url: url,
              type: 'GET',
@@ -147,6 +147,19 @@ $(document).ready(function(){
                  $('#actor-table-list').html(data);
              }
          });
+  });
+
+  $('#actor-company').keyup(function(){
+      var url = '/matter/actors-filter/co/1/term/'+$(this).val();
+      $.ajax({
+          url: url,
+          type: 'GET',
+          data: { },
+          success: function(data){
+              $('#actor-table-list').empty();
+              $('#actor-table-list').html(data);
+          }
+      });
   });
 
 
@@ -218,10 +231,10 @@ $(document).ready(function(){
 <div id="actors-box" class="place-card">
 <?php if(count($this->actors)): ?>
     <div class="list-headers">
-    	<div class="col-name">Name<br><input type="text" size=20 name="actor-name" id="actor-name" class="filter-input" /></div>
+    	<div class="col-name">Name <input type="text" size=20 name="actor-name" id="actor-name" class="filter-input" /></div>
     	<div class="col-firstname">Firstname</div>
     	<div class="col-display">Display name</div>
-    	<div class="col-company">Company</div>
+    	<div class="col-company">Company <input type="text" size=20 name="actor-company" id="actor-company" class="filter-input" /></div>
     	<div class="col-delete" >Delete</div>
     </div>
 <div id="actor-table-list">
