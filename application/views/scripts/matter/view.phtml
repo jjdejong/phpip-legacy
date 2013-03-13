@@ -700,8 +700,10 @@ if(count($this->matter_actors))
     }
     else if ($event['code'] == 'FIL' && $country_code == 'EP')
         $href = 'https://register.epo.org/espacenet/application?number=EP' . $cleanednumber;
-    else if($event['code'] == 'FIL' && $country_code == 'FR')
+    else if ($event['code'] == 'FIL' && $country_code == 'FR')
         $href = 'http://regbrvfr.inpi.fr/register/application?number=' . $CC . $cleanednumber;
+    else if ($event['code'] == 'FIL' && $country_code == 'GB')
+        $href = 'http://www.ipo.gov.uk/p-ipsum/Case/ApplicationNumber/' . $CC . $cleanednumber;
     ?> 
 <div class="status-row"><span class="status-col-name"><?=$event['name']?></span><span class="status-col-date"><?=$event['event_date']?></span><span class="status-col-number" ><? if($href !=  ""){ ?><a href="<?=$href?>" target="_blank"><?=$event['detail']?></a><?} else {?><?=$event['detail']?><?}?></span></div>
 <?php endforeach; ?>
