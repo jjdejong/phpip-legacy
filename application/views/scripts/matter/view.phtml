@@ -694,7 +694,7 @@ if(count($this->matter_actors))
     $href = '';
     if($event['alt_matter_ID'] !=  "")
         $href = '/matter/view/id/' . $event['alt_matter_ID'];
-    else if ($event['code'] == 'PUB' || $event['code'] == 'GRT') {
+    else if (($event['code'] == 'PUB' || $event['code'] == 'GRT') && $category == 'PAT') {
         // Fix US pub number for Espacenet by keeping the last 6 digits after the year
         if ($CC == 'US' && $event['code'] == 'PUB') $cleanednumber = substr($cleanednumber, 0, 4) . substr($cleanednumber, -6);
         $href = 'http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=' . $CC . '&NR=' . $cleanednumber;
