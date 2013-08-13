@@ -443,26 +443,6 @@ WHERE e2.matter_id IS NULL
   }
 
 /**
- * retrieves parent matters of a given matter ----> this is superseded by getMatter() above
-**/
-/* public function getMatterParent($matter_id = 0)
-  {
-
-    if(!$matter_id)
-	return;
-
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('m' => 'matter'))
-                            ->joinLeft(array('c' => 'country'), 'c.iso = m.country', array('country_name' => 'c.name'))
-                            ->joinLeft(array('mc' => 'matter_category'), 'm.category_code = mc.code', array('category' => 'mc.category'))
-                            ->where('ID = ?', $matter_id);
-
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }*/
-
-/**
  * returns container_ID of a matter
 **/
   public function getMatterContainer($matter_id = 0)
@@ -501,7 +481,7 @@ WHERE e2.matter_id IS NULL
     $selectQuery = $dbSelect->from(array('mal' => 'matter_actor_lnk'), array("mal.*", "if(mal.matter_ID=".$container_id.", 1,0) as inherited"))
                             ->joinLeft(array('a' => 'actor'), 'a.ID = mal.actor_ID')
                             ->joinLeft(array('ar' => 'actor_role'), 'mal.role = ar.code', array('ar.name as role_name'))
-                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('aa.name as company_name'))
+                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = mal.company_ID', array('aa.name as company_name'))
                             ->order(array('ar.display_order', 'mal.display_order','ar.box','ar.box_color'))
                             ->where('matter_ID = ?', $matter_id)
                             ->orwhere('matter_ID = ? and mal.shared = 1 and matter_ID != 0', $container_id);
@@ -509,29 +489,6 @@ WHERE e2.matter_id IS NULL
     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
   }
 
-/**
- * retrieves all actors from actor table
-**/
-/* NOT USED
-  public function getActors($matter_id = 0, $container_id = 0)
-  {
-
-    //if(!$matter_id)
-	    //return;
-
-    if(!$container_id)
-	    $container_id = 0;
-
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('a' => 'actor'))
-                            ->joinLeft(array('ar' => 'actor_role'), 'a.default_role = ar.code', array('ar.name as role_name'))
-                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('aa.name as company_name'))
-                            ->order(array('a.name', 'ar.display_order','ar.box','ar.box_color'));
-
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }*/
   
 /**
  * retrives actors for a given role and linked to a matter
@@ -546,12 +503,13 @@ WHERE e2.matter_id IS NULL
        $container_id = 0;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
+    $this->_dbTable->getAdapter()->query('SET NAMES utf8');
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
     $selectQuery = $dbSelect->from(array('mal' => 'matter_actor_lnk'), array('mal.*', "if(mal.matter_ID=".$container_id.", 1,0) as inherited"))
                             ->joinLeft(array('a' => 'actor'), 'a.ID = mal.actor_ID', array('a.ID as AID', 'a.name', 'a.first_name', 'a.display_name'))
                             ->joinLeft(array('ar' => 'actor_role'), 'mal.role = ar.code', array('ar.name as role_name', 'ar.code', 'ar.shareable', 'ar.notes', 'ar.show_ref', 'ar.show_company', 'ar.show_date', 'ar.show_rate'))
-                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('aa.name as company_name'))
+                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = mal.company_ID', array('aa.name as company_name'))
                             ->order(array('mal.display_order', 'ar.box','ar.box_color'))
                             ->where("matter_ID = " . $matter_id. " AND mal.role = '". $role. "'")
                             ->orwhere("matter_ID = ".$container_id." AND mal.role = '".$role."' AND mal.shared = 1 AND matter_ID != 0");
@@ -967,12 +925,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   	{
   		$dbTable = $this->getDbTable('Application_Model_DbTable_MatterActorLink');
   		$where = $dbTable->getAdapter()->quoteInto('ID = ?', $mal_id);
-           try{
-  		$dbTable->delete($where);
-                return 1;
-              }catch(Exception $e){
-                 return $e->getMessage();
-              }
+        try{
+  			$dbTable->delete($where);
+            return 1;
+        }catch(Exception $e){
+            return $e->getMessage();
+        }
   	}
   }
 
