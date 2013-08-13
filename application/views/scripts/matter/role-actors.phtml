@@ -251,7 +251,7 @@ $(document).ready(function(){
 				else
 					$('.actor_date').css('display', 'none');
 				
-                                $('#actor-role-title').html("Actor role");
+                $('#actor-role-title').html("Actor role");
 				$('#role-actors-block').css('display', 'block');
 				g_shareable = shareable;
 				g_show_ref = show_ref;
@@ -365,8 +365,9 @@ $(document).ready(function(){
 <li style="width: 156px;">Name</li>
 <li <?php echo ($this->actor_role['show_ref'])? '' : 'style="display:none;"';?> class="actor_ref" >Actor ref</li>
 <li <?php echo ($this->actor_role['show_company'])? '' : 'style="display:none;"';?> class="actor_comp" >Company</li>
-<li <?php echo ($this->actor_role['show_rate'])? 'style="width:70px;"' : 'style="display:none;"';?> class="actor_rate" >Rate</li>
+<li <?php echo ($this->actor_role['show_rate'])? 'style="width:45px;"' : 'style="display:none;"';?> class="actor_rate" >Rate</li>
 <li <?php echo ($this->actor_role['show_date'])? 'style="width:70px;"' : 'style="display:none;"';?> class="actor_date" >Date</li>
+<li style="width:45px;">Shared</li>
 <li style="border:none;" ><img src="" alt="" width=16 height=16 title="Delete Actor"></img></li>
 </ul></div>
 <ul id="sortable-role-actors" >
@@ -387,9 +388,10 @@ $actor_display_name = ($actor['display_name'] == "" ) ? $actor['name'] .  (($act
 <li style="width: 156px;"><span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float:left; cursor: move;" ></span><span class="editable_actor" id="actor_ID"><?php echo htmlentities($actor_display_name); ?></span></li>
 <li class="editable actor_ref" <?php echo ($actor['show_ref'])? '' : 'style="display:none;"';?> id="actor_ref" ><?=$actor['actor_ref']?></li>
 <li class="editable_comp actor_comp" <?php echo ($actor['show_company'])? '' : 'style="display:none;"';?> id="company_ID-<?=$actor['company_ID']?>-<?=$actor['ID']?>" ><?=$actor['company_name']?></li>
-<li class="editable actor_rate" <?php echo ($actor['show_rate'])? 'style="width:70px;"' : 'style="display:none;"';?> id="rate" ><?=$actor['rate']?></li>
+<li class="editable actor_rate" <?php echo ($actor['show_rate'])? 'style="width:45px;"' : 'style="display:none;"';?> id="rate" ><?=$actor['rate']?></li>
 <li class="editable actor_date" <?php echo ($actor['show_date'])? 'style="width:70px;"' : 'style="display:none;"';?> id="date" ><?=$actor['date']?></li>
-<li class="delete-matter-actor" id="<?=$actor['matter_ID']?>"><span class="ui-icon ui-icon-trash" style="float:right;"></span></li>
+<li class="editable" style="width:45px;" id="shared" ><?=$actor['shared']?></li>
+<li class="delete-matter-actor" id="<?=$actor['matter_ID']?>" style="float:right;"><span class="ui-icon ui-icon-trash"></span></li>
 </ul>
 </li>
 <?php 
