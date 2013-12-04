@@ -710,7 +710,7 @@ if(count($this->matter_actors))
     else if ($event['code'] == 'FIL' && $country_code == 'GB')
         $href = 'http://www.ipo.gov.uk/p-ipsum/Case/ApplicationNumber/' . $CC . $cleanednumber;
     else if ($event['code'] == 'FIL' && $country_code == 'EM')
-        $href = 'https://oami.europa.eu/eSearch/#details/trademarks/' . $cleanednumber;
+        $href = 'https://oami.europa.eu/eSearch/#basic/1+1+1+1/' . $cleanednumber;
     ?> 
 <div class="status-row"><span class="status-col-name"><?=$event['name']?></span><span class="status-col-date"><?=$event['event_date']?></span><span class="status-col-number" ><? if($href !=  ""){ ?><a href="<?=$href?>" target="_blank"><?=$event['detail']?></a><?} else {?><?=$event['detail']?><?}?></span></div>
 <?php endforeach; ?>
