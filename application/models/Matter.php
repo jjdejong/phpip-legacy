@@ -369,7 +369,7 @@ try{
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbStmt = $this->_dbTable->getAdapter()->query("select distinct concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
+    $dbStmt = $this->_dbTable->getAdapter()->query("select distinct CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
 matter.country AS country,
 matter.category_code AS Cat,
 matter.origin,
@@ -2072,7 +2072,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     }
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbStmt = $this->_dbTable->getAdapter()->query("select distinct concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),''))  AS Ref,
+    $dbStmt = $this->_dbTable->getAdapter()->query("select distinct CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
 matter.category_code AS Cat,
 matter.country AS country,
 matter.origin,
