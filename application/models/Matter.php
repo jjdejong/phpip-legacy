@@ -912,7 +912,9 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
   	if($matter_actor_id && !empty($data))
   	{
-  		return $this->getDbTable('Application_Model_DbTable_MatterActorLink')->update($data, array('ID = ?' => $matter_actor_id));
+  		$dbTable = $this->getDbTable('Application_Model_DbTable_MatterActorLink');
+    	$dbTable->getAdapter()->query('SET NAMES utf8');
+  		return $dbTable->update($data, array('ID = ?' => $matter_actor_id));
   	}
   }
   
