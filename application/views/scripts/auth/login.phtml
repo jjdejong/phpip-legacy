@@ -23,7 +23,7 @@ if(isset($this->auth_error)){
 	echo '<div id="auth_failed" >' . $this->auth_error . "</div>";
 }
 ?>
-<form action="<?= $this->escape($this->loginForm->getAction()) ?>" method="<?= $this->loginForm->getMethod() ?>" enctype="$this->loginForm->getEncType()">
+<form action="<?= $this->escape($this->loginForm->getAction()) ?>" method="<?= $this->loginForm->getMethod() ?>" enctype="$this->loginForm->getEncType()" accept-charset="utf-8">
 <?
 
       #Reflection::export(new ReflectionObject($this->loginForm));

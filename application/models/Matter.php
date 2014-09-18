@@ -95,6 +95,7 @@ class Application_Model_Matter
       throw new Exception('Invalid table data gateway provided');
     $this->_dbTable = $dbTable;
     $this->_adapter = $dbTable->getAdapter();
+    $this->_dbTable->getAdapter()->query('SET NAMES utf8');
     return $this;
   }
 
@@ -503,7 +504,6 @@ WHERE e2.matter_id IS NULL
        $container_id = 0;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $this->_dbTable->getAdapter()->query('SET NAMES utf8');
     $dbSelect = $this->_dbTable->getAdapter()->select();
 
     $selectQuery = $dbSelect->from(array('mal' => 'matter_actor_lnk'), array('mal.*', "if(mal.matter_ID=".$container_id.", 1,0) as inherited"))
@@ -1454,7 +1454,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   }
 
 /**
- * @return matter_category.ref_prefix for a given matter_category.code
+ * return matter_category.ref_prefix for a given matter_category.code
 **/
   public function getMatterRefPrefix($category_code = null)
   {
@@ -1651,7 +1651,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
                                  'host' => $db_detail["host"],
                                  'username' => $db_detail["username"],
                                  'password' => $db_detail["password"],
-                                 'dbname' => 'information_schema',
+                                 'dbname' => 'information_schema'
                ));
       return $db;
   }
@@ -1799,7 +1799,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
 
 
 /**
- * actor's Matter Dependencies
+ * actor's other Dependencies
 **/
   public function getActorOtherActorDependencies($actor_id = null)
   {
@@ -1942,7 +1942,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
   }
 
 /**
- * @return next idx for a new matter created
+ * return next idx for a new matter created
 **/
   public function getNextIdx($matter = array())
   {
@@ -2119,7 +2119,6 @@ FROM matter
     ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
 WHERE e2.matter_id IS NULL
 ".$filter_clause ." ". $multi_query . " order by ".$sortField." ".$sortDir.", matter.origin, matter.country");
-
     return $dbStmt->fetchAll();
   }
 }
