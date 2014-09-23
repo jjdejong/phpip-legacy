@@ -913,7 +913,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   	if($matter_actor_id && !empty($data))
   	{
   		$dbTable = $this->getDbTable('Application_Model_DbTable_MatterActorLink');
-    	$dbTable->getAdapter()->query('SET NAMES utf8');
+    	//$dbTable->getAdapter()->query('SET NAMES utf8');
   		return $dbTable->update($data, array('ID = ?' => $matter_actor_id));
   	}
   }
@@ -1041,7 +1041,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $data["$field_name"] = $field_value != "" ? $field_value : NULL;
 
       $dbTable = $this->getDbTable('Application_Model_DbTable_Actor');
-      $dbTable->getAdapter()->query('SET NAMES utf8');
+      //$dbTable->getAdapter()->query('SET NAMES utf8');
       try{
            $dbTable->update($data, array('ID = ?' => $actor_id));
            return true;
@@ -1506,7 +1506,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       $classifier['display_order'] = $do;
 
     $this->setDbTable('Application_Model_DbTable_Classifier');
-    $this->_dbTable->getAdapter()->query("SET NAMES utf8");
+    //$this->_dbTable->getAdapter()->query("SET NAMES utf8");
     try{
       $this->_dbTable->insert($classifier);
       return $this->_adapter->lastInsertID();
@@ -1546,7 +1546,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       return false;
 
     $dbTable = $this->getDbTable('Application_Model_DbTable_Classifier');
-    $dbTable->getAdapter()->query('SET NAMES utf8');
+    //$dbTable->getAdapter()->query('SET NAMES utf8');
 
     if($value == ''){
         try {
@@ -1922,7 +1922,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
     if(empty($data))
       return false;
 
-	$this->getDbTable('Application_Model_DbTable_Matter')->getAdapter()->query("SET NAMES utf8");
+	//$this->getDbTable('Application_Model_DbTable_Matter')->getAdapter()->query("SET NAMES utf8");
     $this->getDbTable('Application_Model_DbTable_Matter')->update($data, array('ID = ?' => $matter_id));
   }
 
