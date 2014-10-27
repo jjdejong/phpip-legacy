@@ -2576,7 +2576,7 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('REF','Refused',NULL,NULL,0,1,NULL,0,0,0,0,'This is the final decision, that can only be appealed - do not mistake with an exam report','root@localhost','2013-09-19 10:27:58','root'),
 ('REG','Registration','TM',NULL,0,1,NULL,0,0,0,0,NULL,'root','2012-06-19 09:54:42',NULL),
 ('REM','Reminder',NULL,NULL,1,0,NULL,0,0,0,0,NULL,'root@localhost','2011-05-09 17:11:17',NULL),
-('REN','Renewal',NULL,NULL,1,0,'sloquet',0,0,1,0,'AKA Annuity','root@localhost','2013-05-16 13:24:28','root'),
+('REN','Renewal',NULL,NULL,1,0,NULL,0,0,1,0,'AKA Annuity','root@localhost','2013-05-16 13:24:28','root'),
 ('REP','Respond',NULL,NULL,1,0,NULL,1,0,0,0,'Use for any response','root@localhost','2011-09-22 11:40:57','root'),
 ('REQ','Request Examination',NULL,NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost',NULL,NULL),
 ('RSTR','Restriction Req.','PAT','US',0,0,NULL,0,0,0,0,NULL,'root','2011-11-03 15:53:39','root'),
