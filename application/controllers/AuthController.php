@@ -15,7 +15,6 @@ class AuthController extends Zend_Controller_Action
 
     public function loginAction()
     {
-        // action body
         $auth = Zend_Auth::getInstance();
         $identity = $auth->getIdentity();
 //        $registry = Zend_Registry::getInstance();
@@ -47,7 +46,7 @@ class AuthController extends Zend_Controller_Action
                 if ($result->isValid()){
                     #$authSession = Zend_Session_Namespace::getInstance('');
 //                    $registry->set('id', $id);
-                    $this->_helper->FlashMessenger('Successful Login');
+                    //$this->_helper->FlashMessenger('Successful Login');
                     $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
                     $userInfo = $modelUser->getAll($loginForm->getValue('Email'));
                     
@@ -108,7 +107,6 @@ class AuthController extends Zend_Controller_Action
         $auth->clearIdentity();
         Zend_Session::namespaceUnset("siteInfoNamespace");
         $this->_helper->redirector('login','auth');
-        // action body
     }
 
 }

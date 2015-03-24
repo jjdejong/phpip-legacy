@@ -433,14 +433,16 @@ WHERE e2.matter_id IS NULL
 	return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array('m.*', "concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID",))
-                            ->joinLeft(array('c' => 'country'), 'c.iso = m.country', array('country_name' => 'c.name'))
-                            ->joinLeft(array('mc' => 'matter_category'), 'm.category_code = mc.code', array('category' => 'mc.category'))
-                            ->where('ID = ?', $matter_id);
+    $uidsql = "concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),''))";
+    $selectQuery = $db->select()
+    	->from(array('m' => 'matter'), array('m.*', 'UID' => new Zend_Db_Expr($uidsql)))
+        ->joinLeft(array('c' => 'country'), 'c.iso = m.country', array('country_name' => 'c.name'))
+        ->joinLeft(array('mc' => 'matter_category'), 'm.category_code = mc.code', array('category' => 'mc.category'))
+        ->where('ID = ?', $matter_id);
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -452,12 +454,13 @@ WHERE e2.matter_id IS NULL
       return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('m' => 'matter'))
-                            ->where('ID = ?', $matter_id);
+    $selectQuery = $db->select()
+    	->from(array('m' => 'matter'))
+        ->where('ID = ?', $matter_id);
 
-    $matter = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+    $matter = $db->fetchRow($selectQuery);
     if($matter['container_ID'] == null)
       return $matter_id;
     else
@@ -477,17 +480,18 @@ WHERE e2.matter_id IS NULL
        $container_id = 0;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('mal' => 'matter_actor_lnk'), array("mal.*", "if(mal.matter_ID=".$container_id.", 1,0) as inherited"))
-                            ->joinLeft(array('a' => 'actor'), 'a.ID = mal.actor_ID')
-                            ->joinLeft(array('ar' => 'actor_role'), 'mal.role = ar.code', array('ar.name as role_name'))
-                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = mal.company_ID', array('aa.name as company_name'))
-                            ->order(array('ar.display_order', 'mal.display_order','ar.box','ar.box_color'))
-                            ->where('matter_ID = ?', $matter_id)
-                            ->orwhere('matter_ID = ? and mal.shared = 1 and matter_ID != 0', $container_id);
+    $selectQuery = $db->select()
+    	->from(array('mal' => 'matter_actor_lnk'), array('mal.*', 'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)'))
+        ->joinLeft(array('a' => 'actor'), 'a.ID = mal.actor_ID')
+        ->joinLeft(array('ar' => 'actor_role'), 'mal.role = ar.code', array('role_name' => 'ar.name'))
+        ->joinLeft(array('aa' => 'actor'), 'aa.ID = mal.company_ID', array('company_name' => 'aa.name'))
+        ->order(array('ar.display_order', 'mal.display_order', 'ar.box', 'ar.box_color'))
+        ->where('matter_ID = ?', $matter_id)
+        ->orwhere('matter_ID = ? and mal.shared = 1 and matter_ID != 0', $container_id);
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
   }
 
   
@@ -504,17 +508,18 @@ WHERE e2.matter_id IS NULL
        $container_id = 0;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('mal' => 'matter_actor_lnk'), array('mal.*', "if(mal.matter_ID=".$container_id.", 1,0) as inherited"))
-                            ->joinLeft(array('a' => 'actor'), 'a.ID = mal.actor_ID', array('a.ID as AID', 'a.name', 'a.first_name', 'a.display_name'))
-                            ->joinLeft(array('ar' => 'actor_role'), 'mal.role = ar.code', array('ar.name as role_name', 'ar.code', 'ar.shareable', 'ar.notes', 'ar.show_ref', 'ar.show_company', 'ar.show_date', 'ar.show_rate'))
-                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = mal.company_ID', array('aa.name as company_name'))
-                            ->order(array('mal.display_order', 'ar.box','ar.box_color'))
-                            ->where("matter_ID = " . $matter_id. " AND mal.role = '". $role. "'")
-                            ->orwhere("matter_ID = ".$container_id." AND mal.role = '".$role."' AND mal.shared = 1 AND matter_ID != 0");
+    $selectQuery = $db->select()
+    	->from(array('mal' => 'matter_actor_lnk'), array('mal.*', 'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)'))
+        ->joinLeft(array('a' => 'actor'), 'a.ID = mal.actor_ID', array('AID' => 'a.ID', 'a.name', 'a.first_name', 'a.display_name'))
+        ->joinLeft(array('ar' => 'actor_role'), 'mal.role = ar.code', array('ar.name as role_name', 'ar.code', 'ar.shareable', 'ar.notes', 'ar.show_ref', 'ar.show_company', 'ar.show_date', 'ar.show_rate'))
+        ->joinLeft(array('aa' => 'actor'), 'aa.ID = mal.company_ID', array('company_name' => 'aa.name'))
+        ->order(array('mal.display_order', 'ar.box','ar.box_color'))
+        ->where("matter_ID = " . $matter_id. " AND mal.role = '". $role. "'")
+        ->orwhere("matter_ID = ".$container_id." AND mal.role = '".$role."' AND mal.shared = 1 AND matter_ID != 0");
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
   }
   
 /**
@@ -525,17 +530,18 @@ WHERE e2.matter_id IS NULL
   	if($role)
   	{
   		$this->setDbTable('Application_Model_DbTable_ActorRole');
-  		$dbSelect = $this->_dbTable->getAdapter()->select();
+  		$db = $this->_dbTable->getAdapter();
   		
-  		$selectQuery = $dbSelect->from(array('ar' => 'actor_role'))
-  		                        ->where("ar.code = ?", $role);
+  		$selectQuery = $db->select()
+  			->from(array('ar' => 'actor_role'))
+  		    ->where("ar.code = ?", $role);
   		                        
-  		return $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+  		return $db->fetchRow($selectQuery);
   	}
   }
 
 /**
- * retreives all events of a given matter
+ * retreives all status events of a given matter, and displays link information
 **/
   public function getMatterEvents($matter_id = 0)
   {
@@ -544,20 +550,49 @@ WHERE e2.matter_id IS NULL
         return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('e' => 'event'), array('DATE_FORMAT(if(e.alt_matter_ID is not NULL, (select event_date from event where matter_ID = e.alt_matter_ID and code = "FIL") , e.event_date),"%d/%m/%Y") as event_date', 'if(e.alt_matter_ID is not NULL, (select concat(matter.country,event.detail) from event,matter where matter_ID = e.alt_matter_ID and code = "FIL" and matter.ID = e.alt_matter_ID limit 1) , e.detail) as detail', 'alt_matter_ID'))
-                            ->joinInner(array('en' => 'event_name'), 'e.code = en.code')
-                            ->where('matter_ID = ? and en.status_event = 1', $matter_id)
-                            ->order('e.event_date asc');
+    $selectQuery = $db->select()
+    	->from(array('e' => 'event'), array(
+    		'event_date' => 'DATE_FORMAT(ifnull(e2.event_date, e.event_date),"%d/%m/%Y")', 
+    		'detail' => 'ifnull(concat(m2.country, e2.detail), e.detail)', 
+    		'alt_matter_ID'))
+        ->join(array('en' => 'event_name'), 'e.code = en.code')
+        ->joinLeft(array('e2' => 'event'), 'e2.matter_ID = e.alt_matter_ID and e2.code = "FIL"', array())
+        ->joinLeft(array('m2' => 'matter'), 'm2.ID = e.alt_matter_ID', array())
+        ->where('e.matter_ID = ? and en.status_event = 1', $matter_id)
+        ->order('e.event_date asc');
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
+  }
+
+/**
+ * retrieves all events for a matter (for the full list opened when clicking on the status event box title)
+**/
+  public function getMatterAllEvents($matter_id = 0)
+  {
+
+    if(!$matter_id)
+	return;
+
+    $this->setDbTable('Application_Model_DbTable_Matter');
+    $db = $this->_dbTable->getAdapter();
+
+    $selectQuery = $db->select()
+    	->from(array('e' => 'event'), array('ID', 'event_date' => 'DATE_FORMAT(e.event_date,"%d/%m/%Y")', 'detail', 'alt_matter_ID', 'e.notes'))
+		->join(array('en' => 'event_name'), 'e.code = en.code','en.name')
+		->joinLeft(array('m' => 'matter'), 'm.ID = e.alt_matter_ID', array('alt_caseref' => 'm.caseref', 'm.country', 'm.origin'))
+		->joinLeft(array('mt' => 'matter_type'), 'mt.code = m.type_code', array('matter_type' => 'mt.type'))
+		->where('matter_ID = ? ', $matter_id)
+		->order('e.event_date asc');
+
+    return $db->fetchAll($selectQuery);
   }
 
 /**
  * retrives all expired events for a matter
 **/
-  public function getMatterEventsExpired($matter_id = 0)
+/*  public function getMatterEventsExpired($matter_id = 0)
   {
 
     if(!$matter_id)
@@ -565,17 +600,16 @@ WHERE e2.matter_id IS NULL
 
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('e' => 'event'), array('DATE_FORMAT(`event_date`,"%d/%m/%Y") as event_date', 'detail'))
-                            ->joinInner(array('en' => 'event_name'), 'e.code = en.code')
-                            ->where('matter_ID = ? and e.code = "EXP"', $matter_id)
-                            ->order('e.event_date');
-                            //->where('matter_ID = ? and e.code = "EXP" and en.status_event = 1', $matter_id)
-                            //->order('e.event_date');
+    $selectQuery = $db->select()
+    	->from(array('e' => 'event'), array('event_date'=> new Zend_Db_Expr('DATE_FORMAT(`event_date`,"%d/%m/%Y")'), 'detail'))
+        ->join(array('en' => 'event_name'), 'e.code = en.code')
+        ->where('matter_ID = ? and e.code = "EXP"', $matter_id)
+        ->order('e.event_date');
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
+    return $db->fetchAll($selectQuery);
+  }*/
 
 /**
  * retrieves all open tasks for a matter
@@ -586,16 +620,17 @@ WHERE e2.matter_id IS NULL
       return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('tl' => "task_list"),array('tl.trigger_ID', 'DATE_FORMAT(tl.due_date,"%d/%m/%Y") as due_date', 'tl.due_date AS posix_due_date', 'task_name' => 'tl.name'))
-                            ->joinInner(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID', 't.notes'))
-                            ->joinInner(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code', 'trigger_detail' => 'e.detail'))
-                            ->joinInner(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
-                            ->where('tl.matter_ID = ?  AND t.code != "REN" AND t.done=0', $matter_id)
-                            ->order(array('tl.trigger_ID', 'tl.due_date asc'));
+    $selectQuery = $db->select()
+    	->from(array('tl' => "task_list"),array('tl.trigger_ID', 'due_date' => 'DATE_FORMAT(tl.due_date,"%d/%m/%Y")', 'posix_due_date' => 'tl.due_date', 'task_name' => 'tl.name'))
+        ->join(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID', 't.notes'))
+        ->join(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code', 'trigger_detail' => 'e.detail'))
+        ->join(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
+        ->where('tl.matter_ID = ?  AND t.code != "REN" AND t.done=0', $matter_id)
+        ->order(array('tl.trigger_ID', 'tl.due_date asc'));
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -607,17 +642,18 @@ WHERE e2.matter_id IS NULL
       return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('tl' => "task_list"), array('tl.trigger_ID', 'DATE_FORMAT(tl.due_date,"%d/%m/%Y") as due_date', 'tl.due_date AS posix_due_date', 'task_name' => 'tl.name'))
-                            ->joinInner(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID'))
-                            ->joinInner(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code'))
-                            ->joinInner(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
-                            ->where('tl.matter_ID = ?  AND t.code = "REN" AND t.done=0', $matter_id)
-                            ->order(array('tl.due_date asc', 'tl.trigger_ID'))
-                            ->limit(2,0);
+    $selectQuery = $db->select()
+    	->from(array('tl' => "task_list"), array('tl.trigger_ID', 'due_date' => 'DATE_FORMAT(tl.due_date,"%d/%m/%Y")', 'posix_due_date' => 'tl.due_date', 'task_name' => 'tl.name'))
+        ->join(array('t' => 'task'), 't.ID = tl.ID', array('t.detail', 't.ID'))
+        ->join(array('e' => 'event'), 'e.ID=tl.trigger_ID', array('e.code'))
+        ->join(array('en' => 'event_name'), 'en.code=e.code', array('trigger_name' => 'en.name'))
+        ->where('tl.matter_ID = ?  AND t.code = "REN" AND t.done=0', $matter_id)
+        ->order(array('tl.due_date asc', 'tl.trigger_ID'))
+        ->limit(2,0);
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -630,19 +666,20 @@ WHERE e2.matter_id IS NULL
       return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
-    $selectQuery = $dbSelect->from(array('c' => "classifier"), array('c.ID',  'c.value as c_value', 'if(' . $matter_id . ' = c.lnk_matter_id, matter_id, lnk_matter_id) as lnk_matter_id'))
-                            ->joinInner(array('ct' => 'classifier_type'), "ct.code = c.type_code AND ct.main_display=".$main_display, array('ct.type'))
-                            ->joinLeft(array('cv' => 'classifier_value'), 'cv.ID = c.value_ID', array('cv.value as cv_value'))
-                            ->joinLeft(array('ctv' => 'classifier_type'), 'cv.type_code = ctv.code', array('ctv.type as cv_type'))
-                            ->joinLeft(array('m' => 'matter'), 'c.lnk_matter_id = m.id', array('caseref','country','origin'))
-                            ->joinLeft(array('mt' => 'matter_type'), 'mt.code = m.type_code', array('mt.type as matter_type'))
-                            ->where('c.matter_ID = ?', $matter_id)
-                            ->orwhere('c.lnk_matter_ID = ?', $matter_id)
-                            ->order(array('ct.display_order', 'c.display_order'));
+    $selectQuery = $db->select()
+    	->from(array('c' => "classifier"), array('c.ID',  'c_value' => 'c.value', 'lnk_matter_id' => 'if(' . $matter_id . ' = c.lnk_matter_id, matter_id, lnk_matter_id)'))
+		->join(array('ct' => 'classifier_type'), "ct.code = c.type_code AND ct.main_display=".$main_display, array('ct.type'))
+		->joinLeft(array('cv' => 'classifier_value'), 'cv.ID = c.value_ID', array('cv_value' => 'cv.value'))
+		->joinLeft(array('ctv' => 'classifier_type'), 'cv.type_code = ctv.code', array('cv_type' => 'ctv.type'))
+		->joinLeft(array('m' => 'matter'), 'c.lnk_matter_id = m.id', array('caseref','country','origin'))
+		->joinLeft(array('mt' => 'matter_type'), 'mt.code = m.type_code', array('matter_type' => 'mt.type'))
+		->where('c.matter_ID = ?', $matter_id)
+		->orwhere('c.lnk_matter_ID = ?', $matter_id)
+		->order(array('ct.display_order', 'c.display_order'));
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -654,7 +691,6 @@ WHERE e2.matter_id IS NULL
       return 0;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
 
     $dbStmt = $this->_dbTable->getAdapter()->query("select classifier_type.type, 
 if(lnk_matter_id is null, 
@@ -702,60 +738,39 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
       return;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
+    $db = $this->_dbTable->getAdapter();
 
      if($renewal == 0 && $event_id == 0){
-     $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'e.detail as event_detail', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(t.done_date,"%d/%m/%Y") as done_date', 'DATE_FORMAT(t.due_date,"%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail', 't.ID', 't.notes as task_notes'))
-                             ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
-                             ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
-                             ->where('e.matter_ID = ?', $matter_id)
-                             ->order(array('e.event_date', 't.due_date'));
+     $selectQuery = $db->select()
+     	->from(array('e' => 'event'), array('event_ID' => 'e.ID', 'event_detail' => 'e.detail', 'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")'))
+		->joinLeft(array('t' => 'task'), "e.ID = t.trigger_ID AND t.code != 'REN'", array('*', 'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")', 'due_date' => 'DATE_FORMAT(t.due_date,"%d/%m/%Y")', 'posix_due_date' => 't.due_date', 't.detail', 't.ID', 'task_notes' => 't.notes'))
+		->join(array('en' => 'event_name'), 'e.code = en.code', array('event_name' => 'en.name'))
+		->joinLeft(array('ent' => 'event_name'), 't.code = ent.code', array('task_name' => 'ent.name'))
+		->where('e.matter_ID = ?', $matter_id)
+		->order(array('e.event_date', 't.due_date'));
      }
 
      if($renewal == 1 && $event_id == 0){
-     $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->join(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code = 'REN'", array('*', 'DATE_FORMAT(t.done_date,"%d/%m/%Y") as done_date', 'DATE_FORMAT(t.due_date,"%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail', 't.ID', 't.notes as task_notes'))
-                             ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
-                             ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
-                             ->where('e.matter_ID = ?', $matter_id)
-                             ->order(array('e.event_date', 't.due_date'));
+     $selectQuery = $db->select()
+     	->from(array('e' => 'event'), array('event_ID' => 'e.ID', 'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")'))
+		->join(array('t' => 'task'), "e.ID = t.trigger_ID AND t.code = 'REN'", array('*', 'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")', 'due_date' => 'DATE_FORMAT(t.due_date,"%d/%m/%Y")', 'posix_due_date' => 't.due_date', 't.detail', 't.ID', 'task_notes' => 't.notes'))
+		->joinInner(array('en' => 'event_name'), 'e.code = en.code', array('event_name' => 'en.name'))
+		->joinLeft(array('ent' => 'event_name'), 't.code = ent.code', array('task_name' => 'ent.name'))
+		->where('e.matter_ID = ?', $matter_id)
+		->order(array('e.event_date', 't.due_date'));
      }
      
      // Retrieve tasks linked to a specific event
      if($event_id != 0){
-     $selectQuery = $dbSelect->from(array('e' => 'event'), array('e.ID as event_ID', 'e.detail as event_detail', 'DATE_FORMAT(e.event_date, "%d/%m/%Y") as event_date'))
-                             ->joinLeft(array('t' => 'task'), "e.ID=t.trigger_ID AND t.code != 'REN'", array('*', 'DATE_FORMAT(t.done_date,"%d/%m/%Y") as done_date', 'DATE_FORMAT(t.due_date,"%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail', 't.ID', 't.notes as task_notes'))
-                             ->joinInner(array('en' => 'event_name'), 'e.code=en.code', array('en.name as event_name'))
-                             ->joinLeft(array('ent' => 'event_name'), 't.code=ent.code', array('ent.name as task_name'))
-                             ->where('e.ID = ?', $event_id)
-                             ->order('t.due_date');
+     $selectQuery = $db->select()
+     	->from(array('e' => 'event'), array('event_ID' => 'e.ID', 'event_detail' => 'e.detail', 'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")'))
+		->joinLeft(array('t' => 'task'), "e.ID = t.trigger_ID AND t.code != 'REN'", array('*', 'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")', 'due_date' => 'DATE_FORMAT(t.due_date,"%d/%m/%Y")', 'posix_due_date' => 't.due_date', 't.detail', 't.ID', 'task_notes' => 't.notes'))
+		->joinInner(array('en' => 'event_name'), 'e.code = en.code', array('event_name' => 'en.name'))
+		->joinLeft(array('ent' => 'event_name'), 't.code = ent.code', array('task_name' => 'ent.name'))
+		->where('e.ID = ?', $event_id)
+		->order('t.due_date');
      }
-
-     return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
-  }
-
-/**
- * retrieves all events list for a matter
-**/
-  public function getMatterAllEvents($matter_id = 0)
-  {
-
-    if(!$matter_id)
-	return;
-
-
-    $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('e' => 'event'), array('ID', 'DATE_FORMAT(e.event_date,"%d/%m/%Y") as event_date', 'detail', 'alt_matter_ID', 'e.notes'))
-                            ->joinInner(array('en' => 'event_name'), 'e.code = en.code','en.name')
-                            ->joinLeft(array('m' => 'matter'), 'm.ID = e.alt_matter_ID', array('m.caseref as alt_caseref', 'm.country', 'm.origin'))
-                            ->joinLeft(array('mt' => 'matter_type'), 'mt.code = m.type_code', array('mt.type as matter_type'))
-                            ->where('matter_ID = ? ', $matter_id)
-                            ->order('e.event_date asc');
-
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+     return $db->fetchAll($selectQuery);
   }
 
 
@@ -768,15 +783,16 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
     $phy_query = "";
     if(isset($phy_person)){
-        $phy_query = " AND a.phy_person = ".$phy_person;
+        $phy_query = "AND a.phy_person = " . $phy_person;
     }
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('a' => 'actor'), array('a.id', 'a.name', 'a.first_name','a.display_name','a.login'))
-                            ->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('aa.name as company_name'))
-                            ->where("a.name like '". $term . "%' ".$phy_query)
-                            ->order('a.name asc');
-    $result = $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('a' => 'actor'), array('a.id', 'a.name', 'a.first_name','a.display_name','a.login'))
+		->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('company_name' => 'aa.name'))
+		->where("a.name like '" . $term . "%' " . $phy_query)
+		->order('a.name asc');
+    $result = $db->fetchAll($selectQuery);
     foreach($result as $key => $actor){
       $actor_display = $actor['name'] . (($actor['first_name'] == '')?"":(", ".$actor['first_name'])).( ($actor['display_name'])?(" (".$actor['display_name'].")"):"" );
       $result[$key]['value'] = htmlentities($actor_display);
@@ -790,12 +806,13 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   public function getAllActorsByCo($term = null)
   {
   	$this->setDbTable('Application_Model_DbTable_Matter');
-  	$dbSelect = $this->_dbTable->getAdapter()->select();
-  	$selectQuery = $dbSelect->from(array('a' => 'actor'), array('a.id', 'a.name', 'a.first_name','a.display_name','a.login'))
-  	->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('aa.name as company_name'))
-  	->where("aa.name like '". $term . "%'")
-  	->order('a.name asc');
-  	$result = $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+  	$db = $this->_dbTable->getAdapter();
+  	$selectQuery = $db->select()
+  		->from(array('a' => 'actor'), array('a.id', 'a.name', 'a.first_name','a.display_name','a.login'))
+  		->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('company_name' => 'aa.name'))
+  		->where("aa.name like '". $term . "%'")
+  		->order('a.name asc');
+  	$result = $db->fetchAll($selectQuery);
   	foreach($result as $key => $actor){
   		$actor_display = $actor['name'] . (($actor['first_name'] == '')?"":(", ".$actor['first_name'])).( ($actor['display_name'])?(" (".$actor['display_name'].")"):"" );
   		$result[$key]['value'] = htmlentities($actor_display);
@@ -809,11 +826,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   public function getAllLogins($term = null)
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('a' => 'actor'), array('a.id','a.login as value', 'a.first_name','a.display_name'))
-                            ->where('a.login like ? ', $term . '%')
-                            ->order('a.login asc');
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('a' => 'actor'), array('a.id','a.login as value', 'a.first_name','a.display_name'))
+		->where('a.login like ? ', $term . '%')
+		->order('a.login asc');
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -822,11 +840,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   public function getAllCategories($term = null)
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('mc' => 'matter_category'), array('mc.code as id', 'mc.category as value'))
-                            ->where('mc.category like ? ', $term . '%')
-                            ->order('mc.category asc');
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('mc' => 'matter_category'), array('id' => 'mc.code', 'value' => 'mc.category'))
+		->where('mc.category like ? ', $term . '%')
+		->order('mc.category asc');
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -838,12 +857,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
         return false;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('ar' => 'actor_role'), array('ar.code','ar.name'))
-                            ->where('ar.code = ? ', $role)
-                            ->order('ar.name asc');
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('ar' => 'actor_role'), array('ar.code','ar.name'))
+		->where('ar.code = ? ', $role)
+		->order('ar.name asc');
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -856,11 +875,11 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
         return null;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('ar' => 'actor_role'), array('ar.shareable'))
-                            ->where('ar.code = ? ', $role);
-    $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+		->from(array('ar' => 'actor_role'), array('ar.shareable'))
+		->where('ar.code = ? ', $role);
+    $result = $db->fetchRow($selectQuery);
     return $result['shareable'];
   }
 
@@ -870,11 +889,11 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   public function getAllRoles()
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('ar' => 'actor_role'), array('ar.code','ar.name', 'ar.shareable'))
-                            ->order('ar.name asc');
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('ar' => 'actor_role'), array('ar.code','ar.name', 'ar.shareable'))
+		->order('ar.name asc');
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -883,13 +902,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   public function getActorRoles($term = '')
   {
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('ar' => 'actor_role'), array('ar.code as id','ar.name as value', 'ar.shareable'))
-                            ->order('ar.name asc')
-                            ->where("ar.name like '".$term."%'");
-
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+		->from(array('ar' => 'actor_role'), array('id' => 'ar.code', 'value' => 'ar.name', 'ar.shareable'))
+		->order('ar.name asc')
+		->where("ar.name like '".$term."%'");
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -897,11 +915,9 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 **/
   public function saveRole($role_code = null, $data = array())
   {
-  	if($role_code)
-  	{
-  		return $this->getDbTable('Application_Model_DbTable_ActorRole')->update($data, array('code = ?' => $role_code)); 		
-  	}
-  	return false;
+  	if(!$role_code)
+  		return false;
+  	return $this->getDbTable('Application_Model_DbTable_ActorRole')->update($data, array('code = ?' => $role_code)); 		
   }
   
 
@@ -922,15 +938,18 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
  * deletes a record from matter_actor_lnk
 **/
   public function deleteMatterActor($mal_id = null)
-  {
+  { // We need to update here the display order index of the remaining actors of same role
+  	// update matter_actor_lnk set display_order = display_order-1 where matter_id=xx and role='xx' and display_order > xx;
   	if($mal_id)
   	{
   		$dbTable = $this->getDbTable('Application_Model_DbTable_MatterActorLink');
+		//$row = $dbTable->find($mal_id);
   		$where = $dbTable->getAdapter()->quoteInto('ID = ?', $mal_id);
-        try{
+        try {
+        	//$dbTable->query("UPDATE xx");
   			$dbTable->delete($where);
             return 1;
-        }catch(Exception $e){
+        } catch(Exception $e) {
             return $e->getMessage();
         }
   	}
@@ -945,19 +964,19 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
        return null;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('a' => 'actor'))
-                            ->joinLeft(array('ac' => 'actor'), 'a.company_ID = ac.ID', 'ac.name as company_name')
-                            ->joinLeft(array('ap' => 'actor'), 'a.parent_ID = ap.ID', 'ap.name as parent_name')
-                            ->joinLeft(array('as' => 'actor'), 'a.site_ID = as.ID', 'as.name as site_name')
-                            ->joinLeft(array('ar' => 'actor_role'), 'a.default_role = ar.code', 'ar.name as drole_name')
-                            ->joinLeft(array('c' => 'country'), 'a.country = c.iso', 'c.name as country_name')
-                            ->joinLeft(array('cm' => 'country'), 'a.country_mailing = cm.iso', 'cm.name as country_mailing')
-                            ->joinLeft(array('cb' => 'country'), 'a.country_billing = cb.iso', 'cb.name as country_billing')
-                            ->joinLeft(array('na' => 'country'), 'a.nationality = na.iso', 'na.name as nationality_name')
-                            ->where('a.ID = ?', $actor_id);
-    return $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('a' => 'actor'))
+		->joinLeft(array('ac' => 'actor'), 'a.company_ID = ac.ID', array('company_name' => 'ac.name'))
+		->joinLeft(array('ap' => 'actor'), 'a.parent_ID = ap.ID', array('parent_name' => 'ap.name'))
+		->joinLeft(array('as' => 'actor'), 'a.site_ID = as.ID', array('site_name' => 'as.name'))
+		->joinLeft(array('ar' => 'actor_role'), 'a.default_role = ar.code', array('drole_name' => 'ar.name'))
+		->joinLeft(array('c' => 'country'), 'a.country = c.iso', array('country_name' => 'c.name'))
+		->joinLeft(array('cm' => 'country'), 'a.country_mailing = cm.iso', array('country_mailing' => 'cm.name'))
+		->joinLeft(array('cb' => 'country'), 'a.country_billing = cb.iso', array('country_billing' => 'cb.name'))
+		->joinLeft(array('na' => 'country'), 'a.nationality = na.iso', array('nationality_name' => 'na.name'))
+		->where('a.ID = ?', $actor_id);
+    return $db->fetchRow($selectQuery);
   }
 
 /**
@@ -972,12 +991,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
        $container_id = 0;
 
     $this->setDbTable('Application_Model_DbTable_Matter');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-
-    $selectQuery = $dbSelect->from(array('mal' => 'matter_actor_lnk'), 'max(display_order) as max_dis_order')
-                            ->where("matter_ID = " . $matter_id. " AND mal.role = '". $role. "'")
-                            ->orwhere("matter_ID = ". $container_id." AND mal.role = '" .$role."'");
-    $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+    $db = $this->_dbTable->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('mal' => 'matter_actor_lnk'), array('max_dis_order' => 'max(display_order)'))
+		->where("matter_ID = " . $matter_id. " AND mal.role = '". $role. "'")
+		->orwhere("matter_ID = ". $container_id." AND mal.role = '" .$role."'");
+    $result = $db->fetchRow($selectQuery);
     return ((int)$result['max_dis_order'] + 1);
   }
 
@@ -1007,11 +1026,11 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
     if($matter_id)
     {
       $this->setDbTable('Application_Model_DbTable_Matter');
-      $dbSelect = $this->_dbTable->getAdapter()->select();
-
-      $selectQuery = $dbSelect->from(array('m' => 'matter'), array('ID', 'DATE_FORMAT(`expire_date`, "%d/%m/%Y") as expire_date', 'term_adjust'))
-                              ->where('ID = ?', $matter_id);
-      return $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+      $db = $this->_dbTable->getAdapter();
+      $selectQuery = $db->select()
+      	->from(array('m' => 'matter'), array('ID', 'expire_date' => 'DATE_FORMAT(`expire_date`, "%d/%m/%Y")', 'term_adjust'))
+		->where('ID = ?', $matter_id);
+      return $db->fetchRow($selectQuery);
     }
   }
 
@@ -1081,20 +1100,6 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   }
 
 /**
- * clears a task i.e., task.done = 1 on done_date or now()
- * this function is not in use now, instead clearTasks is used for single/multiple tasks
-**/
-/*  public function clearTask($task_id = 0, $done_date = '')
-  {
-    $data['done'] = 1;
-    $data['done_date'] = $done_date;
-    if($done_date == '')
-      $data['done_date'] = date('Y-m-d');
-
-    return $this->getDbTable('Application_Model_DbTable_Task')->update($data, array('ID = ?' => $task_id));
-  }*/
-
-/**
  * clears a set of tasks i.e., task.done is set to 1 on done_date or now()
 **/
   public function clearTasks($task_ids = array(), $done_date = '')
@@ -1123,14 +1128,15 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
      if(!$task_id)
         return false;
-     $dbSelect = $this->getDbTable('Application_Model_DbTable_Task')->getAdapter()->select();
-     $selectQuery = $dbSelect->from(array('t' => 'task'))
-                             ->where("t.ID = ".$task_id. " AND done_date IS NULL");
+     $db = $this->getDbTable('Application_Model_DbTable_Task')->getAdapter();
+     $selectQuery = $db->select()
+     	->from(array('t' => 'task'))
+		->where("t.ID = ".$task_id. " AND done_date IS NULL");
 
-     $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+     $result = $db->fetchRow($selectQuery);
 
      if($result){
-         $this->getDbTable('Application_Model_DbTable_Task')->getAdapter()->query("UPDATE task set done_date = if(due_date < now(), due_date, now()) where ID=$task_id");
+         $db->query("UPDATE task set done_date = if(due_date < now(), due_date, now()) where ID=$task_id");
      }
   }
 
@@ -1164,11 +1170,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 **/
   public function getContainerRefers($caseref = null, $term = null, $matter_id = null)
   {
-    $dbSelect = $this->getDbTable()->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref, country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
-                            ->joinLeft(array('e' => 'event'), "m.ID=e.matter_ID AND e.code='FIL'", array('e.detail as number', 'e.event_date as filing_date'))
-                            ->where("m.caseref = '".$caseref."' AND m.ID != '".$matter_id."' AND container_ID IS NULL AND caseref LIKE '".$term."%'");
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->getDbTable()->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('m' => 'matter'), array('value' => "concat(caseref, country, ', ', e.detail, ', ', e.event_date)", 'id' => 'm.ID'))
+		->joinLeft(array('e' => 'event'), "m.ID = e.matter_ID AND e.code = 'FIL'", array('number' => 'e.detail', 'filing_date' => 'e.event_date'))
+		->where("m.caseref = '".$caseref."' AND m.ID != '".$matter_id."' AND container_ID IS NULL AND caseref LIKE '".$term."%'");
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -1178,12 +1185,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
     if(!isset($matter_id))
       return false;
-
-    $dbSelect = $this->getDbTable()->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID"))
-                            ->where('m.ID = ?', $matter_id);
-
-    $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+	$uidsql = "concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),''))";
+    $db = $this->getDbTable()->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('m' => 'matter'), array('UID' => new Zend_Db_Expr($uidsql)))
+		->where('m.ID = ?', $matter_id);
+    $result = $db->fetchRow($selectQuery);
     return $result['UID'];
   }
 
@@ -1344,17 +1351,19 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
      
 
       $this->setDbTable('Application_Model_DbTable_Task');
-      $dbSelect = $this->_dbTable->getAdapter()->select();
-      $selectQuery = $dbSelect->from(array('t' => 'task'), array('t.ID as task_ID', 't.code', 'DATE_FORMAT(t.due_date, "%d/%m/%Y") as due_date', 't.due_date AS posix_due_date', 't.detail as task_detail', 't.trigger_ID'))
-                              ->join(array('e' => 'event'), 't.trigger_ID = e.ID', array('e.matter_ID as MID'))
-                              ->join(array('en' => 'event_name'), 't.code=en.code', array('en.name as task_name'))
-                              ->join(array('m' => 'matter'), 'e.matter_ID = m.ID', array('m.caseref', 'm.country', 'm.origin', 'm.type_code', "concat(m.caseref,m.country,if(m.origin IS NULL,'',concat('/',m.origin)),if(m.type_code IS NULL,'',concat('-',m.type_code)),ifnull(CAST(idx AS CHAR(3)),'')) as UID"))
-                              ->joinLeft(array('mal' => 'matter_actor_lnk'), "(ifnull(m.container_ID,m.ID) = mal.matter_ID AND mal.role='DEL')")
-                              ->joinLeft(array('a' => 'actor'), "a.ID = mal.actor_ID")
-                              ->where($where)
-                              ->order(array('t.due_date', 'm.caseref'));
+      $db = $this->_dbTable->getAdapter();
+      $uidsql = "concat(m.caseref,m.country,if(m.origin IS NULL,'',concat('/',m.origin)),if(m.type_code IS NULL,'',concat('-',m.type_code)),ifnull(CAST(idx AS CHAR(3)),''))";
+      $selectQuery = $db->select()
+      		->from(array('t' => 'task'), array('task_ID' => 't.ID', 't.code', 'due_date' => 'DATE_FORMAT(t.due_date, "%d/%m/%Y")', 'posix_due_date' => 't.due_date', 'task_detail' => 't.detail', 't.trigger_ID'))
+        	->join(array('e' => 'event'), 't.trigger_ID = e.ID', array('MID' => 'e.matter_ID'))
+            ->join(array('en' => 'event_name'), 't.code=en.code', array('task_name' => 'en.name'))
+            ->join(array('m' => 'matter'), 'e.matter_ID = m.ID', array('m.caseref', 'm.country', 'm.origin', 'm.type_code', 'UID' => new Zend_Db_Expr($uidsql)))
+            ->joinLeft(array('mal' => 'matter_actor_lnk'), "(ifnull(m.container_ID,m.ID) = mal.matter_ID AND mal.role='DEL')")
+            ->joinLeft(array('a' => 'actor'), "a.ID = mal.actor_ID")
+            ->where($where)
+            ->order(array('t.due_date', 'm.caseref'));
 
-      return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+      return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -1362,16 +1371,15 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 **/
   public function getUsersOpenTaskCount()
   {
-      $this->setDbTable('Application_Model_DbTable_Task');
-      $dbSelect = $this->_dbTable->getAdapter()->select();
-
-      $selectQuery = $dbSelect->from(array('t' => 'task', 'm'=> 'matter', 'e' => 'event'), array('count(*) as no_of_tasks', 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y") as urgent_date', 'MIN(t.due_date) as posix_urgent_date'))
-                               ->join(array('e' => 'event'), 't.trigger_id=e.id')
-                               ->join(array('m' => 'matter'), 'e.matter_id=m.id', array('ifnull(t.assigned_to, m.responsible) as login'))
-                               ->where('m.dead=0 AND t.done=0')
-                               ->group('login');
-
-       return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+	$this->setDbTable('Application_Model_DbTable_Task');
+	$db = $this->_dbTable->getAdapter();
+	$selectQuery = $db->select()
+		->from(array('t' => 'task', 'm' => 'matter', 'e' => 'event'), array('no_of_tasks' => 'count(*)', 'urgent_date' => 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y")', 'posix_urgent_date' => 'MIN(t.due_date)'))
+		->join(array('e' => 'event'), 't.trigger_id=e.id')
+		->join(array('m' => 'matter'), 'e.matter_id=m.id', array('login' => 'ifnull(t.assigned_to, m.responsible)'))
+		->where('m.dead=0 AND t.done=0')
+		->group('login');
+	return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -1383,13 +1391,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
        return false;
 
      $this->setDbTable('Application_Model_DbTable_Task');
-     $dbSelect = $this->_dbTable->getAdapter()->select();
-
-     $selectQuery = $dbSelect->from(array('t' => 'task'), array('t.*', 'DATE_FORMAT(t.due_date, "%d/%m/%Y") as due_date', 'DATE_FORMAT(t.done_date, "%d/%m/%Y")'))
-                             ->join(array('en' => 'event_name'), 'en.code=t.code', array('en.name as task_name'))
-                             ->where('t.ID = ?', $task_id);
-
-     return $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+     $db = $this->_dbTable->getAdapter();
+     $selectQuery = $db->select()
+     	->from(array('t' => 'task'), array('t.*', 'due_date' => 'DATE_FORMAT(t.due_date, "%d/%m/%Y")', 'DATE_FORMAT(t.done_date, "%d/%m/%Y")'))
+		->join(array('en' => 'event_name'), 'en.code=t.code', array('task_name' => 'en.name'))
+		->where('t.ID = ?', $task_id);
+     return $db->fetchRow($selectQuery);
   }
 
 /**
