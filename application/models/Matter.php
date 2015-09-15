@@ -435,7 +435,7 @@ WHERE e2.matter_id IS NULL
     $this->setDbTable('Application_Model_DbTable_Matter');
     $db = $this->_dbTable->getAdapter();
 
-    $uidsql = "concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),''))";
+    $uidsql = "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(m.caseref, m.country), m.origin), m.type_code), m.idx)";
     $selectQuery = $db->select()
     	->from(array('m' => 'matter'), array('m.*', 'UID' => new Zend_Db_Expr($uidsql)))
         ->joinLeft(array('c' => 'country'), 'c.iso = m.country', array('country_name' => 'c.name'))
@@ -1157,22 +1157,23 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 **/
   public function getAllMatterRefers($term = null)
   {
-    $dbSelect = $this->getDbTable()->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('m' => 'matter'), array("concat(caseref, country, ', ', e.detail, ', ', e.event_date) as value", "m.ID as id"))
-                            ->joinLeft(array('e' => 'event'), "m.ID=e.matter_ID AND e.code='FIL'", array('e.detail as number', 'e.event_date as filing_date'))
-                            ->where("m.type_code IS NULL AND caseref LIKE '".$term."%'");
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    $db = $this->getDbTable()->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('m' => 'matter'), array('value' => "concat(caseref, country, ', ', e.detail, ', ', e.event_date)", 'm.ID'))
+        ->joinLeft(array('e' => 'event'), "m.ID=e.matter_ID AND e.code='FIL'", array('number' => 'e.detail', 'filing_date' => 'e.event_date'))
+        ->where("m.type_code IS NULL AND caseref LIKE '".$term."%'");
+    return $db->fetchAll($selectQuery);
   }
 
 
 /**
- * retrives a list of caserefs of container matters
+ * retrieves a list of caserefs of container matters
 **/
   public function getContainerRefers($caseref = null, $term = null, $matter_id = null)
   {
     $db = $this->getDbTable()->getAdapter();
     $selectQuery = $db->select()
-    	->from(array('m' => 'matter'), array('value' => "concat(caseref, country, ', ', e.detail, ', ', e.event_date)", 'id' => 'm.ID'))
+    	->from(array('m' => 'matter'), array('value' => "concat(caseref, country, ', ', e.detail, ', ', e.event_date)", 'm.ID'))
 		->joinLeft(array('e' => 'event'), "m.ID = e.matter_ID AND e.code = 'FIL'", array('number' => 'e.detail', 'filing_date' => 'e.event_date'))
 		->where("m.caseref = '".$caseref."' AND m.ID != '".$matter_id."' AND container_ID IS NULL AND caseref LIKE '".$term."%'");
     return $db->fetchAll($selectQuery);
@@ -1185,7 +1186,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
   {
     if(!isset($matter_id))
       return false;
-	$uidsql = "concat(caseref,country,if(origin IS NULL,'',concat('/',origin)),if(type_code IS NULL,'',concat('-',type_code)),ifnull(CAST(idx AS CHAR(3)),''))";
+	$uidsql = "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(m.caseref, m.country), m.origin), m.type_code), m.idx)";
     $db = $this->getDbTable()->getAdapter();
     $selectQuery = $db->select()
     	->from(array('m' => 'matter'), array('UID' => new Zend_Db_Expr($uidsql)))
@@ -1199,11 +1200,12 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 **/
   public function getAllTasks($term = null)
   {
-    $dbSelect = $this->getDbTable('Application_Model_DbTable_Event')->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('en' => 'event_name'), array('name as value', 'code as id'))
-                            ->where("is_task = 1 AND name LIKE '".$term."%'");
+    $db = $this->getDbTable('Application_Model_DbTable_Event')->getAdapter();
+    $selectQuery = $db->select()
+    	->from(array('en' => 'event_name'), array('value' => 'name', 'id' => 'code'))
+        ->where("is_task = 1 AND name LIKE '".$term."%'");
 
-    return $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+    return $db->fetchAll($selectQuery);
   }
 
 /**
@@ -1352,7 +1354,7 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
       $this->setDbTable('Application_Model_DbTable_Task');
       $db = $this->_dbTable->getAdapter();
-      $uidsql = "concat(m.caseref,m.country,if(m.origin IS NULL,'',concat('/',m.origin)),if(m.type_code IS NULL,'',concat('-',m.type_code)),ifnull(CAST(idx AS CHAR(3)),''))";
+      $uidsql = "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(m.caseref, m.country), m.origin), m.type_code), m.idx)";
       $selectQuery = $db->select()
       		->from(array('t' => 'task'), array('task_ID' => 't.ID', 't.code', 'due_date' => 'DATE_FORMAT(t.due_date, "%d/%m/%Y")', 'posix_due_date' => 't.due_date', 'task_detail' => 't.detail', 't.trigger_ID'))
         	->join(array('e' => 'event'), 't.trigger_ID = e.ID', array('MID' => 'e.matter_ID'))
@@ -1795,7 +1797,7 @@ from event where matter_id=".$matter_ID." and code='PRI';";
 
      $this->setDbTable('Application_Model_DbTable_Actor');
      $matter_dependencies_stmt = $this->_dbTable->getAdapter()->query("select matter.id,
-          concat(caseref,matter.country,if(origin IS NULL,'',concat('/',origin)),if(matter.type_code IS NULL,'',concat('-',matter.type_code)),ifnull(CAST(idx AS CHAR(3)),'')) AS UID,
+          CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(matter.caseref, matter.country), matter.origin), matter.type_code), matter.idx) AS UID,
           actor_role.name as role
           from  matter, matter_actor_lnk, actor_role
           where matter_actor_lnk.matter_id=matter.id
