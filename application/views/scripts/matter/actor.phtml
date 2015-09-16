@@ -125,8 +125,8 @@ $(document).ready(function(){
 	});
 
     $.editable.addInputType('autocomplete', {
-		element : $.editable.types.text.element,
-		plugin : function(settings, original){
+		element: $.editable.types.text.element,
+		plugin: function(settings, original){
 			$('input', this).autocomplete(settings.autocomplete);
 		}
     });
@@ -138,8 +138,8 @@ $(document).ready(function(){
 			return { actor_id : actor_id , field : field_name}
 		},
 		placeholder: '',
-		select : true,
-		indicator : '<span class="icon-busy" />',
+		select: true,
+		indicator: '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
 		data: function(value, settings){
 			return $("<div/>").html(value).text();
@@ -154,7 +154,7 @@ $(document).ready(function(){
 		},
 		type: 'textarea',
 		placeholder: '',
-		select : true,
+		select: true,
 		indicator : '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
 		submit: 'ok',
@@ -177,7 +177,7 @@ $(document).ready(function(){
 		data: { <?php foreach($this->enumOpts as $key => $value){ echo "'".$value."' : '".$value."',"; }?> },
 		type: 'select',
 		placeholder: '',
-		select : true,
+		select: true,
 		indicator : '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
 		submit: 'ok',
@@ -186,59 +186,63 @@ $(document).ready(function(){
 
 	var fvalue = '';
 	var dvalue = '';
+	
     $('.auto-editable').editable('/matter/update-actor', {
 		type: 'autocomplete',
-        onblur: 'submit',
         autocomplete: {
 			minLength: 1,
-			source : "/matter/get-non-actors",
+			source: "/matter/get-non-actors",
 			select: function( event, ui ) {
-				$(this).val(ui.item.value);
-				fvalue = ui.item.id;
+				this.value = ui.item.value;  // assign country name back to the form element
+				fvalue = ui.item.id; // Country code
 				dvalue = ui.item.value;
+        		$(event.target.form).submit(); //submit the form
 			}
 		},
         submitdata: function(value,settings){
-			var actor_id = $('#actor-id').val();
-			var field_name = $(this).attr('id');
 			return { 
-				actor_id : actor_id, 
-				field : field_name, 
+				actor_id: $('#actor-id').val(), 
 				value: fvalue, 
 				dvalue: dvalue 
 			}
 		},
-		placeholder: ' ',
-		indicator : '<span class="icon-busy" />',
+		callback : function(value, settings) { // Reset variables after submission
+			fvalue = '';
+			dvalue = '';
+		},
+		id: 'field', // the object id is the form field name
+		placeholder: '',
+		indicator: '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
 		select: true
     });
 
     $('.country-editable').editable('/matter/update-actor', {
         type: 'autocomplete',
-        onblur: 'submit',
         autocomplete: {
-			minLength : 1,
-			source : "/matter/get-country-codes",
-			autoFocus: true,
+			minLength: 1,
+			source: "/matter/get-country-codes",
 			select: function( event, ui ) {
-				$(this).val(ui.item.value);
-				fvalue = ui.item.id;
+       			this.value = ui.item.value;  // assign country name back to the form element
+				fvalue = ui.item.id; // Country code
 				dvalue = ui.item.value;
+        		$(event.target.form).submit(); //submit the form
 			}
         },
-        submitdata: function(value,settings){
-			var actor_id = $('#actor-id').val();
-			var field_name = $(this).attr('id');
+        submitdata: function(value, settings){
 			return { 
-				actor_id : actor_id, 
-				field : field_name, 
+				actor_id: $('#actor-id').val(), 
 				value: fvalue, 
 				dvalue: dvalue 
-			};
+			}
 		},
+		callback : function(value, settings) { // Reset variables after submission
+			fvalue = '';
+			dvalue = '';
+		},
+		id: 'field', // the object id is the form field name
 		placeholder: '',
-		indicator : '<span class="icon-busy" />',
+		indicator: '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
 		select: true
     });
@@ -247,27 +251,29 @@ $(document).ready(function(){
         type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
-			minLength : 1,
+			minLength: 1,
 			source : "/matter/get-actor-roles",
-			autoFocus: true,
 			select: function( event, ui ) {
-				$(this).val(ui.item.value);
-				fvalue = ui.item.id;
+				this.value = ui.item.value;  // assign country name back to the form element
+				fvalue = ui.item.id; // Country code
 				dvalue = ui.item.value;
+        		$(event.target.form).submit(); //submit the form
 			}
 		},
         submitdata: function(value,settings){
-			var actor_id = $('#actor-id').val();
-			var field_name = $(this).attr('id');
 			return { 
-				actor_id : actor_id, 
-				field : field_name, 
+				actor_id: $('#actor-id').val(), 
 				value: fvalue, 
 				dvalue: dvalue 
 			};
 		},
+		callback : function(value, settings) { // Reset variables after submission
+			fvalue = '';
+			dvalue = '';
+		},
+		id: 'field', // the object id is the form field name
 		placeholder: '',
-		indicator : '<span class="icon-busy" />',
+		indicator: '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
 		select: true
     });
@@ -297,7 +303,7 @@ $(document).ready(function(){
 		if(del_conf == 1){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({
-	      		url : '/matter/delete-actor',
+	      		url: '/matter/delete-actor',
 	      		type: 'POST',
 	      		data: { aid:aid },
 	      		success: function(data){
@@ -362,7 +368,7 @@ Actor Information <span class="close-button">X</span>
 <span class="actor-input-narrow country-editable" id="country" ><?=$this->actor['country_name']?></span>
 <label for="address_mailing" title="<?=$this->actorComments['address_mailing']?>" >Address mailing</label>
 <span class="actor-input-wide teditable" id="address_mailing" ><?=nl2br(htmlentities($this->actor['address_mailing']))?></span>
-<label for="country_mailing" title="<?=$this->actorComments['country_mailing']?>" >Country mailng</label>
+<label for="country_mailing" title="<?=$this->actorComments['country_mailing']?>" >Country mailing</label>
 <span class="actor-input-narrow country-editable" id="country_mailing" ><?=$this->actor['country_mailing']?></span>
 <label for="address_billing" title="<?=$this->actorComments['address_billing']?>" >Address billing</label>
 <span class="actor-input-wide teditable" id="address_billing" ><?=nl2br(htmlentities($this->actor['address_billing']))?></span>
