@@ -152,25 +152,21 @@ vertical-align: top;
     var valid = true;
     $('.refer-autocomplete').editable('/matter/update-event', {
         type: 'autocomplete',
-        onblur: 'submit',
         autocomplete: {
 			minLength : 3,
 			source : "/matter/get-all-refers",
-			autoFocus: true,
 			select: function( event, ui ) {
-				alt_matter_id = ui.item.id;
+				alt_matter_id = ui.item.ID;
+				$(event.target.form).submit(); //submit the form
 			}
         },
         submitdata: function(value,settings){
-             var eid = $(this).parent().attr('id').split('-');
              return { 
-                 event_id : eid, 
-                 field : 'alt_matter_ID', 
+                 event_id: $(this).parent().attr('id').split('-'), 
+                 field: 'alt_matter_ID', 
                  alt_matter: alt_matter_id 
              };
 		},
-		cancel : false,
-		submit : false,
 		placeholder: '...',
 		indicator : '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
@@ -208,7 +204,7 @@ vertical-align: top;
             autoFocus: true,
             select: function( event, ui ) {
 				$( "#event_refers" ).val( ui.item.value );
-				$( "#alt_matter_id" ).val( ui.item.id );
+				$( "#alt_matter_id" ).val( ui.item.ID );
             }
     });
 

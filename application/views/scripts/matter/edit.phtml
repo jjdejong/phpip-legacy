@@ -10,9 +10,9 @@ $(document).ready(function(){
         }
     });
     $('#matter-origin').autocomplete({
-        minLength: 2,
+        minLength: 1,
         source: "/matter/get-country-codes",
-        autoFocus: true,
+        //autoFocus: true,
         select: function( event, ui ) {
 			$( "#matter-origin" ).val( ui.item.value );
 			$( "#matter-origin-id" ).val( ui.item.id );
@@ -303,7 +303,7 @@ $selected = "selected=selected";
 <input type="hidden" name="matter-country-id" id="matter-country-id" value="<?=$this->matter['country']?>" />
 
 <label for="matter-origin">Origin</label>
-<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>"  onfocus="this.select()"/>
+<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>" onfocus="this.select()"/>
 <input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->origin_code?>" />
 
 <label for="matter-type">Type</label>

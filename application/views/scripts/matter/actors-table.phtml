@@ -162,36 +162,8 @@ $(document).ready(function(){
       });
   });
 
-
-/*  $('#delete-actor').click(function(){
-    var del_conf = confirm("Deleting Actor from table. Are you sure?");
-	if(del_conf == 1){
-    	var aid = $('#actor-id').val();
-    		$.ajax({
-      			url : '/matter/delete-actor',
-      			type: 'POST',
-      			data: { aid:aid },
-      			success: function(data){
-        			if(!data.match(/SQLSTATE/)){
-          				$.ajax({
-          					url: '/matter/actornav/nav/next/actor_id/'+aid,
-          					type: 'get',
-          					data: {},
-          					success: function(data){
-            					$('#actor-details-content').empty();
-            					$('#actor-details-content').html(data);
-          					}
-         				});
-        			}else
-          				alert(data);
-      			}
-    		});
-  	}
-    	return false;
-  });*/
-
   $('.delete-from-list').click(function(){
-	    var del_conf = confirm("Deleting Actor from table. Are you sure?");
+	    var del_conf = confirm("Deleting Actor from table. The actor will only be deleted if not used in other tables.");
 		if(del_conf == 1){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({
@@ -208,20 +180,6 @@ $(document).ready(function(){
 		}
 	    return false;
   });
-
-/*  $('.actor-navigation').click(function(){
-      var nav = $(this).attr('id');
-      var url = '/matter/actornav/nav/'+nav+'/actor_id/'+$('#actor-id').val();
-      $.ajax({
-          url: url,
-          type: 'get',
-          data: {},
-          success: function(data){
-            $('#actor-details-content').empty();
-            $('#actor-details-content').html(data);
-          }
-      });
-  });*/
 
   $( "button, input:button" ).button();
 
