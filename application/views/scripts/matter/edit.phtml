@@ -97,6 +97,9 @@ $(document).ready(function(){
         	$('#matter-idx').focus();
             invalid = true;
         }
+        if (isNaN($('#matter-pta').val()) || $('#matter-pta').val() == ""){
+        	$('#matter-pta').val('0');
+        }
         if(invalid)
             $('.validation-errors').css('display', 'block');
         else{
@@ -127,6 +130,7 @@ $(document).ready(function(){
                         parent_ID: $('#matter-parent-id').val(),
                         container_ID: $('#matter-container-id').val(),
                         idx: idx,
+                        term_adjust: $('#matter-pta').val(),
                       },
                 success: function(data){
                     var cdata = data.split('-');
@@ -288,7 +292,6 @@ $selected = "selected=selected";
 <option value="<?=$cat['id']?>" <?=$selected?> ><?=$cat['value']?></option>
 <?php } ?>
 </select>
-<!-- <input type="text" name="matter-category" id="matter-category" value="<?=$this->matter['category']?>" class="required" />-->
 <?php } else{ ?>
 <span id="matter-category" class="display-field" ><?=$this->matter['category']?></span>
 <?php } ?>
@@ -338,6 +341,9 @@ if($type['id'] == $this->matter['type_code'])
 
 <label for="matter-dead">Dead</label>
 <span id="matter-dead" class="display-field" title="This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status" style="cursor:help;" ><?php echo ($this->matter['dead'])? "Yes":"No" ;?></span>
+
+<label for="matter-pta">Term adjust</label>
+<input type="text" name="matter-pta" id="matter-pta" value="<?=$this->matter['term_adjust']?>" onfocus="this.select()" />
 
 <div id="edit-matter-actions">
   <button name="edit-matter-cancel" id="edit-matter-cancel" style="float: right;"><span class="ui-icon ui-icon-cancel" style="float: left;"></span>Cancel</button>
