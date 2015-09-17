@@ -240,7 +240,7 @@ function getFilterUrl()
 $(document).ready(function(){
     <?if($this->display_style){?>
           	  $('.display_actor,.display_status').css('display','none');
-              $('.display_status,').css('display','inline-block');
+              $('.display_status').css('display','inline-block');
     <?}else {?>
               $('.display_actor,.display_status').css('display','none');
               $('.display_actor').css('display','inline-block');
@@ -303,7 +303,7 @@ $(document).ready(function(){
 
          if($(this).val() == 1){
              $('.display_actor,.display_status').css('display','none');
-             $('.display_status,').css('display','inline-block');
+             $('.display_status').css('display','inline-block');
              //Clear the filters exclusive to actor view
              $('#filter-agent').val('');
              $('#filter-agtref').val('');
