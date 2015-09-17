@@ -1535,11 +1535,8 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=".$matter_id." order by ct.t
 
     $container_id = $this->getMatterContainer($matter_id);
     $this->setDbTable('Application_Model_DbTable_Classifier');
-    $dbSelect = $this->_dbTable->getAdapter()->select();
-    $selectQuery = $dbSelect->from(array('c' => 'classifier'), array('max(ifnull(display_order,0))+1 as ndo'))
-                            ->where("matter_ID=".$container_id." AND type_code='".$type_code."'");
-
-    $result = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+    $dbStmt = $this->_dbTable->getAdapter()->query("SELECT ifnull(max(display_order)+1,1) AS ndo FROM classifier WHERE matter_ID=".$container_id ." AND type_code='".$type_code."'");
+    $result = $dbStmt->fetchAll();
     if($result['ndo'] > 0)
       return $result['ndo'];
     else
