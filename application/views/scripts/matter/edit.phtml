@@ -42,7 +42,7 @@ $(document).ready(function(){
         source: "/matter/get-all-refers",
         select: function( event, ui ) {
 			$( "#matter-parent" ).val( ui.item.value );
-			$( "#matter-parent-id" ).val( ui.item.id );
+			$( "#matter-parent-id" ).val( ui.item.ID);
         }
     });
     
@@ -51,7 +51,7 @@ $(document).ready(function(){
         source: "/matter/get-container-refers/caseref/<?=$this->matter['caseref']?>/matter_id/<?=$this->matter['ID']?>",
         select: function( event, ui ) {
 			$( "#matter-container" ).val( ui.item.value );
-			$( "#matter-container-id" ).val( ui.item.id );
+			$( "#matter-container-id" ).val( ui.item.ID );
         },
     });
     
