@@ -127,13 +127,14 @@ $(document).ready(function(){
     var company_id = 0;
 	$('.editable_comp').editable("/matter/save-matter-actor/", {
 		type : "autocomplete",
-		onblur : "submit",
 		autocomplete : {
 			minLength: 1,
 			source : "/matter/get-all-actors/",
 			autoFocus: true,
 			select: function( event, ui ) {
+				this.value = ui.item.value;
 				company_id = ui.item.id;
+				$(event.target.form).submit();
 			}
 		},
 		submitdata: function(value,settings){
@@ -145,8 +146,6 @@ $(document).ready(function(){
 				val: company_id
 			};
 		},
-		cancel : false,
-		submit : false,
 		indicator : '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
 		select: true
