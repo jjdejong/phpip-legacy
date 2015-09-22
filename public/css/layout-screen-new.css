@@ -197,7 +197,7 @@ li{
     -moz-border-radius:10px;
     border-radius: 10px;
     display:none;
-    z-index: 101;
+    /*z-index: 101;*/
 }
 
 #disablewindow{
@@ -209,7 +209,7 @@ li{
     opacity: 0.6; 
     background: black;
     display:none;
-    z-index:100;
+    /*z-index:100;*/
 }
 
 #popupdivcancel{
@@ -653,7 +653,7 @@ select {
 .navigation ul{
   position: absolute;
   display: none;
-  z-index:100;
+  /*z-index:100;*/
   top:30px;
 /*left:784px; */
   background-color: #FFF;
@@ -740,7 +740,7 @@ select {
     -webkit-border-radius:2px;
     -moz-border-radius:2px;
     border-radius:2px;
-    z-index: 4;
+    /*z-index: 4*/;
 }
 
 .listrow-tab-select:hover, .listrow-tab-selected:hover {
@@ -980,10 +980,10 @@ div.selectbox-wrapper ul li {
     filter:alpha(opacity=40);
     -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)";
     display:none;
-    z-index: 100;
+    /*z-index: 50;*/
 }
 .flake-dialog{
-  z-index: 101;
+  /*z-index: 101;*/
   position: fixed;
   top: 200px;
   display: none;
