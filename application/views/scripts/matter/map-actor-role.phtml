@@ -12,7 +12,7 @@
 }
 #actor-details-popup{
     position: fixed;
-    z-index: 110;
+    z-index: 1;
     display:none;
     width: 670px;
 }
@@ -48,13 +48,15 @@ $(document).ready(function(){
     $("#cancel").click(function(event){
         $('#mapactor-pop-up').css('display','none');
         $('#mapactor-pop-up').empty();
-        $('#facade').css('display','none');
+        //$('#facade').css('display','none');
+        $('.ui-widget-overlay').hide();
     });
 
     $("#MatterAddActor").click(function(event){
         $('#mapactor-pop-up').css('display','none');
         $('#mapactor-pop-up').empty();
-        $('#facade').css('display','none');
+        //$('#facade').css('display','none');
+        $('.ui-widget-overlay').hide();
     });
     
     $( "#actor-name" ).autocomplete({
@@ -85,8 +87,8 @@ $(document).ready(function(){
     });
 
     $("#submit").click(function(){
-      $('#facade').css('height',$(document).height());
-      $('#facade').css('display','block');
+      //$('#facade').css('height',$(document).height());
+      //$('#facade').css('display','block');
       var role_val = $('#rolebox').val().split('-');
       $.ajax({
         type: "POST",
@@ -99,7 +101,7 @@ $(document).ready(function(){
           } else {
              $('#mapactor-pop-up').css('display','none');
              $('#mapactor-pop-up').empty();
-             $('#facade').css('display','none');
+             //$('#facade').css('display','none');
              location.reload();
           }
         }

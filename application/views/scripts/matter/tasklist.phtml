@@ -72,7 +72,7 @@ vertical-align: top;
 }
 #add-task-popup{
   width: 500px;
-  z-index: 101;
+  /*z-index: 101;*/
   height: auto;
   top: 220px;
   display: none;
@@ -150,20 +150,20 @@ $(document).ready(function(){
 
     $('.edit-assigned-to').editable('/matter/update-task', {
 		type: 'autocomplete',
-        onblur: 'submit',
         autocomplete: {
 			minLength : 1,
 			source : "/matter/get-all-logins",
+			select: function( event, ui ) {
+				this.value = ui.item.value;
+				$(event.target.form).submit();
+			}
         },
         submitdata: function(value,settings){
-			var tid = $(this).parent().attr('id');
 			return { 
-				task_id : tid, 
+				task_id : $(this).parent().attr('id'), 
 				field : 'assigned_to' 
 			};
 		},
-		cancel : false,
-		submit : false,
 		placeholder: '...',
 		indicator : '<span class="icon-busy" />',
 		tooltip: 'Click to edit...',
@@ -174,24 +174,24 @@ $(document).ready(function(){
         minLength: 1,
         source: "/matter/get-all-logins",
         select: function( event, ui ) {
-            $( "#task_assigned_to" ).val( ui.item.value );
+            this.value = ui.item.value;
         }
     });
 
     $("#MatterAllTasks").click(function(event){
         $('#tasklist-pop-up').css('display','none');
-        location.reload();
+        location.reload(); // try to avoid because it reloads the whole page
     });
 
     $('.editable').editable('/matter/update-task', {
           submitdata: function(value,settings){
-                     var tid = $(this).parent().attr('id');
                      var fclass = $(this).attr('class').split(" ");
                      var field_name = (fclass[0]).split('-');
-                     return { task_id : tid , field : field_name[2]}
+                     return { 
+                     	task_id : $(this).parent().attr('id'), 
+                     	field : field_name[2]
+                     }
                 },
-          //cancel : 'X',
-          //submit : 'Ok',
           placeholder: '...',
           select : true,
           indicator : '<span class="icon-busy" />',
@@ -206,6 +206,7 @@ $(document).ready(function(){
                 return value;
           }
     });
+    
     $('.editable-due-date').editable('/matter/update-task', {
             submitdata: function(value,settings){
               var tid = $(this).parent().attr('id');
@@ -225,6 +226,7 @@ $(document).ready(function(){
             placeholder: '...',
             tooltip: 'Click to edit...',
     });
+    
     $('.editable-done-date').editable('/matter/update-task', {
           submitdata: function(value,settings){
               var tid = $(this).parent().attr('id');
@@ -243,9 +245,9 @@ $(document).ready(function(){
                var field_name = (fclass[0]).split('-');
                if(field_name[2] == 'done_date'){
                   if(data == '')
-                      $('input[name=doneflag-'+tid+']').attr('checked' ,false);
+                      $('input[name=doneflag-'+tid+']').checked = false;
                   else
-                      $('input[name=doneflag-'+tid+']').attr('checked' ,true);
+                      $('input[name=doneflag-'+tid+']').checked = true;
 
                   $('input[name=doneflag-'+tid+']').click();
                }
@@ -270,15 +272,7 @@ $(document).ready(function(){
             url: '/matter/update-task',
             data: { task_id: tid, field: 'done', value: done_val },
             success: function(data){
-              $.ajax({
-                type: "POST",
-                url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
-                data: {},
-                success: function(data){
-                    $('#tasklist-pop-up').empty();
-                    $('#tasklist-pop-up').html(data);
-                }
-              });
+            	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
             }
         });
     });
@@ -341,66 +335,39 @@ $(document).ready(function(){
            alert('Due date required!');
            return;
        }
-       $.ajax({
-           url: '/matter/add-event-task',
-           type: 'POST',
-           data: { trigger_ID: $('#trigger_id').val(),
-                   code: $('#task_id').val(),
-                   due_date: $('#task_duedate').val(),
-                   assigned_to: $('#task_assignedto').val(),
-                   detail: $('#task_detail').val(),
-                   time_spent: $('#task_time').val(),
-                   notes: $('#task_notes').val(),
-                   cost: $('#task_cost').val(),
-                   fee: $('#task_fee').val(),
-                   currency: $('#task_currency').val()
-                  },
-           success: function(data){
-              if(!data.match(/SQLSTATE/)){
-                  //alert(data);
-                  $.ajax({
-                    type: "POST",
-                    url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
-                    data: {},
-                    success: function(data){
-                        $('#tasklist-pop-up').empty();
-                        $('#tasklist-pop-up').html(data);
-                    }
-                  });
-               
-                  $('#add-task-popup').css('display', 'none');
-                  $('#facade').hide();
-              }else
-                  alert(data);
-           }
-       });
+		$.post('/matter/add-event-task', { 
+       		trigger_ID: $('#trigger_id').val(),
+			code: $('#task_id').val(),
+			due_date: $('#task_duedate').val(),
+			assigned_to: $('#task_assignedto').val(),
+			detail: $('#task_detail').val(),
+			time_spent: $('#task_time').val(),
+			notes: $('#task_notes').val(),
+			cost: $('#task_cost').val(),
+			fee: $('#task_fee').val(),
+			currency: $('#task_currency').val()
+		},
+		function(data){
+			if(!data.match(/SQLSTATE/)){
+				$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
+				$('#add-task-popup').css('display', 'none');
+				$('#facade').hide();
+			} else {
+				alert(data);
+			}
+		});
     });
 
     $('.delete-task').click(function(){
-        var tid = $(this).parent().attr('id');
-        var del_conf = confirm("Do you want to delete task?");
-        if(del_conf){
-           $.ajax({
-               url: '/matter/delete-task',
-               type: 'post',
-               data: { tid: tid },
-               success: function(data){
-                 if(!isNaN(parseInt(data))){
-                   $.ajax({
-                   type: "POST",
-                   url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
-                   data: {},
-                   success: function(data){
-                    $('#tasklist-pop-up').empty();
-                    $('#tasklist-pop-up').html(data);
-                   }
-                   });
-                 }else{
-                   alert(data);
-                 }
-               }
-           }); 
-        }
+        if( confirm("Do you want to delete task?") ){
+			$.post('/matter/delete-task', { tid: $(this).parent().attr('id') }, function(data){
+				if(!isNaN(parseInt(data))){
+					$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
+				}else{
+					alert(data);
+				}
+			});
+		} 
     });
 
     $('.delete-event').click(function(){
@@ -412,13 +379,7 @@ $(document).ready(function(){
             if(conf_event_del){
                var arr = $('#event-box-' + eid + ' > div').map(function(){
                             var tid = this.id
-                            $.ajax({
-                               url: '/matter/delete-task',
-                               type: 'post',
-                               data: { tid: tid },
-                               success: function(data){
-                               }
-                            });
+                            $.post('/matter/delete-task', { tid: tid });
                             return tid;
                          }).get();
                $.ajax({
@@ -427,15 +388,7 @@ $(document).ready(function(){
                    data: { eid: eid },
                    success: function(data){
                              if(!isNaN(parseInt(data))){
-                                   $.ajax({
-                                       type: "POST",
-                                       url: "/matter/tasklist/matter_id/<?=$this->matter_id?>",
-                                       data: {},
-                                       success: function(data){
-                                         $('#tasklist-pop-up').empty();
-                                         $('#tasklist-pop-up').html(data);
-                                       }
-                                    });
+                             	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
                               }else{
                                 alert(data);
                               }
