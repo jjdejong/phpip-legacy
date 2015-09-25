@@ -213,6 +213,9 @@ text-align:left;
 
 .matter-role{
     font-weight: bold;
+    color: #733e0f;
+    display: inline-block;
+    cursor: pointer;
 }
 .title-button{
   background: #C8E8F3;
@@ -529,7 +532,11 @@ endif;
     $actor_role = "";
 ?>
 <div class="listrow">
-<div class="list-matter-block" > Actors<span id="responsible-actor-span">Responsible: <?=$this->matter_record[0]['responsible']?></span>  <button style="float:right; margin-top: -2px;" id="new-actor-0" class="add-actor">Add Actor</button></div>
+<div class="list-matter-block">
+	Actors<span id="responsible-actor-span">Responsible: <?=$this->matter_record[0]['responsible']?></span>
+	<button style="float:right; margin-top: -2px;" id="new-actor-0" class="add-actor">Add Actor</button>
+</div>
+
 <div class="list-matter-block-info" style="height: 150px; width: 99%">
 <input type="hidden" name="matterId" id="this-matter-id" value=<?=$this->matter_id?> />
 <input type="hidden" name="containerId" id="this-container-id" value="<?=$this->matter_record[0]['container_ID']?>" />
@@ -542,10 +549,9 @@ foreach($this->matter_actors as $actor):
 	    		echo "</div>";
             $div_start = 0;
 	    	$actor_role = $actor['role_name'];
-            echo "<div class='actor-block'>";
-	        echo '<a href="javascript:void(0);" class="matter-role" id="matter-role-'. $actor['matter_ID'] .'-'.$actor['role'].'" >' . $actor['role_name'] . "</a><span class='add-actor' id='add-actor-" . $actor['role']  . "' title='Add Actor'> <b>+</b></span><br>";
-	  }else
-		echo "<br />";
+            echo '<div class="actor-block">';
+	        echo '<span class="matter-role" id="matter-role-'. $actor['matter_ID'] .'-'.$actor['role'].'" >' . $actor['role_name'] . '</span><span class="add-actor ui-icon ui-icon-plusthick" id="add-actor-' . $actor['role']  . '" title="Add Actor" style="display: inline-block"></span>';
+		}
 	    $actor_display_name = ($actor['display_name'] == "" ) ? $actor['name'] .  (($actor['first_name']) ? (", " . $actor['first_name']) : "") : $actor['display_name'];
 
 	    if($actor['actor_ref'])
@@ -555,9 +561,9 @@ foreach($this->matter_actors as $actor):
 	        $actor_display_name .=  " - " . $actor['company_name'];
 
 	    if(strlen($actor_display_name) > 23)
-	        echo  "<span id='".$actor['ID']."' class='matter-actor help_cursor".($actor['inherited']?" actor-inherit":"")."' title='". htmlentities($actor_display_name) . "'>" . htmlentities($actor_display_name) . "</span>";
+	        echo  "<div id='".$actor['ID']."' class='matter-actor help_cursor".($actor['inherited']?" actor-inherit":"")."' title='". htmlentities($actor_display_name) . "'>" . htmlentities($actor_display_name) . "</div>";
 	    else
-	    	echo  "<span id='".$actor['ID']."' class='matter-actor ".($actor['inherited']?" actor-inherit":"")."' >".htmlentities($actor_display_name)."</span>";
+	    	echo  "<div id='".$actor['ID']."' class='matter-actor ".($actor['inherited']?" actor-inherit":"")."' >".htmlentities($actor_display_name)."</div>";
   }
 endforeach;
 if(count($this->matter_actors))
@@ -734,6 +740,5 @@ if(strlen($classifier['value']) > 80){
 </div>
 <div id="add-matter-popup"></div>
 
-<div id="actor-details-popup" class="place-card" >
-</div>
+<div id="actor-details-popup" class="place-card" ></div>
 <div id="facade"></div>
