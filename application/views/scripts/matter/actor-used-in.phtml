@@ -4,8 +4,6 @@
   width:187px;
   padding:4px;
   background: #FFF;
-  -moz-border-radius: 0px 4px 4px 4px;
-  -webkit-border-radius: 0px 4px 4px 4px;
   border-radius: 0px 4px 4px 4px;
 }
 
@@ -25,25 +23,11 @@
 
 $(document).ready(function(){
   $('.actor-list-row-1').click(function(){
-
-    var actor_id = $(this).attr('id');
-    $('#facade').css('height',$(document).height());
-    $('#facade').css('display','block');
-    $.ajax({
-      url: '/matter/actor/',
-      type: 'POST',
-      data: { actor_id:actor_id },
-      success: function(data){
-        $('#actor-details-popup').empty();
-        $('#actor-details-popup').html(data);
-        $('#actor-details-popup').css('display', 'block');
-        $('#facade').css('display','none');
-      }
-    });
+    $('#actor-details-popup').load('/matter/actor/', { actor_id: $(this).attr('id') });
   });
 
   $('.close-used-in').click(function(){
-      $('#actor-details-used-in').css('display', 'none');
+      $('#actor-details-used-in').hide();
   });
 
 });

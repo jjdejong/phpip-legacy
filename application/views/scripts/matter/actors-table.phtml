@@ -1,8 +1,6 @@
 <style type="text/css" >
 #actors-box{
   display:block;
-  -moz-border-radius: 0px 4px 4px 4px;
-  -webkit-border-radius: 0px 4px 4px 4px;
   border-radius: 0px 4px 4px 4px;
 }
 #actors-list{
@@ -17,11 +15,7 @@
     float:left;
     background: #B5D9E5;
     display:block;
-    -moz-border-radius: 0px 4px 4px 4px;
-    -webkit-border-radius: 0px 4px 4px 4px;
     border-radius: 0px 4px 4px 4px;
-    -moz-box-shadow: 2px 2px 1px #888888;
-    -webkit-box-shadow: 2px 2px 1px #888888;
     box-shadow: 2px 2px 1px #888888;
 }
 .phpip-list li{
@@ -37,15 +31,11 @@
 .list-headers {
     background: #1E4262;
     color: #FFF;
-    -moz-border-radius: 4px 4px 0 0;
-    -webkit-border-radius: 4px 4px 0 0;
     border-radius: 4px 4px 0 0;
     border: none;
     padding: 4px 6px;
 }
 .phpip-list li:last-child {
-    -moz-border-radius: 0 0 4px 4px;
-    -webkit-border-radius: 0 0 4px 4px;
     border-radius: 0 0 4px 4px;
 }
 .col-name{
@@ -75,8 +65,6 @@
 #actors-tab{
   background: #B5D9E5;
   display:block;
-  -moz-border-radius: 4px 4px 0px 0px;
-  -webkit-border-radius: 4px 4px 0px 0px;
   border-radius: 4px 4px 0px 0px;
   width:40px;
   padding: 5px 5px 0px;
@@ -91,8 +79,6 @@
 	width: 670px;
 }
 .filter-input{
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   border: 1px inset #555;
   font-size: 9px;
@@ -120,46 +106,15 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $('.actor-list-row').click(function(){
-    var actor_id = $(this).attr('id');
-    //$('#facade').css('height',$(document).height());
-    $('#facade').css('display','block');
-    $.ajax({
-      url: '/matter/actor/',
-      type: 'POST',
-      data: { actor_id:actor_id },
-      success: function(data){
-        $('#actor-details-popup').empty();
-        $('#actor-details-popup').html(data);
-        $('#actor-details-popup').css('display', 'block');
-        $('#facade').css('display','none');
-      }
-    });
+		$('#actor-details-popup').load('/matter/actor/', { actor_id: $(this).attr('id') }).show();
   });
 
   $('#actor-name').keyup(function(){
-         var url = '/matter/actors-filter/co/0/term/'+$(this).val();
-         $.ajax({
-             url: url,
-             type: 'GET',
-             data: { },
-             success: function(data){
-                 $('#actor-table-list').empty();
-                 $('#actor-table-list').html(data);
-             }
-         });
+		$('#actor-table-list').load('/matter/actors-filter/co/0/term/'+$(this).val());
   });
 
   $('#actor-company').keyup(function(){
-      var url = '/matter/actors-filter/co/1/term/'+$(this).val();
-      $.ajax({
-          url: url,
-          type: 'GET',
-          data: { },
-          success: function(data){
-              $('#actor-table-list').empty();
-              $('#actor-table-list').html(data);
-          }
-      });
+		$('#actor-table-list').load('/matter/actors-filter/co/1/term/'+$(this).val());
   });
 
   $('.delete-from-list').click(function(){
@@ -210,6 +165,6 @@ $(document).ready(function(){
 </div>
 <?php   endif; ?>
 </div>
-<div id="actor-details-popup" class="place-card">
-</div>
+<div id="actor-details-popup" class="place-card" style="float: left"></div>
+<div id="actor-details-used-in" style="display: inline-block; float: left"></div>
 <div id="facade"></div>

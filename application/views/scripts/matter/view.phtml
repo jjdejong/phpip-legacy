@@ -21,8 +21,6 @@
 .head-tab{
   color: #FFFFFF;
   background-color: #1E4262;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   padding:5px 10px;
   margin-bottom:10px;
@@ -31,8 +29,6 @@
 .row-tab{
   border:1px solid #888;
   background-color: #FFFFFF;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
   border-radius: 4px;
   padding:5px 10px;
   margin-top:5px;
@@ -87,8 +83,6 @@
   vertical-align: top;
   overflow-x: hidden;
   white-space: nowrap;
-  -webkit-mask-image: -webkit-linear-gradient(left, black 90%, transparent);
-  -moz-mask-image: -moz-linear-gradient(left, black 90%, transparent);
   mask-image: linear-gradient(left, black 90%, transparent);
   /*box-shadow: inset -5px -2px 10px #888888;*/
 }
@@ -110,8 +104,6 @@
     background-color: #FFFFFF;
     border: 1px solid #DDD;
     border-style:inset;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
     border-radius: 4px;
     height: 100px;
     padding:4px;
@@ -203,7 +195,6 @@ text-align:left;
     position: absolute;
     background: transparent;
     z-index: 1;
-    -moz-box-shadow: 0px;
     box-shadow: 0px;
 }
 
@@ -228,15 +219,11 @@ text-align:left;
   color: #000;
   text-shadow: 0 1px 0 #FFFFFF;
   padding: 2px 16px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 
 #matter-main-titles{
     border: 1px inset #000;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
     border-radius: 5px;
 }
 
@@ -257,7 +244,6 @@ text-align:left;
 #add-classifier-popup, #add-matter-popup{
   display:none;
   z-index: 1;
-  top: 200px;
   position:fixed;
   width:auto;
 }
@@ -293,12 +279,15 @@ text-align:left;
   margin-top: 4px;
 }
 
+.required-field{
+  font-weight: bold;
+  margin-right:4px;
+}
+
 </style>
 
 <script type="text/javascript">
 $(document).ready(function(){
-
-		//$('<div class="ui-widget-overlay"></div>').hide().appendTo('body');
 
         $("#MatterStatus").click(function(event){
             $('#event-pop-up').load("/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>");
@@ -326,7 +315,6 @@ $(document).ready(function(){
  
         $(".add-actor").click(function(event){
             role = $(this).attr('id').split('-');
-            //$('#facade').css('height',$(document).height());
             $('.ui-widget-overlay').show();
             //$('#facade').show();
             $('#mapactor-pop-up').load("/matter/map-actor-role/id/<?=$this->matter_record[0]['ID']?>/role/" + role[2]);
@@ -341,7 +329,6 @@ $(document).ready(function(){
             container_id = matter_role_id[2];
             role_id = matter_role_id[3];
             matter_id = $('input[name=matterId]').val();
-            $('#facade').css('height',$(document).height());
             //$('.ui-widget-overlay').show();
             $('#facade').show();
             $('#mapactor-pop-up').load("/matter/role-actors/", { matter_id: matter_id , container_id: container_id, role_id: role_id });
@@ -361,7 +348,6 @@ $(document).ready(function(){
         });
 
         $('#clone-matter-link').click(function(){
-          $('#facade').css('height', $(document).height());
           //$('.ui-widget-overlay').show();
           $('#facade').show();
           $.ajax({
@@ -369,16 +355,13 @@ $(document).ready(function(){
             type: 'GET',
             data: { category_id : $(this).attr('code'), country: $(this).attr('country'), origin: $(this).attr('origin'), type: $(this).attr('type') },
             success: function(data){
-            	$('#add-matter-popup').empty();
-              	$('#add-matter-popup').html(data);
-            	$('#add-matter-popup').css('left', 200);
+            	$('#add-matter-popup').empty().html(data);
             }
           });
-          $('#add-matter-popup').css('display', 'block');
+          $('#add-matter-popup').show().css({left: 400, top: 150});
         });
                   
         $('#child-matter-link').click(function(){
-          $('#facade').css('height', $(document).height());
           //$('.ui-widget-overlay').show();
           $('#facade').show();
           $.ajax({
@@ -386,16 +369,13 @@ $(document).ready(function(){
             type: 'GET',
             data: { caseref : $(this).attr('caseref'), category_id : $(this).attr('code'), country: $(this).attr('country'), origin: $(this).attr('origin'), type: $(this).attr('type') },
             success: function(data){
-            	$('#add-matter-popup').empty();
-              	$('#add-matter-popup').html(data);
-            	$('#add-matter-popup').css('left', 200);
+            	$('#add-matter-popup').empty().html(data);
             }
           });
-          $('#add-matter-popup').css('display', 'block');
+          $('#add-matter-popup').show().css({left: 400, top: 150});
         });
 
         $('#national-matter-link').click(function(){
-          $('#facade').css('height', $(document).height());
           //$('.ui-widget-overlay').show();
           $('#facade').show();
           $.ajax({
@@ -403,12 +383,10 @@ $(document).ready(function(){
             type: 'GET',
             data: { caseref: $(this).attr('caseref'), category_id : $(this).attr('code'), country : $(this).attr('country') },
             success: function(data){
-            	$('#add-matter-popup').empty();
-              	$('#add-matter-popup').html(data);
-            	$('#add-matter-popup').css('left', 200);
+            	$('#add-matter-popup').empty().html(data);
             }
           });
-          $('#add-matter-popup').css('display', 'block');
+          $('#add-matter-popup').show().css({left: 400, top: 150});
         });
 
         $('.title-editable').editable('/matter/edit-classifier', {
@@ -441,14 +419,12 @@ $(document).ready(function(){
             }
         });
 
-    $('#current-matter-edit').click(function(){
-      $('#facade').css('height', $(document).height());
+    $('#current-matter-edit').click(function(event){
       //$('.ui-widget-overlay').show();
-      $('#facade').show();
-      $('#add-matter-popup').load("/matter/edit/mid/"+$('#this-matter-id').val());
-		//var ren_left = Math.round($(window).width()/2) - Math.round($('#add-matter-popup').width()/2);
-    	$('#add-matter-popup').css('left', 200);
-      $('#add-matter-popup').css('display', 'block');
+      	$('#facade').show();
+      	$('#add-matter-popup').load("/matter/edit/mid/"+$('#this-matter-id').val())
+      		.show()
+      		.css($('#current-matter-edit').offset());
     });
 
     $('#add-classifier-link').hide();
@@ -458,24 +434,14 @@ $(document).ready(function(){
         $('#add-classifier-link').hide();
     });
 
-    $('.matter-actor').click(function(){
-    var actor_id = $(this).attr('id');
-      $('#facade').css('height',$(document).height());
+    $('.matter-actor').click(function(event){
       //$('.ui-widget-overlay').show();
-      $('#facade').show();
-      $.ajax({
-        url: '/matter/actor/',
-        type: 'POST',
-        data: { actor_id:actor_id },
-        success: function(data){
-          $('#actor-details-popup').empty();
-          $('#actor-details-popup').html(data);
-          //ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);
-          $('#actor-details-popup').css('left', 200);
-          $('#actor-details-popup').css('top', 50);
-        }
-      });
-      $('#actor-details-popup').css('display', 'block');
+      	$('#facade').show();
+      	$('#actor-details-popup').load("/matter/actor/", { actor_id: $(this).attr('id') }, function(){ 
+      		$(this).position({of: event, collision: "fit"});
+      		$("#actor-used-in").hide(); 
+      	})
+      		.show();
     });
                   
     $( "button, input:submit, input:button").button();
@@ -491,7 +457,7 @@ $(document).ready(function(){
         $matter_dead = "";
 ?>
 	<div class="matter-title">
-    <?php echo $this->matter_record[0]['category'] ."</br>";?>
+    <?php echo $this->matter_record[0]['category'] ."<br>";?>
     <span style="color: white; font-size: 16px; margin-right: 5px; float: left;" class="<?=$matter_dead?>"><?php echo '<a href="/matter/filter/Ref/'. $this->matter_record[0]['caseref']. '" style="color: white;" title="See family">'. $this->matter_record[0]['UID'] .'</a>'; ?> <button id="current-matter-edit" title="Advanced edit" style="background: transparent; border: transparent;"><span class="ui-icon ui-icon-wrench"></span></button></span>
 
 	<?php

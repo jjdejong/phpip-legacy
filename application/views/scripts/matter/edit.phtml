@@ -55,16 +55,11 @@ $(document).ready(function(){
         },
     });
     
-    $('#edit-matter-cancel').click(function(){
-        $('#add-matter-popup').css('display', 'none');
-        $('#facade').css('display', 'none');
+    $('#edit-matter-cancel, .close-button').click(function(){
+        $('#add-matter-popup').hide();
+        $('#facade').hide();
     });
     
-    $('.close-button').click(function(){
-        $('#add-matter-popup').css('display', 'none');
-        $('#facade').css('display', 'none');
-    });
-
    $('#edit-matter-submit').click(function(){
         var invalid = false;
         $('.validation-errors').empty();
@@ -184,8 +179,6 @@ $(document).ready(function(){
   color: #FFF;
   padding: 5px;
   border: 1px solid #1E4262;
-  -moz-border-radius: 5px 5px 0px 0px;
-  -webkit-border-radius: 5px 5px 0px 0px;
   border-radius: 5px 5px 0px 0px;
 }
 #edit-matter{
@@ -194,8 +187,6 @@ $(document).ready(function(){
   display: block;
   border: 1px inset #888;
   padding: 5px;
-  -moz-border-radius: 0px 0px 5px 5px;
-  -webkit-border-radius: 0px 0px 5px 5px;
   border-radius: 0px 0px 5px 5px;
 }
 #edit-matter label{
@@ -219,8 +210,6 @@ $(document).ready(function(){
 }
 #edit-matter input[type="text"]{
   width: 170px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   border-radius: 3px;
   border: 1px inset #888;
   padding: 3px 2px;
@@ -232,15 +221,9 @@ $(document).ready(function(){
   background: #f00;
   float:right;
   padding: 2px 4px 0px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   border-radius: 3px;
   cursor: pointer;
   font-family: arial;
-}
-.required-field{
-  font-weight: bold;
-  margin-right:4px;
 }
 .validation-errors{
   display:none;
@@ -249,8 +232,6 @@ $(document).ready(function(){
   padding:5px;
   width: auto;
   margin-bottom: 10px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 .validation-errors span{
@@ -261,8 +242,6 @@ $(document).ready(function(){
 .display-field{
   display: inline-block;
   width: 170px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   border-radius: 3px;
   border: 1px solid #888;
   padding: 1px 2px;

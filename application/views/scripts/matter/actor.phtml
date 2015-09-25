@@ -8,8 +8,6 @@ select{
   display: block;
   border: 1px inset #888;
   padding: 5px;
-  -moz-border-radius: 0px 0px 5px 5px;
-  -webkit-border-radius: 0px 0px 5px 5px;
   border-radius: 0px 0px 5px 5px;
 }
 #edit-actor-content label{
@@ -22,8 +20,6 @@ select{
 .actor-input-wide{
   display: inline-block;
   width: 255px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   border-radius: 3px;
   border: 1px solid #FFF;
   background: #FFF;
@@ -35,8 +31,6 @@ select{
 .actor-input-narrow{
   display: inline-block;
   width: 125px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   border-radius: 3px;
   border: 1px solid #FFF;
   background: #FFF;
@@ -52,8 +46,6 @@ select{
   background: #f00;
   float:right;
   padding: 2px 4px 0px;
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
   border-radius: 3px;
   cursor: pointer;
   font-family: arial;
@@ -65,8 +57,6 @@ select{
   color: #FFF;
   padding: 5px;
   border: 1px solid #1E4262;
-  -moz-border-radius: 5px 5px 0px 0px;
-  -webkit-border-radius: 5px 5px 0px 0px;
   border-radius: 5px 5px 0px 0px;
 }
 .validation-errors{
@@ -77,51 +67,29 @@ select{
   display: block;
   margin:0px 0px 5px 10px;
 }
-.required-field{
-  color: #F00;
-}
 .actor-info-set{
   background: #EFEFEF;
   border: 1px inset #888;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
   border-radius: 5px;
 }
 input{
   border: 0px;
 }
 
-#actor-details-used-in{ 
-  z-index: 101; 
+/*#actor-details-used-in{ 
+  /*z-index: 1;*/ 
   position: absolute;
   /*float: right;*/
   width: 220px; 
   display: none; 
-} 
+}*/ 
 
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#actor-used-in').click(function(){
-	    $('#facade').css('height',$(document).height());
-	    $('#facade').css('display','block');
-        var aid = $('#actor-id').val();
-        $.ajax({
-			url: '/matter/actor-used-in',
-			type: 'POST',
-			data: { aid:aid },
-			success: function(data){
-				$('#actor-details-used-in').empty();
-				offset = $('#actor-details-popup').offset();
-				left_position = $('#actor-details-popup').width() + offset.left + 5;
-				top_position = offset.top;
-				$('#actor-details-used-in').css('top', top_position);
-				$('#actor-details-used-in').css('left', left_position);
-				$('#actor-details-used-in').html(data);
-				$('#actor-details-used-in').css("display", "block");
-				$('#facade').css('display','none');            
-			}
-        });
+        $('#actor-details-used-in').load('/matter/actor-used-in', { aid: $('#actor-id').val() })
+        	.show();
 	});
 
     $.editable.addInputType('autocomplete', {
@@ -279,23 +247,11 @@ $(document).ready(function(){
     });
 
     $('input[name=phy_person]').change(function(){
-        var actor_id = $('#actor-id').val();
-        $.ajax({
-			url: '/matter/update-actor',
-			type: 'POST',
-			data: { actor_id : actor_id, field : 'phy_person', value: $('input[name=phy_person]:checked').val()},
-			success: function(data){}
-        });
+        $.post('/matter/update-actor', { actor_id : $('#actor-id').val(), field : 'phy_person', value: $('input[name=phy_person]:checked').val()});
     });
     
     $('input[name=small_entity]').change(function(){
-        var actor_id = $('#actor-id').val();
-        $.ajax({
-			url: '/matter/update-actor',
-			type: 'POST',
-			data: { actor_id : actor_id, field : 'small_entity', value: $('input[name=small_entity]:checked').val()},
-			success: function(data){}
-        });
+        $.post('/matter/update-actor', { actor_id : $('#actor-id').val(), field : 'small_entity', value: $('input[name=small_entity]:checked').val()});
     });
 
     $('.delete-actor').click(function(){
@@ -318,9 +274,9 @@ $(document).ready(function(){
 	});
 
     $('.close-button').click(function(){
-        $('#actor-details-popup').css('display', 'none');
-        $('#actor-details-used-in').css('display', 'none');
-        $('#facade').css('display','none');
+        $('#actor-details-popup').hide();
+        $('#actor-details-used-in').hide();
+        $('#facade').hide();
     });
     
     $( "button, input:button" ).button();
@@ -335,7 +291,7 @@ Actor Information <span class="close-button">X</span>
 <input type="hidden" name="actor_id" id="actor-id" value="<?=$this->actor['ID']?>" />
 <fieldset class="actor-info-set" >
 <legend>Actor details - ID: <?=$this->actor['ID']?></legend>
-<label for="name" title="<?=$this->actorComments['name']?>" >Name <span class="required-field">*</span></label>
+<label for="name" class="required-field" title="<?=$this->actorComments['name']?>" >Name</label>
 <span class="actor-input-wide editable" id="name"><?=htmlentities($this->actor['name'])?></span>
 <label for="first_name" title="<?=$this->actorComments['first_name']?>" >Firstname</label>
 <span class="actor-input-narrow editable" id="first_name" ><?=htmlentities($this->actor['first_name'])?></span>
@@ -404,4 +360,3 @@ Actor Information <span class="close-button">X</span>
 <input type="hidden" value="<?=$this->actor['default_role']?>" id="default_role-code" name="default_role-code"/>
 
 </div>
-<div id="actor-details-used-in"></div>

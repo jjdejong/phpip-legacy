@@ -267,13 +267,8 @@ $(document).ready(function(){
               return;
           }
        }
-        $.ajax({
-            type: 'post',
-            url: '/matter/update-task',
-            data: { task_id: tid, field: 'done', value: done_val },
-            success: function(data){
+        $.post('/matter/update-task', { task_id: tid, field: 'done', value: done_val }, function(data){
             	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
-            }
         });
     });
 
@@ -457,7 +452,7 @@ foreach($this->matter_event_tasks as $event_task):
    echo ": " . $event_task['detail'] ?></span>
 
 <span id="due_date-<?=$event_task['ID']?>" class="tasklist-col-due_date editable-due-date" rule_id="<?=$event_task['rule_used']?>" ><?=$event_task['due_date']?></span>
-<span class="tasklist-col-done" ><input type="checkbox" name="doneflag-<?=$event_task['ID']?>" value="<?=$event_task['ID']?>" <? if($event_task['done']) echo "checked"; ?> ></span>
+<span class="tasklist-col-done" ><input type="checkbox" name="doneflag-<?=$event_task['ID']?>" value="<?=$event_task['ID']?>" <? if($event_task['done']) echo 'checked="checked"'; ?> ></span>
 <span id="done_date-<?=$event_task['ID']?>" class="tasklist-col-done_date editable-done-date" ><?=$event_task['done_date']?></span>
 <span class="tasklist-col-cost editable" title="Click to edit cost"><?=$event_task['cost']?></span>
 <span class="tasklist-col-fee editable" title="Click to edit fee"><?=$event_task['fee']?></span>
