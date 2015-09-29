@@ -440,8 +440,7 @@ $(document).ready(function(){
       	$('#actor-details-popup').load("/matter/actor/", { actor_id: $(this).attr('id') }, function(){ 
       		$(this).position({of: event, collision: "fit"});
       		$("#actor-used-in").hide(); 
-      	})
-      		.show();
+      	}).show();
     });
                   
     $( "button, input:submit, input:button").button();
