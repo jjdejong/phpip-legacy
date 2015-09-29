@@ -3,146 +3,62 @@ $(document).ready(function(){
     $('#matter-country').autocomplete({
         minLength: 2,
         source: "/matter/get-country-codes",
-        focus: function(event, ui){
-            return false;
-        },
         autoFocus: true,
         select: function( event, ui ) {
-                    $( "#matter-country" ).val( ui.item.value );
-                    $( "#matter-country-id" ).val( ui.item.id );
-                 return false;
+            $( "#matter-country" ).val( ui.item.value );
+        	$( "#matter-country-id" ).val( ui.item.id );
         },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
-    }).select();
+    });
+    
     $('#matter-origin').autocomplete({
         minLength: 2,
         source: "/matter/get-country-codes",
-        focus: function(event, ui){
-            return false;
-        },
         autoFocus: true,
         select: function( event, ui ) {
-                    $( "#matter-origin" ).val( ui.item.value );
-                    $( "#matter-origin-id" ).val( ui.item.id );
-                 return false;
+        	$(this).val( ui.item.value );
+            $( "#matter-origin-id" ).val( ui.item.id );
         },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
     });
+    
     $('#matter-type').autocomplete({
         minLength: 1,
         source: "/matter/get-matter-types",
         autoFocus: true,
-        focus: function(event, ui){
-            return false;
-        },
         select: function( event, ui ) {
-                    $( "#matter-type" ).val( ui.item.value );
-                    $( "#matter-type-id" ).val( ui.item.id );
-                 return false;
+            $(this).val( ui.item.value );
+            $( "#matter-type-id" ).val( ui.item.id );
         },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
     });
+    
     $('#matter-caseref').autocomplete({
         minLength: 3,
         source: "/matter/get-matter-caseref",
         autoFocus: true,
-        focus: function(event, ui){
-            return false;
-        },
         select: function( event, ui ) {
-                    $( "#matter-caseref" ).val( ui.item.value );
-                    $( "#matter-caseref-id" ).val( ui.item.id );
-                 return false;
+            $(this).val( ui.item.value );
+            $( "#matter-caseref-id" ).val( ui.item.id );
         },
-
     });
+    
     $('#matter-responsible').autocomplete({
         minLength: 1,
         source: "/matter/get-all-logins",
         autoFocus: true,
-        focus: function(event, ui){
-            return false;
-        },
         select: function( event, ui ) {
-                    $( "#matter-responsible" ).val( ui.item.value );
-                 return false;
+            $(this).val( ui.item.value );
         },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
     });
+    
     $('#matter-category').autocomplete({
         minLength: 1,
         source: "/matter/get-all-categories",
         autoFocus: true,
-        focus: function(event, ui){
-            return true;
-        },
         select: function( event, ui ) {
-                    $( "#matter-category" ).val( ui.item.value );
-                    $( "#matter-category-code" ).val( ui.item.id );
-                 return false;
+            $(this).val( ui.item.value );
+            $( "#matter-category-code" ).val( ui.item.id );
         },
-        change: function( event, ui ){
-                    valid=true;
-                    if ( !ui.item ) {
-                      valid=false;
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $(this).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                 return false;
-        }
     });
+    
     $('#add-matter-cancel').click(function(){
         $('#add-matter-popup').css('display', 'none');
         $('#facade').css('display', 'none');
@@ -151,12 +67,12 @@ $(document).ready(function(){
    $('#add-matter-submit').click(function(){
         var invalid = false;
         $('.validation-errors').empty();
-        if($('#matter-category').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
+        if($('#matter-category-code').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Category requires a correct value</span>');
             invalid = true;
         }
-        if($('#matter-country').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Country requires a value</span>');
+        if($('#matter-country-id').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Country requires a correct value</span>');
             invalid = true;
         }
         if($('#matter-caseref').val() == ""){
@@ -171,37 +87,35 @@ $(document).ready(function(){
             $('.validation-errors').css('display', 'block');
         else{
             $('.validation-errors').css('display', 'none');
-            $.ajax({
-                url: '/matter/add',
-                type: 'POST',
-                data: { category_code: $('#matter-category-code').val(),
-                        country: $('#matter-country-id').val(),
-                        origin: $('#matter-origin-id').val(),
-                        type_code: $('#matter-type-id').val(),
-                        caseref: $('#matter-caseref-id').val(),
-                        responsible: $('#matter-responsible').val()
-                      },
-                success: function(data){
-                    if(isNaN(parseInt(data))){
-                       alert(data);
-                    }else{
-                        $('#add-matter-popup').css('display', 'none');
-                        $('#facade').css('display', 'none');
-                        $(location).attr("href", '/matter/view/id/'+data);
-                    }
+            $.post('/matter/add', { 
+            	category_code: $('#matter-category-code').val(),
+                country: $('#matter-country-id').val(),
+                origin: $('#matter-origin-id').val(),
+                type_code: $('#matter-type-id').val(),
+                caseref: $('#matter-caseref-id').val(),
+                responsible: $('#matter-responsible').val()
+            }, 
+            function(data){
+                if(isNaN(parseInt(data))){
+                	alert(data);
+                } else {
+                    $('#add-matter-popup').hide();
+                    $('#facade').hide();
+                    $(location).attr("href", '/matter/view/id/'+data);
                 }
             });
         }
    });
+   
    $('#clone-matter-submit').click(function(){
         var invalid = false;
         $('.validation-errors').empty();
-        if($('#matter-category').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
+        if($('#matter-category-code').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Category requires a correct value</span>');
             invalid = true;
         }
-        if($('#matter-country').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Country requires a value</span>');
+        if($('#matter-country-id').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Country requires a correct value</span>');
             invalid = true;
         }
         if($('#matter-caseref').val() == ""){
@@ -216,34 +130,30 @@ $(document).ready(function(){
             $('.validation-errors').css('display', 'block');
         else{
             $('.validation-errors').css('display', 'none');
-            $.ajax({
-                url: '/matter/clone',
-                type: 'POST',
-                data: { category_code: $('#matter-category-code').val(),
-                        country: $('#matter-country-id').val(),
-                        origin: $('#matter-origin-id').val(),
-                        type_code: $('#matter-type-id').val(),
-                        caseref: $('#matter-caseref-id').val(),
-                        responsible: $('#matter-responsible').val(),
-                        matter_ID: $('#this-matter-id').val()
-                      },
-                success: function(data){
-                    if( data != 'false' ){
-                      //  alert("Matter added!");
-                    $('#add-matter-popup').css('display', 'none');
-                    $('#facade').css('display', 'none');
-                        $(location).attr("href", '/matter/view/id/'+data);
-                   }else
+            $.post('/matter/clone', { 
+            	category_code: $('#matter-category-code').val(),
+                country: $('#matter-country-id').val(),
+                origin: $('#matter-origin-id').val(),
+                type_code: $('#matter-type-id').val(),
+                caseref: $('#matter-caseref-id').val(),
+                responsible: $('#matter-responsible').val(),
+                matter_ID: $('#this-matter-id').val()
+            },
+            function(data){
+				if( data != 'false' ){
+					$('#add-matter-popup').hide();
+					$('#facade').hide();
+					$(location).attr("href", '/matter/view/id/'+data);
+				} else
                       alert("Clone matter failed");
-                }
             });
         }
    });
    $('#child-matter-submit').click(function(){
         var invalid = false;
         $('.validation-errors').empty();
-        if($('#matter-country').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Country requires a value</span>');
+        if($('#matter-country-id').val() == ""){
+            $('.validation-errors').append('<span class="errors">* Country requires a correct value</span>');
             invalid = true;
         }
         if($('#matter-responsible').val() == ""){
@@ -254,31 +164,28 @@ $(document).ready(function(){
             $('.validation-errors').css('display', 'block');
         else{
             $('.validation-errors').css('display', 'none');
-            $.ajax({
-                url: '/matter/child',
-                type: 'POST',
-                data: { category_code: $('#matter-category-code').val(),
-                        country: $('#matter-country-id').val(),
-                        origin: $('#matter-origin-id').val(),
-                        type_code: $('#matter-type-id').val(),
-                        caseref: $('#matter-caseref-id').val(),
-                        responsible: $('#matter-responsible').val(),
-                        matter_ID: $('#this-matter-id').val(),
-                        priority: $('input[name=child-matter-priority]:checked').val(),
-                        container: $('input[name=child-matter-container]:checked').val()
-                      },
-                success: function(data){
-                    if( data != 'false' ){
-                      //  alert("Matter added!");
-                    $('#add-matter-popup').css('display', 'none');
-                    $('#facade').css('display', 'none');
-                        $(location).attr("href", '/matter/view/id/'+data);
-                   }else
+            $.post('/matter/child', { 
+            	category_code: $('#matter-category-code').val(),
+                country: $('#matter-country-id').val(),
+                origin: $('#matter-origin-id').val(),
+                type_code: $('#matter-type-id').val(),
+                caseref: $('#matter-caseref-id').val(),
+                responsible: $('#matter-responsible').val(),
+                matter_ID: $('#this-matter-id').val(),
+                priority: $('input[name=child-matter-priority]:checked').val(),
+                container: $('input[name=child-matter-container]:checked').val()
+            },
+            function(data){
+                if( data != 'false' ){
+                	$('#add-matter-popup').hide();
+                    $('#facade').hide();
+                    $(location).attr("href", '/matter/view/id/'+data);
+                } else
                       alert("Child matter failed");
-                }
             });
         }
    });
+   
    $("input:button, button").button();
 });
 
@@ -292,8 +199,6 @@ background: #1E4262;
 color: #FFF;
 padding: 5px;
 border: 1px solid #1E4262;
--moz-border-radius: 5px 5px 0px 0px;
--webkit-border-radius: 5px 5px 0px 0px;
 border-radius: 5px 5px 0px 0px;
 }
 #add-matter{
@@ -303,8 +208,6 @@ background: whitesmoke;
 display: block;
 border: 1px inset #888;
 padding: 5px;
--moz-border-radius: 0px 0px 5px 5px;
--webkit-border-radius: 0px 0px 5px 5px;
 border-radius: 0px 0px 5px 5px;
 }
 #add-matter label{
@@ -328,8 +231,6 @@ width: 150px;
 }
 #add-matter input[type="text"]{
 width: 170px;
--moz-border-radius: 3px;
--webkit-border-radius: 3px;
 border-radius: 3px;
 border: 1px inset #888;
 padding: 3px 2px;
@@ -339,11 +240,6 @@ margin: 10px 0px 0px 0px;
 float: right;
 }
 
-.required-field{
-color: #f00;
-    font-weight: bold;
-    margin-right:4px;
-}
 .validation-errors{
 display:none;
 border:1px solid #f00;
@@ -351,8 +247,6 @@ color:#f00;
 padding:5px;
 width: auto;
     margin-bottom: 10px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
     border-radius: 5px;
 }
 .validation-errors span{
@@ -363,8 +257,6 @@ width: auto;
 .display-field{
 display: inline-block;
 width: 170px;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
     border-radius: 3px;
 border: 1px solid #888;
 padding: 1px 2px;
@@ -384,11 +276,11 @@ padding: 1px 2px;
 </div>
 <form type="post" action="" id="add-matter-form" accept-charset="utf-8">
 
-<label for="matter-category"><span class="required-field">*</span>Category</label>
+<label for="matter-category" style="font-weight: bold;">Category</label>
 <input type="text" name="matter-category" id="matter-category" value="<?=$this->category?>" class="required" onfocus="this.select()" />
 <input type="hidden" name="matter-category-code" id="matter-category-code" value="<?=$this->category_code?>" />
 
-<label for="matter-country"><span class="required-field">*</span>Country</label>
+<label for="matter-country" style="font-weight: bold;">Country</label>
 <input type="text" name="matter-country" id="matter-country" value="<?=$this->country_name?>" class="required" onfocus="this.select()" />
 <input type="hidden" name="matter-country-id" id="matter-country-id" value="<?=$this->country_code?>" />
 
@@ -400,7 +292,7 @@ padding: 1px 2px;
 <input type="text" name="matter-type" id="matter-type" value="<?=$this->type_name?>" onfocus="this.select()" />
 <input type="hidden" name="matter-type-id" id="matter-type-id" value="<?=$this->type_code?>" />
 
-<label for="matter-caseref"><?php if(!isset($this->child)){?><span class="required-field">*</span><?php } ?>Caseref</label>
+<label for="matter-caseref" style="font-weight: bold;">Caseref</label>
 <?php if(isset($this->child)){?>
 <span id="matter-caseref" class="display-field" ><?=$this->caseref?></span>
 <?php }else { ?>
@@ -408,7 +300,7 @@ padding: 1px 2px;
 <?php } ?>
 <input type="hidden" name="matter-caseref-id" id="matter-caseref-id" value="<?=$this->caseref?>" />
 
-<label for="matter-responsible"><span class="required-field">*</span>Responsible</label>
+<label for="matter-responsible" style="font-weight: bold;">Responsible</label>
 <input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->username?>" class="required" onfocus="this.select()" />
 
 <?php if(isset($this->child)){ ?>
