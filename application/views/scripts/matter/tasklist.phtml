@@ -179,7 +179,7 @@ $(document).ready(function(){
     });
 
     $("#MatterAllTasks").click(function(event){
-        $('#tasklist-pop-up').css('display','none');
+        $('#tasklist-pop-up').hide();
         location.reload(); // try to avoid because it reloads the whole page
     });
 
@@ -268,7 +268,11 @@ $(document).ready(function(){
           }
        }
         $.post('/matter/update-task', { task_id: tid, field: 'done', value: done_val }, function(data){
-            	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
+        	var event_id = <?=(isset($this->event_id)?$this->event_id:0)?>;
+        	if ( event_id )
+        		$('#tasklist-pop-up').load("/matter/tasklist/event_id/<?=$this->event_id?>");
+        	else 
+        		$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
         });
     });
 
@@ -276,14 +280,13 @@ $(document).ready(function(){
     $('.add-task-toevent').click(function(){
         $('#trigger_id').val( $(this).attr('id') );
         $('#popup-label').val( $(this).attr('title') );
-        $('#facade').css("height", $(document).height());
         $('#facade').show();
-        $('#add-task-popup').css('display', 'block');
+        $('#add-task-popup').show();
         $('#task_name').focus();
     });
 
     $('#add-task-cancel').click(function(){
-        $('#add-task-popup').css('display', 'none');
+        $('#add-task-popup').hide();
         $('#facade').hide();
     });
 
