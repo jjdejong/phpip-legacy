@@ -53,64 +53,66 @@
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
-var fvalue = '';
-var dvalue = '';
-    $("#classifiers-list-head").click(function(event){
-        $('#classifier-popup').css('display','none');
-        location.reload();
-    });
+	var fvalue = '';
+	var dvalue = '';
+	$("#classifiers-list-head").click(function(event){
+		$('#classifier-popup').css('display','none');
+		location.reload();
+	});
 
-        $('.sortable-classifiers').sortable({
-            update : function(event, ui){
-              var order = $(this).sortable('serialize');
-              var liIds = $(this).find('li').map(function(i,n){
-                  return $(n).attr('id');
-              }).get().join(',');
+	$('.sortable-classifiers').sortable({
+		update : function(event, ui){
+			var order = $(this).sortable('serialize');
+			var liIds = $(this).find('li').map(function(i,n){
+				return $(n).attr('id');
+			}).get().join(',');
 
-              $.ajax({
-                type: 'POST',
-                url : '/matter/save-classifier-display/',
-                data: { order_list : liIds },
-                success : function(data){
-                  reorder_actors = 1;
-                }
-              });
-            }
-        });
-        $('#sortable-role-actors').disableSelection();
+			$.ajax({
+				type: 'POST',
+				url : '/matter/save-classifier-display/',
+				data: { order_list : liIds },
+				success : function(data){
+					reorder_actors = 1;
+				}
+			});
+		}
+	});
+
+	$('#sortable-role-actors').disableSelection();
 
     $.editable.addInputType('autocomplete', {
-                element : $.editable.types.text.element,
-                plugin : function(settings, original){
-                  $('input', this).autocomplete(settings.autocomplete);
-          }
+		element : $.editable.types.text.element,
+		plugin : function(settings, original){
+			$('input', this).autocomplete(settings.autocomplete);
+		}
     });
+    
     $.editable.addInputType('tautocomplete', {
-                element : $.editable.types.textarea.element,
-                plugin : function(settings, original){
-                  $('input', this).autocomplete(settings.autocomplete);
-          }
+		element : $.editable.types.textarea.element,
+		plugin : function(settings, original){
+			$('input', this).autocomplete(settings.autocomplete);
+		}
     });
 
     $('.value-neditable').editable('/matter/update-classifier', {
-      type: 'textarea',
-      submit: 'Ok',
-      cancel: 'Cancel',
-      placeholder: '...',
-      select : true,
-      indicator : '<span class="icon-busy" />',
-      tooltip: 'Click to edit....',
-      submitdata: function(value, settings){
-        var cid = $(this).parent().attr('id');
-        return { classifier_id: cid, field: 'value'}
-      }
+		type: 'textarea',
+		submit: 'Ok',
+		cancel: 'Cancel',
+		placeholder: '...',
+		select : true,
+		indicator : '<span class="icon-busy" />',
+		tooltip: 'Click to edit....',
+		submitdata: function(value, settings){
+			var cid = $(this).parent().attr('id');
+			return { classifier_id: cid, field: 'value'}
+		}
     });
 
-var type_id = ''
-var nterm = '';
+	var type_id = ''
+	var nterm = '';
     $('.value-editable').mouseenter(function(){
-      type_id = $(this).attr('id');
-      nterm = '';
+		type_id = $(this).attr('id');
+		nterm = '';
     });
 
     $('.value-editable').editable('/matter/update-classifier', {
@@ -267,27 +269,24 @@ var nterm = '';
     });
 
     $('.add-classifier-totype').click(function(){
-      var type_code = $(this).attr('id');
-      $('#facade').css('height', $(document).height());
-      $('#facade').css("display", "block");
-      $.ajax({
-          type: "GET",
-          url: "/matter/add-classifier/type_code/"+type_code,
-          data: {},
-          success: function(data){
-            
-            if(isNaN(parseInt(data))){
-              $('#add-classifier-popup').html(data);
-              var ren_left = Math.round($(window).width()/2) - Math.round($('#add-classifier-popup').width()/2);
-              $('#add-classifier-popup').css('left', ren_left);
-              $('#add-classifier-popup').css('display', 'block');
-            }else{
-              alert(data);
-            }
-          }
-      });
-      return false;
-    });
+		var type_code = $(this).attr('id');
+		$('#facade').show();
+		$.ajax({
+			type: "GET",
+			url: "/matter/add-classifier/type_code/"+type_code,
+			data: {},
+			success: function(data){
+				if(isNaN(parseInt(data))){
+					$('#add-classifier-popup').html(data)
+					.css($('#MatterOpenTasks').offset())
+					.show();
+            	}else{
+					alert(data);
+            	}
+          	}
+		});
+		return false;
+	});
 
     $('.sortable-classifiers').each(function(){
         var lsize = $(this).children('li').length
