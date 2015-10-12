@@ -8,10 +8,6 @@ class Application_Model_User
 	protected $_password;
 	protected $_passwordsalt;
 	protected $_lastlogin;
-	//protected $_ip;
-	//protected $_ipnum;
-	//protected $_browser;
-	//protected $_ipcity;
 	protected $_createDate;
 	protected $_primary = "ID";
 	protected $_dbTable;
