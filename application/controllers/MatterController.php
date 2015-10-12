@@ -55,7 +55,7 @@ class MatterController extends Zend_Controller_Action {
 		$mfs->category_display = $this->view->category_display;
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->paginateMatters ( $filter_array, $sort_field, $sort_dir, array (), $this->view->category_display );
+		$paginator = $matterModel->fetchMatters ( $filter_array, $sort_field, $sort_dir, array (), $this->view->category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
@@ -998,7 +998,7 @@ class MatterController extends Zend_Controller_Action {
 		$this->view->responsible = @$post_data ['responsible'];
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->paginateMatters ( $filter_array, $sort_field, $sort_dir, $post_data, $category_display );
+		$paginator = $matterModel->fetchMatters ( $filter_array, $sort_field, $sort_dir, $post_data, $category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
@@ -1013,7 +1013,7 @@ class MatterController extends Zend_Controller_Action {
 	}
 	
 	/**
-	 * autocompletes non-actors from actor table where phy_person=0
+	 * autocompletes non-physical persons from actor table (where phy_person=0)
 	 * *
 	 */
 	public function getNonActorsAction() {
@@ -1570,7 +1570,7 @@ class MatterController extends Zend_Controller_Action {
 		$post_data = $mfs->multi_sort;
 		
 		$matterModel = new Application_Model_Matter ();
-		$matters = $matterModel->fetchMatters ( $filter_array, $sort_field, $sort_dir, $post_data, $mfs->category_display );
+		$matters = $matterModel->fetchMatters ( $filter_array, $sort_field, $sort_dir, $post_data, $mfs->category_display, false );
 		$mcount = count ( $matters );
 		
 		if (preg_match ( "/matter/", $rid )) {

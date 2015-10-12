@@ -40,6 +40,7 @@ class Application_Model_Matter {
 	protected $_dbTable;
 	protected $_adapter;
 	protected $_error;
+	
 	public function __construct(array $options = null) {
 		if (is_array ( $options ))
 			$this->setOptions ( $options );
@@ -274,77 +275,22 @@ class Application_Model_Matter {
 	}
 	
 	/**
-	 * retrieves paginated list of matter with specified filters
+	 * retrieves paginated list of matters with specified filters
 	 * *
 	 */
-	public function paginateMatters($filter_array = array(), $sortField = "caseref, container_id, origin, country, matter.type_code, idx", $sortDir = "", $multi_filter = array(), $matter_category_display_type = false) {
-		if ($matter_category_display_type)
-			$dsiplay_with = " where display_with='$matter_category_display_type'";
-		else
-			$dsiplay_with = "";
+	public function fetchMatters($filter_array = array(), 
+									$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx', 
+									$sortDir = '', 
+									$multi_filter = array(), 
+									$matter_category_display_type = false,
+									$paginated = false) {
 		
-		if (empty ( $filter_array ))
-			$filter_clause = "AND (matter.category_code IN (select code from matter_category $dsiplay_with))";
-		else {
-			$filter_clause = "AND (matter.category_code IN (select code from matter_category $dsiplay_with))";
-			
-			if ($filter_array ['value'] && $filter_array ['field'])
-				$filter_clause .= " AND " . $filter_array ['field'] . " = '" . $filter_array ['value'] . "'";
-			
-			if ($filter_array ['field'] == 'Ctnr') {
-				$filter_clause = "AND matter.container_ID IS NULL";
-			}
-			
-			if ($filter_array ['field'] == 'Pri') {
-				$filter_clause = "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
-			}
-		}
-		
-		if ($sortField == 'caseref') {
-			if ($sortDir == 'desc') {
-				$sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-			if ($sortDir == 'asc') {
-				$sortField = "caseref, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-		}
-		if ($sortField == 'Ref') {
-			if ($sortDir == 'desc') {
-				$sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-			if ($sortDir == 'asc') {
-				$sortField = "caseref, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-		}
-		
-		$multi_query = '';
-		if (! empty ( $multi_filter )) {
-			foreach ( $multi_filter as $key => $value ) {
-				if ($value != '' && $key != 'display' && $key != 'display_style') {
-					if ($multi_query == '')
-						if ($key == 'responsible')
-							$multi_query = " HAVING (responsible = '" . $value . "' OR delegate = '" . $value . "')";
-						else
-							$multi_query = " HAVING " . $key . " LIKE '" . $value . "%'";
-					else if ($key == 'responsible')
-						$multi_query .= " AND (responsible = '" . $value . "' OR delegate = '" . $value . "')";
-					else
-						$multi_query .= " AND " . $key . " LIKE '" . $value . "%'";
-				}
-			}
-		}
-		$inventor_filter = 'AND invlnk.display_order = 1';
 		if (array_key_exists ( 'Inventor1', $multi_filter )) {
-			// $inventor_filter = "AND inv.name LIKE '".$multi_filter['Inventor1']."%'";
 			$inventor_filter = '';
-		}
+		} else
+			$inventor_filter = 'AND invlnk.display_order = 1';
 		
-		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( "select distinct CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
+		$sql = "SELECT CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
 matter.country AS country,
 matter.category_code AS Cat,
 matter.origin,
@@ -370,7 +316,8 @@ del.login AS delegate,
 matter.dead,
 IF(isnull(matter.container_ID),1,0) AS Ctnr,
 1 AS Pri
-FROM matter 
+FROM matter IGNORE INDEX (category)
+  JOIN matter_category FORCE INDEX (PRIMARY) ON (matter.category_code = matter_category.code)
   LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
     ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
   LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
@@ -387,13 +334,146 @@ FROM matter
       LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
   LEFT JOIN (classifier, classifier_type) 
     ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
-WHERE e2.matter_id IS NULL
-" . $filter_clause . " " . $multi_query . " order by " . $sortField . " " . $sortDir . ", matter.origin, matter.country" );
+WHERE e2.matter_id IS NULL ";
+
+/* Good try, but no, doesn't work with joins through more than two tables
+		$db = $this->_dbTable->getAdapter ();
+		$selectQuery = $db->select()
+		->from('matter', array(
+			'Ref' => "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx)",
+			'country' => 'matter.country',
+			'Cat' => 'matter.category_code',
+			'origin' => 'matter.origin',
+			'matter.ID',
+			'matter.container_ID',
+			'matter.parent_ID',
+			'matter.responsible',
+			'matter.dead',
+			'Ctnr' => 'IF(isnull(matter.container_ID),1,0)',
+			'Pri' => new Zend_Db_Expr('1'))
+		)
+		->joinLeft( array('clilnk' => 'matter_actor_lnk'), 
+  			"IFNULL(matter.container_ID, matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1",
+    		array('ClRef' => 'clilnk.actor_ref')
+    		)
+    	->joinLeft( array('cli' => 'actor'), 
+  			"cli.ID = clilnk.actor_ID",
+  			array('Client' => "IFNULL(cli.display_name, cli.name)")
+    		)
+    	->joinLeft( array('invlnk' => 'matter_actor_lnk'),
+    		"IFNULL(matter.container_ID, matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter,
+    		array()
+  			)
+  		->joinLeft( array('inv' => 'actor'),
+    		"inv.ID = invlnk.actor_ID",
+    		array('Inventor1' => "CONCAT_WS(' ', inv.name, inv.first_name)")
+  			)
+  		->joinLeft( array('agtlnk' => 'matter_actor_lnk'),
+  			"matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1",
+  			array('AgtRef' => 'agtlnk.actor_ref')
+    		)
+    	->joinLeft( array('agt' => 'actor'),
+  			"agt.ID = agtlnk.actor_ID",
+  			array('Agent' => "IFNULL(agt.display_name, agt.name)")
+    		)
+    	->joinLeft( array('dellnk' => 'matter_actor_lnk'),
+  			"IFNULL(matter.container_ID, matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL'",
+    		array()
+    		)
+    	->joinLeft( array('del' => 'actor'),
+  			"del.ID = dellnk.actor_ID",
+  			array('delegate' => 'del.login')
+    		)
+    	->joinLeft( array('fil' => 'event'),
+  			"matter.ID = fil.matter_ID AND fil.code = 'FIL'",
+  			array('Filed' => 'fil.event_date', 'FilNo' => 'fil.detail')
+  			)
+  		->joinLeft( array('pub' => 'event'),
+  			"matter.ID = pub.matter_ID AND pub.code = 'PUB'",
+  			array('Published' => 'pub.event_date', 'PubNo' => 'pub.detail')
+  			)
+  		->joinLeft( array('grt' => 'event'),
+  			"matter.ID = grt.matter_ID AND grt.code = 'GRT'",
+  			array('Granted' => 'grt.event_date', 'GrtNo' => 'grt.detail')
+  			)
+  		->joinLeft( array('status' => 'event'),
+  			"matter.ID = status.matter_ID",
+  			array('Status_date' => 'status.event_date')
+    		)
+    	->join( 'event_name',
+    		"event_name.code = status.code AND event_name.status_event = 1",
+    		array('Status' => 'event_name.name')
+    		)
+      	->joinLeft( array('e2' => 'event'),
+      		"status.matter_id = e2.matter_id AND status.event_date < e2.event_date",
+    		array()
+      		)
+      	->joinLeft( array('en2' => 'event_name'),
+      		"e2.code = en2.code AND en2.status_event = 1",
+    		array()
+      		) 
+  		->joinLeft( 'classifier', 
+    		"classifier.matter_ID = IFNULL(matter.container_ID, matter.ID)",
+    		array('Title' => 'classifier.value')
+    		)
+    	->joinLeft( 'classifier_type', 
+    		"classifier.type_code = classifier_type.code AND classifier_type.display_order = 1 AND classifier_type.main_display = 1",
+    		array()
+    		)
+		->where('e2.matter_id IS NULL');*/
 		
+		$where_clause = '';
+		if ($matter_category_display_type)
+			$where_clause = "AND matter_category.display_with = '$matter_category_display_type' ";
+		
+		if (!empty ( $filter_array )) {			
+			if ($filter_array ['field'] == 'Ctnr') {
+				$where_clause .= "AND matter.container_ID IS NULL ";
+			} else if ($filter_array ['field'] == 'Pri') {
+				$where_clause .= "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID) ";
+			} else if ($filter_array ['value'] && $filter_array ['field']) {
+				$where_clause .= "AND " . $filter_array ['field'] . " = '" . $filter_array ['value'] . "' ";
+			}
+		}
+		
+		$having_clause = '';
+		if (! empty ( $multi_filter )) {
+			foreach ( $multi_filter as $key => $value ) {
+				if ($value != '' && $key != 'display' && $key != 'display_style') {
+					if ($having_clause == '')
+						$having_clause = "HAVING ";
+					else
+						$having_clause .= "AND ";
+					if ($key == 'responsible')
+						$having_clause .= "(responsible = '$value' OR delegate = '$value') ";
+					else
+						$having_clause .= "$key LIKE '$value%' ";
+				}
+			}
+		}
+		
+		if ($sortField == 'caseref') {
+			if ($sortDir == 'desc') {
+				$sortField = 'matter.caseref DESC, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx';
+			} elseif ($sortDir == 'asc') {
+				$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx';
+			}
+			$sortDir = '';
+		} else
+			$sortDir .= ', matter.caseref, matter.origin, matter.country';
+		
+		$sql .= $where_clause . $having_clause . 'ORDER BY ' . $sortField .' '. $sortDir; 
+		
+		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
+		$dbStmt = $this->_dbTable->getAdapter ()->query ($sql);
 		$results = $dbStmt->fetchAll ();
-		$adapter = new Zend_Paginator_Adapter_Array ( $results );
-		
-		return new Zend_Paginator ( $adapter );
+
+		if( $paginated ) {
+			$adapter = new Zend_Paginator_Adapter_Array ( $results );
+			return new Zend_Paginator ( $adapter );
+		} else {
+			return $results;
+		}
 	}
 	
 	/**
@@ -619,31 +699,6 @@ WHERE e2.matter_id IS NULL
 	}
 	
 	/**
-	 * retrives all expired events for a matter
-	 * *
-	 */
-	/*
-	 * public function getMatterEventsExpired($matter_id = 0)
-	 * {
-	 *
-	 * if(!$matter_id)
-	 * return;
-	 *
-	 *
-	 * $this->setDbTable('Application_Model_DbTable_Matter');
-	 * $db = $this->_dbTable->getAdapter();
-	 *
-	 * $selectQuery = $db->select()
-	 * ->from(array('e' => 'event'), array('event_date'=> new Zend_Db_Expr('DATE_FORMAT(`event_date`,"%d/%m/%Y")'), 'detail'))
-	 * ->join(array('en' => 'event_name'), 'e.code = en.code')
-	 * ->where('matter_ID = ? and e.code = "EXP"', $matter_id)
-	 * ->order('e.event_date');
-	 *
-	 * return $db->fetchAll($selectQuery);
-	 * }
-	 */
-	
-	/**
 	 * retrieves all open tasks for a matter
 	 * *
 	 */
@@ -772,7 +827,7 @@ WHERE e2.matter_id IS NULL
 	}
 	
 	/**
-	 * retrieves all classifiers for a given matter
+	 * Retrieves non-main classifiers for display in the matter detail screen
 	 * *
 	 */
 	public function getClassifiers($matter_id = 0) {
@@ -781,24 +836,52 @@ WHERE e2.matter_id IS NULL
 		
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( "select classifier_type.type, 
-if(lnk_matter_id is null, 
-  if(classifier.value_id is null, classifier.value, (select value from classifier_value where id=value_id)),
-  if(lnk_matter_id=ifnull(matter.container_id,matter.id), 
-    (select concat(caseref, country) from matter where id=matter_id),
-    (select concat(caseref, country) from matter where id=lnk_matter_id))) as value, 
-if(lnk_matter_id is null, classifier.url, concat('/matter/view/id/', if(lnk_matter_id=ifnull(matter.container_id,matter.id), matter_id, lnk_matter_id))) as url
-from classifier, classifier_type, matter 
-where classifier.type_code=classifier_type.code
-and classifier_type.main_display=0
-and ifnull(matter.container_id, matter.id) in (matter_ID, lnk_matter_id)
-and matter.id=" . $matter_id . " order by classifier_type.type, classifier_type.display_order, classifier.display_order" );
+		// The UNION clause retrieves the backward links
+		$dbStmt = $this->_dbTable->getAdapter ()->query ( 
+"(SELECT 
+    classifier_type.type AS type,
+    IFNULL(mlnk.caseref,
+            IFNULL(classifier_value.`value`,
+                    classifier.`value`)) AS value,
+    IF(lnk_matter_id IS NULL,
+        classifier.url,
+        CONCAT('/matter/view/id/',
+                IF(lnk_matter_id = IFNULL(m.container_id, m.id),
+                    matter_id,
+                    lnk_matter_id))) AS url
+FROM
+    matter m
+        JOIN
+    classifier ON (IFNULL(m.container_id, m.id) = classifier.matter_ID)
+        JOIN
+    classifier_type ON (classifier.type_code = classifier_type.`code`
+        AND classifier_type.main_display = 0)
+        LEFT JOIN
+    classifier_value ON (classifier_value.id = classifier.value_id)
+        LEFT JOIN
+    matter mlnk ON (mlnk.id = classifier.lnk_matter_id)
+WHERE m.id = " . $matter_id . "
+ORDER BY classifier_type.type, classifier_type.display_order, classifier.display_order) 
+UNION (SELECT 
+    classifier_type.type AS type,
+    mlnk.caseref AS value,
+    CONCAT('/matter/view/id/', mlnk.id) AS url
+FROM
+    matter m
+        JOIN
+    classifier ON (IFNULL(m.container_id, m.id) = classifier.lnk_matter_ID)
+        JOIN
+    classifier_type ON (classifier.type_code = classifier_type.`code`
+        AND classifier_type.main_display = 0)
+        JOIN
+    matter mlnk ON (mlnk.id = classifier.matter_id)
+WHERE m.id = " . $matter_id . ")" );
 		
 		return $dbStmt->fetchAll ();
 	}
 	
 	/**
-	 * retrieves full list of classifiers
+	 * Retrieves non-main classifiers for display in the detailed classifier list
 	 * *
 	 */
 	public function getMatterClassifiers($matter_id = 0) {
@@ -806,14 +889,30 @@ and matter.id=" . $matter_id . " order by classifier_type.type, classifier_type.
 			return;
 		
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( "select c.ID, ct.type, c.type_code, c.value_ID,
-if(c.value_id is null, c.value, (select value from classifier_value where id=value_id)) as value,
-c.url,
-(select caseref from matter where id=c.lnk_matter_id) as lnkTo
-from classifier as c, classifier_type as ct, matter as m
-where c.type_code=ct.code
-and ct.main_display=0
-and matter_ID=ifnull(m.container_id, m.id) and m.id=" . $matter_id . " order by ct.type, ct.display_order, c.display_order" );
+		// For the links, this query only lists those included in the container
+		$dbStmt = $this->_dbTable->getAdapter ()->query ( 
+"SELECT 
+    c.ID,
+    ct.type,
+    c.type_code,
+    c.value_ID,
+    IFNULL(cv.value, c.value) AS value,
+    c.url,
+    mlnk.caseref AS lnkTo
+FROM
+    classifier c
+        JOIN
+    classifier_type ct ON (c.type_code = ct.code
+        AND ct.main_display = 0)
+        LEFT JOIN
+    classifier_value cv ON (cv.id = c.value_id)
+        LEFT JOIN
+    matter mlnk ON (mlnk.id = c.lnk_matter_id)
+        JOIN
+    matter m ON (c.matter_ID = IFNULL(m.container_id, m.id))
+WHERE
+    m.id = " . $matter_id . "
+ORDER BY ct.type, ct.display_order, c.display_order" );
 		
 		return $dbStmt->fetchAll ();
 	}
@@ -1859,7 +1958,6 @@ and matter_ID=ifnull(m.container_id, m.id) and m.id=" . $matter_id . " order by 
 			return false;
 		
 		$dbTable = $this->getDbTable ( 'Application_Model_DbTable_Classifier' );
-		// $dbTable->getAdapter()->query('SET NAMES utf8');
 		
 		if ($value == '') {
 			try {
@@ -2324,28 +2422,28 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 	}
 	
 	/**
-	 * fetchMatters is used to navigate through filtered matter list
+	 * (Deprecated, use new fetchMatters with optional pagination) fetchMatters is used to navigate through filtered matter list
 	 * *
 	 */
-	public function fetchMatters($filter_array = array(), $sortField = "caseref, container_ID, origin, country, matter.type_code, idx", $sortDir = "ASC", $multi_filter = array(), $matter_category_display_type = false) {
+	/*public function OLDfetchMatters($filter_array = array(), $sortField = "caseref, container_ID, origin, country, matter.type_code, idx", $sortDir = "ASC", $multi_filter = array(), $matter_category_display_type = false) {
 		if ($matter_category_display_type)
 			$dsiplay_with = " where display_with='$matter_category_display_type'";
 		else
 			$dsiplay_with = "";
 		
 		if (empty ( $filter_array ))
-			$filter_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
+			$where_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
 		else {
-			$filter_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
+			$where_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
 			if ($filter_array ['value'] && $filter_array ['field'])
-				$filter_clause .= " AND " . $filter_array ['field'] . " = '" . $filter_array ['value'] . "'";
+				$where_clause .= " AND " . $filter_array ['field'] . " = '" . $filter_array ['value'] . "'";
 			
 			if ($filter_array ['field'] == 'Ctnr') {
-				$filter_clause = "AND matter.container_ID IS NULL";
+				$where_clause = "AND matter.container_ID IS NULL";
 			}
 			
 			if ($filter_array ['field'] == 'Pri') {
-				$filter_clause = "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
+				$where_clause = "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
 			}
 		}
 		
@@ -2373,19 +2471,19 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 		if ($sortField == "")
 			$sortField = "caseref, container_ID";
 		
-		$multi_query = '';
+		$having_clause = '';
 		if (! empty ( $multi_filter )) {
 			foreach ( $multi_filter as $key => $value ) {
 				if ($value != '' && $key != 'display' && $key != 'display_style') {
-					if ($multi_query == '')
+					if ($having_clause == '')
 						if ($key == 'responsible')
-							$multi_query = " HAVING (responsible = '" . $value . "' OR delegate = '" . $value . "')";
+							$having_clause = " HAVING (responsible = '" . $value . "' OR delegate = '" . $value . "')";
 						else
-							$multi_query = " HAVING " . $key . " LIKE '" . $value . "%'";
+							$having_clause = " HAVING " . $key . " LIKE '" . $value . "%'";
 					else if ($key == 'responsible')
-						$multi_query .= " AND (responsible = '" . $value . "' OR delegate = '" . $value . "')";
+						$having_clause .= " AND (responsible = '" . $value . "' OR delegate = '" . $value . "')";
 					else
-						$multi_query .= " AND " . $key . " LIKE '" . $value . "%'";
+						$having_clause .= " AND " . $key . " LIKE '" . $value . "%'";
 				}
 			}
 		}
@@ -2440,7 +2538,7 @@ FROM matter
   LEFT JOIN (classifier, classifier_type) 
     ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
 WHERE e2.matter_id IS NULL
-" . $filter_clause . " " . $multi_query . " order by " . $sortField . " " . $sortDir . ", matter.origin, matter.country" );
+" . $where_clause . " " . $having_clause . " order by " . $sortField . " " . $sortDir . ", matter.origin, matter.country" );
 		return $dbStmt->fetchAll ();
-	}
+	}*/
 }
