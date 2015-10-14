@@ -1,111 +1,120 @@
 <style type="text/css">
-.status-row{
-display:block;
-}
-.tasklist-col-name{
-display:inline-block;
-width: 150px;
-vertical-align: top;
+.status-row {
+	display: block;
 }
 
-.tasklist-col-due_date, .tasklist-col-done_date, .tasklist-col-assigned_to{
-display:inline-block;
-width: 80px;
-vertical-align: top;
+.tasklist-col-name {
+	display: inline-block;
+	width: 150px;
+	vertical-align: top;
 }
 
-.tasklist-col-done{
-display:inline-block;
-width: 38px;
-vertical-align: top;
-text-align: center;
+.tasklist-col-due_date, .tasklist-col-done_date,
+	.tasklist-col-assigned_to {
+	display: inline-block;
+	width: 80px;
+	vertical-align: top;
 }
 
-.tasklist-col-cost, .tasklist-col-fee{
-display:inline-block;
-width: 60px;
-vertical-align: top;
+.tasklist-col-done {
+	display: inline-block;
+	width: 38px;
+	vertical-align: top;
+	text-align: center;
 }
 
-.tasklist-col-currency{
-display:inline-block;
-width: 36px;
-vertical-align: top;
+.tasklist-col-cost, .tasklist-col-fee {
+	display: inline-block;
+	width: 60px;
+	vertical-align: top;
 }
 
-.tasklist-col-notes{
-display:inline-block;
-width: 180px;
-vertical-align: top;
+.tasklist-col-currency {
+	display: inline-block;
+	width: 36px;
+	vertical-align: top;
 }
 
-.tasklist-col{
-display:inline-block;
-width: 150px;
-vertical-align: top;
+.tasklist-col-notes {
+	display: inline-block;
+	width: 180px;
+	vertical-align: top;
+}
+
+.tasklist-col {
+	display: inline-block;
+	width: 150px;
+	vertical-align: top;
 }
 
 #MatterAllTasks:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
-#MatterAllTasksBlock{
-    width: 941px;
+#MatterAllTasksBlock {
+	width: 941px;
 }
 
 .notes:hover {
-    cursor: help;
-}
-#add-task-popup{
-  width: 530px;
-  z-index: 101;
-  height: auto;
-  top: 0px;
-  display:none;
-  position:absolute;
-}
-#add-task-wrap{
-  background: #FFF;
-  padding: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  border: 1px inset #ccc;
-}
-#add-task-wrap label{
-  width:75px;
-  display:inline-block;
-  vertical-align: top;
-  text-align: right;
-}
-#add-task-wrap input{
-  margin-bottom:5px;
-}
-.delete-task{
-  display: none;
-  cursor: pointer;
-}
-.add-task-toevent{
-  cursor: pointer;
-}
-.event-actions{
-  display:none;
-}
-.event-head{
-  height: 18px;
-  vertical-align: top;
-}
-.event-head:hover .event-actions{
-  display:inline-block;
-}
-.task-row:hover .delete-task{
-  display:inline-block;
-}
-.task-row:hover{
-background: #EEF;
+	cursor: help;
 }
 
+#add-task-popup {
+	width: 530px;
+	z-index: 101;
+	height: auto;
+	top: 0px;
+	display: none;
+	position: absolute;
+}
 
+#add-task-wrap {
+	background: #FFF;
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px inset #ccc;
+}
+
+#add-task-wrap label {
+	width: 75px;
+	display: inline-block;
+	vertical-align: top;
+	text-align: right;
+}
+
+#add-task-wrap input {
+	margin-bottom: 5px;
+}
+
+.delete-task {
+	display: none;
+	cursor: pointer;
+}
+
+.add-task-toevent {
+	cursor: pointer;
+}
+
+.event-actions {
+	display: none;
+}
+
+.event-head {
+	height: 18px;
+	vertical-align: top;
+}
+
+.event-head:hover .event-actions {
+	display: inline-block;
+}
+
+.task-row:hover .delete-task {
+	display: inline-block;
+}
+
+.task-row:hover {
+	background: #EEF;
+}
 </style>
 
 <script type="text/javascript">
@@ -401,103 +410,138 @@ $(document).ready(function(){
 
 </script>
 
-<div id="MatterAllTasksBlock" class="listrow" ><div id="MatterAllTasks" class="status-row">
-<span class="tasklist-col-name" style="margin-left: 5px;"><? 
-if ($this->renewal == 1) 
-    echo "All renewals";
-else
-    echo "All tasks";
-     ?></span>
-<span class="tasklist-col-due_date" >Due date</span>
-<span class="tasklist-col-done" >Done</span>
-<span class="tasklist-col-done_date" >Done date</span>
-<span class="tasklist-col-cost" >Cost</span>
-<span class="tasklist-col-fee" >Fee</span>
-<span class="tasklist-col-currency" >Cur.</span>
-<? if ($this->renewal == 0) {?> 
-<span class="tasklist-col-time_spent" >Time</span>
-<? } ?>
-<span class="tasklist-col-assigned_to" >Assigned To</span>
-<span class="tasklist-col-notes" >Notes</span>
-<span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"></span>
-</div>
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
-
-<?php 
-$event_id = '';
-$event_code = "";
-$add_empty_row = 0;
-$close_event_box = 0;
-
-foreach($this->matter_event_tasks as $event_task):
-    if($event_id != $event_task['event_ID']){
-       $event_id = $event_task['event_ID'];
-if($close_event_box)
-     echo "</div>";
- ?>
-<div id="event-box-<?=$event_id?>" >
-<? if($add_empty_row){ ?>
-<div style="height:15px;"></div>
-<? } ?>
-<div class="status-row event-head" style="border-bottom: 1px solid #DDD;">
-<span class="tasklist-col-name"><b><?=$event_task['event_name'] . " - " . $event_task['event_date'] ?></b></span>
-<div class="event-actions" style="width:48px"><span class="add-task-toevent" id="<?=$event_id?>" title="Add task to event"><span class="ui-icon ui-icon-plusthick" style="float:left;"></span></span></div>
-</div>
-<?php $close_event_box = 1; }
-    if($event_id == $event_task['trigger_ID']){
-?> 
-<div class="status-row task-row" id="<?=$event_task['ID']?>">
-<span class="tasklist-col-name"><?=$event_task['task_name']?>
-<? if($event_task['detail'] != "")
-	echo " - " . $event_task['detail'] ?></span>
-
-<span id="due_date-<?=$event_task['ID']?>" class="tasklist-col-due_date editable-due-date" rule_id="<?=$event_task['rule_used']?>" ><?=$event_task['due_date']?></span>
-<span class="tasklist-col-done" ><input type="checkbox" name="doneflag-<?=$event_task['ID']?>" value="<?=$event_task['ID']?>" <? if($event_task['done']) echo "checked"; ?> ></span>
-<span id="done_date-<?=$event_task['ID']?>" class="tasklist-col-done_date editable-done-date" ><?=$event_task['done_date']?></span>
-<span class="tasklist-col-cost editable" ><?=$event_task['cost']?></span>
-<span class="tasklist-col-fee editable" ><?=$event_task['fee']?></span>
-<span class="tasklist-col-currency editable" ><?=$event_task['currency']?></span>
-<? if ($this->renewal == 0) {?> 
-<span class="tasklist-col-time_spent editable" ><?=$event_task['time_spent']?></span>
-<?}?>
-<span class="tasklist-col-assigned_to edit-assigned-to" ><?=$event_task['assigned_to']?></span>
-<? if(strlen($event_task['task_notes']) < 25){?>
-<span class="tasklist-col-notes editable" ><?=$event_task['task_notes'];?></span>
-<? } else { ?>
-<span class="tasklist-col-notes notes editable" title="<?=$event_task['task_notes'];?>"><? echo substr($event_task['task_notes'], 0, 25) . "...";?></span>
-<? } ?>
-<span class="delete-task" title="Delete task"><span class="ui-icon ui-icon-trash" style="float:right;"></span></span>
-</div>
-<?php }
-	$add_empty_row = 1;
- ?>
-<? endforeach; ?>
-</div>
-
+<div id="MatterAllTasksBlock" class="listrow">
+	<div id="MatterAllTasks" class="status-row">
+		<span class="tasklist-col-name" style="margin-left: 5px;">
+		<?php if ($this->renewal == 1)
+			echo "All renewals";
+		else
+			echo "All tasks";
+		?>
+		</span>
+		<span class="tasklist-col-due_date">Due date</span>
+		<span class="tasklist-col-done">Done</span>
+		<span class="tasklist-col-done_date">Done date</span>
+		<span class="tasklist-col-cost">Cost</span>
+		<span class="tasklist-col-fee">Fee</span>
+		<span class="tasklist-col-currency">Cur.</span>
+		<?php if ($this->renewal == 0) {?> 
+			<span class="tasklist-col-time_spent">Time</span>
+		<? } ?>
+		<span class="tasklist-col-assigned_to">Assigned To</span>
+		<span class="tasklist-col-notes">Notes</span>
+		<span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"></span>
+	</div>
+	<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width: 99%; height: auto;">
+		<?php
+		$event_id = '';
+		$event_code = "";
+		$add_empty_row = 0;
+		$close_event_box = 0;
+		
+		foreach ( $this->matter_event_tasks as $event_task ) :
+			if ($event_id != $event_task ['event_ID']) {
+				$event_id = $event_task ['event_ID'];
+				if ($close_event_box)
+					echo "</div>";
+				?>
+				<div id="event-box-<?=$event_id?>">
+				<? if($add_empty_row){ ?>
+					<div style="height: 15px;"></div>
+				<? } ?>
+					<div class="status-row event-head" style="border-bottom: 1px solid #DDD;">
+						<span class="tasklist-col-name"><b><?=$event_task['event_name'] . " - " . $event_task['event_date'] ?></b></span>
+						<div class="event-actions" style="width: 48px">
+							<span class="add-task-toevent" id="<?=$event_id?>" title="Add task to event">
+								<span class="ui-icon ui-icon-plusthick" style="float: left;"></span>
+							</span>
+						</div>
+					</div>
+				<?php
+				$close_event_box = 1;
+			}
+			if ($event_id == $event_task ['trigger_ID']) { ?> 
+			<div class="status-row task-row" id="<?=$event_task['ID']?>">
+				<span class="tasklist-col-name">
+					<?=$event_task['task_name']?>
+					<?if ($event_task ['detail'] != "")
+						echo " - " . $event_task ['detail']?>
+				</span>
+				<span id="due_date-<?=$event_task['ID']?>" class="tasklist-col-due_date editable-due-date" rule_id="<?=$event_task['rule_used']?>">
+					<?=$event_task['due_date']?>
+				</span>
+				<span class="tasklist-col-done">
+					<input type="checkbox" name="doneflag-<?=$event_task['ID']?>" value="<?=$event_task['ID']?>"
+					<?php if($event_task['done']) echo "checked"; ?>>
+				</span>
+				<span id="done_date-<?=$event_task['ID']?>" class="tasklist-col-done_date editable-done-date">
+					<?=$event_task['done_date']?>
+				</span>
+				<span class="tasklist-col-cost editable">
+					<?=$event_task['cost']?>
+				</span>
+				<span class="tasklist-col-fee editable">
+					<?=$event_task['fee']?>
+				</span>
+				<span class="tasklist-col-currency editable">
+					<?=$event_task['currency']?>
+				</span>
+				<?php if ($this->renewal == 0) {?> 
+				<span class="tasklist-col-time_spent editable">
+					<?=$event_task['time_spent']?>
+				</span>
+				<?}?>
+				<span class="tasklist-col-assigned_to edit-assigned-to">
+					<?=$event_task['assigned_to']?>
+				</span>
+				<?php if(strlen($event_task['task_notes']) < 25) {?>
+				<span class="tasklist-col-notes editable">
+					<?=$event_task['task_notes'];?>
+				</span>
+				<?php } else { ?>
+				<span class="tasklist-col-notes notes editable" title="<?=$event_task['task_notes'];?>">
+					<? echo substr($event_task['task_notes'], 0, 25) . "...";?>
+				</span>
+				<? } ?>
+				<span class="delete-task" title="Delete task">
+					<span class="ui-icon ui-icon-trash" style="float: right;"></span>
+				</span>
+			</div>
+			<?php }
+				$add_empty_row = 1;
+		endforeach; ?>
+		</div>
+	</div>
 </div>
 <div id="pr-confirm"></div>
-<?php //endif; ?>
-
 <div id="add-task-popup" class="listrow">
-<div id="add-task-wrap">
-<input type="hidden" name="trigger_id" value="" id="trigger_id" />
-<label for="task_name" ><span style="color: #f00;">*</span>Task Name </label>
-<input type="text" name="task_name" id="task_name" value=""/>
-<input type="hidden" name ="task_id" id="task_id" value="" />
-<label for="task_duedate" ><span style="color: #f00;">*</span>Due date </label>
-<input type="text" name="task_duedate" id="task_duedate" value=""/>
-<label for="task_detail" >Detail </label>
-<input type="text" name="task_detail" id="task_detail" value="" />
-<label for="task_cost" >Cost </label>
-<input type="text" name="task_cost" id="task_cost" value="" />
-<label for="task_fee" >Fee </label>
-<input type="text" name="task_fee" id="task_fee" value=""/>
-<label for="task_currency" >Currency </label>
-<input type="text" name="task_currency" id="task_currency" value=""/>
-<label for="task_assigned_to" >Assigned to </label>
-<input type="text" name="task_assigned_to" id="task_assigned_to" value="" /><br>
-<label for="task_notes" >Notes </label><textarea name="task_notes" id="task_notes" rows=2 cols=40></textarea><br>
-<input type="button" name="add_task_cancel" id="add-task-cancel" value="Cancel" style="margin-top: 10px; margin-left: 4px; float: right;"/>
-<input type="button" name="add_task_submit" id="add-task-submit" value="Add task" style="margin-top: 10px; float: right;"/>
-</div>
+	<div id="add-task-wrap">
+		<input type="hidden" name="trigger_id" value="" id="trigger_id" />
+		<label for="task_name"><b>Task Name</b></label>
+		<input type="text" name="task_name" id="task_name" value="" style="width: 120px;" />
+		<input type="hidden" name="task_id" id="task_id" value="" />
+		<label for="task_duedate"><b>Due date</b></label>
+		<input type="text" name="task_duedate" id="task_duedate" value="" style="width: 120px;" />
+		<br>
+		<label for="task_detail">Detail </label>
+		<input type="text" name="task_detail" id="task_detail" value="" style="width: 120px;" />
+		<label for="task_cost">Cost </label>
+		<input type="text" name="task_cost" id="task_cost" value="" style="width: 120px;" />
+		<br>
+		<label for="task_fee">Fee </label>
+		<input type="text" name="task_fee" id="task_fee" value="" style="width: 120px;" />
+		<label for="task_currency">Currency </label>
+		<input type="text" name="task_currency" id="task_currency" value="" style="width: 120px;" />
+		<br>
+		<label for="task_time">Time spent</label>
+		<input type="text" name="task_time" id="task_time" value="" style="width: 120px;" />
+		<label for="task_assigned_to">Assigned to </label>
+		<input type="text" name="task_assigned_to" id="task_assigned_to" value="" style="width: 120px;" />
+		<br> 
+		<label for="task_notes">Notes</label>
+		<textarea name="task_notes" id="task_notes" rows=2 cols=45></textarea>
+		<br>
+		<button name="add_task_cancel" id="add-task-cancel" style="float: right;">Cancel</button>
+		<button name="add_task_submit" id="add-task-submit" style="float: right;">Add task</button>
+	</div>
 </div>
