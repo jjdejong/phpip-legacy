@@ -305,9 +305,13 @@ $(document).ready(function(){
         });
 
         $("#MatterRenTasks").click(function(){
-         	$('#tasklist-pop-up').load("/matter/tasklistren/id/<?=$this->matter_record[0]['ID']?>", function(){
-            	$(this).show("scale");
-            }).css('top', $(this).offset().top);
+         	$('#tasklist-pop-up').load(
+                "/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>",
+                { renewal: 1 },
+                function(){
+            		$(this).show("scale");
+            	}
+            ).css('top', $(this).offset().top);
         }); 
 
         $("#MatterClassifier").click(function(){
@@ -505,7 +509,7 @@ else
 <?php } ?>
 		</div>
 
-<?php 
+<?php // Title box ("main" classifiers)
 foreach($this->matter_classifier_main as $classifier):
 $cid = $classifier['ID'];
     if($classifier['c_value']){
@@ -568,7 +572,7 @@ if(isset($this->matter_actors)):
 	<div class="list-matter-block-info" style="height: 150px; width: 99%">
 		<input type="hidden" name="matterId" id="this-matter-id" value=<?=$this->matter_id?> />
 		<input type="hidden" name="containerId" id="this-container-id" value="<?=$this->matter_record[0]['container_ID']?>" />
-<?php
+<?php  // Actors box
 	foreach($this->matter_actors as $actor):
 		if($actor['role_name'] != ""){
 	    	if($actor_role != $actor['role_name']){
@@ -600,9 +604,8 @@ if(isset($this->matter_actors)):
 </div>
 <?php
 endif;
-?>
 
-<?php //Matter Events?>
+// Status box (main events)?>
 <div class="listrow" style="width: 462px; display: inline-block;">
 	<div class="status-row" id="MatterStatus" style="margin-left: 5px;" title="Click for more detail">
 		<span class="status-col-name">Status</span><span class="status-col-date">Date</span>
