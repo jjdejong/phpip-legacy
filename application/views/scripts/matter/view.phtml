@@ -306,7 +306,7 @@ $(document).ready(function(){
 
         $("#MatterRenTasks").click(function(){
          	$('#tasklist-pop-up').load(
-                "/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>",
+                "/matter/tasklist/event_id/<?=$this->matter_open_tasks_ren[0]['trigger_ID']?>",
                 { renewal: 1 },
                 function(){
             		$(this).show("scale");
@@ -612,8 +612,8 @@ endif;
 		<span class="status-col-number">Number</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
 	<div class="list-matter-block-info" style="width:98%" >
-
-<?php foreach($this->matter_events as $event):
+<?php 
+foreach($this->matter_events as $event):
     if ($this->matter_record[0]['origin'] == 'EP') $CC = 'EP';
     else $CC = $this->matter_record[0]['country'];
     $country_code = $this->matter_record[0]['country'];
@@ -646,8 +646,8 @@ endif;
 			<span class="status-col-date"><?=$event['event_date']?></span>
 			<span class="status-col-number" ><? if($href !=  ""){ ?><a href="<?=$href?>" target="_blank"><?=$event['detail']?></a><?} else {?><?=$event['detail']?><?}?></span>
 		</div>
-<?php endforeach; ?>
-
+<?php 
+endforeach; ?>
 	</div>
 </div>
 
@@ -660,63 +660,74 @@ $trigger_id = "";
 		<span style="float:right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
 	<div class="list-matter-block-info" style="width:98%" >
-<?php
-foreach($this->matter_open_tasks as $open_task): 
-	if($trigger_id != $open_task['trigger_ID']){
-		$trigger_id = $open_task['trigger_ID'];
- ?>
-
+	<?php 
+	foreach($this->matter_open_tasks as $open_task): 
+		if($trigger_id != $open_task['trigger_ID']){
+			$trigger_id = $open_task['trigger_ID'];
+ 	?>
 		<div class="status-row" style="border-bottom: 1px solid #DDD; margin-top: 2px;">
 			<span class="task-col-name"><b><?=$open_task['trigger_name'] ." - ". $open_task['trigger_detail'] ?></b></span>
 			<span class="status-col-date"></span>
 		</div>
-<?php
-	}
-    if($trigger_id == $open_task['trigger_ID']){
-?> 
+		<?php
+		}
+		if($trigger_id == $open_task['trigger_ID']){
+		?> 
 		<div class="status-row">
 			<span class="task-col-name help_cursor" title="<?=htmlentities($open_task['notes']) ?>"><?=$open_task['task_name']?>
-<?php
-		if($open_task['detail'] != "")
-			echo ": " . $open_task['detail']
-?>
+			<?php 
+			if($open_task['detail'] != "")
+				echo ": " . $open_task['detail']
+			?>
 			</span>
 			<span class="status-col-date" ><?=$open_task['due_date']?></span>
 		</div>
-<?php
-	}
-endforeach;
-?>
+	<?php
+		}
+	endforeach;
+	?>
 	</div>
 </div>
 
 
-<?php //Matter Open Task Renewals
+<?php //Matter Open Renewals
 $trigger_id = "";
 ?>
 <div class="listrow" style="display: inline-block; width: 200px !important;">
-<div class="status-row" id="MatterRenTasks" title="Click for more detail"><span class="renewal-col-name">Renewals</span><span class="renewal-col-date" >Due</span><span style="float:right;" class="ui-icon ui-icon-newwin"></span></div>
-<div class="list-matter-block-info" style="width:97%" >
-<?php foreach($this->matter_open_tasks_ren as $open_task): 
-    if($trigger_id != $open_task['trigger_ID']){
-       $trigger_id = $open_task['trigger_ID'];
- ?>
-
-<div class="status-row" style="margin:5px 0px; border-bottom: 1px solid #DDD;"><span class="renewal-col-name">From: <b><?=$open_task['trigger_name']?></b></span><span class="renewal-col-date"></span><span class="renewal-col-number" ></span></div>
-<?php  }
-
-    if($trigger_id == $open_task['trigger_ID']){
-?> 
-<div class="status-row"><span class="renewal-col-name"><?=$open_task['detail']?></span><span class="renewal-col-date" ><?=$open_task['due_date']?></span></div>
-<?php }
-      
-endforeach; ?>
-<div class="status-row">&nbsp;</div>
-<?php if(isset($this->matter_expiry['expire_date'])):
-echo "Expiry: ".$this->matter_expiry['expire_date']; echo ($this->matter_expiry['term_adjust'] > 0)? "<br>(PTA: ".$this->matter_expiry['term_adjust']." days)" : "" ;
-endif; ?>
-
-</div>
+	<div class="status-row" id="MatterRenTasks" title="Click for more detail">
+		<span class="renewal-col-name">Renewals</span>
+		<span class="renewal-col-date" >Due</span>
+		<span style="float:right;" class="ui-icon ui-icon-newwin"></span>
+	</div>
+	<div class="list-matter-block-info" style="width:97%" >
+	<?php 
+	foreach($this->matter_open_tasks_ren as $open_task): 
+	    if($trigger_id != $open_task['trigger_ID']){
+	       $trigger_id = $open_task['trigger_ID'];
+	 ?>
+		<div class="status-row" style="margin:5px 0px; border-bottom: 1px solid #DDD;">
+			<span class="renewal-col-name">From: <b><?=$open_task['trigger_name']?></b></span>
+			<span class="renewal-col-date"></span>
+			<span class="renewal-col-number" ></span>
+		</div>
+		<?php  
+		}
+	    if($trigger_id == $open_task['trigger_ID']){
+		?> 
+		<div class="status-row">
+			<span class="renewal-col-name"><?=$open_task['detail']?></span>
+			<span class="renewal-col-date" ><?=$open_task['due_date']?></span>
+		</div>
+		<?php
+		}  
+	endforeach; ?>
+		<div class="status-row">&nbsp;</div>
+<?php
+if(isset($this->matter_expiry['expire_date'])):
+	echo "Expiry: ".$this->matter_expiry['expire_date']; echo ($this->matter_expiry['term_adjust'] > 0)? "<br>(PTA: ".$this->matter_expiry['term_adjust']." days)" : "" ;
+endif; 
+?>
+	</div>
 </div>
 
 
@@ -739,13 +750,13 @@ foreach($this->classifiers as $classifier){
 		if($close_type){
 ?>
 	</div>
-<?php 		$count = 0;
+			<?php 		
+			$count = 0;
     	}
-?>
-
+		?>
 	<div class="status-row" style="margin:5px 0px;">
 		<span class="classifier-name"><b><?=$classifier['type']?></b></span>
-<?php 
+		<?php 
 		$close_type=1;
 	} 
 	if($ctype == $classifier['type']){
@@ -758,20 +769,20 @@ foreach($this->classifiers as $classifier){
   			$classifier_value .= ' ...';
   			$show_title=1;
 		}
-?>
+		?>
 		<span class="classifier-value" title="<?php echo ($show_title)?$classifier['value']:'';?>"  >
-<?php
+		<?php
 		if($classifier['url'] == '')
         	echo $classifier_value;
 		else
 			echo '<a href="'.$classifier['url'].'" target="_blank">'.$classifier_value.'</a>';
-?>
+		?>
 		</span>
-<?
-		}
-	} 
-    if($close_type)
-		echo "</div>";
+<?php
+	}
+} 
+if($close_type)
+	echo "</div>";
 ?>
 
 	</div>

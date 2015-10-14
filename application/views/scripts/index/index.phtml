@@ -182,7 +182,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-    $('.open-ren').click(function(){
+    /*$('.open-ren').click(function(){
        $('#facade').show();
        $.ajax({
          url: '/index/open-task-details',
@@ -194,11 +194,16 @@ $(document).ready(function(){
              .show();
          }
        });
-    });
+    });*/
     
     $('.open-task').click(function(){
-       $('#facade').show();
-       $('#tasklist-pop-up').load('/matter/tasklist/event_id/' + $(this).attr('id')).show();
+    	trig_id_code = $(this).attr('id').split('-');
+    	if (trig_id_code[1] == 'REN')
+    		ren = 1;
+    	else
+    		ren = 0;
+		$('#facade').show();
+		$('#tasklist-pop-up').load('/matter/tasklist/event_id/' + trig_id_code[0], { renewal: ren }).show();
     });
 
     $('.add-cat-matter').click(function(){
@@ -448,7 +453,7 @@ $(document).ready(function(){
 								$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
 						?>
 						<li id="<?=$open_task['task_ID']?>">
-							<div class="col-task-name"><a href="javascript:void(0);" class="open-ren" id="<?=$open_task['task_ID']?>"><?=$task_name?></a></div>
+							<div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>-<?=$open_task['code']?>"><?=$task_name?></a></div>
 							<div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div>
 							<div class="col-task-due_date"><?=$open_task['due_date']?></div>
 							<div class="col-actions">

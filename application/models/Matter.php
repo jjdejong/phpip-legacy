@@ -838,11 +838,15 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getMatterEventTasks($matter_id = 0, $renewal = 0, $event_id = 0) {
 		if (! $matter_id && ! $event_id)
 			return;
-		
+		if ($renewal == 1)
+			$rencomp = ' = ';
+		else
+			$rencomp = ' != ';
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
 		
-		if ($renewal == 0 && $event_id == 0) {
+		// Retrieve tasks linked to a matter, distinguising between renewals and others
+		if ($matter_id != 0) {
 			$selectQuery = $db->select ()->from ( array (
 					'e' => 'event' 
 			), array (
@@ -851,7 +855,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")' 
 			) )->joinLeft ( array (
 					't' => 'task' 
-			), "e.ID = t.trigger_ID AND t.code != 'REN'", array (
+			), "e.ID = t.trigger_ID AND t.code $rencomp 'REN'", array (
 					'*',
 					'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")',
 					'due_date' => 'DATE_FORMAT(t.due_date,"%d/%m/%Y")',
@@ -873,11 +877,12 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			) );
 		}
 		
-		if ($renewal == 1 && $event_id == 0) {
+		/*if ($renewal == 1) {
 			$selectQuery = $db->select ()->from ( array (
 					'e' => 'event' 
 			), array (
 					'event_ID' => 'e.ID',
+					'event_detail' => 'e.detail',
 					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")' 
 			) )->join ( array (
 					't' => 'task' 
@@ -901,9 +906,9 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 					'e.event_date',
 					't.due_date' 
 			) );
-		}
+		}*/
 		
-		// Retrieve tasks linked to a specific event
+		// Retrieve tasks linked to a specific event, distinguising between renewals and others
 		if ($event_id != 0) {
 			$selectQuery = $db->select ()->from ( array (
 					'e' => 'event' 
@@ -913,7 +918,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")' 
 			) )->joinLeft ( array (
 					't' => 'task' 
-			), "e.ID = t.trigger_ID AND t.code != 'REN'", array (
+			), "e.ID = t.trigger_ID AND t.code $rencomp 'REN'", array (
 					'*',
 					'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")',
 					'due_date' => 'DATE_FORMAT(t.due_date,"%d/%m/%Y")',
