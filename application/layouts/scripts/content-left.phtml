@@ -1,6 +1,6 @@
 <div id="inner">
-<? #echo $this->navigation()->menu() ?>
 <?php
+//echo $this->navigation()->menu();
 $navPrimary = $this->navigation()->findBy('label','Top Level Nav');
 #$navPrimary = $this->navigation()->findBy('Label','Touch');
 echo $this->navigation()
@@ -9,6 +9,5 @@ echo $this->navigation()
 #
 #print_r($this->navigation());
 #Reflection::export(new ReflectionObject($this->navigation())) ;
-
 ?>
 </div>

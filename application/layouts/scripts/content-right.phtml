@@ -30,21 +30,17 @@
 	background:#FFF;
 	border:1px solid #ddd;
 	border-style:inset;
-	-webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+	border-radius: 4px;
 	margin-top:5px;
 }
 
 .stats-field legend{
 	background:#1E4262;
 	color:#fff;
-	-webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  padding:2px 5px;
-  text-shadow:0 -1px 0 #000000;
-  margin-left:5px;
+	border-radius: 4px;
+	padding:2px 5px;
+	text-shadow:0 -1px 0 #000000;
+	margin-left:5px;
 }
 
 #active-refresh :hover{
@@ -53,27 +49,20 @@
 
 #active-head{
 	background:#1E4262;
-	-webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  padding:5px 8px;
-  margin-top:5px;
-  color: #FFF;
-/*  box-shadow:2px 2px 1px #888;
-  -moz-box-shadow:2px 2px 1px #888;
-  -webkit-box-shadow:2px 2px 1px #888; */
-  border: 1px solid #1E4262;
-  border-style: outset;
- /* font-weight:bold;*/
+	border-radius: 4px;
+	padding:5px 8px;
+	margin-top:5px;
+	color: #FFF;
+	border: 1px solid #1E4262;
+	border-style: outset;
 }
 
 </style>
 
 <div id='content-right-title'>Statistics</div>
 <div class="inner-right">
-<? echo $this->navigation()->breadcrumbs()->setIndent(8) ?>
-<? #echo $this->navigation()->menu() ?>
-<?php
+<?php echo $this->navigation()->breadcrumbs()->setIndent(8);
+#echo $this->navigation()->menu();
 /*$navPrimary = $this->navigation()->findOneByLabel('Broadcast');
 echo $this->navigation()
                    ->menu()

@@ -6,37 +6,44 @@
 <?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen')
 	->headLink()->prependStylesheet($this->baseUrl('/js/jquery-ui.css'), 'screen'); ?>
 
-<? $this->headScript()->appendFile(
+<?php 
+	$this->headScript()->appendFile(
     '/js/jquery-2.1.4.js',
     'text/javascript'
     ); ?>
     
-<? $this->headScript()->appendFile(
+<?php 
+	$this->headScript()->appendFile(
     '/js/jquery-migrate-1.2.1.js',
     'text/javascript'
     ); ?>
 
-<? $this->headScript()->appendFile(
+<?php 
+	$this->headScript()->appendFile(
     '/js/encoder.js',
     'text/javascript'
     ); ?>
 
-<? $this->headScript()->appendFile(
+<?php 
+	$this->headScript()->appendFile(
     '/js/jquery-ui.js',
     'text/javascript'
     ); ?>
 
-<? $this->headScript()->appendFile(
+<?php 
+	$this->headScript()->appendFile(
     '/js/jquery.jeditable.js',
     'text/javascript'
     ); ?>
     
-<? $this->headScript()->appendFile(
+<?php 
+	$this->headScript()->appendFile(
     '/js/jquery-custom-function.js',
     'text/javascript'
     ); ?>
 
-<?= $this->headScript()->appendFile(
+<?= 
+	$this->headScript()->appendFile(
     '/js/jquery.selectbox-0.5.js',
     'text/javascript'
     ); ?>
@@ -53,7 +60,7 @@
 <div id="loggedin"><?php  echo "Connected as " . $this->firstname;?></div>
 <?= $this->render('content-left.phtml') ?>
 
-<?
+<?php
     }
 
 ?></div>

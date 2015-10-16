@@ -1,54 +1,65 @@
 <style type="text/css">
-#MatterAllClassifiers{
-  width: 941px;
-}
-#classifiers-list-head{
-  cursor: pointer;
-}
-.classifier-col-value{
-  display:inline-block;
-  width: 220px;
-  vertical-align: top;
-}
-.classifier-col-url{
-  display:inline-block;
-  width: 350px;
-  vertical-align: top; 
-}
-.classifier-col-lnkto{
-  display:inline-block;
-  width: 160px;
-  vertical-align: top;
-}
-.classifier-actions{
-  display: none;
-}
-.classifier-head span{
-  height: 18px;
-  vertical-align: top;
-}
-.classifier-head:hover .classifier-actions{
-  display: inline-block;
+#MatterAllClassifiers {
+	width: 941px;
 }
 
-.delete-classifier{
-  display: none;
-  cursor: pointer;
+#classifiers-list-head {
+	cursor: pointer;
 }
-.classifier-row:hover .delete-classifier{
-  display: inline-block;
+
+.classifier-col-value {
+	display: inline-block;
+	width: 220px;
+	vertical-align: top;
 }
-.add-classifier-totype{
-  cursor: pointer;
+
+.classifier-col-url {
+	display: inline-block;
+	width: 350px;
+	vertical-align: top;
 }
+
+.classifier-col-lnkto {
+	display: inline-block;
+	width: 160px;
+	vertical-align: top;
+}
+
+.classifier-actions {
+	display: none;
+}
+
+.classifier-head span {
+	height: 18px;
+	vertical-align: top;
+}
+
+.classifier-head:hover .classifier-actions {
+	display: inline-block;
+}
+
+.delete-classifier {
+	display: none;
+	cursor: pointer;
+}
+
+.classifier-row:hover .delete-classifier {
+	display: inline-block;
+}
+
+.add-classifier-totype {
+	cursor: pointer;
+}
+
 .sortable-classifiers {
-  list-style-type:none;
-  margin: 0px;
-  padding: 0px;
+	list-style-type: none;
+	margin: 0px;
+	padding: 0px;
 }
-.sortable-classifiers li{
-  float:left;
-  width: 900px;
+
+.sortable-classifiers li {
+	float: left;
+	width: 900px;
 }
 </style>
 <script type="text/javascript">
@@ -298,57 +309,67 @@ $(document).ready(function(){
 });
 </script>
 
-<div id="MatterAllClassifiers" class="listrow" ><div id="classifiers-list-head" class="status-row" style="padding-bottom:4px;">
-<span class="classifier-col-value" style="margin-left: 5px;">All classifiers</span>
-<span class="classifier-col-url" style="margin-left: 10px;">URL</span>
-<span class="classifier-col-lnkto" style="margin-left: 10px;">Link to matter</span>
-<button class="add-classifier-totype" style="float:right;margin: 0px 5px 3px 0px;vertical-align:top;">Add classifier</button>
-</div>
-
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:99%; height: auto;" >
-<?php 
-$type = '';
-$close_type = 0;
-$add_empty_row = 0;
-
-foreach($this->classifiers as $classifier){
-  if($type != $classifier['type']){
-    $type = $classifier['type'];
-    
-    if($close_type)
-      echo "</div></ul></div>";
-?>
-<? if($add_empty_row){ ?>
-<div style="height:15px;float:left;width:900px;"></div>
-<? } ?>
-<div id="classifier-type-<?=$classifier['type_code']?>" style="float:left;">
-<div class="status-row classifier-head" style="margin:5px 0px; border-bottom: 1px solid #DDD;">
-<span class="classifier-col-value"><b><?=$classifier['type']?></b></span>
-<div class="classifier-actions"><span class="add-classifier-totype" id="<?=$classifier['type_code']?>" title="Add classifier to type"><span class="ui-icon ui-icon-plusthick" title="Add classifier" style="float: left;"></span></span>
-&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete-classifier-type" style="cursor:pointer;" id="<?=$classifier['type_code']?>"><span class="ui-icon ui-icon-trash" title="Delete classifier type" style="float: right;"></span></span></div>
-</div>
-<div style="display:block;"><ul class="sortable-classifiers" >
-<?php $close_type=1; }
-    if($type == $classifier['type']){
-      if($classifier['value_ID'] === NULL)
-         $vclass = "value-neditable";
-      else
-         $vclass = "value-editable";
-?>
-<li id="<?=$classifier['ID']?>">
-<span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float:left; cursor: move;" ></span>
-<div class="status-row classifier-row" id="<?=$classifier['ID']?>" typc="<?=$classifier['type_code']?>">
-  <span class="classifier-col-value <?=$vclass?>" id="<?=$classifier['type_code']?>" ><?=$classifier['value']?></span>
-<span class="classifier-col-url url-editable" style="overflow: hidden; white-space: nowrap; margin-left: 10px;"><?=$classifier['url']?></span>
-  <span class="classifier-col-lnkto lnk-editable" style="margin-left: 10px;"><?=$classifier['lnkTo']?></span>
-  <span class="delete-classifier"><span class="ui-icon ui-icon-trash" title="Delete classifier" style="float: right;"></span></span>
-</div></li>
-<?php } 
-   $add_empty_row = 1;
- }
-    if($close_type)
-      echo "</div></ul></div>";
- ?>
-</div>
-
-</div>
+<div id="MatterAllClassifiers" class="listrow">
+	<div id="classifiers-list-head" class="status-row" style="padding-bottom: 4px;">
+		<span class="classifier-col-value" style="margin-left: 5px;">All classifiers</span> 
+		<span class="classifier-col-url" style="margin-left: 10px;">URL</span> 
+		<span class="classifier-col-lnkto" style="margin-left: 10px;">Link to matter</span>
+		<button class="add-classifier-totype" style="float: right; margin: 0px 5px 3px 0px; vertical-align: top;">Add classifier</button>
+	</div>
+	<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width: 99%; height: auto;">
+		<?php
+		$type = '';
+		$close_type = 0;
+		$add_empty_row = 0;
+		
+		foreach ( $this->classifiers as $classifier ) {
+			if ($type != $classifier ['type']) {
+				$type = $classifier ['type'];				
+				if ($close_type)
+					echo "</div></ul></div>";
+				if($add_empty_row){ ?>
+			<div style="height: 15px; float: left; width: 900px;"></div>
+				<?php 
+				} ?>
+		<div id="classifier-type-<?=$classifier['type_code']?>" style="float: left;">
+			<div class="status-row classifier-head" style="margin: 5px 0px; border-bottom: 1px solid #DDD;">
+				<span class="classifier-col-value"><b><?=$classifier['type']?></b></span>
+				<div class="classifier-actions">
+					<span class="add-classifier-totype" id="<?=$classifier['type_code']?>" title="Add classifier to type">
+						<span class="ui-icon ui-icon-plusthick" title="Add classifier" style="float: left;"></span>
+					</span> &nbsp;&nbsp;&nbsp;&nbsp;
+					<span class="delete-classifier-type" style="cursor: pointer;" id="<?=$classifier['type_code']?>">
+						<span class="ui-icon ui-icon-trash" title="Delete classifier type" style="float: right;"></span>
+					</span>
+				</div>
+			</div>
+			<div style="display: block;">
+				<ul class="sortable-classifiers">
+					<?php		
+					$close_type = 1;
+						}
+						if ($type == $classifier ['type']) {
+							if ($classifier ['value_ID'] === NULL)
+								$vclass = "value-neditable";
+							else
+								$vclass = "value-editable";
+							?>
+					<li id="<?=$classifier['ID']?>">
+						<span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float: left; cursor: move;"></span>
+						<div class="status-row classifier-row" id="<?=$classifier['ID']?>" typc="<?=$classifier['type_code']?>">
+							<span class="classifier-col-value <?=$vclass?>" id="<?=$classifier['type_code']?>"><?=$classifier['value']?></span>
+							<span class="classifier-col-url url-editable" style="overflow: hidden; white-space: nowrap; margin-left: 10px;"><?=$classifier['url']?></span>
+							<span class="classifier-col-lnkto lnk-editable" style="margin-left: 10px;"><?=$classifier['lnkTo']?></span> 
+							<span class="delete-classifier">
+								<span class="ui-icon ui-icon-trash" title="Delete classifier" style="float: right;"></span>
+							</span>
+						</div>
+					</li>
+					<?php } 
+					$add_empty_row = 1;
+				}
+			    if($close_type)
+					echo "</div></ul></div>";
+					?>
+			</div>
+		</div>

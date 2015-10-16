@@ -191,132 +191,198 @@ $(document).ready(function(){
 
 </script>
 
-<style type="text/css" >
-#add-matter-head{
-display:block;
-width: 540px;
-background: #1E4262;
-color: #FFF;
-padding: 5px;
-border: 1px solid #1E4262;
-border-radius: 5px 5px 0px 0px;
-}
-#add-matter{
-width: 540px;
-height: auto;
-background: whitesmoke;
-display: block;
-border: 1px inset #888;
-padding: 5px;
-border-radius: 0px 0px 5px 5px;
-}
-#add-matter label{
-display: inline-block;
-text-align: right;
-width: 75px;
-margin: 0px 5px 10px 0px;
-}
-#child-matter-options {
-border-top: 1px solid #DDD;
-padding-top: 8px;
-}
-#child-matter-options span{
-display:inline-block;
-text-align: right;
-width: 150px;
-}
-#child-matter-options label{
-text-align: left;
-width: 150px;
-}
-#add-matter input[type="text"]{
-width: 170px;
-border-radius: 3px;
-border: 1px inset #888;
-padding: 3px 2px;
-}
-#add-matter-actions{
-margin: 10px 0px 0px 0px;
-float: right;
+<style type="text/css">
+#add-matter-head {
+	display: block;
+	width: 540px;
+	background: #1E4262;
+	color: #FFF;
+	padding: 5px;
+	border: 1px solid #1E4262;
+	border-radius: 5px 5px 0px 0px;
 }
 
-.validation-errors{
-display:none;
-border:1px solid #f00;
-color:#f00;
-padding:5px;
-width: auto;
-    margin-bottom: 10px;
-    border-radius: 5px;
+#add-matter {
+	width: 540px;
+	height: auto;
+	background: whitesmoke;
+	display: block;
+	border: 1px inset #888;
+	padding: 5px;
+	border-radius: 0px 0px 5px 5px;
 }
-.validation-errors span{
-display: block;
-width: auto;
-    margin-left: 20px;
+
+#add-matter label {
+	display: inline-block;
+	text-align: right;
+	width: 75px;
+	margin: 0px 5px 10px 0px;
 }
-.display-field{
-display: inline-block;
-width: 170px;
-    border-radius: 3px;
-border: 1px solid #888;
-padding: 1px 2px;
-    vertical-align: top;
-    margin-bottom: 2px;
-    min-height: 14px;
+
+#child-matter-options {
+	border-top: 1px solid #DDD;
+	padding-top: 8px;
+}
+
+#child-matter-options span {
+	display: inline-block;
+	text-align: right;
+	width: 150px;
+}
+
+#child-matter-options label {
+	text-align: left;
+	width: 150px;
+}
+
+#add-matter input[type="text"] {
+	width: 170px;
+	border-radius: 3px;
+	border: 1px inset #888;
+	padding: 3px 2px;
+}
+
+#add-matter-actions {
+	margin: 10px 0px 0px 0px;
+	float: right;
+}
+
+.validation-errors {
+	display: none;
+	border: 1px solid #f00;
+	color: #f00;
+	padding: 5px;
+	width: auto;
+	margin-bottom: 10px;
+	border-radius: 5px;
+}
+
+.validation-errors span {
+	display: block;
+	width: auto;
+	margin-left: 20px;
+}
+
+.display-field {
+	display: inline-block;
+	width: 170px;
+	border-radius: 3px;
+	border: 1px solid #888;
+	padding: 1px 2px;
+	vertical-align: top;
+	margin-bottom: 2px;
+	min-height: 14px;
 }
 </style>
 
 <div class="place-card">
-<div id="add-matter-head">
+	<div id="add-matter-head">
 <?=$this->matter_title?>
 </div>
-<div id="add-matter">
-<div class="validation-errors">
+	<div id="add-matter">
+		<div class="validation-errors"></div>
+		<form method="post" action="" id="add-matter-form" accept-charset="utf-8">
+			<label for="matter-category" style="font-weight: bold;">Category</label>
+			<input type="text" 
+				name="matter-category" 
+				id="matter-category"
+				value="<?=$this->category?>" 
+				class="required"
+				onfocus="this.select()" /> 
+			<input type="hidden"
+				name="matter-category-code" 
+				id="matter-category-code"
+				value="<?=$this->category_code?>" /> 
+			<label for="matter-country" style="font-weight: bold;">Country</label> 
+			<input type="text"
+				name="matter-country" 
+				id="matter-country"
+				value="<?=$this->country_name?>" 
+				class="required"
+				onfocus="this.select()" /> 
+			<input type="hidden"
+				name="matter-country-id" 
+				id="matter-country-id"
+				value="<?=$this->country_code?>" /> 
+			<label for="matter-origin">Origin</label>
+			<input type="text" 
+				name="matter-origin" 
+				id="matter-origin"
+				value="<?=$this->origin_name?>" 
+				onfocus="this.select()" /> 
+			<input type="hidden" 
+				name="matter-origin-id" 
+				id="matter-origin-id"
+				value="<?=$this->origin_code?>" /> 
+			<label for="matter-type">Type</label>
+			<input type="text" 
+				name="matter-type" 
+				id="matter-type"
+				value="<?=$this->type_name?>" 
+				onfocus="this.select()" /> 
+			<input type="hidden" 
+				name="matter-type-id" 
+				id="matter-type-id"
+				value="<?=$this->type_code?>" /> 
+			<label for="matter-caseref" style="font-weight: bold;">Caseref</label>
+			<?php if(isset($this->child)){?>
+				<span id="matter-caseref" class="display-field"><?=$this->caseref?></span>
+			<?php }else { ?>
+				<input type="text" 
+					name="matter-caseref" 
+					id="matter-caseref"
+					value="<?=$this->caseref?>" 
+					class="required" 
+					onfocus="this.select()" />
+			<?php } ?>
+			<input type="hidden" 
+				name="matter-caseref-id" id="matter-caseref-id"
+				value="<?=$this->caseref?>" /> 
+			<label for="matter-responsible" style="font-weight: bold;">Responsible</label> 
+			<input type="text" 
+				name="matter-responsible" 
+				id="matter-responsible"
+				value="<?=$this->username?>" 
+				class="required"
+				onfocus="this.select()" />
 
-</div>
-<form type="post" action="" id="add-matter-form" accept-charset="utf-8">
+			<?php if(isset($this->child)){ ?>
+			<div id="child-matter-options">
+				<span>Current matter as a : </span> 
+				<input type="radio"
+					name="child-matter-priority" 
+					value="1" checked="checked"
+					id="current-priority-matter" />
+				<label for="current-priority-matter">PRIORITY</label>
+				<input type="radio" 
+					name="child-matter-priority" 
+					value="0"
+					id="current-parent-matter" />
+				<label for="current-parent-matter">PARENT</label><br>
+				<span>Child matter as : </span> 
+				<input type="radio"
+					name="child-matter-container" 
+					value="1"
+					id="child-independent-matter" />
+				<label for="child-independent-matter">Independent Container</label> 
+				<input type="radio" 
+					name="child-matter-container" 
+					value="0"
+					checked="checked" id="child-inherit-matter" />
+				<label for="child-inherit-matter">Inherits its information</label>
+			</div>
+			<?php } ?>
 
-<label for="matter-category" style="font-weight: bold;">Category</label>
-<input type="text" name="matter-category" id="matter-category" value="<?=$this->category?>" class="required" onfocus="this.select()" />
-<input type="hidden" name="matter-category-code" id="matter-category-code" value="<?=$this->category_code?>" />
-
-<label for="matter-country" style="font-weight: bold;">Country</label>
-<input type="text" name="matter-country" id="matter-country" value="<?=$this->country_name?>" class="required" onfocus="this.select()" />
-<input type="hidden" name="matter-country-id" id="matter-country-id" value="<?=$this->country_code?>" />
-
-<label for="matter-origin">Origin</label>
-<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>" onfocus="this.select()" />
-<input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->origin_code?>" />
-
-<label for="matter-type">Type</label>
-<input type="text" name="matter-type" id="matter-type" value="<?=$this->type_name?>" onfocus="this.select()" />
-<input type="hidden" name="matter-type-id" id="matter-type-id" value="<?=$this->type_code?>" />
-
-<label for="matter-caseref" style="font-weight: bold;">Caseref</label>
-<?php if(isset($this->child)){?>
-<span id="matter-caseref" class="display-field" ><?=$this->caseref?></span>
-<?php }else { ?>
-<input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->caseref?>" class="required" onfocus="this.select()" />
-<?php } ?>
-<input type="hidden" name="matter-caseref-id" id="matter-caseref-id" value="<?=$this->caseref?>" />
-
-<label for="matter-responsible" style="font-weight: bold;">Responsible</label>
-<input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->username?>" class="required" onfocus="this.select()" />
-
-<?php if(isset($this->child)){ ?>
-<div id="child-matter-options" >
- <span>Current matter as a : </span> <input type="radio" name="child-matter-priority" value="1" checked="checked" id="current-priority-matter" /><label for="current-priority-matter" >PRIORITY</label>
-  <input type="radio" name="child-matter-priority" value="0" id="current-parent-matter" /><label for="current-parent-matter">PARENT</label><br>
- <span>Child matter as : </span> <input type="radio" name="child-matter-container" value="1" id="child-independent-matter" /><label for="child-independent-matter" >Independent Container</label>
-  <input type="radio" name="child-matter-container" value="0" checked="checked" id="child-inherit-matter" /><label for="child-inherit-matter">Inherits its information</label>
-</div>
-<?php } ?>
-
-<div id="add-matter-actions">
-
-<input type="button" name="<?=$this->matter_cap_id?>" id="<?=$this->matter_cap_id?>" value="<?=$this->matter_cap?>" />
-<input type="button" name="add-matter-cancel" id="add-matter-cancel" value="Cancel" />
-</div>
-</form>
-</div>
+			<div id="add-matter-actions">
+				<input type="button" 
+					name="<?=$this->matter_cap_id?>"
+					id="<?=$this->matter_cap_id?>" 
+					value="<?=$this->matter_cap?>" /> 
+				<input type="button" 
+					name="add-matter-cancel" 
+					id="add-matter-cancel"
+					value="Cancel" />
+			</div>
+		</form>
+	</div>
 </div>

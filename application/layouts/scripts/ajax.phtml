@@ -1,27 +1,23 @@
-<?= $this->headLink()
+<?php 
+	$this->headLink()
         ->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen');
-?>
-<?	$this->headScript()->appendFile(
+	$this->headScript()->appendFile(
     	'/js/jquery-2.1.4.js',
     	'text/javascript'
     );
-?>
-<?	$this->headScript()->appendFile(
+	$this->headScript()->appendFile(
     	'/js/jquery-migrate-1.2.1.js',
     	'text/javascript'
     );
-?>
-<?	$this->headScript()->appendFile(
+	$this->headScript()->appendFile(
     	'/js/jquery-ui.js',
     	'text/javascript'
     );
-?>
-<?	$this->headScript()->appendFile(
+	$this->headScript()->appendFile(
     '/js/jquery-custom-function.js',
     'text/javascript'
     );
-?>
-<?php     
+     
 	if($this->dojo()->isEnabled()) {
         $this->dojo()->setDjConfigOption('usePlainJson',true)
                   ->addStylesheetModule('dijit.themes.tundra')

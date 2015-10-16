@@ -1,8 +1,6 @@
 <?php
-
-#echo $this->doctype('HTML5'); ?>
-
-<?= $this->doctype() ?>
+#echo $this->doctype('HTML5');
+echo $this->doctype(); ?>
 <html>
 <head>
 <?= $this->headTitle() ?>
@@ -14,8 +12,8 @@
 </head>
 
 <body<?= 0 != count($this->routeContext) ? ' class="' . implode(' ', array_unique($this->routeContext)) . '"' : '' ?>>
-<? #$this->placeholder('header'); ?>
-<? #$this->render('header.phtml') ?>
+<?php #$this->placeholder('header'); ?>
+<?php #$this->render('header.phtml') ?>
 
 <div id="page">
     <div id="logo"><a id="logo" href="<?= $this->url(array(), null, true) ?>">phpIP</a></div>

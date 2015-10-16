@@ -1,57 +1,63 @@
-<style type="text/css" >
-#add-actor-content{
-  width: 99%;
-  background: #FFF;
-  display: block;
-  border: 1px inset #888;
-  padding: 5px;
-  border-radius: 0px 0px 5px 5px;
-}
-#add-actor-content label{
-  display: inline-block;
-  text-align: left;
-  width: 100px;
-  margin: 0px 5px 5px 5px;
-  vertical-align: top;
-}
-.actor-input{
-  width: 170px;
-  border-radius: 3px;
-  border: 1px inset #888;
-  padding: 1px 2px;
-  vertical-align: top;
-  margin-bottom: 2px;
-}
-.close-button{
-  background: #f00;
-  float:right;
-  padding: 2px 4px 0px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-family: arial;
-}
-#add-actor-head{
-  display:block;
-  width: 99%;
-  background: #1E4262;
-  color: #FFF;
-  padding: 5px;
-  border: 1px solid #1E4262;
-  border-radius: 5px 5px 0px 0px;
-}
-.validation-errors{
-  color: #F00;
-  padding: 5px;
-}
-#valid-error{
-  display: block;
-  margin:0px 0px 5px 10px;
+<style type="text/css">
+#add-actor-content {
+	width: 99%;
+	background: #FFF;
+	display: block;
+	border: 1px inset #888;
+	padding: 5px;
+	border-radius: 0px 0px 5px 5px;
 }
 
-.actor-info-set{
-  background: #EFEFEF;
-  border: 1px inset #888;
-  border-radius: 5px;
+#add-actor-content label {
+	display: inline-block;
+	text-align: left;
+	width: 100px;
+	margin: 0px 5px 5px 5px;
+	vertical-align: top;
+}
+
+.actor-input {
+	width: 170px;
+	border-radius: 3px;
+	border: 1px inset #888;
+	padding: 1px 2px;
+	vertical-align: top;
+	margin-bottom: 2px;
+}
+
+.close-button {
+	background: #f00;
+	float: right;
+	padding: 2px 4px 0px;
+	border-radius: 3px;
+	cursor: pointer;
+	font-family: arial;
+}
+
+#add-actor-head {
+	display: block;
+	width: 99%;
+	background: #1E4262;
+	color: #FFF;
+	padding: 5px;
+	border: 1px solid #1E4262;
+	border-radius: 5px 5px 0px 0px;
+}
+
+.validation-errors {
+	color: #F00;
+	padding: 5px;
+}
+
+#valid-error {
+	display: block;
+	margin: 0px 0px 5px 10px;
+}
+
+.actor-info-set {
+	background: #EFEFEF;
+	border: 1px inset #888;
+	border-radius: 5px;
 }
 </style>
 
@@ -338,94 +344,132 @@ $(document).ready(function(){
 </script>
 
 <div id="add-actor-head">
-Create Actor <span class="close-button">X</span>
+	Create Actor <span class="close-button">X</span>
 </div>
 <div id="add-actor-content">
-<?php if(isset($this->formErrors)){ ?>
-<div class="validation-errors" >
-<?php foreach($this->formErrors as $key => $value){
-   echo '<div class="valid-error">* '.$key.' - '.$value['isEmpty'].'</div>';
- } ?>
-</div>
-<?php } ?>
-<?php if(isset($this->sqlErrors)){ ?>
-<div class="validation-errors" >
-<?php echo $this->sqlErrors;?>
-</div>
-<?php } ?>
+	<?php
+	if(isset($this->formErrors)){ 
+		?>
+	<div class="validation-errors">
+		<?php	
+		foreach ( $this->formErrors as $key => $value ) {
+			echo '<div class="valid-error">* ' . $key . ' - ' . $value ['isEmpty'] . '</div>';
+		}
+		?>
+	</div>
+	<?php 
+	} 
+	if(isset($this->sqlErrors)){
+		?>
+	<div class="validation-errors">
+		<?=$this->sqlErrors;?>
+	</div>
+	<?php 
+	} 
+	?>
 <form id="add-actor-form" method="post" action="" accept-charset="utf-8">
-<fieldset class="actor-info-set" >
-<legend>Actor details</legend>
-<label for="name" title="<?=$this->actorComments['name']?>" >Name <span class="required-field">*</span></label>
-<?php echo $this->actorForm->getElement('name'); ?>
-<label for="first_name" title="<?=$this->actorComments['first_name']?>" >Firstname</label>
-<?php echo $this->actorForm->getElement('first_name'); ?>
-<label for="display_name" title="<?=$this->actorComments['display_name']?>" >Display Name</label>
-<?php echo $this->actorForm->getElement('display_name'); ?>
-<label for="login" title="<?=$this->actorComments['login']?>" >Login</label>
-<?php echo $this->actorForm->getElement('login'); ?>
-<label for="default_role" title="<?=$this->actorComments['default_role']?>" >Default role</label>
-<?php echo $this->actorForm->getElement('default_role'); ?>
-<label for="function" title="<?=$this->actorComments['function']?>" >Function</label>
-<?php echo $this->actorForm->getElement('function'); ?>
-<label for="Employer" title="<?=$this->actorComments['company_ID']?>" >Employer</label>
-<?php echo $this->actorForm->getElement('Employer'); ?>
-<label for="parent_company" title="<?=$this->actorComments['parent_ID']?>" >Parent Company</label>
-<?php echo $this->actorForm->getElement('parent_company'); ?>
-<label for="WorkSite" title="<?=$this->actorComments['site_ID']?>" >Work Site</label>
-<?php echo $this->actorForm->getElement('WorkSite');?>
-<label for="phy_person" title="<?=$this->actorComments['phy_person']?>" >Physical Person</label>
-<?php echo $this->actorForm->getElement('phy_person');?>
-<label for="nationality" title="<?=$this->actorComments['nationality']?>" >Nationality</label>
-<?php echo $this->actorForm->getElement('nationality');?>
-<label for="small_entity" title="<?=$this->actorComments['small_entity']?>" >Small Entity</label>
-<?php echo $this->actorForm->getElement('small_entity');?>
-</fieldset>
-<fieldset class="actor-info-set" >
-<legend >Contact details</legend>
-<label for="address" title="<?=$this->actorComments['address']?>" >Address</label>
-<?php echo $this->actorForm->getElement('address');?>
-<label for="country" title="<?=$this->actorComments['country']?>" >country</label>
-<?php echo $this->actorForm->getElement('country');?>
-<label for="address_mailing" title="<?=$this->actorComments['address_mailing']?>" >Address mailing</label>
-<?php echo $this->actorForm->getElement('address_mailing');?>
-<label for="country_mailing" title="<?=$this->actorComments['country_mailing']?>" >Country mailng</label>
-<?php echo $this->actorForm->getElement('country_mailing');?>
-<label for="address_billing" title="<?=$this->actorComments['address_billing']?>" >Address Billing</label>
-<?php echo $this->actorForm->getElement('address_billing');?>
-<label for="country_billing" title="<?=$this->actorComments['country_billing']?>" >Country Billing</label>
-<?php echo $this->actorForm->getElement('country_billing');?>
-<label for="email" title="<?=$this->actorComments['email']?>" >Email</label>
-<?php echo $this->actorForm->getElement('email');?>
-<label for="phone" title="<?=$this->actorComments['phone']?>" >Phone</label>
-<?php echo $this->actorForm->getElement('phone');?>
-<label for="phone2" title="<?=$this->actorComments['phone2']?>" >Phone 2</label>
-<?php echo $this->actorForm->getElement('phone2');?>
-<label for="fax" title="<?=$this->actorComments['fax']?>" >Fax</label>
-<?php echo $this->actorForm->getElement('fax');?>
-</fieldset>
-<fieldset class="actor-info-set" >
-<legend>Other details</legend>
-<label for="pay_category" title="<?=$this->actorComments['pay_category']?>" >Pay Category</label>
-<?php echo $this->actorForm->getElement('pay_category');?>
-<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>" >VAT No.</label>
-<?php echo $this->actorForm->getElement('VAT_number');?>
-<label for="notes" title="<?=$this->actorComments['notes']?>" >Notes</label>
-<?php echo $this->actorForm->getElement('notes');?>
-</fieldset>
+	<fieldset class="actor-info-set">
+		<legend>Actor details</legend>
+		<label for="name" title="<?=$this->actorComments['name']?>"><b>Name</b></label>
+			<?=$this->actorForm->getElement('name')?>
+		<label for="first_name" title="<?=$this->actorComments['first_name']?>">Firstname</label>
+			<?=$this->actorForm->getElement('first_name')?>
+		<label for="display_name" title="<?=$this->actorComments['display_name']?>">Display Name</label>
+			<?=$this->actorForm->getElement('display_name')?>
+		<label for="login" title="<?=$this->actorComments['login']?>">Login</label>
+			<?=$this->actorForm->getElement('login')?>
+		<label for="default_role" title="<?=$this->actorComments['default_role']?>">Default role</label>
+			<?=$this->actorForm->getElement('default_role')?>
+		<label for="function" title="<?=$this->actorComments['function']?>">Function</label>
+			<?=$this->actorForm->getElement('function')?>
+		<label for="Employer" title="<?=$this->actorComments['company_ID']?>">Employer</label>
+			<?=$this->actorForm->getElement('Employer')?>
+		<label for="parent_company" title="<?=$this->actorComments['parent_ID']?>">Parent Company</label>
+			<?=$this->actorForm->getElement('parent_company')?>
+		<label for="WorkSite" title="<?=$this->actorComments['site_ID']?>">Work Site</label>
+			<?=$this->actorForm->getElement('WorkSite')?>
+		<label for="phy_person" title="<?=$this->actorComments['phy_person']?>">Physical Person</label>
+			<?=$this->actorForm->getElement('phy_person')?>
+		<label for="nationality" title="<?=$this->actorComments['nationality']?>">Nationality</label>
+			<?=$this->actorForm->getElement('nationality')?>
+		<label for="small_entity" title="<?=$this->actorComments['small_entity']?>">Small Entity</label>
+			<?=$this->actorForm->getElement('small_entity')?>
+	</fieldset>
+	<fieldset class="actor-info-set">
+		<legend>Contact details</legend>
+		<label for="address" title="<?=$this->actorComments['address']?>">Address</label>
+			<?=$this->actorForm->getElement('address')?>
+		<label for="country" title="<?=$this->actorComments['country']?>">country</label>
+			<?=$this->actorForm->getElement('country')?>
+		<label for="address_mailing" title="<?=$this->actorComments['address_mailing']?>">Address mailing</label>
+			<?=$this->actorForm->getElement('address_mailing')?>
+		<label for="country_mailing" title="<?=$this->actorComments['country_mailing']?>">Country mailng</label>
+			<?=$this->actorForm->getElement('country_mailing')?>
+		<label for="address_billing" title="<?=$this->actorComments['address_billing']?>">Address Billing</label>
+			<?=$this->actorForm->getElement('address_billing')?>
+		<label for="country_billing" title="<?=$this->actorComments['country_billing']?>">Country Billing</label>
+			<?=$this->actorForm->getElement('country_billing')?>
+		<label for="email" title="<?=$this->actorComments['email']?>">Email</label>
+			<?=$this->actorForm->getElement('email')?>
+		<label for="phone" title="<?=$this->actorComments['phone']?>">Phone</label>
+			<?=$this->actorForm->getElement('phone')?>
+		<label for="phone2" title="<?=$this->actorComments['phone2']?>">Phone 2</label>
+			<?=$this->actorForm->getElement('phone2')?>
+		<label for="fax" title="<?=$this->actorComments['fax']?>">Fax</label>
+			<?=$this->actorForm->getElement('fax')?>
+	</fieldset>
+	<fieldset class="actor-info-set">
+		<legend>Other details</legend>
+		<label for="pay_category" title="<?=$this->actorComments['pay_category']?>">Pay Category</label>
+			<?=$this->actorForm->getElement('pay_category');?>
+		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT No.</label>
+			<?=$this->actorForm->getElement('VAT_number');?>
+		<label for="notes" title="<?=$this->actorComments['notes']?>">Notes</label>
+			<?=$this->actorForm->getElement('notes');?>
+	</fieldset>
+		<input type="hidden" 
+			value="" 
+			id="Employer-id" 
+			name="Employer-id" /> 
+		<input type="hidden" 
+			value="" 
+			id="parent_company-id" 
+			name="parent_company-id" /> 
+		<input type="hidden" 
+			value=""
+			id="WorkSite-id" 
+			name="WorkSite-id" /> 
+		<input type="hidden" 
+			value=""
+			id="country-code" 
+			name="country-code" /> 
+		<input type="hidden"
+			value="" 
+			id="nationality-code" 
+			name="country-code" /> 
+		<input type="hidden" 
+			value="" 
+			id="country_mailing-code"
+			name="country_mailing-code" /> 
+		<input type="hidden" 
+			value=""
+			id="country_billing-code" 
+			name="country_billing-code" /> 
+		<input
+			type="hidden" 
+			value="<?=$this->default_role_code?>"
+			id="default_role-code" 
+			name="default_role-code" />
 
-<input type="hidden" value="" id="Employer-id" name="Employer-id"/>
-<input type="hidden" value="" id="parent_company-id" name="parent_company-id"/>
-<input type="hidden" value="" id="WorkSite-id" name="WorkSite-id"/>
-<input type="hidden" value="" id="country-code" name="country-code"/>
-<input type="hidden" value="" id="nationality-code" name="country-code"/>
-<input type="hidden" value="" id="country_mailing-code" name="country_mailing-code"/>
-<input type="hidden" value="" id="country_billing-code" name="country_billing-code"/>
-<input type="hidden" value="<?=$this->default_role_code?>" id="default_role-code" name="default_role-code"/>
-
-<div style="text-align: center; margin-top:5px;">
-<input type="button" value="Create" name="add-actor-submit" id="add-actor-submit" />
-<input type="button" value="Cancel" name="add-actor-cancel" id="add-actor-cancel" />
-</div>
-</form>
+		<div style="text-align: center; margin-top: 5px;">
+			<input type="button" 
+				value="Create" 
+				name="add-actor-submit"
+				id="add-actor-submit" /> 
+			<input type="button" 
+				value="Cancel"
+				name="add-actor-cancel" 
+				id="add-actor-cancel" />
+		</div>
+	</form>
 </div>

@@ -1,20 +1,20 @@
 <style type="text/css">
-
 #MatterAddActor:hover {
-    cursor: pointer;
+	cursor: pointer;
 }
 
-.formtitle{
-    width:90px;
-    display: inline-block;
-    text-align: right;
-    margin-bottom: 10px;
+.formtitle {
+	width: 90px;
+	display: inline-block;
+	text-align: right;
+	margin-bottom: 10px;
 }
-#actor-details-popup{
-    position: fixed;
-    z-index: 1;
-    display:none;
-    width: 670px;
+
+#actor-details-popup {
+	position: fixed;
+	z-index: 1;
+	display: none;
+	width: 670px;
 }
 </style>
 
@@ -113,50 +113,64 @@ $(document).ready(function(){
 
 $( "#actor-name" ).focus();
 
-</script>  
-<div class="listrow" style="width:350px"><div id="MatterAddActor" class="status-row">
-<span class="eventlist-col-name" style="margin-left: 5px;">Add Actor</span>
-</div>
-<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width:98%; height: auto; background: whitesmoke;" >
-
-<span class="formtitle">Role</span> <select id="rolebox" name="role_select">
-        <option value='0-0'>Select</option> 
+</script>
+<div class="listrow" style="width: 350px">
+	<div id="MatterAddActor" class="status-row">
+		<span class="eventlist-col-name" style="margin-left: 5px;">Add Actor</span>
+	</div>
+	<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width: 98%; height: auto; background: whitesmoke;">
+		<span class="formtitle">Role</span> 
+		<select id="rolebox" name="role_select">
+			<option value='0-0'>Select</option> 
 <?php
-        $cont_yes = ""; $cont_no = "";
-        foreach ($this->all_roles as $role){
-            if ($role['code'] == $this->role_search){
-                $selected = " selected";
-                ($role['shareable']) ? $cont_yes = "checked" : $cont_no = "checked";
-            }
-            else
-                $selected = "";
-            echo "<option value='". $role['code'] ."-". $role['shareable']."' $selected>" . $role['name'] . "</option>";
-        }
-            if (1 == $this->role_search)
-                $selected = " selected";
-            else
-                $selected = "";
-        ?>
-      </select>
-<br>
-<span class="formtitle">Name</span> <input id="actor-name" size="30"/>
-<input type="hidden" id="actor-id" />
-<br>
-<span class="formtitle">Ref.</span> <input id="actor-ref" size="30"/>
-<input type="hidden" id="matter-id" value="<?=$this->matter_id?>" />
-<br>
-<?php if($this->container_id): ?>
-<input type="radio" name="matter_container" value="<?=$this->container_id?>" id="container_yes" <?=$cont_yes?> />
-<label for="container_yes" >Add actor to container</label><br>
-<input type="radio" name="matter_container" value='0' id="container_no" <?=$cont_no?> />
-<label for="container_no" >Add actor to current matter only</label>
-<br>
-<?php endif; ?>
-<div style="float: right;">
-<button id="submit">Add</button>
-<button id="cancel">Cancel</button>
-</div>
-</div>
+$cont_yes = "";
+$cont_no = "";
+foreach ( $this->all_roles as $role ) {
+	if ($role ['code'] == $this->role_search) {
+		$selected = " selected";
+		($role ['shareable']) ? $cont_yes = "checked" : $cont_no = "checked";
+	} else
+		$selected = "";
+	echo "<option value='" . $role ['code'] . "-" . $role ['shareable'] . "' $selected>" . $role ['name'] . "</option>";
+}
+if (1 == $this->role_search)
+	$selected = " selected";
+else
+	$selected = "";
+?>
+		</select> 
+		<br> 
+		<span class="formtitle">Name</span> 
+		<input id="actor-name" size="30" /> 
+		<input type="hidden" id="actor-id" /> 
+		<br>
+		<span class="formtitle">Ref.</span> 
+		<input id="actor-ref" size="30" />
+		<input type="hidden" id="matter-id" value="<?=$this->matter_id?>" /> 
+		<br>
+<?php 
+if($this->container_id): ?>
+		<input type="radio" 
+			name="matter_container" 
+			value="<?=$this->container_id?>" 
+			id="container_yes" 
+			<?=$cont_yes?> />
+		<label for="container_yes">Add actor to container</label>
+		<br> 
+		<input type="radio" 
+			name="matter_container" 
+			value='0' 
+			id="container_no"
+			<?=$cont_no?> /> 
+		<label for="container_no">Add actor to current matter only</label> 
+		<br>
+<?php 
+endif; ?>
+		<div style="float: right;">
+			<button id="submit">Add</button>
+			<button id="cancel">Cancel</button>
+		</div>
+	</div>
 </div>
 
 <div id="actor-details-popup" class="place-card"></div>

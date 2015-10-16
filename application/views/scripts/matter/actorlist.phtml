@@ -1,57 +1,63 @@
-<style type="text/css" >
-#actors-list-block{
-  width: 942px;
+<style type="text/css">
+#actors-list-block {
+	width: 942px;
 }
-#actors-list{
-  background: #FFF;
-  padding: 5px;
-  border: 1px inset #888;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
+
+#actors-list {
+	background: #FFF;
+	padding: 5px;
+	border: 1px inset #888;
+	border-radius: 5px;
 }
-.actor-list-row{
-  margin-bottom: 5px;
-  cursor: pointer;
-  padding:4px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+
+.actor-list-row {
+	margin-bottom: 5px;
+	cursor: pointer;
+	padding: 4px;
+	border-radius: 4px;
 }
+
 .actor-list-row:hover {
-  background: #C8E8F3;
+	background: #C8E8F3;
 }
-.actorlist-col-name{
-  display:inline-block;
-  width: 220px;
-  vertical-align: top;
+
+.actorlist-col-name {
+	display: inline-block;
+	width: 220px;
+	vertical-align: top;
 }
-.actorlist-col-first_name{
-  display:inline-block;
-  width: 200px;
-  vertical-align: top;
+
+.actorlist-col-first_name {
+	display: inline-block;
+	width: 200px;
+	vertical-align: top;
 }
-.actorlist-col-display_name{
-  display:inline-block;
-  width: 200px;
-  vertical-align: top;
+
+.actorlist-col-display_name {
+	display: inline-block;
+	width: 200px;
+	vertical-align: top;
 }
-.actorlist-col-comp_actor{
-  display:inline-block;
-  width: 260px;
-  vertical-align: top;
+
+.actorlist-col-comp_actor {
+	display: inline-block;
+	width: 260px;
+	vertical-align: top;
 }
-.actor-role-row{
-  border-bottom: 1px solid #DDD;
-  margin: 0px 0px 5px 0px;
+
+.actor-role-row {
+	border-bottom: 1px solid #DDD;
+	margin: 0px 0px 5px 0px;
 }
-#actors-head{
-  cursor: pointer;
+
+#actors-head {
+	cursor: pointer;
 }
-#actor-details-popup{
-  display: none;
-  z-index: 101;
-  position: fixed;
+
+#actor-details-popup {
+	display: none;
+	z-index: 101;
+	position: fixed;
 }
 </style>
 <script type="text/javascript">
@@ -81,39 +87,39 @@ $(document).ready(function(){
 });
 </script>
 
-<div id="actors-list-block" class="listrow" >
-<div class="status-row" id="actors-head">
-
-<span class="actorlist-col-name">Name</span>
-<span class="actorlist-col-first_name">Firstname</span>
-<span class="actorlist-col-display_name">Display name</span>
-<span class="actorlist-col-comp_actor">Actor</span>
-
-</div>
-
-<?php if(isset($this->matter_actors)){ 
-$actor_role = "";
-?>
-<div id="actors-list">
-<?php foreach($this->matter_actors as $actor) {
-  if($actor['role_name'] != ""){
-    if($actor_role != $actor['role_name']){
-       $actor_role = $actor['role_name']; ?>
-<div class="actor-role-row" ><b><?=$actor_role?></b>
-</div>
-<?php    }
-  }
-?>
-<div class="actor-list-row status-row" id="<?=$actor['ID']?>">
-<span class="actorlist-col-name"><?php echo htmlentities($actor['name']);?></span>
-<span class="actorlist-col-first_name"><?php echo htmlentities($actor['first_name']);?></span>
-<span class="actorlist-col-display_name"><?php echo htmlentities($actor['display_name']);?></span>
-<span class="actorlist-col-comp_actor"><?php echo htmlentities($actor['company_name']);?></span>
-
-</div>
-  
-<?php } ?>
-</div>
-<?php } ?>
-<div id="actor-details-popup" class="place-card" ></div>
+<div id="actors-list-block" class="listrow">
+	<div class="status-row" id="actors-head">
+		<span class="actorlist-col-name">Name</span> 
+		<span class="actorlist-col-first_name">Firstname</span> 
+		<span class="actorlist-col-display_name">Display name</span> 
+		<span class="actorlist-col-comp_actor">Actor</span>
+	</div>
+	<?php
+	if (isset ( $this->matter_actors )) {
+		$actor_role = "";
+		?>
+	<div id="actors-list">
+		<?php
+		foreach ( $this->matter_actors as $actor ) {
+			if ($actor ['role_name'] != "") {
+				if ($actor_role != $actor ['role_name']) {
+					$actor_role = $actor ['role_name'];
+					?>
+		<div class="actor-role-row"><b><?=$actor_role?></b></div>
+		<?php					
+				}
+			}
+			?>
+		<div class="actor-list-row status-row" id="<?=$actor['ID']?>">
+			<span class="actorlist-col-name"><?php echo htmlentities($actor['name']);?></span>
+			<span class="actorlist-col-first_name"><?php echo htmlentities($actor['first_name']);?></span>
+			<span class="actorlist-col-display_name"><?php echo htmlentities($actor['display_name']);?></span>
+			<span class="actorlist-col-comp_actor"><?php echo htmlentities($actor['company_name']);?></span>
+		</div>
+<?php
+		} ?>
+	</div>
+<?php
+	} ?>
+	<div id="actor-details-popup" class="place-card"></div>
 </div>
