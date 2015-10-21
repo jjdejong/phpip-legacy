@@ -236,21 +236,21 @@ function getFilterUrl()
 	if(responsible == 1)
 		url = url + '/responsible/'+'<?=$this->login?>';
 	url = url + '/sort/'+sortKey+'/dir/'+sortDir;
-	<?php if($this->category_display){?>
+	<?php if($this->category_display):?>
 		url = url + '/display/<?=$this->category_display?>';
-	<?php }?>
+	<?php endif;?>
 		url = url + '/display_style/'+display_style;
 	return url;
 }
 
 $(document).ready(function(){
-    <?php if($this->display_style){?>
+    <?php if($this->display_style):?>
 		$('.display_actor,.display_status').css('display','none');
 		$('.display_status').css('display','inline-block');
-    <?php }else {?>
+    <?php else:?>
 		$('.display_actor,.display_status').css('display','none');
 		$('.display_actor').css('display','inline-block');
-    <?php }?>
+    <?php endif;?>
 
 
      if(sortDir == 'asc'){
@@ -532,86 +532,86 @@ if (isset ( $this->containers )) {
 	</div>
 
 	<div id="matter-list">
-		<?php
-		if (count ( $this->paginator )) :
-			if (count ( $this->paginator ) > 1)
-				echo $this->paginationControl ( $this->paginator, 'Sliding', 'pagination.phtml' );
-			$rindex = 0;
-			foreach ( $this->paginator as $matter ) :
-				?>
-			<div class="row-tab" id="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex++?>" style="background: <?=($matter['Ctnr'])?'lightcyan':'white'; ?>" >
-				<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>"
-					class="display_actor display_status linkcolumn column column-case">
-					<span class="<?=($matter['dead'])?"matter-dead": "";?>"><?=$matter['Ref']; ?></span>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-cat">
-					<?=$matter['Cat']; ?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-status">
-					<?=$matter['Status'];?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date">
-					<?=$matter['Status_date'];?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client">
-					<?=htmlentities($matter['Client']);?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client-ref">
-					<?=htmlentities($matter['ClRef']);?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent">
-					<?=htmlentities($matter['Agent']);?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent-ref">
-					<?=htmlentities($matter['AgtRef']);?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-title">
-					<?=htmlentities($matter['Title']);?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-inventor">
-					<?=htmlentities($matter['Inventor1']);?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-date">
-					<?=$matter['Filed'];?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-filing-no" title="<?=$matter['FilNo']?>">
-					<?=$matter['FilNo'];?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Published']?>">
-					<?=$matter['Published'];?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>">
-					<?php
-					if ($matter ['origin'] == 'EP')
-						$CC = 'EP';
-					else
-						$CC = $matter ['country'];
-					$country_code = $matter ['country'];
-					$removethese = array (
-							"/^$country_code/",
-							'/ /',
-							'/,/',
-							'/-/',
-							'/\//' 
-					);
-					$pubno = preg_replace ( $removethese, '', $matter ['PubNo'] );
-					if ($CC == 'US')
-						$pubno = substr ( $pubno, 0, 4 ) . substr ( $pubno, - 6 );
-					?>
-					<a href="http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=<?=$CC?>&NR=<?=$pubno?>" target="_blank"><?=$matter['PubNo'];?></a>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Granted']?>">
-					<?=$matter['Granted'];?>
-				</div>
-				<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-pub-no" title="<?=$matter['GrtNo']?>">
-					<?=$matter['GrtNo'];?>
-				</div>
+<?php
+if (count ( $this->paginator )):
+	if (count ( $this->paginator ) > 1)
+		echo $this->paginationControl ( $this->paginator, 'Sliding', 'pagination.phtml' );
+	$rindex = 0;
+	foreach ( $this->paginator as $matter ):
+?>
+		<div class="row-tab" id="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex++?>" style="background: <?=($matter['Ctnr'])?'lightcyan':'white'?>" >
+			<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>"
+				class="display_actor display_status linkcolumn column column-case">
+				<span class="<?=($matter['dead'])?"matter-dead": ""?>"><?=$matter['Ref']?></span>
 			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-cat">
+				<?=$matter['Cat']?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-status">
+				<?=$matter['Status']?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date">
+				<?=$matter['Status_date']?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client">
+				<?=htmlentities($matter['Client'])?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client-ref">
+				<?=htmlentities($matter['ClRef'])?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent">
+				<?=htmlentities($matter['Agent'])?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent-ref">
+				<?=htmlentities($matter['AgtRef'])?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-title">
+				<?=htmlentities($matter['Title'])?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-inventor">
+				<?=htmlentities($matter['Inventor1'])?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-date">
+				<?=$matter['Filed']?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-filing-no" title="<?=$matter['FilNo']?>">
+				<?=$matter['FilNo']?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Published']?>">
+				<?=$matter['Published']?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>">
+<?php
+		if ($matter ['origin'] == 'EP')
+			$CC = 'EP';
+		else
+			$CC = $matter ['country'];
+		$country_code = $matter ['country'];
+		$removethese = array (
+				"/^$country_code/",
+				'/ /',
+				'/,/',
+				'/-/',
+				'/\//' 
+		);
+		$pubno = preg_replace ( $removethese, '', $matter ['PubNo'] );
+		if ($CC == 'US')
+			$pubno = substr ( $pubno, 0, 4 ) . substr ( $pubno, - 6 ); 
+?>
+				<a href="http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=<?=$CC?>&NR=<?=$pubno?>" target="_blank"><?=$matter['PubNo']?></a>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Granted']?>">
+				<?=$matter['Granted']?>
+			</div>
+			<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-pub-no" title="<?=$matter['GrtNo']?>">
+				<?=$matter['GrtNo']?>
+			</div>
+		</div>
 		
-			<?php 
-			endforeach;
-			if(count($this->paginator) > 1)
-			    echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
-		endif; ?>
+<?php 
+	endforeach;
+	if(count($this->paginator) > 1)
+	    echo $this->paginationControl($this->paginator, 'Sliding', 'pagination.phtml');
+endif; ?>
 	</div>
 </div>

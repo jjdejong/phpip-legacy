@@ -401,7 +401,8 @@ $(document).ready(function(){
 		<span class="tasklist-col-due_date">Due date</span>
 		<span class="tasklist-col-done">Done</span> 
 		<span class="tasklist-col-done_date">Done date</span> 
-		<span class="tasklist-col-cost">Cost</span> <span class="tasklist-col-fee">Fee</span>
+		<span class="tasklist-col-cost">Cost</span> 
+		<span class="tasklist-col-fee">Fee</span>
 		<span class="tasklist-col-currency">Cur.</span>
 <?php 
 if (!$this->renewal) {?> 
@@ -417,7 +418,7 @@ if (!$this->renewal) {?>
 $event_id = '';
 foreach ( $this->matter_event_tasks as $event_task ) :
 	// Display the trigger event in the first iteration
-	if ($event_id != $event_task ['event_ID']) {			
+	if ($event_id != $event_task ['event_ID']):			
 		$event_id = $event_task ['event_ID'];
 ?>
 		<div style="height: 15px;"></div>
@@ -435,8 +436,8 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 			</div>
 		</div>
 <?php
-	}
-	if ($event_id == $event_task ['trigger_ID']) { ?>
+	endif;
+	if ($event_id == $event_task ['trigger_ID']): ?>
 		<div class="status-row task-row" id="<?=$event_task['ID']?>">
 			<span class="tasklist-col-detail editable" title="Click to edit detail">
 				<?=$event_task['task_name']?>
@@ -447,7 +448,7 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 			</span>
 			<span class="tasklist-col-done">
 				<input type="checkbox" name="doneflag-<?=$event_task['ID']?>" value="<?=$event_task['ID']?>"
-				<?php if($event_task['done']) echo 'checked="checked"'; ?>>
+				<?=$event_task['done'] ? 'checked' : '' ?>>
 			</span> 
 			<span id="done_date-<?=$event_task['ID']?>" class="tasklist-col-done_date editable-done-date">
 				<?=$event_task['done_date']?>
@@ -461,11 +462,11 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 			<span class="tasklist-col-currency editable" title="Click to edit">
 				<?=$event_task['currency']?>
 			</span>
-			<?php if (!$this->renewal) { ?>
+			<?php if (!$this->renewal): ?>
 			<span class="tasklist-col-time_spent editable" title="Click to edit (HH:MM:SS)">
 				<?=$event_task['time_spent']?>
 			</span>
-			<?php } ?>
+			<?php endif; ?>
 			<span class="tasklist-col-assigned_to edit-assigned-to" title="Click to edit">
 				<?=$event_task['assigned_to']?>
 			</span>
@@ -477,7 +478,7 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 			</span>
 		</div>
 <?php 
-	}
+	endif;
 endforeach; ?>
 	</div>
 </div>

@@ -46,11 +46,11 @@ if ($header != '') {
 		?>
 	<div id="matter-head-navigation">
 		<button title="Previous" class="matter-navigation" 
-			id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)-1;}else{echo "matter-previous-" . $this->matter_id;} ?>">
+			id="<?=($this->matter_index === "") ? ((int)$this->matter_index)-1 : "matter-previous-" . $this->matter_id ?>">
 			<span class="ui-icon ui-icon-seek-prev"></span>
 		</button>
 		<button title="Next" class="matter-navigation" 
-			id="<?php if($this->matter_index === ""){echo ((int)$this->matter_index)+1;}else{echo "matter-next-" . $this->matter_id;} ?>">
+			id="<?=($this->matter_index === "") ? ((int)$this->matter_index)+1 : "matter-next-" . $this->matter_id ?>">
 			<span class="ui-icon ui-icon-seek-next"></span>
 		</button>
 	</div>

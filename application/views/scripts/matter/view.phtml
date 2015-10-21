@@ -317,13 +317,13 @@ $(document).ready(function(){
 
         $("#MatterStatus").click(function(){
             $('#event-pop-up').load("/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>", function(){
-            	$(this).show("scale");
+            	$(this).show();
             }).css($(this).offset());
         }); 
 
         $("#MatterOpenTasks").click(function(){
         	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>", function(){
-            	$(this).show("scale");
+            	$(this).show();
             }).css('top', $(this).offset().top);
         });
 
@@ -334,14 +334,14 @@ $(document).ready(function(){
                 "/matter/tasklist/event_id/" + trig_id,
                 { renewal: 1 },
                 function(){
-            		$(this).show("scale");
+            		$(this).show();
             	}
             ).css('top', $(this).offset().top);
         }); 
 
         $("#MatterClassifier").click(function(){
             $('#classifier-popup').load("/matter/classifierlist/id/<?=$this->matter_record[0]['ID']?>", function(){
-            	$(this).show("scale");
+            	$(this).show();
             }).css('top', $(this).offset().top);
         });
  
