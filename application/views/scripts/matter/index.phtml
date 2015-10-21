@@ -282,7 +282,6 @@ $(document).ready(function(){
         var url = '/matter/filter' + getFilterUrl();
         var objThis = $(this);
         var objSort = $('#'+sort_id[0]+'-sort');
-
         $.ajax({
              url: url,
              type: 'GET',
@@ -306,7 +305,6 @@ $(document).ready(function(){
 
 
      $('.display_style').click(function(){
-
          if($(this).val() == 1){
              $('.display_actor,.display_status').css('display','none');
              $('.display_status').css('display','inline-block');
@@ -325,12 +323,8 @@ $(document).ready(function(){
              $('#filter-pubno').val('');
              $('#filter-granted').val('');
              $('#filter-grtno').val('');
-
-
          }
-
-	var url = '/matter/filter' + getFilterUrl();
-                  
+		var url = '/matter/filter' + getFilterUrl();                 
          $.ajax({
              url: url,
              type: 'POST',
@@ -345,7 +339,7 @@ $(document).ready(function(){
 
 
      $('#show-responsible').click(function(){
-	var url = '/matter/filter' + getFilterUrl();
+		var url = '/matter/filter' + getFilterUrl();
          $.ajax({
              url: url,
              type: 'GET',
@@ -360,7 +354,7 @@ $(document).ready(function(){
 
 
      $('#show-containers').click(function(){
-	var url = '/matter/filter' + getFilterUrl();
+		var url = '/matter/filter' + getFilterUrl();
          $.ajax({
              url: url,
              type: 'GET',
@@ -374,7 +368,7 @@ $(document).ready(function(){
      });
 
      $('#show-all').click(function(){
-	var url = '/matter/filter' + getFilterUrl();
+		var url = '/matter/filter' + getFilterUrl();
          $.ajax({
              url: url,
              type: 'GET',
@@ -391,7 +385,7 @@ $(document).ready(function(){
          if($(this).val().length != 0 && $(this).val().length < 3 && ($(this).attr("id") == "filter-ref" || $(this).attr("id") == "filter-title")){
              return false;
          }
-	var url = '/matter/filter' + getFilterUrl();;
+		var url = '/matter/filter' + getFilterUrl();
          $.ajax({
              url: url,
              type: 'GET',
@@ -420,10 +414,10 @@ $(document).ready(function(){
 <div id="matter-results-bg" class="place-card">
 <?php
 $show_conts = '';
-$show_all = 'checked=checked';
+$show_all = 'checked';
 if (isset ( $this->containers )) {
 	if ($this->containers) {
-		$show_conts = 'checked=checked';
+		$show_conts = 'checked';
 		$show_all = '';
 	}
 }
@@ -435,14 +429,14 @@ if (isset ( $this->containers )) {
 		<label for="show-containers">Show Containers</label>
 	</div>
 	<div id="actor-status" style="float: left; margin-left: 20px;">
-		<input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?php if (!$this->display_style)?> checked /> 
+		<input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?=!$this->display_style ? 'checked' : ''?> /> 
 		<label for="show-actor">Actor View</label> 
-		<input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?php if ($this->display_style)?> checked /> 
+		<input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?=$this->display_style ? 'checked' : ''?> /> 
 		<label for="show-status">Status View</label>
 	</div>
 	
 	<div id="mine-all" style="float: left; margin-left: 20px;">
-		<input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?php if ($this->responsible)?> checked /> 
+		<input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?=$this->responsible ? 'checked' : ''?> /> 
 		<label for="show-responsible">Show Mine</label>
 	</div>
 	
