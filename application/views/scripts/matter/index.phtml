@@ -268,8 +268,8 @@ $(document).ready(function(){
 
 
      $(".linkcolumn").click(function(event){
-        var id_array = $(this).attr('mid').split('-');
-        var rid = $(this).attr('rid');
+        var id_array = $(this).attr('data-mid').split('-');
+        var rid = $(this).attr('data-rid');
         var url = '/matter/view/id/'+id_array[2]+'/rid/'+rid;
         window.open(url);
      });
@@ -539,48 +539,48 @@ if (count ( $this->paginator )):
 	$rindex = 0;
 	foreach ( $this->paginator as $matter ):
 ?>
-		<div class="row-tab" id="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex++?>" style="background: <?=($matter['Ctnr'])?'lightcyan':'white'?>" >
-			<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>"
+		<div class="row-tab" id="edit-matter-<?=$matter['ID'] ?>" data-rid="<?=$rindex++?>" style="background: <?=($matter['Ctnr'])?'lightcyan':'white'?>" >
+			<div data-mid="edit-matter-<?=$matter['ID'] ?>" data-rid="<?=$rindex?>"
 				class="display_actor display_status linkcolumn column column-case">
 				<span class="<?=($matter['dead'])?"matter-dead": ""?>"><?=$matter['Ref']?></span>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-cat">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-cat">
 				<?=$matter['Cat']?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-status">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-status">
 				<?=$matter['Status']?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_status linkcolumn column column-date">
 				<?=$matter['Status_date']?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client">
 				<?=htmlentities($matter['Client'])?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client-ref">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-client-ref">
 				<?=htmlentities($matter['ClRef'])?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent">
 				<?=htmlentities($matter['Agent'])?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent-ref">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor linkcolumn column column-agent-ref">
 				<?=htmlentities($matter['AgtRef'])?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-title">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor linkcolumn column column-title">
 				<?=htmlentities($matter['Title'])?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor linkcolumn column column-inventor">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor linkcolumn column column-inventor">
 				<?=htmlentities($matter['Inventor1'])?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-date">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_actor display_status linkcolumn column column-date">
 				<?=$matter['Filed']?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-filing-no" title="<?=$matter['FilNo']?>">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_status linkcolumn column column-filing-no" title="<?=$matter['FilNo']?>">
 				<?=$matter['FilNo']?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Published']?>">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Published']?>">
 				<?=$matter['Published']?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID']?>" rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>">
+			<div data-mid="edit-matter-<?=$matter['ID']?>" data-rid="<?=$rindex?>" class="display_status column column-pub-no publink" title="<?=$matter['PubNo']?>" id="<?=$matter['country']."~".$matter['PubNo']?>">
 <?php
 		if ($matter ['origin'] == 'EP')
 			$CC = 'EP';
@@ -600,10 +600,10 @@ if (count ( $this->paginator )):
 ?>
 				<a href="http://worldwide.espacenet.com/publicationDetails/biblio?DB=EPODOC&CC=<?=$CC?>&NR=<?=$pubno?>" target="_blank"><?=$matter['PubNo']?></a>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Granted']?>">
+			<div data-mid="edit-matter-<?=$matter['ID'] ?>" data-rid="<?=$rindex?>" class="display_status linkcolumn column column-date" title="<?=$matter['Granted']?>">
 				<?=$matter['Granted']?>
 			</div>
-			<div mid="edit-matter-<?=$matter['ID'] ?>" rid="<?=$rindex?>" class="display_status linkcolumn column column-pub-no" title="<?=$matter['GrtNo']?>">
+			<div data-mid="edit-matter-<?=$matter['ID'] ?>" data-rid="<?=$rindex?>" class="display_status linkcolumn column column-pub-no" title="<?=$matter['GrtNo']?>">
 				<?=$matter['GrtNo']?>
 			</div>
 		</div>
