@@ -463,7 +463,9 @@ WHERE e2.matter_id IS NULL ";
 				'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)' 
 		) )->joinLeft ( array (
 				'a' => 'actor' 
-		), 'a.ID = mal.actor_ID' )->joinLeft ( array (
+		), 'a.ID = mal.actor_ID', array(
+				'a.name', 'a.first_name', 'a.display_name'
+		) )->joinLeft ( array (
 				'ar' => 'actor_role' 
 		), 'mal.role = ar.code', array (
 				'role_name' => 'ar.name' 
@@ -876,37 +878,6 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 					't.due_date' 
 			) );
 		}
-		
-		/*if ($renewal == 1) {
-			$selectQuery = $db->select ()->from ( array (
-					'e' => 'event' 
-			), array (
-					'event_ID' => 'e.ID',
-					'event_detail' => 'e.detail',
-					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")' 
-			) )->join ( array (
-					't' => 'task' 
-			), "e.ID = t.trigger_ID AND t.code = 'REN'", array (
-					'*',
-					'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")',
-					'due_date' => 'DATE_FORMAT(t.due_date,"%d/%m/%Y")',
-					'posix_due_date' => 't.due_date',
-					't.detail',
-					't.ID',
-					'task_notes' => 't.notes' 
-			) )->joinInner ( array (
-					'en' => 'event_name' 
-			), 'e.code = en.code', array (
-					'event_name' => 'en.name' 
-			) )->joinLeft ( array (
-					'ent' => 'event_name' 
-			), 't.code = ent.code', array (
-					'task_name' => 'ent.name' 
-			) )->where ( 'e.matter_ID = ?', $matter_id )->order ( array (
-					'e.event_date',
-					't.due_date' 
-			) );
-		}*/
 		
 		// Retrieve tasks linked to a specific event, distinguising between renewals and others
 		if ($event_id != 0) {

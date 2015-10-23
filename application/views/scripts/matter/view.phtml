@@ -371,7 +371,7 @@ $(document).ready(function(){
         $('#add-classifier-link').click(function(){
             //$('.ui-widget-overlay').show();
             $('#facade').show();
-            $('#add-classifier-popup').load("/matter/add-title/cat_code/"+$(this).attr('code'))
+            $('#add-classifier-popup').load("/matter/add-title/cat_code/"+$(this).attr('data-code'))
             .css($(this).offset())
             .show();
         });
@@ -383,10 +383,10 @@ $(document).ready(function(){
             url: '/matter/clone',
             type: 'GET',
             data: { 
-            	category_id: $(this).attr('code'), 
-            	country: $(this).attr('country'), 
-            	origin: $(this).attr('origin'), 
-            	type: $(this).attr('type') 
+            	category_id: $(this).attr('data-code'), 
+            	country: $(this).attr('data-country'), 
+            	origin: $(this).attr('data-origin'), 
+            	type: $(this).attr('data-type') 
             },
             success: function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150});
@@ -401,11 +401,11 @@ $(document).ready(function(){
             url: '/matter/child',
             type: 'GET',
             data: { 
-            	caseref: $(this).attr('caseref'), 
-            	category_id : $(this).attr('code'), 
-            	country: $(this).attr('country'), 
-            	origin: $(this).attr('origin'), 
-            	type: $(this).attr('type') 
+            	caseref: $(this).attr('data-caseref'), 
+            	category_id : $(this).attr('data-code'), 
+            	country: $(this).attr('data-country'), 
+            	origin: $(this).attr('data-origin'), 
+            	type: $(this).attr('data-type') 
             },
             success: function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150});
@@ -420,9 +420,9 @@ $(document).ready(function(){
             url: '/matter/national',
             type: 'GET',
             data: { 
-            	caseref: $(this).attr('caseref'), 
-            	category_id: $(this).attr('code'), 
-            	country: $(this).attr('country') 
+            	caseref: $(this).attr('data-caseref'), 
+            	category_id: $(this).attr('data-code'), 
+            	country: $(this).attr('data-country') 
             },
             success: function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150});
@@ -485,7 +485,6 @@ $(document).ready(function(){
     });
                   
     $( "button, input:submit, input:button").button();
-
 });
 </script>
 
@@ -498,57 +497,59 @@ else
 	$matter_dead = "";
 ?>
 	<div class="matter-title">
-<?php 	
-echo $this->matter_record[0]['category'] ."<br>";
-?>
+		<?=$this->matter_record[0]['category']?>
+		<br/>
     	<span style="color: white; font-size: 16px; margin-right: 5px;" class="<?=$matter_dead?>">
-    		<a href="/matter/filter/Ref/<?=$this->matter_record[0]['caseref']?>" style="color: white;" title="See family"><?=$this->matter_record[0]['UID']?></a>
+    		<a href="/matter/filter/Ref/<?=$this->matter_record[0]['caseref']?>" style="color: white;" title="See family">
+    			<?=$this->matter_record[0]['UID']?>
+    		</a>
     		<button id="current-matter-edit" title="Advanced edit" style="background: transparent; border: transparent;">
 				<span class="ui-icon ui-icon-wrench"></span>
-			</button> </span>
-<?php
-if ($this->matter_parent) {
-	echo "<br /><a id='parent-matter' href='/matter/view/id/" . $this->matter_parent [0] ['ID'] . "' title='See parent'>" . $this->matter_parent [0] ['UID'];
-	echo " (" . $this->matter_parent [0] ['category_code'] . ")</a>";
-}
-if ($this->matter_container) {
-	echo "<br><a id='container-matter' href='/matter/view/id/" . $this->matter_container [0] ['ID'] . "' title='See container'>" . $this->matter_container [0] ['UID'];
-	echo " (" . $this->matter_container [0] ['category_code'] . ")</a>";
-}
-?>
+			</button>
+		</span>
+<?php if ($this->matter_parent) {?>
+		<br/>
+		<a id="parent-matter" href="/matter/view/id/<?=$this->matter_parent [0] ['ID']?>" title="See parent">
+			<?=$this->matter_parent [0] ['UID']?> (<?=$this->matter_parent [0] ['category_code']?>)
+		</a>
+<?php };
+if ($this->matter_container) { ?>
+		<br/>
+		<a id="container-matter" href="/matter/view/id/<?=$this->matter_container [0] ['ID']?>" title="See container">
+			<?=$this->matter_container [0] ['UID']?> (<?=$this->matter_container [0] ['category_code']?>)
+		</a>
+<?php }; ?>
 	</div>
 	<div class="matter-name">
 		<div id="title-action-div">
 			<button id="clone-matter-link"
-				country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>"
-				origin="<?=$this->matter_record[0]['origin']?>"
-				type="<?=$this->matter_record[0]['type_code']?>"
-				code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
+				data-country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>"
+				data-origin="<?=$this->matter_record[0]['origin']?>"
+				data-type="<?=$this->matter_record[0]['type_code']?>"
+				data-code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
 				<span class="ui-icon ui-icon-copy" style="float: left;"></span>
 				Clone matter
 			</button>
 			<button id="child-matter-link"
-				caseref="<?=$this->matter_record[0]['caseref']?>"
-				country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>"
-				origin="<?=$this->matter_record[0]['origin']?>"
-				type="<?=$this->matter_record[0]['type_code']?>"
-				code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
-				<span class="ui-icon ui-icon-link" style="float: left;"></span> New
-				child
+				data-caseref="<?=$this->matter_record[0]['caseref']?>"
+				data-country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>"
+				data-origin="<?=$this->matter_record[0]['origin']?>"
+				data-type="<?=$this->matter_record[0]['type_code']?>"
+				data-code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
+				<span class="ui-icon ui-icon-link" style="float: left;"></span> 
+				New child
 			</button>
-<?php 
-if($this->national_phase){ ?>
+<?php if($this->national_phase){ ?>
 			<button id="national-matter-link"
-				caseref="<?=$this->matter_record[0]['caseref']?>"
-				country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>"
-				origin="<?=$this->matter_record[0]['origin']?>"
-				type="<?=$this->matter_record[0]['type_code']?>"
-				code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
+				data-caseref="<?=$this->matter_record[0]['caseref']?>"
+				data-country="<?=$this->matter_record[0]['country_name']?>-<?=$this->matter_record[0]['country']?>"
+				data-origin="<?=$this->matter_record[0]['origin']?>"
+				data-type="<?=$this->matter_record[0]['type_code']?>"
+				data-code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
 				<span class="ui-icon ui-icon-flag" style="float: left;"></span>
 				Enter nat. phase
 			</button>
-<?php 
-} ?>
+<?php } ?>
 		</div>
 <?php 
 // Title box ("main" classifiers)
@@ -576,24 +577,21 @@ if ($this->matter_classifier_container_main) :
 			$classifier_arr [$classifier ['type']] = "<a href='/matter/view/id/" . $classifier ['lnk_matter_id'] . "'>" . $classifier ['caseref'] . "</a> " . $classifier ['country'] . " " . $classifier ['origin'] . " " . $classifier ['matter_type'];
 		}
 	endforeach;
-endif;
-?>
+endif; ?>
 		<div id="matter-main-titles">
 <?php
 if (count ( @$classifier_arr )) {
-	foreach ( $classifier_arr as $type => $value ) :
-?>
-			<div class=""
-				style="margin: 5px 0px; display: block; text-align: left;">
-				<span class="classifier-main-name"><b><?=$type?></b></span>
-				<span class="classifier-main-value"><?php echo $value;?></span>
+	foreach ( $classifier_arr as $type => $value ) : ?>
+			<div class="" style="margin: 5px 0px; display: block; text-align: left;">
+				<span class="classifier-main-name"><b><?=$type?></b></span>:
+				<span class="classifier-main-value"><?=$value?></span>
 			</div>
 <?php
 	endforeach	;
 } else
 	echo "...Hover the mouse here to add a title item...";
 ?>
-			<button id="add-classifier-link" code="<?=$this->matter_record[0]['category_code']?>" style="position: absolute; width: 120px; margin-left: 50px">
+			<button id="add-classifier-link" data-code="<?=$this->matter_record[0]['category_code']?>" style="position: absolute; width: 120px; margin-left: 50px">
 				<span class="ui-icon ui-icon-plusthick" style="float: left;"></span>
 				Add title item
 			</button>
@@ -602,10 +600,7 @@ if (count ( @$classifier_arr )) {
 </div>
 
 <?php
-if (isset ( $this->matter_actors )) :
-	$div_start = 1;
-	$actor_role = "";
-?>
+if (isset ( $this->matter_actors )) :?>
 <div class="listrow">
 	<div class="list-matter-block">
 		Actors
@@ -620,43 +615,48 @@ if (isset ( $this->matter_actors )) :
 		<input type="hidden" 
 			name="matterId" 
 			id="this-matter-id"
-			value=<?=$this->matter_id?> /> 
+			value="<?=$this->matter_id?>" /> 
 		<input type="hidden"
 			name="containerId" 
 			id="this-container-id"
 			value="<?=$this->matter_record[0]['container_ID']?>" />
 <?php 
 // Actors box
-	foreach ( $this->matter_actors as $actor ) :
-		if ($actor ['role_name'] != "") {
-			if ($actor_role != $actor ['role_name']) {
-				if ($div_start == 0)
-					echo "</div>";
-				$div_start = 0;
-				$actor_role = $actor ['role_name'];
-				echo '<div class="actor-block">';
-				echo '<span class="matter-role" id="matter-role-' . $actor ['matter_ID'] . '-' . $actor ['role'] . '" >' . $actor ['role_name'] . '</span><span class="add-actor ui-icon ui-icon-plusthick" id="add-actor-' . $actor ['role'] . '" title="Add Actor" style="display: inline-block"></span>';
-			}
-			$actor_display_name = ($actor ['display_name'] == "") ? $actor ['name'] . (($actor ['first_name']) ? (", " . $actor ['first_name']) : "") : $actor ['display_name'];
-			
+	// Group actors in an array per role
+	foreach  ( $this->matter_actors as $actor ) {
+		$actors_per_role[$actor ['role_name']][] = $actor;
+	}
+	foreach ($actors_per_role as $role_name => $actors): ?>
+		<div class="actor-block">
+			<span class="matter-role" id="matter-role-<?=$this->matter_id?>-<?=$actors [0]['role']?>">
+				<?=$role_name?>
+				
+			</span>
+			<span class="add-actor ui-icon ui-icon-plusthick" id="add-actor-<?=$actors [0]['role']?>" title="Add Actor" style="display: inline-block"></span>
+<?php 	
+		foreach ( $actors as $actor ):
+			$actor_display_name = ($actor ['display_name'] == "") ? $actor ['name'] . (($actor ['first_name']) ? (", " . $actor ['first_name']) : "") : $actor ['display_name'];			
 			if ($actor ['actor_ref'])
-				$actor_display_name .= " (" . $actor ['actor_ref'] . ")";
-			
+				$actor_display_name .= " (" . $actor ['actor_ref'] . ")";			
 			if ($actor ['company_name'])
-				$actor_display_name .= " - " . $actor ['company_name'];
-			
-			if (strlen ( $actor_display_name ) > 23)
-				echo "<div id='" . $actor ['ID'] . "' class='matter-actor help_cursor" . ($actor ['inherited'] ? " actor-inherit" : "") . "' title='" . htmlentities ( $actor_display_name ) . "'>" . htmlentities ( $actor_display_name ) . "</div>";
-			else
-				echo "<div id='" . $actor ['ID'] . "' class='matter-actor " . ($actor ['inherited'] ? " actor-inherit" : "") . "' >" . htmlentities ( $actor_display_name ) . "</div>";
-		}
-	endforeach;
-	if (count ( $this->matter_actors ))
-		echo "</div>";
-	?>
+				$actor_display_name .= " - " . $actor ['company_name'];			
+			if (strlen ( $actor_display_name ) > 23):?>
+			<div id="<?=$actor ['ID']?>" class="matter-actor help_cursor <?=($actor ['inherited'] ? ' actor-inherit' : '')?>" title="<?=htmlentities ( $actor_display_name )?>">
+				<?=$actor_display_name?>
+				
+			</div>
+			<?php else:?>
+			<div id="<?=$actor ['ID']?>" class="matter-actor <?=($actor ['inherited'] ? ' actor-inherit' : '')?>">
+				<?=$actor_display_name?>
+				
+			</div>
+			<?php endif;
+		endforeach;?>
+		</div>
+<?php 
+	endforeach;?>
 	</div>
 </div>
-
 <?php
 endif;
 

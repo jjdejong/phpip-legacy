@@ -1,35 +1,29 @@
 <style type="text/css">
-#submit-element{
-    margin-left: 125px;
+#submit-element {
+	margin-left: 125px;
 }
-#auth_failed{
-display:block;
-color: #F00;
-font-size: 11px;
-font-weight: bold;
-text-align:center;
-margin-bottom:10px;
+
+#auth_failed {
+	display: block;
+	color: #F00;
+	font-size: 11px;
+	font-weight: bold;
+	text-align: center;
+	margin-bottom: 10px;
 }
 </style>
 <?php
-
-      $this->loginForm->setAction($this->url())
-                      ->setMethod('post')
-                      ->setEncType('multipart/form-data');
-
-?>
-<?php 
-if(isset($this->auth_error)){
+$this->loginForm->setAction ( $this->url () )->setMethod ( 'post' )->setEncType ( 'multipart/form-data' );
+if (isset ( $this->auth_error )) {
 	echo '<div id="auth_failed" >' . $this->auth_error . "</div>";
-}
-?>
-<form action="<?= $this->escape($this->loginForm->getAction()) ?>" method="<?= $this->loginForm->getMethod() ?>" enctype="$this->loginForm->getEncType()" accept-charset="utf-8">
-<?
-
-      #Reflection::export(new ReflectionObject($this->loginForm));
-      echo $this->loginForm->Email;
-      echo $this->loginForm->Password;
-      echo $this->loginForm->submit;
+}?>
+<form action="<?= $this->escape($this->loginForm->getAction()) ?>"
+	method="<?= $this->loginForm->getMethod() ?>"
+	enctype="$this->loginForm->getEncType()" accept-charset="utf-8">
+<?php
+echo $this->loginForm->Email;
+echo $this->loginForm->Password;
+echo $this->loginForm->submit;
 ?>
 </form>
 
