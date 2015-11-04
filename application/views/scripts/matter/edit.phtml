@@ -149,7 +149,7 @@ $(document).ready(function(){
    });
 
    $('#delete-matter').click(function(){
-        var mid = $(this).attr('mid');
+        var mid = $(this).attr('data-mid');
         var caseref = $('#matter-caseref').val();
         var conf = confirm("Do you really want to delete this Matter?");
         if(conf == 1){
@@ -171,164 +171,265 @@ $(document).ready(function(){
    $( "button, input:submit" ).button();
 });
 </script>
-<style type="text/css" >
-#edit-matter-head{
-  display:block;
-  width: 540px;
-  background: #1E4262;
-  color: #FFF;
-  padding: 5px;
-  border: 1px solid #1E4262;
-  border-radius: 5px 5px 0px 0px;
+<style type="text/css">
+#edit-matter-head {
+	display: block;
+	width: 540px;
+	background: #1E4262;
+	color: #FFF;
+	padding: 5px;
+	border: 1px solid #1E4262;
+	border-radius: 5px 5px 0px 0px;
 }
-#edit-matter{
-  width: 540px;
-  background: whitesmoke;
-  display: block;
-  border: 1px inset #888;
-  padding: 5px;
-  border-radius: 0px 0px 5px 5px;
+
+#edit-matter {
+	width: 540px;
+	background: whitesmoke;
+	display: block;
+	border: 1px inset #888;
+	padding: 5px;
+	border-radius: 0px 0px 5px 5px;
 }
-#edit-matter label{
-  display: inline-block;
-  text-align: right;
-  width: 75px;
-  margin: 0px 5px 10px 0px;
+
+#edit-matter label {
+	display: inline-block;
+	text-align: right;
+	width: 75px;
+	margin: 0px 5px 10px 0px;
 }
+
 #child-matter-options {
-  border-top: 1px solid #DDD;
-  padding-top: 8px;
+	border-top: 1px solid #DDD;
+	padding-top: 8px;
 }
-#child-matter-options span{
-  display:inline-block;
-  text-align: right;
-  width: 150px;
+
+#child-matter-options span {
+	display: inline-block;
+	text-align: right;
+	width: 150px;
 }
-#child-matter-options label{
-  text-align: left;
-  width: 150px;
+
+#child-matter-options label {
+	text-align: left;
+	width: 150px;
 }
-#edit-matter input[type="text"]{
-  width: 170px;
-  border-radius: 3px;
-  border: 1px inset #888;
-  padding: 3px 2px;
+
+#edit-matter input[type="text"] {
+	width: 170px;
+	border-radius: 3px;
+	border: 1px inset #888;
+	padding: 3px 2px;
 }
-#edit-matter-actions{
-  margin: 10px 0px 0px 0px;
+
+#edit-matter-actions {
+	margin: 10px 0px 0px 0px;
 }
-.close-button{
-  background: #f00;
-  float:right;
-  padding: 2px 4px 0px;
-  border-radius: 3px;
-  cursor: pointer;
-  font-family: arial;
+
+.close-button {
+	background: #f00;
+	float: right;
+	padding: 2px 4px 0px;
+	border-radius: 3px;
+	cursor: pointer;
+	font-family: arial;
 }
-.validation-errors{
-  display:none;
-  border:1px solid #f00;
-  color:#f00;
-  padding:5px;
-  width: auto;
-  margin-bottom: 10px;
-  border-radius: 5px;
+
+.validation-errors {
+	display: none;
+	border: 1px solid #f00;
+	color: #f00;
+	padding: 5px;
+	width: auto;
+	margin-bottom: 10px;
+	border-radius: 5px;
 }
-.validation-errors span{
-    display: block;
-    width: auto;
-    margin-left: 20px;
+
+.validation-errors span {
+	display: block;
+	width: auto;
+	margin-left: 20px;
 }
-.display-field{
-  display: inline-block;
-  width: 170px;
-  border-radius: 3px;
-  border: 1px solid #888;
-  padding: 1px 2px;
-  vertical-align: top;
-  margin-bottom: 2px;
-  min-height: 14px;
+
+.display-field {
+	display: inline-block;
+	width: 170px;
+	border-radius: 3px;
+	border: 1px solid #888;
+	padding: 1px 2px;
+	vertical-align: top;
+	margin-bottom: 2px;
+	min-height: 14px;
 }
 </style>
 <div class="place-card">
-<div id="edit-matter-head">
-Advanced Matter edition <span class="close-button">X</span>
-</div>
-<div id="edit-matter">
-<div class="validation-errors">
-
-</div>
-<input type="hidden" name="current-matter-id" id="current-matter-id" value="<?=$this->matter['ID']?>" />
-<label for="matter-category" class="required-field">Category</label>
-<?php if($this->cat_edit){?>
-<select name="matter-category" id="matter-category" style="width:176px;">
-<?php foreach($this->cats as $cat){
-$selected = "";
-if($cat['id'] == $this->matter['category_code']){
-$selected = "selected=selected";
-}
-?>
-<option value="<?=$cat['id']?>" <?=$selected?> ><?=$cat['value']?></option>
-<?php } ?>
-</select>
-<?php } else{ ?>
-<span id="matter-category" class="display-field" ><?=$this->matter['category']?></span>
-<?php } ?>
-<input type="hidden" name="matter-category-code" id="matter-category-code" value="<?=$this->matter['category_code']?>" />
-
-<label for="matter-country" class="required-field">Country</label>
-<?php if($this->country_edit){ ?>
-<input type="text" name="matter-country" id="matter-country" value="<?=$this->matter['country_name']?>" class="required" onfocus="this.select()" />
-<?php } else{ ?>
-<span id="matter-country" class="display-field" ><?=$this->matter['country_name']?></span>
-<?php } ?>
-<input type="hidden" name="matter-country-id" id="matter-country-id" value="<?=$this->matter['country']?>" />
-
-<label for="matter-origin">Origin</label>
-<input type="text" name="matter-origin" id="matter-origin" value="<?=$this->origin_name?>" onfocus="this.select()"/>
-<input type="hidden" name="matter-origin-id" id="matter-origin-id" value="<?=$this->origin_code?>" />
-
-<label for="matter-type">Type</label>
-<select name="matter-type" id="matter-type" style="width:176px;" >
-<option value=""></option>
-<?php foreach($this->types as $type){ 
-$select = "";
-if($type['id'] == $this->matter['type_code'])
-  $select = "selected=selected";
-?>
-<option value="<?=$type['id']?>" <?=$select?> ><?=$type['value']?></option>
-<?php } ?>
-</select>
-
-<label for="matter-caseref" class="required-field">Caseref</label>
-<input type="text" name="matter-caseref" id="matter-caseref" value="<?=$this->matter['caseref']?>" class="required" onfocus="this.select()" />
-<input type="hidden" name="matter-caseref-prev" id="matter-caseref-prev" value="<?=$this->matter['caseref']?>"/>
-
-<label for="matter-responsible" class="required-field">Responsible</label>
-<input type="text" name="matter-responsible" id="matter-responsible" value="<?=$this->matter['responsible']?>" class="required" onfocus="this.select()" />
-
-<label for="matter-parent-id">Parent</label>
-<input type="text" name="matter-parent" id="matter-parent" value="<?=$this->parent?>" onfocus="this.select()" />
-<input type="hidden" name="matter-parent-id" id="matter-parent-id" value="<?=$this->parent_id?>" />
-
-<label for="matter-container-id">Container</label>
-<input type="text" name="matter-container" id="matter-container" value="<?=$this->container?>" onfocus="this.select()" />
-<input type="hidden" name="matter-container-id" id="matter-container-id" value="<?=$this->container_id?>" />
-
-<label for="matter-idx">Idx</label>
-<input type="text" name="matter-idx" id="matter-idx" value="<?=$this->matter['idx']?>" onfocus="this.select()" />
-
-<label for="matter-dead">Dead</label>
-<span id="matter-dead" class="display-field" title="This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status" style="cursor:help;" ><?php echo ($this->matter['dead'])? "Yes":"No" ;?></span>
-
-<label for="matter-pta">Term adjust</label>
-<input type="text" name="matter-pta" id="matter-pta" value="<?=$this->matter['term_adjust']?>" onfocus="this.select()" />
-
-<div id="edit-matter-actions">
-  <button name="edit-matter-cancel" id="edit-matter-cancel" style="float: right;"><span class="ui-icon ui-icon-cancel" style="float: left;"></span>Cancel</button>
-  <button name="edit-matter-submit" id="edit-matter-submit" style="float: right;"><span class="ui-icon ui-icon-disk" style="float: left;"></span>Save</button>
-  <button id="delete-matter" mid="<?=$this->matter['ID']?>" style="color: red;"><span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete Matter</button>
-</div>
-
-</div>
+	<div id="edit-matter-head">
+		Advanced Matter edition <span class="close-button">X</span>
+	</div>
+	<div id="edit-matter">
+		<div class="validation-errors"></div>
+		<input type="hidden" 
+			name="current-matter-id" 
+			id="current-matter-id" 
+			value="<?=$this->matter['ID']?>" /> 
+		<label for="matter-category" class="required-field">
+			Category
+		</label>
+<?php 
+if($this->cat_edit){?>
+		<select name="matter-category" id="matter-category" style="width: 176px;">
+<?php
+	foreach ( $this->cats as $cat ) {
+		$selected = "";
+		if ($cat ['id'] == $this->matter ['category_code']) {
+			$selected = "selected=selected";
+		}?>
+			<option value="<?=$cat['id']?>" <?=$selected?>>
+				<?=$cat['value']?>
+			</option>
+<?php 
+	} ?>
+		</select>
+<?php 
+} else { ?>
+		<span id="matter-category" class="display-field">
+			<?=$this->matter['category']?>
+		</span>
+<?php 
+} ?>
+		<input type="hidden" 
+			name="matter-category-code" 
+			id="matter-category-code" 
+			value="<?=$this->matter['category_code']?>" />
+		<label for="matter-country" class="required-field">
+			Country
+		</label>
+<?php 
+if($this->country_edit){ ?>
+		<input type="text" 
+			name="matter-country" 
+			id="matter-country" 
+			value="<?=$this->matter['country_name']?>" 
+			class="required" 
+			onfocus="this.select()" />
+<?php 
+} else { ?>
+		<span id="matter-country" class="display-field">
+			<?=$this->matter['country_name']?>
+		</span>
+<?php 
+} ?>
+		<input type="hidden" 
+			name="matter-country-id" 
+			id="matter-country-id" 
+			value="<?=$this->matter['country']?>" /> 
+		<label for="matter-origin">
+			Origin
+		</label>
+		<input type="text" 
+			name="matter-origin" 
+			id="matter-origin" 
+			value="<?=$this->origin_name?>" 
+			onfocus="this.select()" /> 
+		<input type="hidden" 
+			name="matter-origin-id" 
+			id="matter-origin-id" 
+			value="<?=$this->origin_code?>" /> 
+		<label for="matter-type">
+			Type
+		</label>
+		<select name="matter-type" id="matter-type" style="width: 176px;">
+			<option value=""></option>
+<?php
+foreach ( $this->types as $type ) {
+	$select = "";
+	if ($type ['id'] == $this->matter ['type_code'])
+		$select = "selected=selected";
+	?>
+			<option value="<?=$type['id']?>" <?=$select?>>
+				<?=$type['value']?>
+			</option>
+<?php 
+	} ?>
+		</select> 
+		<label for="matter-caseref" class="required-field">
+			Caseref
+		</label>
+		<input type="text" 
+			name="matter-caseref" 
+			id="matter-caseref"
+			value="<?=$this->matter['caseref']?>" 
+			class="required"
+			onfocus="this.select()" /> 
+		<input type="hidden" 
+			name="matter-caseref-prev" 
+			id="matter-caseref-prev" 
+			value="<?=$this->matter['caseref']?>" /> 
+		<label for="matter-responsible" class="required-field">
+			Responsible
+		</label> 
+		<input type="text" 
+			name="matter-responsible" 
+			id="matter-responsible" 
+			value="<?=$this->matter['responsible']?>" 
+			class="required" 
+			onfocus="this.select()" /> 
+		<label for="matter-parent-id">
+			Parent
+		</label>
+		<input type="text" 
+			name="matter-parent" 
+			id="matter-parent" 
+			value="<?=$this->parent?>" 
+			onfocus="this.select()" /> 
+		<input type="hidden" 
+			name="matter-parent-id" 
+			id="matter-parent-id" 
+			value="<?=$this->parent_id?>" /> 
+		<label for="matter-container-id">
+			Container
+		</label>
+		<input type="text" 
+			name="matter-container" 
+			id="matter-container" 
+			value="<?=$this->container?>" 
+			onfocus="this.select()" /> 
+		<input type="hidden" 
+			name="matter-container-id" 
+			id="matter-container-id" 
+			value="<?=$this->container_id?>" /> 
+		<label for="matter-idx">
+			Idx
+		</label>
+		<input type="text" 
+			name="matter-idx" 
+			id="matter-idx" 
+			value="<?=$this->matter['idx']?>" 
+			onfocus="this.select()" /> 
+		<label for="matter-dead">
+			Dead
+		</label> 
+		<span id="matter-dead" class="display-field" title="This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status" style="cursor: help;">
+			<?php echo ($this->matter['dead'])? "Yes":"No" ;?>
+		</span>
+		<label for="matter-pta">
+			Term adjust
+		</label> 
+		<input type="text" 
+			name="matter-pta" 
+			id="matter-pta" 
+			value="<?=$this->matter['term_adjust']?>" 
+			onfocus="this.select()" />
+		<div id="edit-matter-actions">
+			<button name="edit-matter-cancel" id="edit-matter-cancel" style="float: right;">
+				<span class="ui-icon ui-icon-cancel" style="float: left;"></span>Cancel
+			</button>
+			<button name="edit-matter-submit" id="edit-matter-submit" style="float: right;">
+				<span class="ui-icon ui-icon-disk" style="float: left;"></span>Save
+			</button>
+			<button id="delete-matter" data-mid="<?=$this->matter['ID']?>" style="color: red;">
+				<span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete
+				Matter
+			</button>
+		</div>
+	</div>
 </div>

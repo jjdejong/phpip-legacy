@@ -356,10 +356,16 @@ $(document).ready(function(){
 							?>
 					<li id="<?=$classifier['ID']?>">
 						<span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float: left; cursor: move;"></span>
-						<div class="status-row classifier-row" id="<?=$classifier['ID']?>" typc="<?=$classifier['type_code']?>">
-							<span class="classifier-col-value <?=$vclass?>" id="<?=$classifier['type_code']?>"><?=$classifier['value']?></span>
-							<span class="classifier-col-url url-editable" style="overflow: hidden; white-space: nowrap; margin-left: 10px;"><?=$classifier['url']?></span>
-							<span class="classifier-col-lnkto lnk-editable" style="margin-left: 10px;"><?=$classifier['lnkTo']?></span> 
+						<div class="status-row classifier-row" id="<?=$classifier['ID']?>">
+							<span class="classifier-col-value <?=$vclass?>" id="<?=$classifier['type_code']?>">
+								<?=$classifier['value']?>
+							</span>
+							<span class="classifier-col-url url-editable" style="overflow: hidden; white-space: nowrap; margin-left: 10px;">
+								<?=$classifier['url']?>
+							</span>
+							<span class="classifier-col-lnkto lnk-editable" style="margin-left: 10px;">
+								<?=$classifier['lnkTo']?>
+							</span> 
 							<span class="delete-classifier">
 								<span class="ui-icon ui-icon-trash" title="Delete classifier" style="float: right;"></span>
 							</span>

@@ -478,7 +478,7 @@ $(document).ready(function(){
     $('.matter-actor').click(function(event){
       //$('.ui-widget-overlay').show();
       	$('#facade').show();
-      	$('#actor-details-popup').load("/matter/actor/", { actor_id: $(this).attr('id') }, function(){ 
+      	$('#actor-details-popup').load("/matter/actor/", { actor_id: this.id }, function(){ 
       		$(this).position({of: event, collision: "fit"});
       		$("#actor-used-in").hide(); 
       	}).show();
@@ -635,18 +635,19 @@ if (isset ( $this->matter_actors )) :?>
 			<span class="add-actor ui-icon ui-icon-plusthick" id="add-actor-<?=$actors [0]['role']?>" title="Add Actor" style="display: inline-block"></span>
 <?php 	
 		foreach ( $actors as $actor ):
+			$tooltip = '';
 			$actor_display_name = ($actor ['display_name'] == "") ? $actor ['name'] . (($actor ['first_name']) ? (", " . $actor ['first_name']) : "") : $actor ['display_name'];			
 			if ($actor ['actor_ref'])
-				$actor_display_name .= " (" . $actor ['actor_ref'] . ")";			
+				$tooltip = $actor ['actor_ref'];			
 			if ($actor ['company_name'])
-				$actor_display_name .= " - " . $actor ['company_name'];			
-			if (strlen ( $actor_display_name ) > 23):?>
-			<div id="<?=$actor ['ID']?>" class="matter-actor help_cursor <?=($actor ['inherited'] ? ' actor-inherit' : '')?>" title="<?=htmlentities ( $actor_display_name )?>">
+				$tooltip = $actor ['company_name'];			
+			if ($tooltip):?>
+			<div id="<?=$actor ['actor_ID']?>" class="matter-actor help_cursor <?=($actor ['inherited'] ? ' actor-inherit' : '')?>" title="<?=htmlentities ( $tooltip )?>">
 				<?=$actor_display_name?>
 				
 			</div>
 			<?php else:?>
-			<div id="<?=$actor ['ID']?>" class="matter-actor <?=($actor ['inherited'] ? ' actor-inherit' : '')?>">
+			<div id="<?=$actor ['actor_ID']?>" class="matter-actor <?=($actor ['inherited'] ? ' actor-inherit' : '')?>">
 				<?=$actor_display_name?>
 				
 			</div>
@@ -663,8 +664,7 @@ endif;
 // Status box (main events) 
 ?>
 <div class="listrow" style="width: 462px; display: inline-block;">
-	<div class="status-row" id="MatterStatus" style="margin-left: 5px;"
-		title="Click for more detail">
+	<div class="status-row" id="MatterStatus" style="margin-left: 5px;" title="Click for more detail">
 		<span class="status-col-name">Status</span>
 		<span class="status-col-date">Date</span> 
 		<span class="status-col-number">Number</span>

@@ -241,22 +241,6 @@ class MatterController extends Zend_Controller_Action {
 	}
 	
 	/**
-	 * displays all renewal tasks
-	 * called upon clicking renewal tasks box in matter view page
-	 * *  OBSOLETE
-	 */
-	/*public function tasklistrenAction() {
-		$this->_helper->layout->disableLayout ();
-		$matter_id = $this->_getParam ( 'id' );
-		$event_id = $this->_getParam ( 'event_id' );
-		$matterModel = new Application_Model_Matter ();
-		$this->view->matter_event_tasks = $matterModel->getMatterEventTasks ( $matter_id, 1, $event_id );
-		$this->view->renewal = 1;
-		$this->view->matter_id = $matter_id;
-		$this->view->event_id = $event_id;
-	}*/
-	
-	/**
 	 * displays all events
 	 * called upon clicking events box in matter view page
 	 * *
@@ -268,21 +252,6 @@ class MatterController extends Zend_Controller_Action {
 		$this->view->matter_events = $matterModel->getMatterAllEvents ( $matter_id );
 		$this->view->matter_id = $matter_id;
 	}
-	
-	/**
-	 * Deprecated
-	 * *
-	 */
-	/*
-	 * public function actorlistAction()
-	 * {
-	 * $this->_helper->layout->disableLayout();
-	 * $matter_id = $this->_getParam('matter_id');
-	 * $container_id = $this->_getParam('container_id');
-	 * $matterModel = new Application_Model_Matter();
-	 * $this->view->matter_actors = $matterModel->getMatterActors($matter_id, $container_id);
-	 * }
-	 */
 	
 	/**
 	 * Displays all classifiers list
