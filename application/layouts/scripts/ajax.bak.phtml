@@ -1,19 +1,18 @@
 <?php 
 	$this->headLink()
         ->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen');
+	
 	$this->headScript()->appendFile(
     	'/js/jquery-2.1.4.js',
     	'text/javascript'
     );
-	$this->headScript()->appendFile(
-    	'/js/jquery-migrate-1.2.1.js',
-    	'text/javascript'
-    );
+	
 	$this->headScript()->appendFile(
     	'/js/jquery-ui.js',
     	'text/javascript'
     );
-	$this->headScript()->appendFile(
+	
+	echo $this->headScript()->appendFile(
     '/js/jquery-custom-function.js',
     'text/javascript'
     );
@@ -24,9 +23,8 @@
                   ->setLocalPath("/js/dojo/dojo/dojo.js");
     	echo $this->dojo();
     }
-    
 ?>
 <body class="tundra">
-<?= $this->layout()->content; ?>
+	<?= $this->layout()->content ?>
 </body>
 

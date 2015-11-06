@@ -182,20 +182,6 @@
 <script type="text/javascript">
 $(document).ready(function(){
 
-    /*$('.open-ren').click(function(){
-       $('#facade').show();
-       $.ajax({
-         url: '/index/open-task-details',
-         type: 'GET',
-         data: { task_id: $(this).attr('id') },
-         success: function(data){
-             $('#task-pop-up').html(data)
-             .css( $('#open-renewals-box').offset() )
-             .show();
-         }
-       });
-    });*/
-    
     $('.open-task').click(function(){
     	trig_id_code = $(this).attr('id').split('-');
     	if (trig_id_code[1] == 'REN')
@@ -302,35 +288,52 @@ $(document).ready(function(){
 	<div id="home-top">
 		<div id="categories-box" class="home-box">
 			<div class="home-box-header">
-				<div class="list-header">Categories for <em><?=@$this->categories[0]['responsible']?></em></div>
-				<div class="clear-tasks-box"><button class="add-cat-matter" style="display:block;" id="Patent-PAT">New matter</button></div>
+				<div class="list-header">
+					Categories for <em><?=@$this->categories[0]['responsible']?></em>
+				</div>
+				<div class="clear-tasks-box">
+					<button class="add-cat-matter" style="display:block;" id="Patent-PAT">New matter</button>
+				</div>
 			</div>
 			<div id="" class="home-card">
     			<div class="list-headers">
-    				<div class="col-cat">Category</div>
-    				<div class="col-count">Count</div>
+    				<div class="col-cat">
+    					Category
+    				</div>
+    				<div class="col-count">
+    					Count
+    				</div>
     				<div class="col-actions">&nbsp;</div>
     			</div>
-				<?php if(count($this->categories)){ ?>
+<?php 
+if(count($this->categories)){ ?>
 				<ul class="phpip-list" id="category-list">
-					<?php foreach($this->categories as $matter): ?>
-    					<li>
-    						<div class="col-cat">
-    							<a href="/matter/filter/Cat/<?=$matter['category_code']?>/responsible/<?=$matter['responsible']?>"><?=$matter['category']." (".$matter['category_code'].")"?></a>
-    						</div>
-    						<div class="col-count">
-    							<?=$matter['no_of_matters']?>
-    						</div>
-    						<div class="col-actions"><a href="javascript:void(0);" class="add-cat-matter" id="<?=$matter['category']?>-<?=$matter['category_code']?>" title="New <?=$matter['category']?>">
-    							<span class="ui-icon ui-icon-plusthick" style="float: right;"></span></a>
-    						</div>
-    					</li>
-					<?php endforeach; ?>
+<?php 
+	foreach($this->categories as $matter): ?>
+    				<li>
+    					<div class="col-cat">
+    						<a href="/matter/filter/Cat/<?=$matter['category_code']?>/responsible/<?=$matter['responsible']?>">
+    							<?=$matter['category']." (".$matter['category_code'].")"?>
+    							
+    						</a>
+    					</div>
+    					<div class="col-count">
+    						<?=$matter['no_of_matters']?>
+    						
+    					</div>
+    					<div class="col-actions">
+    						<a href="javascript:void(0);" class="add-cat-matter" id="<?=$matter['category']?>-<?=$matter['category_code']?>" title="New <?=$matter['category']?>">
+    							<span class="ui-icon ui-icon-plusthick" style="float: right;"></span>
+    						</a>
+    					</div>
+    				</li>
+<?php 
+	endforeach; ?>
 				</ul>
-				<?php } ?>
+<?php 
+} ?>
 			</div>
 		</div>
-
 		<div id="open-tasks-box" class="home-box">
 			<div class="home-box-header">
 				<div class="list-header">Open tasks
@@ -343,14 +346,15 @@ $(document).ready(function(){
 				</div>
 
 				<div class="clear-tasks-box">
-				<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 2px 8px;" />
-				<label for="open-done-date" ></label>
-				<input type="text" value="" id="open-done-date" class="done-date" />
-				<input type="hidden" value="" id="alt-date" />
-			</div>
+					<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 2px 8px;" />
+					<label for="open-done-date" ></label>
+					<input type="text" value="" id="open-done-date" class="done-date" />
+					<input type="hidden" value="" id="alt-date" />
+				</div>
 			</div>
 			<div id="" class="home-card">
-			<?php if(count($this->open_tasks)): ?>
+<?php 
+if(count($this->open_tasks)): ?>
 				<div class="list-headers">
 					<div class="col-task-name">Task</div>
 					<div class="col-task-matter">Matter</div>
@@ -358,35 +362,43 @@ $(document).ready(function(){
 					<div class="col-actions">Close</div>
 				</div>
 				<ul class="phpip-list" id="open-tasks-list">
-					<?php foreach($this->open_tasks as $open_task){ 
-						$task_name  = $open_task['task_name'];
-						$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
-						if ($open_task['posix_due_date'] < date('Y-m-d'))
-							$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
-						else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
-							$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
-					?>
+<?php 
+	foreach($this->open_tasks as $open_task){ 
+		$task_name  = $open_task['task_name'];
+		$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
+		if ($open_task['posix_due_date'] < date('Y-m-d'))
+			$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
+		else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
+			$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';?>
 					<li id="<?=$open_task['task_ID']?>">
 						<div class="col-task-name">
-							<a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>"><?=$task_name?></a>
+							<a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>">
+								<?=$task_name?>
+								
+							</a>
 						</div>
 						<div class="col-task-matter">
-							<a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a>
+							<a href="/matter/view/id/<?=$open_task['MID']?>">
+								<?=$open_task['UID']?>
+								
+							</a>
 						</div>
 						<div class="col-task-due_date">
 							<?=$open_task['due_date']?>
+							
 						</div>
 						<div class="col-actions">
 							<input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="Clear">
 						</div>
 					</li>
-					<?php } ?>
+<?php 
+	} ?>
 				</ul>
-			<?php endif; ?>
+<?php 
+endif; ?>
 			</div>
 		</div>
 	</div>
-
 	<div id="home-bottom" >
 		<div id="users-box" class="home-box">
 			<div class="home-box-header">
@@ -398,26 +410,42 @@ $(document).ready(function(){
 					<div class="col-open-count">Open Tasks</div>
 					<div class="col-most-urgent">Most urgent</div>
 				</div>
-				<?php if(count($this->users_list)): ?>
-					<ul class="phpip-list" id="users-task-count" >
-					<?php foreach($this->users_list as $user){ 
-						if($user['no_of_tasks'] > 0){
-							if ($user['posix_urgent_date'] < date('Y-m-d'))
-								$user['urgent_date'] = '<span style="color:red; text-decoration:blink;">' .$user['urgent_date']. '</span>';
-							else if ($user['posix_urgent_date'] < date('Y-m-d', strtotime('+1 week')))
-								$user['urgent_date'] = '<span style="color:tomato;">' .$user['urgent_date']. '</span>';
-					?>
+<?php 
+if(count($this->users_list)): ?>
+				<ul class="phpip-list" id="users-task-count" >
+<?php 
+	foreach($this->users_list as $user){ 
+		if($user['no_of_tasks'] > 0){
+			if ($user['posix_urgent_date'] < date('Y-m-d'))
+				$user['urgent_date'] = '<span style="color:red; text-decoration:blink;">' .$user['urgent_date']. '</span>';
+			else if ($user['posix_urgent_date'] < date('Y-m-d', strtotime('+1 week')))
+				$user['urgent_date'] = '<span style="color:tomato;">' .$user['urgent_date']. '</span>';
+?>
 					<li>
-						<div class="col-user-login"><a href="/index/user-page/username/<?=$user['login']?>"><?=$user['login']?></a></div>
-						<div class="col-open-count"><a href="/index/user-open-tasks/username/<?=$user['login']?>"><?=$user['no_of_tasks']?></a></div>
-						<div class="col-most-urgent"><?=$user['urgent_date']?></div>
+						<div class="col-user-login">
+							<a href="/index/user-page/username/<?=$user['login']?>">
+								<?=$user['login']?>
+								
+							</a>
+						</div>
+						<div class="col-open-count">
+							<a href="/index/user-open-tasks/username/<?=$user['login']?>">
+								<?=$user['no_of_tasks']?>
+								
+							</a>
+						</div>
+						<div class="col-most-urgent">
+							<?=$user['urgent_date']?>
+							
+						</div>
 					</li>
-					<?php }} ?>
-					</ul>
-				<?php endif;?>
+<?php 	}
+	} ?>
+				</ul>
+<?php 
+endif;?>
 			</div>
 		</div>
-
 		<div id="open-renewals-box" class="home-box">
 			<div class="home-box-header">
 				<div class="list-header">Open renewals
@@ -436,33 +464,53 @@ $(document).ready(function(){
 				</div>
 			</div>
 			<div id="" class="home-card">
-				<?php if(count($this->ren_tasks)): ?>
-					<div class="list-headers">
-						<div class="col-task-name">Task</div>
-						<div class="col-task-matter">Matter</div>
-						<div class="col-task-due_date">Due date</div>
-						<div class="col-actions">Close</div>
-					</div>
-					<ul class="phpip-list" id="ren-tasks-list">
-						<?php foreach($this->ren_tasks as $open_task){ 
-							$task_name  = $open_task['task_name'];
-							$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
-							if ($open_task['posix_due_date'] < date('Y-m-d'))
-								$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
-							else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
-								$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
-						?>
-						<li id="<?=$open_task['task_ID']?>">
-							<div class="col-task-name"><a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>-<?=$open_task['code']?>"><?=$task_name?></a></div>
-							<div class="col-task-matter"><a href="/matter/view/id/<?=$open_task['MID']?>"><?=$open_task['UID']?></a></div>
-							<div class="col-task-due_date"><?=$open_task['due_date']?></div>
-							<div class="col-actions">
-								<input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-ren-task button-style" value="Clear">
-							</div>
-						</li>
-						<?php } ?>
-					</ul>
-				<?php endif; ?>
+<?php 
+if(count($this->ren_tasks)): ?>
+				<div class="list-headers">
+					<div class="col-task-name">Task</div>
+					<div class="col-task-matter">Matter</div>
+					<div class="col-task-due_date">Due date</div>
+					<div class="col-actions">Close</div>
+				</div>
+				<ul class="phpip-list" id="ren-tasks-list">
+<?php 
+	foreach($this->ren_tasks as $open_task){ 
+		$task_name  = $open_task['task_name'];
+		$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
+		if ($open_task['posix_due_date'] < date('Y-m-d'))
+			$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
+		else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
+			$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';?>
+					<li id="<?=$open_task['task_ID']?>">
+						<div class="col-task-name">
+							<a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>-<?=$open_task['code']?>">
+								<?=$task_name?>
+								
+							</a>
+						</div>
+						<div class="col-task-matter">
+							<a href="/matter/view/id/<?=$open_task['MID']?>">
+								<?=$open_task['UID']?>
+								
+							</a>
+						</div>
+						<div class="col-task-due_date">
+							<?=$open_task['due_date']?>
+							
+						</div>
+						<div class="col-actions">
+							<input type="checkbox" 
+								name="clear-task-<?=$open_task['task_ID']?>" 
+								id="<?=$open_task['task_ID']?>" 
+								class="clear-ren-task button-style" 
+								value="Clear">
+						</div>
+					</li>
+<?php 
+	} ?>
+				</ul>
+<?php 
+endif; ?>
 			</div>
 		</div>
 	</div>
@@ -470,6 +518,6 @@ $(document).ready(function(){
 
 <div id="task-pop-up" class="place-card" ></div>
 <div id="tasklist-pop-up"></div>
-<div id="add-matter-popup" class="" ></div>
+<div id="add-matter-popup"></div>
 <div id="facade"></div>
 

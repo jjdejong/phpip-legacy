@@ -1,81 +1,81 @@
 <?= $this->doctype() ?>
+
 <html>
 <head>
 <?= $this->headTitle('phpIP - IP portfolio management') ?>
-<?= $this->headMeta() ?>
-<?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen')
-	->headLink()->prependStylesheet($this->baseUrl('/js/jquery-ui.css'), 'screen'); ?>
 
-<?php 
+<?= $this->headMeta() ?>
+
+<?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen')
+	->headLink()->prependStylesheet($this->baseUrl('/js/jquery-ui.css'), 'screen') ?>
+	
+<?php
 	$this->headScript()->appendFile(
     '/js/jquery-2.1.4.js',
     'text/javascript'
-    ); ?>
-    
-<?php 
+    );
+	
 	$this->headScript()->appendFile(
-    '/js/jquery-migrate-1.2.1.js',
-    'text/javascript'
-    ); ?>
-
-<?php 
+	'/js/jquery-ui.js',
+	'text/javascript'
+	);
+	
 	$this->headScript()->appendFile(
     '/js/encoder.js',
     'text/javascript'
-    ); ?>
-
-<?php 
-	$this->headScript()->appendFile(
-    '/js/jquery-ui.js',
-    'text/javascript'
-    ); ?>
-
-<?php 
+    );
+	
 	$this->headScript()->appendFile(
     '/js/jquery.jeditable.js',
     'text/javascript'
-    ); ?>
-    
-<?php 
+    );
+	
 	$this->headScript()->appendFile(
     '/js/jquery-custom-function.js',
     'text/javascript'
-    ); ?>
-
-<?= 
-	$this->headScript()->appendFile(
+    );
+	
+	echo $this->headScript()->appendFile(
     '/js/jquery.selectbox-0.5.js',
     'text/javascript'
     ); ?>
+    
 </head>
-<body<?= 0 != count($this->routeContext) ? ' class="' . implode(' ', array_unique($this->routeContext)) . '"' : '' ?> class="tundra">
-<div id="header">
-<div id="header-inside">
-    <div id="logo"><a class="header-link" href="http://www.omnipat.fr"><span class="icon-omnipat"></span>phpIP</a></div>
-<div id="header-right">
+<body <?= count($this->routeContext) ? ' class="' . implode(' ', array_unique($this->routeContext)) . '"' : '' ?> class="tundra">
+	<div id="header">
+		<div id="header-inside">
+    		<div id="logo">
+    			<a class="header-link" href="http://www.omnipat.fr">
+    				<span class="icon-omnipat"></span>
+    				phpIP
+    			</a>
+    		</div>
+			<div id="header-right">
 
 <?php
-    if ($this->login && $this->login != "" ){ ?>
-
-<div id="loggedin"><?php  echo "Connected as " . $this->firstname;?></div>
-<?= $this->render('content-left.phtml') ?>
-
+if ($this->login && $this->login != "" ){ ?>
+				<div id="loggedin">
+					<?="Connected as " . $this->firstname ?>
+					
+				</div>
+				<?=$this->render('content-left.phtml') ?>
+				
 <?php
-    }
-
-?></div>
-</div>
-</div>
-<div id="page">
-    <div id="content">
-        <div id="content-body">
-		<?= $this->render('content-inner-header.phtml') ?>
-            <div id="content-layout">
-                <?= $this->layout()->content ?>
-            </div>
-        </div>
-    </div>
-</div>
-
+}?>
+			</div>
+		</div>
+	</div>
+	<div id="page">
+	    <div id="content">
+	        <div id="content-body">
+			<?=$this->render('content-inner-header.phtml') ?>
+			
+	            <div id="content-layout">
+	                <?=$this->layout()->content ?>
+	                
+	            </div>
+	        </div>
+	    </div>
+	</div>
 </body>
 </html>
