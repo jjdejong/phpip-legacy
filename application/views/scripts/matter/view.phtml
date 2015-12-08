@@ -638,6 +638,7 @@ if (isset ( $this->matter_actors )) :?>
 			$tooltip = '';
 			$actor_display_name = ($actor ['display_name'] == "") ? $actor ['name'] . (($actor ['first_name']) ? (", " . $actor ['first_name']) : "") : $actor ['display_name'];			
 			if ($actor ['actor_ref'])
+				$actor_display_name .= " (" . $actor ['actor_ref'] . ")";			
 				$tooltip = $actor ['actor_ref'];			
 			if ($actor ['company_name'])
 				$tooltip = $actor ['company_name'];			
