@@ -38,6 +38,7 @@ CREATE TABLE `actor` (
   `login` char(16) DEFAULT NULL COMMENT 'Database user login if not null.',
   `password` varchar(32) DEFAULT NULL,
   `password_salt` varchar(32) DEFAULT NULL,
+  `ipuser` tinyint(1) DEFAULT '0' COMMENT 'Is phpIP user or not',
   `last_login` datetime DEFAULT NULL,
   `default_role` char(5) DEFAULT NULL COMMENT 'Link to ''actor_role'' table. A same actor can have different roles - this is the default role of the actor.',
   `function` varchar(45) DEFAULT NULL,

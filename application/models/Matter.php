@@ -943,6 +943,29 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		}
 		return $result;
 	}
+
+	/**
+	 * retrieves all users from actor table filterted by name
+	 * $term --search term
+	**/
+	public function getAllUsers($term = null) {
+	    $phy_query = "";
+	    if(isset($phy_person)){
+	        $phy_query = " AND a.phy_person = ".$phy_person;
+	    }
+	    $this->setDbTable('Application_Model_DbTable_Matter');
+	    $dbSelect = $this->_dbTable->getAdapter()->select();
+	    $selectQuery = $dbSelect->from(array('a' => 'actor'), array('a.id', 'a.name', 'a.first_name','a.display_name','a.login', 'a.ipuser'))
+	              ->joinLeft(array('aa' => 'actor'), 'aa.ID = a.company_ID', array('aa.name as company_name'))
+	              ->where("a.name like '". $term . "%'  AND a.phy_person = 1 AND a.login is not null")
+	              ->order('a.name asc');
+	    $result = $this->_dbTable->getAdapter()->fetchAll($selectQuery);
+	    foreach($result as $key => $actor){
+	      $actor_display = $actor['name'] . (($actor['first_name'] == '')?"":(", ".$actor['first_name'])).( ($actor['display_name'])?(" (".$actor['display_name'].")"):"" );
+	      $result[$key]['value'] = htmlentities($actor_display);
+	    }
+	    return $result;
+	  }
 	
 	/**
 	 * retrieves all actors from actor table filtered by company
@@ -2084,6 +2107,90 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 		}
 	}
 	
+	/**
+	 * give permission to an user
+	**/
+	  public function permitUser($actor_id = null)
+	  {
+	      if(!$actor_id)
+	        return;
+	      $this->setDbTable('Application_Model_DbTable_Actor');
+	      $dbSelect = $this->_dbTable->getAdapter()->select();
+	    	
+	    	$selectQuery = $dbSelect->from(array('u'=>'actor'))
+	        		->where('u.id = ?', $actor_id);
+	      $row = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+	      $passwd = 'changeme';
+	      $login = $row['login'];
+	      $config = Zend_Registry::get('config');
+	      $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
+	      $username = $siteInfoNamespace->username;
+	      $password = $siteInfoNamespace->password;
+	      $db_detail = $this->_dbTable->getAdapter()->getConfig();
+	      $host = $db_detail['host'];
+	      try {
+	        $dbm = new PDO("mysql:host=$host;dbname=mysql",$username,$password);
+	      }
+	      catch(Exception $e)
+	      {
+	        return 'Access denied';
+	      }
+	      try {
+	        $sql1 = "CREATE USER '".$login."'@'%' IDENTIFIED BY '".$passwd."'";
+	        $sql2 = "GRANT ALL ON phpip.* TO '".$login."'@'%'";
+	        $dbm->exec($sql1);
+	        $dbm->exec($sql2);
+	      }
+	      catch(Exception $e)
+	      {
+	        return "Unable to insert the user. ";
+	      }
+	      $this->setDbTable('Application_Model_DbTable_Actor');
+	      $data['ipuser']=1;
+	      $data['password'] = md5($passwd.'salt');
+	      $data['password_salt'] = 'salt'; 
+	      $this->getDbTable('Application_Model_DbTable_Actor')->update($data, array('ID = ?' => $actor_id));
+	  }
+
+	/**
+	 * unpermit an user
+	**/
+	  public function banUser($actor_id = null)
+	  {
+	      if(!$actor_id)
+	        return;
+	    $this->setDbTable('Application_Model_DbTable_Actor');
+	    $dbSelect = $this->_dbTable->getAdapter()->select();
+    	
+	      $selectQuery = $dbSelect->from(array('u'=>'actor'))
+	        						->where('u.id = ?', $actor_id);
+	      $row = $this->_dbTable->getAdapter()->fetchRow($selectQuery);
+	      $login = $row['login'];
+	      $config = Zend_Registry::get('config');
+	      $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
+	      $username = $siteInfoNamespace->username;
+	      $password = $siteInfoNamespace->password;
+	      $db_detail = $this->_dbTable->getAdapter()->getConfig();
+	      $host = $db_detail['host'];
+	      try {
+	        $dbm = new PDO("mysql:host=$host;dbname=mysql",$username,$password);
+	      }
+	      catch(Exception $e)
+	      {
+	        return 'Echec de la connexion à la base de données '.$e;
+	      }
+	      try {
+	        $sql1 = "DROP USER '".$login."'@'%'";
+	        $dbm->exec($sql1);
+	      }
+	      catch(Exception $e)
+	      {
+	        return "Echec de la suppression : ".$e->getMessage();
+	      }
+	      $data['ipuser']=0;
+	      $this->getDbTable('Application_Model_DbTable_Actor')->update($data, array('ID = ?' => $actor_id));
+	  }
+
 	/**
 	 * actor's Matter Dependencies
 	 * *

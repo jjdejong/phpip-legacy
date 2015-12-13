@@ -276,6 +276,14 @@ class MatterController extends Zend_Controller_Action {
 	}
 	
 	/**
+	 * Displays all actors from users table
+	**/
+	public function usersTableAction() {
+	    $matterModel = new Application_Model_Matter();
+	    $this->view->users = $matterModel->getAllUsers();
+	}
+
+	/**
 	 * Displays filtered actors from actor table
 	 * called when filter term is entered in actor Name input in actors-table page
 	 * *
@@ -1360,6 +1368,37 @@ class MatterController extends Zend_Controller_Action {
 			echo $result;
 		}
 	}
+
+	/**
+	 * permit an user
+	**/
+	public function permitUserAction() {
+	    $this->_helper->layout->disableLayout();
+	    $this->_helper->viewRenderer->setNoRender();
+	    if($this->getRequest()->isPost()){
+	        $actor_id = $this->_getParam('aid');
+	        $matterModel = new Application_Model_Matter();
+	        $result = $matterModel->permitUser($actor_id);
+	    }
+	  }
+
+	/**
+	 * ban an user
+	**/
+	public function banUserAction()
+	  {
+	    $this->_helper->layout->disableLayout();
+	    $this->_helper->viewRenderer->setNoRender();
+	    if($this->getRequest()->isPost()){
+	        $actor_id = $this->_getParam('aid');
+	        $matterModel = new Application_Model_Matter();
+	        $result = $matterModel->banUser($actor_id);
+	        $actorInfo = $matterModel->getActorInfo($actor_id);
+	        $userModel = new Application_Model_User();
+	        $result = $userModel->banLogUser($actorInfo['login']);
+	    }
+	  }
+
 	
 	/**
 	 * show Actor Used in details
