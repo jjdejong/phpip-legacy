@@ -55,6 +55,12 @@
                             <title>Actors</title>
                             <uri>/matter/actors-table</uri>
                         </actors>
+                        <users>
+                            <label>Users</label>
+                            <id>users</id>
+                            <title>Users</title>
+                            <uri>/matter/users-table</uri>
+                        </users>
                     </pages>
                 </tables>
                 <account>
