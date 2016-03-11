@@ -98,7 +98,7 @@ input {
 <script type="text/javascript">
 $(document).ready(function(){
 	$('#actor-used-in').click(function(){
-        $('#actor-details-used-in').load('/matter/actor-used-in', { aid: $('#actor-id').val() })
+        $('#actor-details-used-in').load('/actor/used-in', { aid: $('#actor-id').val() })
         	.show();
 	});
 
@@ -109,7 +109,7 @@ $(document).ready(function(){
 		}
     });
 
-    $('.editable').editable('/matter/update-actor', {
+    $('.editable').editable('/actor/update', {
 		submitdata: function(value,settings){
 			var actor_id = $('#actor-id').val();
 			var field_name = $(this).attr('id');
@@ -124,7 +124,7 @@ $(document).ready(function(){
 		}
     });
     
-    $('.teditable').editable('/matter/update-actor', {
+    $('.teditable').editable('/actor/update', {
 		submitdata: function(value,settings){
 			var actor_id = $('#actor-id').val();
 			var field_name = $(this).attr('id');
@@ -143,7 +143,7 @@ $(document).ready(function(){
 		}
     });
     
-    $('.select-editable').editable('/matter/update-actor', {
+    $('.select-editable').editable('/actor/update', {
 		submitdata: function(value,settings){
 			var actor_id = $('#actor-id').val();
 			var field_name = $(this).attr('id');
@@ -165,11 +165,11 @@ $(document).ready(function(){
 	var fvalue = '';
 	var dvalue = '';
 	
-    $('.auto-editable').editable('/matter/update-actor', {
+    $('.auto-editable').editable('/actor/update', {
 		type: 'autocomplete',
         autocomplete: {
 			minLength: 1,
-			source: "/matter/get-non-actors",
+			source: "/actor/get-companies",
 			select: function( event, ui ) {
 				this.value = ui.item.value;  // assign country name back to the form element
 				fvalue = ui.item.id; // Country code
@@ -195,7 +195,7 @@ $(document).ready(function(){
 		select: true
     });
 
-    $('.country-editable').editable('/matter/update-actor', {
+    $('.country-editable').editable('/actor/update', {
         type: 'autocomplete',
         autocomplete: {
 			minLength: 1,
@@ -225,12 +225,12 @@ $(document).ready(function(){
 		select: true
     });
     
-    $('.role-editable').editable('/matter/update-actor', {
+    $('.role-editable').editable('/actor/update', {
         type: 'autocomplete',
         onblur: 'submit',
         autocomplete: {
 			minLength: 1,
-			source : "/matter/get-actor-roles",
+			source : "/actor/get-actor-roles",
 			select: function( event, ui ) {
 				this.value = ui.item.value;  // assign country name back to the form element
 				fvalue = ui.item.id; // Country code
@@ -257,11 +257,11 @@ $(document).ready(function(){
     });
 
     $('input[name=phy_person]').change(function(){
-        $.post('/matter/update-actor', { actor_id : $('#actor-id').val(), field : 'phy_person', value: $('input[name=phy_person]:checked').val()});
+        $.post('/actor/update', { actor_id : $('#actor-id').val(), field : 'phy_person', value: $('input[name=phy_person]:checked').val()});
     });
     
     $('input[name=small_entity]').change(function(){
-        $.post('/matter/update-actor', { actor_id : $('#actor-id').val(), field : 'small_entity', value: $('input[name=small_entity]:checked').val()});
+        $.post('/actor/update', { actor_id : $('#actor-id').val(), field : 'small_entity', value: $('input[name=small_entity]:checked').val()});
     });
 
     $('.delete-actor').click(function(){
@@ -269,7 +269,7 @@ $(document).ready(function(){
 		if(del_conf == 1){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({
-	      		url: '/matter/delete-actor',
+	      		url: '/actor/delete',
 	      		type: 'POST',
 	      		data: { aid:aid },
 	      		success: function(data){

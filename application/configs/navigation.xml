@@ -53,13 +53,13 @@
                             <label>Actors</label>
                             <id>actors</id>
                             <title>Actors</title>
-                            <uri>/matter/actors-table</uri>
+                            <uri>/actor</uri>
                         </actors>
                         <users>
                             <label>Users</label>
                             <id>users</id>
                             <title>Users</title>
-                            <uri>/matter/users-table</uri>
+                            <uri>/actor/users</uri>
                         </users>
                     </pages>
                 </tables>

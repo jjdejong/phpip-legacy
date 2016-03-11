@@ -7,7 +7,7 @@ $(document).ready(function(){
     if(actor_id == 'nomatch'){
         $.ajax({
             type: "GET",
-            url: '/matter/add-actor',
+            url: '/actor/add',
             success: function(data){
             	$('#actor-details-popup').empty();
     	        $('#actor-details-popup').html(data);
@@ -18,7 +18,7 @@ $(document).ready(function(){
         });
     } else {
 	    $.ajax({
-	      url: '/matter/actor/',
+	      url: '/actor/view',
 	      type: 'POST',
 	      data: { actor_id:actor_id },
 	      success: function(data){
@@ -36,7 +36,7 @@ $(document).ready(function(){
 	if(del_conf == 1){
     var aid = $(this).attr('id');
     $.ajax({
-      url : '/matter/delete-actor',
+      url : '/actor/delete',
       type: 'POST',
       data: { aid:aid },
       success: function(data){
@@ -60,7 +60,7 @@ $(document).ready(function(){
     	<div class="col-display"><?=htmlentities(@$actor['display_name'])?></div>
     	<div class="col-company"><?=htmlentities(@$actor['company_name'])?></div>
     	<div class="col-delete" >
-    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"></span>/>
+    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"></span>
     	</div>
     </li>
 <?php endforeach; ?>

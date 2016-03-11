@@ -478,7 +478,7 @@ $(document).ready(function(){
     $('.matter-actor').click(function(event){
       //$('.ui-widget-overlay').show();
       	$('#facade').show();
-      	$('#actor-details-popup').load("/matter/actor/", { actor_id: this.id }, function(){ 
+      	$('#actor-details-popup').load("/actor/view", { actor_id: this.id }, function(){ 
       		$(this).position({of: event, collision: "fit"});
       		$("#actor-used-in").hide(); 
       	}).show();

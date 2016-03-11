@@ -266,46 +266,6 @@ class MatterController extends Zend_Controller_Action {
 	}
 	
 	/**
-	 * Displays all actors from actor table
-	 * *
-	 */
-	public function actorsTableAction() {
-		// $this->_helper->layout->disableLayout();
-		$matterModel = new Application_Model_Matter ();
-		$this->view->actors = $matterModel->getAllActors ();
-	}
-	
-	/**
-	 * Displays all actors from users table
-	**/
-	public function usersTableAction() {
-	    $matterModel = new Application_Model_Matter();
-	    $this->view->users = $matterModel->getAllUsers();
-	}
-
-	/**
-	 * Displays filtered actors from actor table
-	 * called when filter term is entered in actor Name input in actors-table page
-	 * *
-	 */
-	public function actorsFilterAction() {
-		$this->_helper->layout->disableLayout ();
-		$term = $this->_getParam ( 'term' );
-		$co = $this->_getParam ( 'co' );
-		$matterModel = new Application_Model_Matter ();
-		if ($co == '0') {
-			$this->view->actors = $matterModel->getAllActors ( $term );
-			if (count ( $this->view->actors ) == 0)
-				array_push ( $this->view->actors, array (
-						'id' => 'nomatch',
-						'name' => 'No match. Create Actor?' 
-				) );
-		} else {
-			$this->view->actors = $matterModel->getAllActorsByCo ( $term );
-		}
-	}
-	
-	/**
 	 * Adds an actor to a selected role
 	 * *
 	 */
@@ -320,47 +280,11 @@ class MatterController extends Zend_Controller_Action {
 			$this->view->role_search = $this->view->role;
 		
 		$matterModel = new Application_Model_Matter ();
-		$this->view->role_name = $matterModel->getRoleName ( $this->view->role );
-		$this->view->all_roles = $matterModel->getAllRoles ();
+		$actorModel = new Application_Model_Actor ();
+		$this->view->role_name = $actorModel->getRoleName ( $this->view->role );
+		$this->view->all_roles = $actorModel->getAllRoles ();
 		
 		$this->view->container_id = $matterModel->getMatterContainer ( $this->view->matter_id );
-	}
-	
-	/**
-	 * gets all actors for a role
-	 * used in autocomplete of actor fields
-	 * *
-	 */
-	public function getAllActorsAction() {
-		$this->_helper->layout->disableLayout ();
-		$this->_helper->viewRenderer->setNoRender ();
-		$this->view->term = $this->_getParam ( 'term' );
-		$this->view->role = $this->_getParam ( 'role' );
-		$matterModel = new Application_Model_Matter ();
-		$matter_actors = $matterModel->getAllActors ( $this->view->term );
-		array_push ( $matter_actors, array (
-				'id' => 'cna786',
-				'value' => '<font color="red">Create Actor</font>' 
-		) );
-		
-		$this->view->matter_actor = $matter_actors;
-		echo @json_encode ( $matter_actors );
-	}
-	
-	/**
-	 * gets all logins for a role
-	 * used in autocomplete of responsible fields
-	 * *
-	 */
-	public function getAllLoginsAction() {
-		$this->_helper->layout->disableLayout ();
-		$this->_helper->viewRenderer->setNoRender ();
-		$this->view->term = $this->_getParam ( 'term' );
-		$this->view->role = $this->_getParam ( 'role' );
-		$matterModel = new Application_Model_Matter ();
-		$this->view->matter_login = $matterModel->getAllLogins ( $this->view->term );
-		
-		echo json_encode ( $this->view->matter_login );
 	}
 	
 	/**
@@ -392,13 +316,14 @@ class MatterController extends Zend_Controller_Action {
 		$role_id = $this->_getParam ( 'role_id' );
 		
 		$matterModel = new Application_Model_Matter ();
+		$actorModel = new Application_Model_Actor ();
 		$matter_record = $matterModel->getMatter ( $matter_id );
 		// $container_id = $matterModel->getMatterContainer($matter_id);
 		
 		$this->view->role_actors = $matterModel->getMatterActorsForRole ( $matter_record [0] ['container_ID'], $matter_id, $role_id );
 		$this->view->role = $this->view->role_actors [0] ['role_name'];
 		$this->view->matter_id = $matter_id;
-		$this->view->actor_role = $matterModel->getActorRoleInfo ( $role_id );
+		$this->view->actor_role = $actorModel->getActorRoleInfo ( $role_id );
 		$this->view->actors_count = count ( $this->view->role_actors );
 	}
 	
@@ -434,15 +359,14 @@ class MatterController extends Zend_Controller_Action {
 		$data = array ();
 		
 		$matterModel = new Application_Model_Matter ();
-		
+		$actorModel = new Application_Model_Actor ();
 		$matter_id = $this->getRequest ()->getPost ( 'matter_ID' );
 		$data ['actor_ID'] = $this->getRequest ()->getPost ( 'actor_ID' );
 		$data ['role'] = $this->getRequest ()->getPost ( 'role' );
 		$container_id = $matterModel->getMatterContainer ( $matter_id );
 		$data ['actor_ref'] = $this->getRequest ()->getPost ( 'actor_ref' );
 		$role_shareable = $this->getRequest ()->getPost ( 'role_shareable' );
-		
-		$data ['shared'] = $matterModel->isRoleShareable ( $data ['role'] );
+		$data ['shared'] = $actorModel->isRoleShareable ( $data ['role'] );
 		
 		if ($this->getRequest ()->getPost ( 'add_container' ) && $container_id) {
 			$data ['matter_ID'] = $container_id;
@@ -453,7 +377,7 @@ class MatterController extends Zend_Controller_Action {
 			$data ['shared'] = 0;
 		}
 		
-		$actor_info = $matterModel->getActorInfo ( $data ['actor_ID'] );
+		$actor_info = $actorModel->getActorInfo ( $data ['actor_ID'] );
 		$data ['company_ID'] = $actor_info ['company_ID'];
 		$data ['display_order'] = $matterModel->getNextDisplayOrder ( $matter_id, $container_id, $data ['role'] );
 		$data ['date'] = date ( 'Y-m-d' );
@@ -480,7 +404,10 @@ class MatterController extends Zend_Controller_Action {
 		$post_data = $this->getRequest ()->getPost ();
 		$display_val = $post_data ['value'];
 		if (isset ( $post_data ['field'] ))
-			$data [$post_data ['field']] = $post_data ['val'];
+			if ($post_data ['val'] == 0)
+				$data [$post_data ['field']] = null;
+			else
+				$data [$post_data ['field']] = $post_data ['val'];
 		else
 			$data [$post_data ['id']] = $post_data ['value'];
 		$matter_actor_id = $post_data ['matter_actor_id'];
@@ -991,134 +918,6 @@ class MatterController extends Zend_Controller_Action {
 	}
 	
 	/**
-	 * autocompletes non-physical persons from actor table (where phy_person=0)
-	 * *
-	 */
-	public function getNonActorsAction() {
-		$this->_helper->layout->disableLayout ();
-		$this->_helper->viewRenderer->setNoRender ();
-		$this->view->term = $this->_getParam ( 'term' );
-		$matterModel = new Application_Model_Matter ();
-		$matter_actors = $matterModel->getAllActors ( $this->view->term, 0 );
-		
-		echo json_encode ( $matter_actors );
-	}
-	
-	/**
-	 * autocompletes roles from actor_role
-	 * *
-	 */
-	public function getActorRolesAction() {
-		$this->_helper->layout->disableLayout ();
-		$this->_helper->viewRenderer->setNoRender ();
-		$this->view->term = $this->_getParam ( 'term' );
-		$matterModel = new Application_Model_Matter ();
-		$actor_roles = $matterModel->getActorRoles ( $this->view->term );
-		
-		echo json_encode ( $actor_roles );
-	}
-	
-	/**
-	 * add/create a new actor
-	 * *
-	 */
-	public function addActorAction() {
-		$this->_helper->layout->disableLayout ();
-		$request = $this->getRequest ();
-		$matterModel = new Application_Model_Matter ();
-		$actorForm = new Application_Form_Matter_Actor ();
-		if ($request->isPost ()) {
-			$post_data = $request->getPost ();
-			if ($actorForm->isValid ( $post_data )) {
-				
-				foreach ( $post_data as $key => $data ) {
-					if ($data == "")
-						unset ( $post_data [$key] );
-				}
-				
-				$actor_id = $matterModel->addActor ( $post_data );
-				if ($actor_id) {
-					$this->_helper->viewRenderer->setNoRender ();
-					$json_data = array ();
-					$json_data ['actor_name'] = $post_data ['name'];
-					$json_data ['actor_id'] = $actor_id;
-					echo json_encode ( $json_data );
-					return;
-				} else {
-					$this->view->sqlErrors = $matterModel->getError ();
-					$default_role = $actorForm->getValue ( 'default_role' );
-				}
-			} else {
-				$this->view->formErrors = $actorForm->getMessages ();
-				$default_role = $actorForm->getValue ( 'default_role' );
-			}
-		} else {
-			$default_role = $this->_getParam ( 'role' );
-		}
-		$role_info = $matterModel->getActorRoleInfo ( $default_role );
-		$this->view->actorComments = $matterModel->getTableComments ( 'actor' );
-		$actorForm->getElement ( 'default_role' )->setValue ( $role_info ['name'] );
-		$enumOpts = $matterModel->getEnumSet ( 'actor', 'pay_category' );
-		$actorForm->getElement ( 'pay_category' )->setMultiOptions ( $enumOpts );
-		$this->view->actorForm = $actorForm;
-		$this->view->default_role = $role_info ['name'];
-		$this->view->default_role_code = $role_info ['code'];
-	}
-	
-	/**
-	 * displays and offers in-place edit of actor details
-	 * *
-	 */
-	public function actorAction() {
-		$this->_helper->layout->disableLayout ();
-		$actor_id = $this->_getParam ( 'actor_id' );
-		$matterModel = new Application_Model_Matter ();
-		$actorInfo = $matterModel->getActorInfo ( $actor_id );
-		$this->view->enumOpts = $matterModel->getEnumSet ( 'actor', 'pay_category' );
-		$this->view->actorComments = $matterModel->getTableComments ( 'actor' );
-		$this->view->actor = $actorInfo;
-	}
-	
-	/**
-	 * updates actor field through in-place edit feature
-	 * *
-	 */
-	public function updateActorAction() {
-		$this->_helper->layout->disableLayout ();
-		$this->_helper->viewRenderer->setNoRender ();
-		
-		if (! $this->getRequest ()->isPost ())
-			return false;
-		
-		$post_data = $this->getRequest ()->getPost ();
-		$actor_id = $post_data ['actor_id'];
-		$field_name = $post_data ['field'];
-		$field_value = $post_data ['value'];
-		$dvalue = isset ( $post_data ['dvalue'] ) ? $post_data ['dvalue'] : NULL;
-		$matterModel = new Application_Model_Matter ();
-		$matterModel->updateActor ( $actor_id, $field_name, $field_value );
-		
-		if (! $matterModel->getError ()) {
-			if (isset ( $dvalue ) && ! $matterModel->getError ()) {
-				$field_value = $dvalue;
-			}
-			
-			if (in_array ( $field_name, array (
-					'address',
-					'address_mailing',
-					'address_billing',
-					'notes' 
-			) )) {
-				$field_value = nl2br ( $field_value );
-			}
-			
-			echo $field_value;
-		} else {
-			echo $matterModel->getError ();
-		}
-	}
-	
-	/**
 	 * clones a matter
 	 * *
 	 */
@@ -1352,97 +1151,6 @@ class MatterController extends Zend_Controller_Action {
 			$this->view->username = $this->username;
 			$this->view->caseref = $caseref;
 		}
-	}
-	
-	/**
-	 * deletes an actor
-	 * *
-	 */
-	public function deleteActorAction() {
-		$this->_helper->layout->disableLayout ();
-		$this->_helper->viewRenderer->setNoRender ();
-		if ($this->getRequest ()->isPost ()) {
-			$actor_id = $this->_getParam ( 'aid' );
-			$matterModel = new Application_Model_Matter ();
-			$result = $matterModel->deleteActor ( $actor_id );
-			echo $result;
-		}
-	}
-
-	/**
-	 * permit an user
-	**/
-	public function permitUserAction() {
-	    $this->_helper->layout->disableLayout();
-	    $this->_helper->viewRenderer->setNoRender();
-	    if($this->getRequest()->isPost()){
-	        $actor_id = $this->_getParam('aid');
-	        $matterModel = new Application_Model_Matter();
-	        $result = $matterModel->permitUser($actor_id);
-	    }
-	  }
-
-	/**
-	 * ban an user
-	**/
-	public function banUserAction()
-	  {
-	    $this->_helper->layout->disableLayout();
-	    $this->_helper->viewRenderer->setNoRender();
-	    if($this->getRequest()->isPost()){
-	        $actor_id = $this->_getParam('aid');
-	        $matterModel = new Application_Model_Matter();
-	        $result = $matterModel->banUser($actor_id);
-	        $actorInfo = $matterModel->getActorInfo($actor_id);
-	        $userModel = new Application_Model_User();
-	        $result = $userModel->banLogUser($actorInfo['login']);
-	    }
-	  }
-
-	
-	/**
-	 * show Actor Used in details
-	 * *
-	 */
-	public function actorUsedInAction() {
-		$this->_helper->layout->disableLayout ();
-		if ($this->getRequest ()->isPost ()) {
-			$actor_id = $this->_getParam ( 'aid' );
-			$matterModel = new Application_Model_Matter ();
-			$this->view->matter_dependencies = $matterModel->getActorMatterDependencies ( $actor_id );
-			$this->view->other_actor_dependencies = $matterModel->getActorOtherActorDependencies ( $actor_id );
-		}
-	}
-	
-	/**
-	 * navigate through actors from actor view page
-	 * *
-	 */
-	public function actornavAction() {
-		$this->_helper->layout->disableLayout ();
-		
-		$nav = $this->_getParam ( 'nav' );
-		$actor_id = $this->_getParam ( 'actor_id' );
-		
-		$matterModel = new Application_Model_Matter ();
-		switch ($nav) {
-			case "next" :
-				$actorInfo = $matterModel->getNextActor ( $actor_id );
-				break;
-			case "prev" :
-				$actorInfo = $matterModel->getPrevActor ( $actor_id );
-				break;
-			case "forward" :
-				$actorInfo = $matterModel->getForwardActor ( $actor_id, 10 );
-				break;
-			case "backward" :
-				$actorInfo = $matterModel->getBackwardActor ( $actor_id, 10 );
-				break;
-		}
-		$this->view->enumOpts = $matterModel->getEnumSet ( 'actor', 'pay_category' );
-		$this->view->actorComments = $matterModel->getTableComments ( 'actor' );
-		$this->view->actor = $actorInfo;
-		$this->render ( 'actor' );
 	}
 	
 	/**

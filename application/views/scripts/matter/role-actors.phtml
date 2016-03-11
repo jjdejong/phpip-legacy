@@ -107,7 +107,7 @@ $(document).ready(function(){
 			location.reload();
 	});
 
-	$('.editable').editable('/matter/save-matter-actor/', {
+	$('.editable').editable('/matter/save-matter-actor', {
 		submitdata: function(value,settings){
 			reorder_actors = 1;
 			var mal_id = $(this).parent().attr('id').split('-');
@@ -128,11 +128,11 @@ $(document).ready(function(){
 	});
 
     var company_id = 0;
-	$('.editable_comp').editable("/matter/save-matter-actor/", {
+	$('.editable_comp').editable("/matter/save-matter-actor", {
 		type : "autocomplete",
 		autocomplete : {
 			minLength: 1,
-			source : "/matter/get-all-actors/",
+			source : "/actor/get-all-actors",
 			autoFocus: true,
 			select: function( event, ui ) {
 				this.value = ui.item.value;
@@ -155,11 +155,11 @@ $(document).ready(function(){
 	});
 
     var actor_id = 0;
-	$('.editable_actor').editable("/matter/save-matter-actor/", {
+	$('.editable_actor').editable("/matter/save-matter-actor", {
 		type: "autocomplete",
 		onblur: "submit",
 		autocomplete: {
-			source: "/matter/get-all-actors/",
+			source: "/actor/get-all-actors",
 			autoFocus: true,
 			select: function( event, ui ) {
 				actor_id = ui.item.id;
@@ -384,16 +384,16 @@ $(document).ready(function(){
 					<li style="width: 156px;">
 						Name
 					</li>
-					<li <?php echo ($this->actor_role['show_ref'])? '' : 'style="display:none;"';?> class="actor_ref">
+					<li <?= $this->actor_role['show_ref'] ? '' : 'style="display:none;"' ?> class="actor_ref">
 						Actor ref
 					</li>
-					<li <?php echo ($this->actor_role['show_company'])? '' : 'style="display:none;"';?> class="actor_comp">
+					<li <?= $this->actor_role['show_company'] ? '' : 'style="display:none;"' ?> class="actor_comp">
 						Company
 					</li>
-					<li <?php echo ($this->actor_role['show_rate'])? 'style="width:45px;"' : 'style="display:none;"';?> class="actor_rate">
+					<li <?= $this->actor_role['show_rate'] ? 'style="width:45px;"' : 'style="display:none;"' ?> class="actor_rate">
 						Rate
 					</li>
-					<li <?php echo ($this->actor_role['show_date'])? 'style="width:70px;"' : 'style="display:none;"';?> class="actor_date">
+					<li <?= $this->actor_role['show_date'] ? 'style="width:70px;"' : 'style="display:none;"' ?> class="actor_date">
 						Date
 					</li>
 					<li style="width: 45px;">
@@ -421,16 +421,16 @@ $(document).ready(function(){
 							<span class="ui-icon ui-icon-arrowthick-2-n-s sort-icon" style="float: left; cursor: move;"></span>
 							<span class="editable_actor" id="actor_ID"><?php echo htmlentities($actor_display_name); ?></span>
 						</li>
-						<li class="editable actor_ref" <?php echo ($actor['show_ref'])? '' : 'style="display:none;"';?> id="actor_ref">
+						<li class="editable actor_ref" <?= $actor['show_ref'] ? '' : 'style="display:none;"' ?> id="actor_ref">
 							<?=$actor['actor_ref']?>
 						</li>
-						<li class="editable_comp actor_comp" <?php echo ($actor['show_company'])? '' : 'style="display:none;"';?> id="company_ID-<?=$actor['company_ID']?>-<?=$actor['ID']?>">
+						<li class="editable_comp actor_comp" <?= $actor['show_company'] ? '' : 'style="display:none;"' ?> id="company_ID-<?=$actor['company_ID']?>-<?=$actor['ID']?>">
 							<?=$actor['company_name']?>
 						</li>
-						<li class="editable actor_rate" <?php echo ($actor['show_rate'])? 'style="width:45px;"' : 'style="display:none;"';?> id="rate">
+						<li class="editable actor_rate" <?= $actor['show_rate'] ? 'style="width:45px;"' : 'style="display:none;"' ?> id="rate">
 							<?=$actor['rate']?>
 						</li>
-						<li class="editable actor_date" <?php echo ($actor['show_date'])? 'style="width:70px;"' : 'style="display:none;"';?> id="date">
+						<li class="editable actor_date" <?= $actor['show_date'] ? 'style="width:70px;"' : 'style="display:none;"' ?> id="date">
 							<?=$actor['date']?>
 						</li>
 						<li class="editable" style="width: 45px;" id="shared">

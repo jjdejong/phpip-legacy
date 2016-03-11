@@ -61,13 +61,13 @@ $(document).ready(function(){
     
     $( "#actor-name" ).autocomplete({
             minLength: 1,
-            source: "/matter/get-all-actors/",
+            source: "/actor/get-all-actors",
             select: function( event, ui ) {
                 if(ui.item.id == 'cna786'){
                     var drole = $('#rolebox').val().split('-');
                     $.ajax({
                         type: "GET",
-                        url: '/matter/add-actor/role/'+drole[0],
+                        url: '/actor/add/role/'+drole[0],
                         success: function(data){
                             $('#actor-details-popup').html(data);
                             var ren_left = Math.round($(window).width()/2) - Math.round($('#actor-details-popup').width()/2);

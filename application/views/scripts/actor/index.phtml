@@ -6,7 +6,7 @@
 #actors-list{
   margin: 0px;
   padding: 0px;
-  max-height:250px;
+  max-height:300px;
   overflow:auto;
 }
 .phpip-lists{
@@ -20,7 +20,6 @@
 }
 .phpip-list li{
     list-style: none;
-    padding: 3px 6px;
     color: #3F3F38;
     border-bottom: 1px solid #DDD;
     background: #FFF;
@@ -40,6 +39,7 @@
 }
 .col-name{
     display:inline-block;
+    padding: 4px 0px 4px 6px;
     width: 250px;
 }
 .col-firstname{
@@ -106,15 +106,15 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $('.actor-list-row').click(function(){
-		$('#actor-details-popup').load('/matter/actor/', { actor_id: $(this).attr('id') }).show();
+		$('#actor-details-popup').load('/actor/view', { actor_id: $(this).attr('id') }).show();
   });
 
   $('#actor-name').keyup(function(){
-		$('#actor-table-list').load('/matter/actors-filter/co/0/term/'+$(this).val());
+		$('#actor-table-list').load('/actor/filter/co/0/term/'+$(this).val());
   });
 
   $('#actor-company').keyup(function(){
-		$('#actor-table-list').load('/matter/actors-filter/co/1/term/'+$(this).val());
+		$('#actor-table-list').load('/actor/filter/co/1/term/'+$(this).val());
   });
 
   $('.delete-from-list').click(function(){
@@ -122,7 +122,7 @@ $(document).ready(function(){
 		if(del_conf == 1){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({
-	      	url : '/matter/delete-actor',
+	      	url : '/actor/delete',
 	      	type: 'POST',
 	      	data: { aid:aid },
 	      	success: function(data){
@@ -159,7 +159,7 @@ $(document).ready(function(){
     	<div class="col-display"><?=htmlentities($actor['display_name'])?></div>
     	<div class="col-company"><?=htmlentities($actor['company_name'])?></div>
     	<div class="col-delete" >
-    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"></span>/>
+    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"></span>
     	</div>
     </li>
 <?php endforeach; ?>

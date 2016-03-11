@@ -1,0 +1,155 @@
+<style type="text/css" >
+#actors-box{
+  display:block;
+  border-radius: 0px 4px 4px 4px;
+}
+#actors-list{
+  margin: 0px;
+  padding: 0px;
+  max-height:300px;
+  overflow:auto;
+}
+.phpip-lists{
+    margin:0px 5px 5px;
+    padding: 4px;
+    float:left;
+    background: #B5D9E5;
+    display:block;
+    border-radius: 0px 4px 4px 4px;
+    box-shadow: 2px 2px 1px #888888;
+}
+.phpip-list li{
+    list-style: none;
+    color: #3F3F38;
+    border-bottom: 1px solid #DDD;
+    background: #FFF;
+}
+.phpip-list li:hover {
+    background: #C8E8F3;
+}
+.list-headers {
+    background: #1E4262;
+    color: #FFF;
+    border-radius: 4px 4px 0 0;
+    border: none;
+    padding: 4px 6px;
+}
+.phpip-list li:last-child {
+    border-radius: 0 0 4px 4px;
+}
+.col-name{
+    display:inline-block;
+    padding: 4px 0px 4px 6px;
+    width: 250px;
+}
+.col-firstname{
+    display:inline-block;
+    width: 200px;
+}
+.col-display{
+    display:inline-block;
+    width: 200px;
+}
+.col-company{
+    display:inline-block;
+    width: 200px;
+}
+.col-delete{
+    display:none;
+    width: 40px;
+    text-align: center;
+}
+.home-box{
+  float:left;
+}
+#actors-tab{
+  background: #B5D9E5;
+  display:block;
+  border-radius: 4px 4px 0px 0px;
+  /*width:200px;*/
+  padding: 5px 5px 0px;
+}
+.actor-list-row{
+  cursor: pointer;
+}
+#actor-details-popup{
+  display: none;
+  /*z-index: 101;
+  position: absolute;*/
+	width: 670px;
+}
+#actor-details-nav{
+  text-align:center;
+  display: none;
+}
+#actor-details-nav img{
+  margin-left: 10px;
+  cursor: pointer;
+}
+.actor-list-row:hover .col-delete{
+	display: inline-block;
+}
+.actor-navigation{
+	margin-bottom: 5px;
+}
+
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.actor-list-row').click(function(){
+		$('#actor-details-popup').load('/actor/view', { actor_id: $(this).attr('id') }).show();
+  });
+
+  $('.delete-from-list').click(function(){
+	    var del_conf = confirm("Deleting Actor from table. The actor will only be deleted if not used in other tables.");
+		if(del_conf == 1){
+	    	var aid = $(this).attr('id');
+	    	$.ajax({
+	      	url : '/actor/delete',
+	      	type: 'POST',
+	      	data: { aid:aid },
+	      	success: function(data){
+	        	if(isNaN(parseInt(data)))
+	          		alert(data); 
+	        	else 
+		        	location.reload();     
+          	}
+			});
+		}
+	    return false;
+  });
+
+  $( "button, input:button" ).button();
+
+});
+</script>
+<div id="actors-tab">phpIP users (these are simply actors that have a login defined)</div>
+<div id="actors-box" class="place-card">
+<?php if(count($this->users)): ?>
+    <div class="list-headers">
+    	<div class="col-name">Name</div>
+    	<div class="col-firstname">Login</div>
+    	<div class="col-display">Role</div>
+    	<div class="col-company">Last login</div>
+    	<div class="col-delete" >Delete</div>
+    </div>
+<div id="actor-table-list">
+<ul class="phpip-list" id="actors-list">
+<?php foreach($this->users as $actor): ?>
+    <li class="actor-list-row" id="<?=$actor['id']?>">
+    	<div class="col-name"><?=htmlentities($actor['name'])?></div>
+    	<div class="col-firstname"><?=htmlentities($actor['login'])?></div>
+    	<div class="col-display"><?=htmlentities($actor['default_role'])?></div>
+    	<div class="col-company"><?=htmlentities($actor['last_login'])?></div>
+    	<div class="col-delete">
+    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" title="Delete user"></span>
+    	</div>
+    </li>
+<?php endforeach; ?>
+</ul>
+</div>
+<?php   endif; ?>
+</div>
+<div id="actor-details-popup" class="place-card" style="float: left"></div>
+<div id="actor-details-used-in" style="display: inline-block; float: left"></div>
+<div id="facade"></div>

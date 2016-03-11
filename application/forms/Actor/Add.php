@@ -1,6 +1,6 @@
 <?php
 
-class Application_Form_Matter_Actor extends Zend_Form
+class Application_Form_Actor_Add extends Zend_Form
 {
     public function init()
     {
