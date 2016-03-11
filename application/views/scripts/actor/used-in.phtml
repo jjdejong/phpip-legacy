@@ -33,7 +33,7 @@
 
 $(document).ready(function(){
   $('.actor-list-row-1').click(function(){
-    $('#actor-details-popup').load('/matter/actor/', { actor_id: $(this).attr('id') });
+    $('#actor-details-popup').load('/actor/view', { actor_id: $(this).attr('id') });
   });
 
   $('.close-used-in').click(function(){

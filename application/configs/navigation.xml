@@ -47,7 +47,7 @@
                     <label>Tables</label>
                     <id>tables</id>
                     <title>Tables</title>
-                    <uri>/matter/actors-table</uri>
+                    <uri>/actor</uri>
                     <pages>
                         <actors>
                             <label>Actors</label>

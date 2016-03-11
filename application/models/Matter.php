@@ -1623,7 +1623,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	 * retrieves column comments defined for a table
 	 * *
 	 */
-	public function getTableComments($table_name = null) {
+	/*public function getTableComments($table_name = null) {
 		if (! isset ( $table_name )) {
 			return false;
 		}
@@ -1638,13 +1638,13 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			$comments ["$col_name"] = $row ['column_comment'];
 		}
 		return $comments;
-	}
+	}*/
 	
 	/**
 	 * retrieves enum set defined for a column in a table
 	 * *
 	 */
-	public function getEnumSet($table_name = null, $column_name = null) {
+	/*public function getEnumSet($table_name = null, $column_name = null) {
 		if (! isset ( $table_name ) && ! isset ( $column_name ))
 			return false;
 		
@@ -1660,13 +1660,13 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			$enums ["$value"] = $value;
 		}
 		return $enums;
-	}
+	}*/
 	
 	/**
 	 * Pdo_Mysql connection to database information_schema
 	 * *
 	 */
-	public function getInfoDb() {
+	/*public function getInfoDb() {
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db_detail = $this->_dbTable->getAdapter ()->getConfig ();
 		
@@ -1677,7 +1677,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 				'dbname' => 'information_schema' 
 		) );
 		return $db;
-	}
+	}*/
 	
 	/**
 	 * get the country details from country for a given country_code(iso)
