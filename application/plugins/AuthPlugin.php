@@ -35,12 +35,12 @@ class Application_Plugins_AuthPlugin extends Zend_Controller_Plugin_Abstract
         	Zend_Db_Table_Abstract::setDefaultAdapter($db);
 	   	
          	return;
-	}else{
-	  $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
-	  $siteInfoNamespace->requestURL = $this->_request->getParams();
-	  $this->_request->setModuleName('default');
-	  $this->_request->setControllerName('Auth');
-	  $this->_request->setActionName('login');
-	}
+		}else{
+	  		$siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
+	  		$siteInfoNamespace->requestURL = $this->_request->getParams();
+	  		$this->_request->setModuleName('default');
+	  		$this->_request->setControllerName('Auth');
+	  		$this->_request->setActionName('login');
+		}
     }
 }

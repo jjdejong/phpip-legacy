@@ -28,13 +28,6 @@ class MatterController extends Zend_Controller_Action {
 	 * *
 	 */
 	public function indexAction() {
-		$filter_array ['value'] = $this->_getParam ( 'value' );
-		$filter_array ['field'] = $this->_getParam ( 'filter' );
-		
-		if ($filter_array ['field'] == 'Ctnr') {
-			$this->view->containers = 1;
-		}
-		
 		$get_sort = $this->_getParam ( 'sort' );
 		$get_dir = $this->_getParam ( 'dir' );
 		$sort_field = isset ( $get_sort ) ? $get_sort : 'caseref';
@@ -42,12 +35,9 @@ class MatterController extends Zend_Controller_Action {
 		$this->view->category_display = $this->_getParam ( 'display' );
 		$this->view->display_style = $this->_getParam ( 'displaystyle' );
 		
-		// print_r($filter_array);
-		
 		$page = $this->_getParam ( 'page', 1 );
 		
 		$mfs = new Zend_Session_Namespace ( 'matter_filter' );
-		$mfs->filter_array = $filter_array;
 		$mfs->sort_field = $sort_field;
 		$mfs->sort_dir = $sort_dir;
 		$mfs->multi_sort = array ();
@@ -55,15 +45,15 @@ class MatterController extends Zend_Controller_Action {
 		$mfs->category_display = $this->view->category_display;
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->fetchMatters ( $filter_array, $sort_field, $sort_dir, array (), $this->view->category_display, true );
+		$paginator = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, array (), $this->view->category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
 		$this->view->paginator = $paginator;
 		$this->view->sort_id = 'caseref';
 		$this->view->sort_dir = 'asc';
-		// $this->view->container = $containers;
 	}
+	
 	/**
 	 * to add a new Matter
 	 * *
@@ -104,7 +94,6 @@ class MatterController extends Zend_Controller_Action {
 			$this->view->matter_title = "Add new Matter";
 			$this->view->matter_cap = "Add Matter";
 			$this->view->matter_cap_id = "add-matter-submit";
-			// echo "caseref ".$this->view->caseref;exit();
 		}
 	}
 	
@@ -114,8 +103,6 @@ class MatterController extends Zend_Controller_Action {
 	 */
 	public function viewAction() {
 		$matter_id = $this->_getParam ( 'id', 0 );
-		// $matter_index = $this->_getParam('rid',0);
-		// $matter_id = $this->_getParam('id');
 		$matter_index = $this->_getParam ( 'rid' );
 		
 		$matterModel = new Application_Model_Matter ();
@@ -318,7 +305,6 @@ class MatterController extends Zend_Controller_Action {
 		$matterModel = new Application_Model_Matter ();
 		$actorModel = new Application_Model_Actor ();
 		$matter_record = $matterModel->getMatter ( $matter_id );
-		// $container_id = $matterModel->getMatterContainer($matter_id);
 		
 		$this->view->role_actors = $matterModel->getMatterActorsForRole ( $matter_record [0] ['container_ID'], $matter_id, $role_id );
 		$this->view->role = $this->view->role_actors [0] ['role_name'];
@@ -849,19 +835,11 @@ class MatterController extends Zend_Controller_Action {
 	
 	/**
 	 * retrieves matter list based on filters
-	 * filter field/fields
-	 * filter value/values
+	 * filter multiple fields
 	 * sort field
 	 * sort directions
 	 */
 	public function filterAction() {
-		$filter_array ['value'] = $this->_getParam ( 'value' );
-		$filter_array ['field'] = $this->_getParam ( 'filter' );
-		
-		if ($filter_array ['field'] == 'Ctnr') {
-			$this->view->containers = 1;
-		}
-		
 		$category_display = $this->_getParam ( 'display' );
 		$this->view->display_style = $this->_getParam ( 'display_style' );
 		
@@ -876,7 +854,6 @@ class MatterController extends Zend_Controller_Action {
 		$page = $this->_getParam ( 'page', 1 );
 		
 		$post_data = $this->getRequest ()->getParams ();
-		// print_r($post_data);
 		$post_data_arr = array ();
 		
 		foreach ( $post_data as $key => $data ) {
@@ -895,7 +872,6 @@ class MatterController extends Zend_Controller_Action {
 		unset ( $post_data ['dir'] );
 		
 		$mfs = new Zend_Session_Namespace ( 'matter_filter' );
-		$mfs->filter_array = $filter_array;
 		$mfs->sort_field = $sort_field;
 		$mfs->sort_dir = $sort_dir;
 		$mfs->multi_sort = $post_data;
@@ -903,7 +879,7 @@ class MatterController extends Zend_Controller_Action {
 		$this->view->responsible = @$post_data ['responsible'];
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->fetchMatters ( $filter_array, $sort_field, $sort_dir, $post_data, $category_display, true );
+		$paginator = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, $post_data, $category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
@@ -974,7 +950,6 @@ class MatterController extends Zend_Controller_Action {
 			$caseref = $matterModel->getMatterCaseref ( $matter_ref ['ref_prefix'] );
 			$this->view->caseref = $caseref [0] ['id'];
 			$this->view->matter_title = "Clone to new Matter";
-			// echo "caseref ".$this->view->caseref;exit();
 			
 			$origin_arr = $matterModel->getCountryByCode ( $origin );
 			$this->view->origin_name = $origin_arr ['name'];
@@ -1112,7 +1087,6 @@ class MatterController extends Zend_Controller_Action {
 			$matter ['container_ID'] = $matterModel->getMatterContainer ( $matter_id );
 			$matter ['responsible'] = $current_matter [0] ['responsible'];
 			
-			// print_r($form_data);exit();
 			$m = 0;
 			for($i = 0; $i < count ( $form_data );) {
 				if (substr ( $form_data [$i] ['name'], 0, 3 ) == "dis") {
@@ -1281,13 +1255,12 @@ class MatterController extends Zend_Controller_Action {
 		
 		$rid = $this->_getParam ( 'rid' );
 		$mfs = new Zend_Session_Namespace ( 'matter_filter' );
-		$filter_array = $mfs->filter_array;
 		$sort_field = $mfs->sort_field;
 		$sort_dir = $mfs->sort_dir;
 		$post_data = $mfs->multi_sort;
 		
 		$matterModel = new Application_Model_Matter ();
-		$matters = $matterModel->fetchMatters ( $filter_array, $sort_field, $sort_dir, $post_data, $mfs->category_display, false );
+		$matters = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, $post_data, $mfs->category_display, false );
 		$mcount = count ( $matters );
 		
 		if (preg_match ( "/matter/", $rid )) {
@@ -1315,4 +1288,54 @@ class MatterController extends Zend_Controller_Action {
 		
 		$this->_redirect ( '/matter/view/id/' . $matter_id . "/rid/" . $rid );
 	}
+	
+	/**
+	 * Exports Matters list
+	 * *
+	 */
+	public function exportAction() {
+		$this->_helper->viewRenderer->setNoRender();
+		$this->_helper->layout->disableLayout();	
+		
+		$category_display = $this->_getParam ( 'display' );
+		
+		$get_sort = $this->_getParam ( 'sort' );
+		$get_dir = $this->_getParam ( 'dir' );
+		$sort_field = isset ( $get_sort ) ? $get_sort : 'caseref';
+		$sort_dir = isset ( $get_dir ) ? $get_dir : 'asc';
+		
+		$post_data = $this->getRequest ()->getParams ();
+		$post_data_arr = array ();
+		
+		foreach ( $post_data as $key => $data ) {
+			$post_data_arr [$key] = preg_replace ( "/~~/", "/", $data );
+		}
+		
+		$post_data = $post_data_arr;
+		
+		unset ( $post_data ['controller'] );
+		unset ( $post_data ['action'] );
+		unset ( $post_data ['module'] );
+		unset ( $post_data ['page'] );
+		unset ( $post_data ['filter'] );
+		unset ( $post_data ['value'] );
+		unset ( $post_data ['sort'] );
+		unset ( $post_data ['dir'] );
+		
+		$matterModel = new Application_Model_Matter ();
+		$export = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, $post_data, $category_display, false );
+		
+		$this->getResponse()
+			->setHeader('Content-Type', 'application/csv; charset=utf-8')
+			->setHeader('Content-disposition', 'attachment; filename=export.csv');
+		$export_csv = fopen('php://memory', 'w');
+		$captions = array('Omnipat', 'Country', 'Cat', 'Origin', 'Status', 'Status date', 'Client', 'Client Ref', 'Agent', 'Agent Ref', 'Title', 'Inventor 1', 'Filed', 'FilNo', 'Published', 'Pub. No', 'Granted', 'Grt No', 'ID', 'container_ID', 'parent_ID', 'Responsible', 'Delegate', 'Dead', 'Ctnr');
+		fputcsv($export_csv, $captions, ';');
+		foreach ($export as $row) {
+			fputcsv($export_csv, $row, ';');
+		}
+		fseek($export_csv, 0);
+		fpassthru($export_csv);
+	}
+
 }

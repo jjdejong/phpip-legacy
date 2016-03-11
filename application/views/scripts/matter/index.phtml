@@ -200,7 +200,7 @@ function getFilterUrl()
 	var responsible = $('input[name=responsible-filter]:checked').val();
 	var url = '';
 	if($('input[name=container-filter]:checked').val() == 1)
-		url = url + '/filter/Ctnr/value/1';
+		url = url + '/Ctnr/1';
 	if(ref != '')
 		url = url + '/Ref/'+ref;
 	if(cat != '')
@@ -327,7 +327,7 @@ $(document).ready(function(){
 		var url = '/matter/filter' + getFilterUrl();                 
          $.ajax({
              url: url,
-             type: 'POST',
+             type: 'GET',
              data: {},
              success: function(data){
                  $('#matter-list').empty();
@@ -338,7 +338,7 @@ $(document).ready(function(){
      });
 
 
-     $('#show-responsible').click(function(){
+     $('.filter-button').click(function(){
 		var url = '/matter/filter' + getFilterUrl();
          $.ajax({
              url: url,
@@ -351,34 +351,11 @@ $(document).ready(function(){
              }
          });
      });
-
-
-     $('#show-containers').click(function(){
-		var url = '/matter/filter' + getFilterUrl();
-         $.ajax({
-             url: url,
-             type: 'GET',
-             data: { },
-             success: function(data){
-                 $('#matter-list').empty();
-                 $('#matter-list').html(data);
-                 window.history.pushState('', 'phpIP' , url);
-             }
-         });
-     });
-
-     $('#show-all').click(function(){
-		var url = '/matter/filter' + getFilterUrl();
-         $.ajax({
-             url: url,
-             type: 'GET',
-             data: { },
-             success: function(data){
-                 $('#matter-list').empty();
-                 $('#matter-list').html(data);
-                 window.history.pushState('', 'phpIP' , url);
-             }
-         });
+     
+    $('#export').click(function(e){
+		var url = '/matter/export' + getFilterUrl();
+		e.preventDefault();  //stop the browser from following
+    	window.location.href = url;
      });
 
      $('.filter-input').keyup(function(){
@@ -422,23 +399,27 @@ if (isset ( $this->containers )) {
 	}
 }
 ?>
-	<div id="container-all" style="float: left;">
+	<div id="container-all" class="filter-button" style="float: left;">
 		<input type="radio" id="show-all" name="container-filter" value=0 <?=$show_all?> /> 
 		<label for="show-all">Show All</label> 
 		<input type="radio" id="show-containers" name="container-filter" value=1 <?=$show_conts?> /> 
 		<label for="show-containers">Show Containers</label>
 	</div>
-	<div id="actor-status" style="float: left; margin-left: 20px;">
+	<div id="actor-status" class="filter-button" style="float: left; margin-left: 20px;">
 		<input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?=!$this->display_style ? 'checked' : ''?> /> 
 		<label for="show-actor">Actor View</label> 
 		<input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?=$this->display_style ? 'checked' : ''?> /> 
 		<label for="show-status">Status View</label>
 	</div>
 	
-	<div id="mine-all" style="float: left; margin-left: 20px;">
+	<div id="mine-all" class="filter-button" style="float: left; margin-left: 20px;">
 		<input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?=$this->responsible ? 'checked' : ''?> /> 
 		<label for="show-responsible">Show Mine</label>
 	</div>
+
+	<button id="export" name="export" style="float: right;">
+		<span class="ui-icon ui-icon-download" style="float: left;"></span> Export
+	</button>
 	
 	<button id="clear-matter-filters" name="clear-filters" style="float: right;">
 		<span class="ui-icon ui-icon-close" style="float: left;"></span> Clear filters
@@ -586,15 +567,15 @@ if (count ( $this->paginator )):
 			$CC = 'EP';
 		else
 			$CC = $matter ['country'];
-		$country_code = $matter ['country'];
-		$removethese = array (
+			$country_code = $matter ['country'];
+			$removethese = array (
 				"/^$country_code/",
 				'/ /',
 				'/,/',
 				'/-/',
 				'/\//' 
-		);
-		$pubno = preg_replace ( $removethese, '', $matter ['PubNo'] );
+			);
+			$pubno = preg_replace ( $removethese, '', $matter ['PubNo'] );
 		if ($CC == 'US')
 			$pubno = substr ( $pubno, 0, 4 ) . substr ( $pubno, - 6 ); 
 ?>

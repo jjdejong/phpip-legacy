@@ -276,9 +276,10 @@ class Application_Model_Matter {
 	
 	/**
 	 * retrieves paginated list of matters with specified filters
-	 * *
+	 * $filter_array is probably no longer needed
+	 *
 	 */
-	public function fetchMatters($filter_array = array(), 
+	public function fetchMatters($filter_array = array(),
 									$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx', 
 									$sortDir = '', 
 									$multi_filter = array(), 
@@ -314,8 +315,7 @@ matter.parent_ID,
 matter.responsible,
 del.login AS delegate,
 matter.dead,
-IF(isnull(matter.container_ID),1,0) AS Ctnr,
-1 AS Pri
+IF(isnull(matter.container_ID),1,0) AS Ctnr
 FROM matter IGNORE INDEX (category)
   JOIN matter_category FORCE INDEX (PRIMARY) ON (matter.category_code = matter_category.code)
   LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
@@ -339,16 +339,6 @@ WHERE e2.matter_id IS NULL ";
 		$where_clause = '';
 		if ($matter_category_display_type)
 			$where_clause = "AND matter_category.display_with = '$matter_category_display_type' ";
-		
-		if (!empty ( $filter_array )) {			
-			if ($filter_array ['field'] == 'Ctnr') {
-				$where_clause .= "AND matter.container_ID IS NULL ";
-			} else if ($filter_array ['field'] == 'Pri') {
-				$where_clause .= "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID) ";
-			} else if ($filter_array ['value'] && $filter_array ['field']) {
-				$where_clause .= "AND " . $filter_array ['field'] . " = '" . $filter_array ['value'] . "' ";
-			}
-		}
 		
 		$having_clause = '';
 		if (! empty ( $multi_filter )) {
@@ -1920,125 +1910,4 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 		$this->_dbTable->insert ( $data );
 		return $this->_adapter->lastInsertID ();
 	}
-	
-	/**
-	 * (Deprecated, use new fetchMatters with optional pagination) fetchMatters is used to navigate through filtered matter list
-	 * *
-	 */
-	/*public function OLDfetchMatters($filter_array = array(), $sortField = "caseref, container_ID, origin, country, matter.type_code, idx", $sortDir = "ASC", $multi_filter = array(), $matter_category_display_type = false) {
-		if ($matter_category_display_type)
-			$dsiplay_with = " where display_with='$matter_category_display_type'";
-		else
-			$dsiplay_with = "";
-		
-		if (empty ( $filter_array ))
-			$where_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
-		else {
-			$where_clause = "and (matter.category_code IN (select code from matter_category $dsiplay_with))";
-			if ($filter_array ['value'] && $filter_array ['field'])
-				$where_clause .= " AND " . $filter_array ['field'] . " = '" . $filter_array ['value'] . "'";
-			
-			if ($filter_array ['field'] == 'Ctnr') {
-				$where_clause = "AND matter.container_ID IS NULL";
-			}
-			
-			if ($filter_array ['field'] == 'Pri') {
-				$where_clause = "AND EXISTS(SELECT 1 FROM event WHERE event.code='PRI' AND alt_matter_ID=matter.ID)";
-			}
-		}
-		
-		if ($sortField == 'caseref') {
-			if ($sortDir == 'desc') {
-				$sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-			if ($sortDir == 'asc') {
-				$sortField = "caseref, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-		}
-		if ($sortField == 'Ref') {
-			if ($sortDir == 'desc') {
-				$sortField = "caseref desc, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-			if ($sortDir == 'asc') {
-				$sortField = "caseref, container_id, origin, country, matter.type_code, idx";
-				$sortDir = '';
-			}
-		}
-		
-		if ($sortField == "")
-			$sortField = "caseref, container_ID";
-		
-		$having_clause = '';
-		if (! empty ( $multi_filter )) {
-			foreach ( $multi_filter as $key => $value ) {
-				if ($value != '' && $key != 'display' && $key != 'display_style') {
-					if ($having_clause == '')
-						if ($key == 'responsible')
-							$having_clause = " HAVING (responsible = '" . $value . "' OR delegate = '" . $value . "')";
-						else
-							$having_clause = " HAVING " . $key . " LIKE '" . $value . "%'";
-					else if ($key == 'responsible')
-						$having_clause .= " AND (responsible = '" . $value . "' OR delegate = '" . $value . "')";
-					else
-						$having_clause .= " AND " . $key . " LIKE '" . $value . "%'";
-				}
-			}
-		}
-		$inventor_filter = 'AND invlnk.display_order = 1';
-		if (array_key_exists ( 'Inventor1', $multi_filter )) {
-			$inventor_filter = "HAVING inv.name LIKE '" . $multi_filter ['Inventor1'] . "%'";
-			// $inventor_filter = '';
-		}
-		
-		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( "select distinct CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
-matter.category_code AS Cat,
-matter.country AS country,
-matter.origin,
-event_name.name AS Status,
-status.event_date AS Status_date,
-IFNULL(cli.display_name, cli.name) AS Client,
-clilnk.actor_ref AS ClRef,
-IFNULL(agt.display_name, agt.name) AS Agent,
-agtlnk.actor_ref AS AgtRef,
-classifier.value AS Title,
-CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
-fil.event_date AS Filed,
-fil.detail AS FilNo,
-pub.event_date AS Published,
-pub.detail AS PubNo,
-grt.event_date AS Granted,
-grt.detail AS GrtNo,
-matter.ID,
-matter.container_ID,
-matter.parent_ID,
-matter.responsible,
-del.login AS delegate,
-matter.dead,
-IF(isnull(matter.container_ID),1,0) AS Ctnr,
-1 AS Pri
-FROM matter 
-  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
-    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
-  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
-    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . " AND inv.ID = invlnk.actor_ID)
-  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
-    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
-  LEFT JOIN (matter_actor_lnk dellnk, actor del) 
-    ON (ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' AND del.ID = dellnk.actor_ID)
-  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
-  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
-  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
-  LEFT JOIN (event status, event_name) 
-    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
-      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
-  LEFT JOIN (classifier, classifier_type) 
-    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
-WHERE e2.matter_id IS NULL
-" . $where_clause . " " . $having_clause . " order by " . $sortField . " " . $sortDir . ", matter.origin, matter.country" );
-		return $dbStmt->fetchAll ();
-	}*/
 }
