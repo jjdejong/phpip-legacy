@@ -318,13 +318,13 @@ $(document).ready(function(){
         $("#MatterStatus").click(function(){
             $('#event-pop-up').load("/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>", function(){
             	$(this).show();
-            }).css($(this).offset());
+            }).css($(this).offset()).draggable();
         }); 
 
         $("#MatterOpenTasks").click(function(){
         	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>", function(){
             	$(this).show();
-            }).css('top', $(this).offset().top);
+            }).css('top', $(this).offset().top).draggable();
         });
 
         $("#MatterRenTasks").click(function(){
@@ -336,13 +336,13 @@ $(document).ready(function(){
                 function(){
             		$(this).show();
             	}
-            ).css('top', $(this).offset().top);
+            ).css('top', $(this).offset().top).draggable();
         }); 
 
         $("#MatterClassifier").click(function(){
             $('#classifier-popup').load("/matter/classifierlist/id/<?=$this->matter_record[0]['ID']?>", function(){
             	$(this).show();
-            }).css('top', $(this).offset().top);
+            }).css('top', $(this).offset().top).draggable();
         });
  
         $(".add-actor").click(function(){
@@ -351,7 +351,7 @@ $(document).ready(function(){
             //$('#facade').show();
             $('#mapactor-pop-up').load("/matter/map-actor-role/id/<?=$this->matter_record[0]['ID']?>/role/" + role[2])
             .css({'top': $(this).offset().top, 'right': 150})
-            .show();
+            .show().draggable();
         });
 
         $(".matter-role").click(function(){
@@ -365,7 +365,7 @@ $(document).ready(function(){
             	container_id: container_id, 
             	role_id: role_id 
             }).css({'width':'840px', 'top': $(this).offset().top})
-            .show();
+            .show().draggable();
         });
 
         $('#add-classifier-link').click(function(){
@@ -373,7 +373,7 @@ $(document).ready(function(){
             $('#facade').show();
             $('#add-classifier-popup').load("/matter/add-title/cat_code/"+$(this).attr('data-code'))
             .css($(this).offset())
-            .show();
+            .show().draggable();
         });
 
         $('#clone-matter-link').click(function(){
@@ -389,7 +389,7 @@ $(document).ready(function(){
             	type: $(this).attr('data-type') 
             },
             success: function(data){
-            	$('#add-matter-popup').html(data).show().css({left: 400, top: 150});
+            	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
             }
           });
         });
@@ -408,7 +408,7 @@ $(document).ready(function(){
             	type: $(this).attr('data-type') 
             },
             success: function(data){
-            	$('#add-matter-popup').html(data).show().css({left: 400, top: 150});
+            	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
             }
           });
         });
@@ -425,7 +425,7 @@ $(document).ready(function(){
             	country: $(this).attr('data-country') 
             },
             success: function(data){
-            	$('#add-matter-popup').html(data).show().css({left: 400, top: 150});
+            	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
             }
           });
         });
@@ -481,7 +481,7 @@ $(document).ready(function(){
       	$('#actor-details-popup').load("/actor/view", { actor_id: this.id }, function(){ 
       		$(this).position({of: event, collision: "fit"});
       		$("#actor-used-in").hide(); 
-      	}).show();
+      	}).show().draggable();
     });
                   
     $( "button, input:submit, input:button").button();
