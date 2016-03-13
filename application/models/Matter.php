@@ -40,7 +40,6 @@ class Application_Model_Matter {
 	protected $_dbTable;
 	protected $_adapter;
 	protected $_error;
-	
 	public function __construct(array $options = null) {
 		if (is_array ( $options ))
 			$this->setOptions ( $options );
@@ -277,15 +276,8 @@ class Application_Model_Matter {
 	/**
 	 * retrieves paginated list of matters with specified filters
 	 * $filter_array is probably no longer needed
-	 *
 	 */
-	public function fetchMatters($filter_array = array(),
-									$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx', 
-									$sortDir = '', 
-									$multi_filter = array(), 
-									$matter_category_display_type = false,
-									$paginated = false) {
-		
+	public function fetchMatters($filter_array = array(), $sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx', $sortDir = '', $multi_filter = array(), $matter_category_display_type = false, $paginated = false) {
 		if (array_key_exists ( 'Inventor1', $multi_filter )) {
 			$inventor_filter = '';
 		} else
@@ -366,13 +358,13 @@ WHERE e2.matter_id IS NULL ";
 		} else
 			$sortDir .= ', matter.caseref, matter.origin, matter.country';
 		
-		$sql .= $where_clause . $having_clause . 'ORDER BY ' . $sortField .' '. $sortDir; 
+		$sql .= $where_clause . $having_clause . 'ORDER BY ' . $sortField . ' ' . $sortDir;
 		
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
-		$dbStmt = $this->_dbTable->getAdapter ()->query ($sql);
+		$dbStmt = $this->_dbTable->getAdapter ()->query ( $sql );
 		$results = $dbStmt->fetchAll ();
-
-		if( $paginated ) {
+		
+		if ($paginated) {
 			$adapter = new Zend_Paginator_Adapter_Array ( $results );
 			return new Zend_Paginator ( $adapter );
 		} else {
@@ -453,8 +445,10 @@ WHERE e2.matter_id IS NULL ";
 				'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)' 
 		) )->joinLeft ( array (
 				'a' => 'actor' 
-		), 'a.ID = mal.actor_ID', array(
-				'a.name', 'a.first_name', 'a.display_name'
+		), 'a.ID = mal.actor_ID', array (
+				'a.name',
+				'a.first_name',
+				'a.display_name' 
 		) )->joinLeft ( array (
 				'ar' => 'actor_role' 
 		), 'mal.role = ar.code', array (
@@ -726,8 +720,7 @@ WHERE e2.matter_id IS NULL ";
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		
 		// The UNION clause retrieves the backward links
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( 
-"(SELECT 
+		$dbStmt = $this->_dbTable->getAdapter ()->query ( "(SELECT 
     classifier_type.type AS type,
     IFNULL(mlnk.caseref,
             IFNULL(classifier_value.`value`,
@@ -779,8 +772,7 @@ WHERE m.id = " . $matter_id . ")" );
 		
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		// For the links, this query only lists those included in the container
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( 
-"SELECT 
+		$dbStmt = $this->_dbTable->getAdapter ()->query ( "SELECT 
     c.ID,
     ct.type,
     c.type_code,
@@ -1306,7 +1298,8 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	
 	/**
 	 * retrieves open task or renewals which are assigned to a user or a user is responsible for.
-	 * $flag = 1 gives only tasks assigned to the current user
+	 * $flag = 1 provides only tasks specifically assigned to the current user (assigned_to field in task)
+	 * If the user has no tasks, all tasks are listed (to implement)
 	 */
 	public function getUserOpenTasks($user = null, $ren = 0, $flag = 0) { // NOT RENewal
 		if (! isset ( $user )) {
@@ -1623,61 +1616,67 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	 * retrieves column comments defined for a table
 	 * *
 	 */
-	/*public function getTableComments($table_name = null) {
-		if (! isset ( $table_name )) {
-			return false;
-		}
-		
-		$infoDb = $this->getInfoDb ();
-		$db_detail = $this->_dbTable->getAdapter ()->getConfig ();
-		$query = "select column_name, column_comment from columns where table_schema='" . $db_detail ["dbname"] . "' AND table_name='" . $table_name . "'";
-		$result = $infoDb->fetchAll ( $query );
-		$comments = array ();
-		foreach ( $result as $row ) {
-			$col_name = $row ['column_name'];
-			$comments ["$col_name"] = $row ['column_comment'];
-		}
-		return $comments;
-	}*/
+	/*
+	 * public function getTableComments($table_name = null) {
+	 * if (! isset ( $table_name )) {
+	 * return false;
+	 * }
+	 *
+	 * $infoDb = $this->getInfoDb ();
+	 * $db_detail = $this->_dbTable->getAdapter ()->getConfig ();
+	 * $query = "select column_name, column_comment from columns where table_schema='" . $db_detail ["dbname"] . "' AND table_name='" . $table_name . "'";
+	 * $result = $infoDb->fetchAll ( $query );
+	 * $comments = array ();
+	 * foreach ( $result as $row ) {
+	 * $col_name = $row ['column_name'];
+	 * $comments ["$col_name"] = $row ['column_comment'];
+	 * }
+	 * return $comments;
+	 * }
+	 */
 	
 	/**
 	 * retrieves enum set defined for a column in a table
 	 * *
 	 */
-	/*public function getEnumSet($table_name = null, $column_name = null) {
-		if (! isset ( $table_name ) && ! isset ( $column_name ))
-			return false;
-		
-		$infoDb = $this->getInfoDb ();
-		$db_detail = $this->_dbTable->getAdapter ()->getConfig ();
-		$query = "select substring(column_type, 5) as enumset from columns where table_schema='" . $db_detail ["dbname"] . "' AND table_name='" . $table_name . "' and column_name='" . $column_name . "'";
-		$result = $infoDb->fetchRow ( $query );
-		$enumSet = substr ( $result ['enumset'], 1, - 1 );
-		$enumArr = explode ( ",", $enumSet );
-		$enums = array ();
-		foreach ( $enumArr as $key => $value ) {
-			$value = substr ( $value, 1, - 1 );
-			$enums ["$value"] = $value;
-		}
-		return $enums;
-	}*/
+	/*
+	 * public function getEnumSet($table_name = null, $column_name = null) {
+	 * if (! isset ( $table_name ) && ! isset ( $column_name ))
+	 * return false;
+	 *
+	 * $infoDb = $this->getInfoDb ();
+	 * $db_detail = $this->_dbTable->getAdapter ()->getConfig ();
+	 * $query = "select substring(column_type, 5) as enumset from columns where table_schema='" . $db_detail ["dbname"] . "' AND table_name='" . $table_name . "' and column_name='" . $column_name . "'";
+	 * $result = $infoDb->fetchRow ( $query );
+	 * $enumSet = substr ( $result ['enumset'], 1, - 1 );
+	 * $enumArr = explode ( ",", $enumSet );
+	 * $enums = array ();
+	 * foreach ( $enumArr as $key => $value ) {
+	 * $value = substr ( $value, 1, - 1 );
+	 * $enums ["$value"] = $value;
+	 * }
+	 * return $enums;
+	 * }
+	 */
 	
 	/**
 	 * Pdo_Mysql connection to database information_schema
 	 * *
 	 */
-	/*public function getInfoDb() {
-		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
-		$db_detail = $this->_dbTable->getAdapter ()->getConfig ();
-		
-		$db = new Zend_Db_Adapter_Pdo_Mysql ( array (
-				'host' => $db_detail ["host"],
-				'username' => $db_detail ["username"],
-				'password' => $db_detail ["password"],
-				'dbname' => 'information_schema' 
-		) );
-		return $db;
-	}*/
+	/*
+	 * public function getInfoDb() {
+	 * $this->setDbTable ( 'Application_Model_DbTable_Matter' );
+	 * $db_detail = $this->_dbTable->getAdapter ()->getConfig ();
+	 *
+	 * $db = new Zend_Db_Adapter_Pdo_Mysql ( array (
+	 * 'host' => $db_detail ["host"],
+	 * 'username' => $db_detail ["username"],
+	 * 'password' => $db_detail ["password"],
+	 * 'dbname' => 'information_schema'
+	 * ) );
+	 * return $db;
+	 * }
+	 */
 	
 	/**
 	 * get the country details from country for a given country_code(iso)

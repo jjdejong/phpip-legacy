@@ -45,7 +45,7 @@ class MatterController extends Zend_Controller_Action {
 		$mfs->category_display = $this->view->category_display;
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, array (), $this->view->category_display, true );
+		$paginator = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, array (), $this->view->category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
@@ -879,7 +879,7 @@ class MatterController extends Zend_Controller_Action {
 		$this->view->responsible = @$post_data ['responsible'];
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, $post_data, $category_display, true );
+		$paginator = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, $post_data, $category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
@@ -1260,7 +1260,7 @@ class MatterController extends Zend_Controller_Action {
 		$post_data = $mfs->multi_sort;
 		
 		$matterModel = new Application_Model_Matter ();
-		$matters = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, $post_data, $mfs->category_display, false );
+		$matters = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, $post_data, $mfs->category_display, false );
 		$mcount = count ( $matters );
 		
 		if (preg_match ( "/matter/", $rid )) {
@@ -1294,8 +1294,8 @@ class MatterController extends Zend_Controller_Action {
 	 * *
 	 */
 	public function exportAction() {
-		$this->_helper->viewRenderer->setNoRender();
-		$this->_helper->layout->disableLayout();	
+		$this->_helper->viewRenderer->setNoRender ();
+		$this->_helper->layout->disableLayout ();
 		
 		$category_display = $this->_getParam ( 'display' );
 		
@@ -1323,19 +1323,42 @@ class MatterController extends Zend_Controller_Action {
 		unset ( $post_data ['dir'] );
 		
 		$matterModel = new Application_Model_Matter ();
-		$export = $matterModel->fetchMatters ( array(), $sort_field, $sort_dir, $post_data, $category_display, false );
+		$export = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, $post_data, $category_display, false );
 		
-		$this->getResponse()
-			->setHeader('Content-Type', 'application/csv')
-			->setHeader('Content-disposition', 'attachment; filename=export.csv');
-		$export_csv = fopen('php://memory', 'w');
-		$captions = array('Omnipat', 'Country', 'Cat', 'Origin', 'Status', 'Status date', 'Client', 'Client Ref', 'Agent', 'Agent Ref', 'Title', 'Inventor 1', 'Filed', 'FilNo', 'Published', 'Pub. No', 'Granted', 'Grt No', 'ID', 'container_ID', 'parent_ID', 'Responsible', 'Delegate', 'Dead', 'Ctnr');
-		fputcsv($export_csv, $captions, ';');
-		foreach ($export as $row) {
-			fputcsv($export_csv, array_map("utf8_decode", $row), ';');
+		$this->getResponse ()->setHeader ( 'Content-Type', 'application/csv' )->setHeader ( 'Content-disposition', 'attachment; filename=export.csv' );
+		$export_csv = fopen ( 'php://memory', 'w' );
+		$captions = array (
+				'Omnipat',
+				'Country',
+				'Cat',
+				'Origin',
+				'Status',
+				'Status date',
+				'Client',
+				'Client Ref',
+				'Agent',
+				'Agent Ref',
+				'Title',
+				'Inventor 1',
+				'Filed',
+				'FilNo',
+				'Published',
+				'Pub. No',
+				'Granted',
+				'Grt No',
+				'ID',
+				'container_ID',
+				'parent_ID',
+				'Responsible',
+				'Delegate',
+				'Dead',
+				'Ctnr' 
+		);
+		fputcsv ( $export_csv, $captions, ';' );
+		foreach ( $export as $row ) {
+			fputcsv ( $export_csv, array_map ( "utf8_decode", $row ), ';' );
 		}
-		fseek($export_csv, 0);
-		fpassthru($export_csv);
+		fseek ( $export_csv, 0 );
+		fpassthru ( $export_csv );
 	}
-
 }
