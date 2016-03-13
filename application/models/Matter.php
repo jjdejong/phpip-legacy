@@ -274,59 +274,63 @@ class Application_Model_Matter {
 	}
 	
 	/**
-	 * retrieves paginated list of matters with specified filters
-	 * $filter_array is probably no longer needed
+	 * retrieves paginated/unpaginated list of matters with specified filters
 	 */
-	public function fetchMatters($filter_array = array(), $sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx', $sortDir = '', $multi_filter = array(), $matter_category_display_type = false, $paginated = false) {
+	public function fetchMatters( 
+			$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx', 
+			$sortDir = '', 
+			$multi_filter = array(), 
+			$matter_category_display_type = false, 
+			$paginated = false ) {
 		if (array_key_exists ( 'Inventor1', $multi_filter )) {
 			$inventor_filter = '';
 		} else
 			$inventor_filter = 'AND invlnk.display_order = 1';
 		
 		$sql = "SELECT CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
-matter.country AS country,
-matter.category_code AS Cat,
-matter.origin,
-event_name.name AS Status,
-status.event_date AS Status_date,
-IFNULL(cli.display_name, cli.name) AS Client,
-clilnk.actor_ref AS ClRef,
-IFNULL(agt.display_name, agt.name) AS Agent,
-agtlnk.actor_ref AS AgtRef,
-classifier.value AS Title,
-CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
-fil.event_date AS Filed,
-fil.detail AS FilNo,
-pub.event_date AS Published,
-pub.detail AS PubNo,
-grt.event_date AS Granted,
-grt.detail AS GrtNo,
-matter.ID,
-matter.container_ID,
-matter.parent_ID,
-matter.responsible,
-del.login AS delegate,
-matter.dead,
-IF(isnull(matter.container_ID),1,0) AS Ctnr
-FROM matter IGNORE INDEX (category)
-  JOIN matter_category FORCE INDEX (PRIMARY) ON (matter.category_code = matter_category.code)
-  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
-    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
-  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
-    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . " AND inv.ID = invlnk.actor_ID)
-  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
-    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
-  LEFT JOIN (matter_actor_lnk dellnk, actor del) 
-    ON (ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' AND del.ID = dellnk.actor_ID)  
-  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
-  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
-  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
-  LEFT JOIN (event status, event_name) 
-    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
-      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
-  LEFT JOIN (classifier, classifier_type) 
-    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
-WHERE e2.matter_id IS NULL ";
+			matter.country AS country,
+			matter.category_code AS Cat,
+			matter.origin,
+			event_name.name AS Status,
+			status.event_date AS Status_date,
+			IFNULL(cli.display_name, cli.name) AS Client,
+			clilnk.actor_ref AS ClRef,
+			IFNULL(agt.display_name, agt.name) AS Agent,
+			agtlnk.actor_ref AS AgtRef,
+			classifier.value AS Title,
+			CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
+			fil.event_date AS Filed,
+			fil.detail AS FilNo,
+			pub.event_date AS Published,
+			pub.detail AS PubNo,
+			grt.event_date AS Granted,
+			grt.detail AS GrtNo,
+			matter.ID,
+			matter.container_ID,
+			matter.parent_ID,
+			matter.responsible,
+			del.login AS delegate,
+			matter.dead,
+			IF(isnull(matter.container_ID),1,0) AS Ctnr
+			FROM matter IGNORE INDEX (category)
+			  JOIN matter_category FORCE INDEX (PRIMARY) ON (matter.category_code = matter_category.code)
+			  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
+			    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
+			  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
+			    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . " AND inv.ID = invlnk.actor_ID)
+			  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
+			    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
+			  LEFT JOIN (matter_actor_lnk dellnk, actor del) 
+			    ON (ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' AND del.ID = dellnk.actor_ID)  
+			  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
+			  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
+			  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
+			  LEFT JOIN (event status, event_name) 
+			    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
+			      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
+			  LEFT JOIN (classifier, classifier_type) 
+			    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
+			WHERE e2.matter_id IS NULL ";
 		
 		$where_clause = '';
 		if ($matter_category_display_type)

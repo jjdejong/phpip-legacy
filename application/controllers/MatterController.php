@@ -45,7 +45,7 @@ class MatterController extends Zend_Controller_Action {
 		$mfs->category_display = $this->view->category_display;
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, array (), $this->view->category_display, true );
+		$paginator = $matterModel->fetchMatters ( $sort_field, $sort_dir, array (), $this->view->category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
@@ -879,7 +879,7 @@ class MatterController extends Zend_Controller_Action {
 		$this->view->responsible = @$post_data ['responsible'];
 		
 		$matterModel = new Application_Model_Matter ();
-		$paginator = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, $post_data, $category_display, true );
+		$paginator = $matterModel->fetchMatters ( $sort_field, $sort_dir, $post_data, $category_display, true );
 		$paginator->setCurrentPageNumber ( $page );
 		$paginator->setItemCountPerPage ( 25 );
 		
@@ -1260,7 +1260,7 @@ class MatterController extends Zend_Controller_Action {
 		$post_data = $mfs->multi_sort;
 		
 		$matterModel = new Application_Model_Matter ();
-		$matters = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, $post_data, $mfs->category_display, false );
+		$matters = $matterModel->fetchMatters ( $sort_field, $sort_dir, $post_data, $mfs->category_display, false );
 		$mcount = count ( $matters );
 		
 		if (preg_match ( "/matter/", $rid )) {
@@ -1323,7 +1323,7 @@ class MatterController extends Zend_Controller_Action {
 		unset ( $post_data ['dir'] );
 		
 		$matterModel = new Application_Model_Matter ();
-		$export = $matterModel->fetchMatters ( array (), $sort_field, $sort_dir, $post_data, $category_display, false );
+		$export = $matterModel->fetchMatters ( $sort_field, $sort_dir, $post_data, $category_display, false );
 		
 		$this->getResponse ()->setHeader ( 'Content-Type', 'application/csv' )->setHeader ( 'Content-disposition', 'attachment; filename=export.csv' );
 		$export_csv = fopen ( 'php://memory', 'w' );
