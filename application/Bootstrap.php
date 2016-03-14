@@ -33,5 +33,16 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 		$config = new Zend_Config ( $this->getOptions (), true );
 		Zend_Registry::set ( 'config', $config );
 	}
+	protected function _initLoadAclIni() {
+		$config = new Zend_Config_Ini ( APPLICATION_PATH . '/configs/acl.ini' );
+		Zend_Registry::set ( 'acl', $config );
+	}
+	protected function _initAclControllerPlugin() {
+		$this->bootstrap ( 'frontcontroller' );
+		$this->bootstrap ( 'loadAclIni' );
+		$front = Zend_Controller_Front::getInstance ();
+		$aclPlugin = new Application_Plugins_AclController ( new Application_Model_Acl () );
+		$front->registerPlugin ( $aclPlugin );
+	}
 }
 

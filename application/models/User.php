@@ -60,12 +60,12 @@ class Application_Model_User {
 		$this->_adapter = $dbTable->getAdapter ();
 		return $this;
 	}
-	public function getDbTable($tableName = 'Application_Model_DbTable_User') {
+	public function getDbTable($tableName = 'Application_Model_DbTable_Actor') {
 		$this->setDbTable ( $tableName );
 		return $this->_dbTable;
 	}
 	public function getAll($username) {
-		$this->setDbTable ( 'Application_Model_DbTable_User' );
+		$this->setDbTable ( 'Application_Model_DbTable_Actor' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		
 		$selectQuery = $dbSelect->from ( array (
@@ -75,7 +75,7 @@ class Application_Model_User {
 		return $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 	}
 	public function updateLastLogin($userID) {
-		$this->setDbTable ( 'Application_Model_DbTable_User' );
+		$this->setDbTable ( 'Application_Model_DbTable_Actor' );
 		
 		$where = $this->_dbTable->getAdapter ()->quoteInto ( 'ID = ?', $userID );
 		$data = array (

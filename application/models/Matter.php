@@ -1286,23 +1286,31 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	 * *
 	 */
 	public function getCategoryMatterCount($user = null) {
+		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		if (! isset ( $user )) {
-			$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 			$user = $siteInfoNamespace->username;
 		}
+		$userid = $siteInfoNamespace->userId;
+		$role = $siteInfoNamespace->role;
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
 				'm' => 'matter' 
 		), array (
 				'm.category_code',
-				'count(*) as no_of_matters',
-				'm.responsible' 
+				'count(*) as no_of_matters' 
 		) )->join ( array (
 				'mc' => 'matter_category' 
 		), 'm.category_code = mc.code', array (
 				'mc.category' 
-		) )->where ( "responsible = '" . $user . "'" )->group ( 'category_code' );
+		) )->group ( 'category_code' );
+		
+		if ($role == 'CLI')
+			$selectQuery->join ( array (
+					'cli' => 'matter_actor_lnk'
+			), "ifnull(m.container_ID,m.ID) = cli.matter_ID AND cli.role='CLI' AND cli.actor_id = $userid", array() );
+		else 
+			$selectQuery->where ( 'responsible = ?', $user );
 		
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
@@ -1310,24 +1318,27 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	/**
 	 * retrieves open task or renewals which are assigned to a user or a user is responsible for.
 	 * $flag = 1 provides only tasks specifically assigned to the current user (assigned_to field in task)
-	 * If the user has no tasks, all tasks are listed (to implement)
 	 */
-	public function getUserOpenTasks($user = null, $ren = 0, $flag = 0) { // NOT RENewal
+	public function getUserOpenTasks($user = null, $ren = 0, $flag = 0) {
+		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		if (! isset ( $user )) {
-			$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 			$user = $siteInfoNamespace->username;
-		}
-		
+		}		
+		$userid = $siteInfoNamespace->userId;
+		$role = $siteInfoNamespace->role;
 		if ($ren == 0)
-			$ren_condition = "  AND t.code != 'REN'";
+			$ren_condition = "t.code != 'REN'";
 		else if ($ren == 1)
-			$ren_condition = "  AND t.code = 'REN'";
+			$ren_condition = "t.code = 'REN'";
 		
-		if ($flag)
-			$where = "(t.assigned_to='" . $user . "') AND t.trigger_ID = e.ID AND m.ID = e.matter_ID and t.code = en.code AND t.done=0 AND m.dead=0" . $ren_condition;
+		$where = 't.due_date < DATE_ADD(NOW(), INTERVAL 1 YEAR) AND ';
+		if ($role == 'CLI')
+			$where .= $ren_condition;
+		else if ($flag)
+			$where .= "t.assigned_to = '$user' AND " . $ren_condition;
 		else
-			$where = "'" . $user . "' IN(t.assigned_to, m.responsible, a.login) AND t.trigger_ID = e.ID AND m.ID = e.matter_ID and t.code = en.code AND t.done=0 AND m.dead=0 AND t.due_date < DATE_ADD(NOW(), INTERVAL 1 YEAR)" . $ren_condition;
-		
+			$where .= "'$user' IN(t.assigned_to, m.responsible, a.login) AND " . $ren_condition;
+			
 		$this->setDbTable ( 'Application_Model_DbTable_Task' );
 		$db = $this->_dbTable->getAdapter ();
 		$uidsql = "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(m.caseref, m.country), m.origin), m.type_code), m.idx)";
@@ -1342,7 +1353,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 				't.trigger_ID' 
 		) )->join ( array (
 				'e' => 'event' 
-		), 't.trigger_ID = e.ID', array (
+		), 't.trigger_ID = e.ID AND t.done = 0', array (
 				'MID' => 'e.matter_ID' 
 		) )->join ( array (
 				'en' => 'event_name' 
@@ -1350,7 +1361,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 				'task_name' => 'en.name' 
 		) )->join ( array (
 				'm' => 'matter' 
-		), 'e.matter_ID = m.ID', array (
+		), 'e.matter_ID = m.ID AND m.dead = 0', array (
 				'm.caseref',
 				'm.country',
 				'm.origin',
@@ -1358,12 +1369,18 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 				'UID' => new Zend_Db_Expr ( $uidsql ) 
 		) )->joinLeft ( array (
 				'mal' => 'matter_actor_lnk' 
-		), "(ifnull(m.container_ID,m.ID) = mal.matter_ID AND mal.role='DEL')" )->joinLeft ( array (
+		), "ifnull(m.container_ID,m.ID) = mal.matter_ID AND mal.role='DEL'", array(
+		) )->joinLeft ( array (
 				'a' => 'actor' 
-		), "a.ID = mal.actor_ID" )->where ( $where )->order ( array (
+		), "a.ID = mal.actor_ID", array() )->where ( $where )->order ( array (
 				't.due_date',
 				'm.caseref' 
 		) );
+		
+		if ($role == 'CLI')
+			$selectQuery->join ( array (
+				'cli' => 'matter_actor_lnk' 
+			), "ifnull(m.container_ID,m.ID) = cli.matter_ID AND cli.role='CLI' AND cli.actor_id = $userid", array() );
 		
 		return $db->fetchAll ( $selectQuery );
 	}
@@ -1373,23 +1390,31 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	 * *
 	 */
 	public function getUsersOpenTaskCount() {
+		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
+		$userid = $siteInfoNamespace->userId;
+		$role = $siteInfoNamespace->role;
 		$this->setDbTable ( 'Application_Model_DbTable_Task' );
 		$db = $this->_dbTable->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				't' => 'task',
-				'm' => 'matter',
-				'e' => 'event' 
+				't' => 'task' 
 		), array (
 				'no_of_tasks' => 'count(*)',
 				'urgent_date' => 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y")',
 				'posix_urgent_date' => 'MIN(t.due_date)' 
 		) )->join ( array (
 				'e' => 'event' 
-		), 't.trigger_id=e.id' )->join ( array (
+		), 't.trigger_id=e.id', array(
+		) )->join ( array (
 				'm' => 'matter' 
 		), 'e.matter_id=m.id', array (
 				'login' => 'ifnull(t.assigned_to, m.responsible)' 
 		) )->where ( 'm.dead=0 AND t.done=0' )->group ( 'login' );
+		
+		if ($role == 'CLI')
+			$selectQuery->join ( array (
+					'cli' => 'matter_actor_lnk'
+			), "ifnull(m.container_ID,m.ID) = cli.matter_ID AND cli.role='CLI' AND cli.actor_id = $userid", array() );
+		
 		return $db->fetchAll ( $selectQuery );
 	}
 	

@@ -4,11 +4,14 @@ class IndexController extends Zend_Controller_Action {
 		/* Initialize action controller here */
 	}
 	public function indexAction() {
+		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
+		$username = $siteInfoNamespace->username;
 		$matterModel = new Application_Model_Matter ();
 		$this->view->categories = $matterModel->getCategoryMatterCount ();
 		$this->view->open_tasks = $matterModel->getUserOpenTasks ();
 		$this->view->ren_tasks = $matterModel->getUserOpenTasks ( null, 1 );
 		$this->view->users_list = $matterModel->getUsersOpenTaskCount ();
+		$this->view->responsible = $username;
 	}
 	public function userPageAction() {
 		$username = $this->_getParam ( 'username' );
@@ -17,6 +20,7 @@ class IndexController extends Zend_Controller_Action {
 		$this->view->open_tasks = $matterModel->getUserOpenTasks ( $username );
 		$this->view->ren_tasks = $matterModel->getUserOpenTasks ( $username, 1 );
 		$this->view->users_list = $matterModel->getUsersOpenTaskCount ();
+		$this->view->responsible = $username;
 		$this->render ( 'index' );
 	}
 	public function taskFilterAction() {

@@ -39,7 +39,7 @@ class Application_Plugins_AuthPlugin extends Zend_Controller_Plugin_Abstract
 	  		$siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
 	  		$siteInfoNamespace->requestURL = $this->_request->getParams();
 	  		$this->_request->setModuleName('default');
-	  		$this->_request->setControllerName('Auth');
+	  		$this->_request->setControllerName('auth');
 	  		$this->_request->setActionName('login');
 		}
     }

@@ -4,16 +4,6 @@
 	float: left;
     margin: 10px 0px;
 }
-.phpip-lists{
-    margin:0px 5px 5px;
-    padding: 4px;
-    float:left;
-    background: #B5D9E5;
-    display:block;
-    border-radius: 0px 4px 4px 4px;
-    box-shadow: 2px 2px 1px #888888;
-    max-height:270px;
-}
 .phpip-list{
     margin: 0px;
     padding: 0px;
@@ -54,23 +44,29 @@
     width: auto;
     margin: 10px 0px;
 }
+#category-list{
+    width: 387px;
+    max-height: 320px;
+    overflow: auto;
+}
 #open-tasks-list{
-    max-height: 270px;
-    width: 540px;
+    max-height: 320px;
+    width: 545px;
     overflow:auto;
 }
 #ren-tasks-list{
-    max-height: 270px;
-    width: 540px;
-    overflow-x: hidden;
+    max-height: 320px;
+    width: 545px;
     overflow: auto;
 }
 #users-task-count{
     width: 387px;
+    max-height: 320px;
+    overflow: auto;
 }
 .col-cat{
     display:inline-block;
-    width: 225px;
+    width: 180px;
 }
 .col-count{
     display:inline-block;
@@ -84,15 +80,15 @@
 }
 .col-task-name{
 	display: inline-block;
-	width: 200px;
+	width: 250px;
 }
 .col-task-matter{
 	display: inline-block;
-	width: 150px;
+	width: 120px;
 }
 .col-task-due_date{
 	display: inline-block;
-	width: 100px;
+	width: 80px;
 }
 .img-buttons{
 	border: none;
@@ -258,26 +254,12 @@ $(document).ready(function(){
 
     $("input[name='open-tasks-filter']").change(function(){
         var tasks_flag = $("input[name='open-tasks-filter']:checked").val();
-        $.ajax({
-          type: "POST",
-          url: '/index/task-filter',
-          data: { task_type : 'open', filter: tasks_flag },
-          success: function(data){
-            $('#open-tasks-list').html(data);
-          }
-        });
+        $('#open-tasks-list').load('/index/task-filter', { task_type : 'open', filter: tasks_flag });
     });
 
     $("input[name='open-rens-filter']").change(function(){
         var tasks_flag = $("input[name='open-rens-filter']:checked").val();
-        $.ajax({
-          type: "POST",
-          url: '/index/task-filter',
-          data: { task_type : 'ren', filter: tasks_flag },
-          success: function(data){
-            $('#ren-tasks-list').html(data);
-          }
-        });
+        $('#ren-tasks-list').load('/index/task-filter', { task_type : 'ren', filter: tasks_flag });
     });
     $( "button, input:button").button();
     $("#radio-tasks").buttonset();
@@ -289,7 +271,7 @@ $(document).ready(function(){
 		<div id="categories-box" class="home-box">
 			<div class="home-box-header">
 				<div class="list-header">
-					Categories for <em><?=@$this->categories[0]['responsible']?></em>
+					Categories for <em><?=$this->responsible?></em>
 				</div>
 				<div class="clear-tasks-box">
 					<button class="add-cat-matter" style="display:block;" id="Patent-PAT">New matter</button>
@@ -312,7 +294,7 @@ if(count($this->categories)){ ?>
 	foreach($this->categories as $matter): ?>
     				<li>
     					<div class="col-cat">
-    						<a href="/matter/filter/Cat/<?=$matter['category_code']?>/responsible/<?=$matter['responsible']?>">
+    						<a href="/matter/filter/Cat/<?=$matter['category_code']?>/responsible/<?=$this->responsible?>">
     							<?=$matter['category']." (".$matter['category_code'].")"?>
     							
     						</a>
