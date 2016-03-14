@@ -10,18 +10,6 @@ class IndexController extends Zend_Controller_Action {
 		$this->view->ren_tasks = $matterModel->getUserOpenTasks ( null, 1 );
 		$this->view->users_list = $matterModel->getUsersOpenTaskCount ();
 	}
-	public function openTaskDetailsAction() {
-		$this->_helper->layout->disableLayout ();
-		$task_id = $this->_getParam ( 'task_id' );
-		$matterModel = new Application_Model_Matter ();
-		$this->view->task_details = $matterModel->getOpenTaskDetails ( $task_id );
-	}
-	public function userOpenTasksAction() {
-		$username = $this->_getParam ( 'username' );
-		$matterModel = new Application_Model_Matter ();
-		$this->view->open_tasks = $matterModel->getUserOpenTasks ( $username );
-		$this->view->ren_tasks = $matterModel->getUserOpenTasks ( $username, 1 );
-	}
 	public function userPageAction() {
 		$username = $this->_getParam ( 'username' );
 		$matterModel = new Application_Model_Matter ();

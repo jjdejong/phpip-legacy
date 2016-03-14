@@ -599,8 +599,6 @@ if (count ( @$classifier_arr )) {
 	</div>
 </div>
 
-<?php
-if (isset ( $this->matter_actors )) :?>
 <div class="listrow">
 	<div class="list-matter-block">
 		Actors
@@ -620,7 +618,8 @@ if (isset ( $this->matter_actors )) :?>
 			name="containerId" 
 			id="this-container-id"
 			value="<?=$this->matter_record[0]['container_ID']?>" />
-<?php 
+<?php
+if (!empty ( $this->matter_actors )) : 
 // Actors box
 	// Group actors in an array per role
 	foreach  ( $this->matter_actors as $actor ) {
@@ -656,14 +655,13 @@ if (isset ( $this->matter_actors )) :?>
 		endforeach;?>
 		</div>
 <?php 
-	endforeach;?>
+	endforeach;
+endif;?>
 	</div>
 </div>
-<?php
-endif;
 
-// Status box (main events) 
-?>
+<!-- Status box (main events) -->
+
 <div class="listrow" style="width: 462px; display: inline-block;">
 	<div class="status-row" id="MatterStatus" style="margin-left: 5px;" title="Click for more detail">
 		<span class="status-col-name">Status</span>

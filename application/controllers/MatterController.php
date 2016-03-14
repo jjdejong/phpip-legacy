@@ -267,7 +267,7 @@ class MatterController extends Zend_Controller_Action {
 			$this->view->role_search = $this->view->role;
 		
 		$matterModel = new Application_Model_Matter ();
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$this->view->role_name = $actorModel->getRoleName ( $this->view->role );
 		$this->view->all_roles = $actorModel->getAllRoles ();
 		
@@ -303,7 +303,7 @@ class MatterController extends Zend_Controller_Action {
 		$role_id = $this->_getParam ( 'role_id' );
 		
 		$matterModel = new Application_Model_Matter ();
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$matter_record = $matterModel->getMatter ( $matter_id );
 		
 		$this->view->role_actors = $matterModel->getMatterActorsForRole ( $matter_record [0] ['container_ID'], $matter_id, $role_id );
@@ -345,7 +345,7 @@ class MatterController extends Zend_Controller_Action {
 		$data = array ();
 		
 		$matterModel = new Application_Model_Matter ();
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$matter_id = $this->getRequest ()->getPost ( 'matter_ID' );
 		$data ['actor_ID'] = $this->getRequest ()->getPost ( 'actor_ID' );
 		$data ['role'] = $this->getRequest ()->getPost ( 'role' );

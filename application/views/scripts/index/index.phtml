@@ -335,6 +335,8 @@ if(count($this->categories)){ ?>
 			</div>
 		</div>
 		<div id="open-tasks-box" class="home-box">
+<?php 
+if(count($this->open_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open tasks
 					<span id="radio-tasks" style="float: right;">
@@ -353,8 +355,6 @@ if(count($this->categories)){ ?>
 				</div>
 			</div>
 			<div id="" class="home-card">
-<?php 
-if(count($this->open_tasks)): ?>
 				<div class="list-headers">
 					<div class="col-task-name">Task</div>
 					<div class="col-task-matter">Matter</div>
@@ -429,10 +429,8 @@ if(count($this->users_list)): ?>
 							</a>
 						</div>
 						<div class="col-open-count">
-							<a href="/index/user-open-tasks/username/<?=$user['login']?>">
-								<?=$user['no_of_tasks']?>
-								
-							</a>
+							<?=$user['no_of_tasks']?>
+							
 						</div>
 						<div class="col-most-urgent">
 							<?=$user['urgent_date']?>
@@ -447,6 +445,8 @@ endif;?>
 			</div>
 		</div>
 		<div id="open-renewals-box" class="home-box">
+<?php 
+if(count($this->ren_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open renewals
 					<span id="radio-renewals" style="float: right;">
@@ -464,8 +464,6 @@ endif;?>
 				</div>
 			</div>
 			<div id="" class="home-card">
-<?php 
-if(count($this->ren_tasks)): ?>
 				<div class="list-headers">
 					<div class="col-task-name">Task</div>
 					<div class="col-task-matter">Matter</div>

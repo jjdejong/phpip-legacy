@@ -39,6 +39,7 @@ class AuthController extends Zend_Controller_Action {
 					$siteInfoNamespace->Firstname = $userInfo ['name'];
 					$siteInfoNamespace->username = $userInfo ['login'];
 					$siteInfoNamespace->password = $loginForm->getValue ( 'Password' );
+					$siteInfoNamespace->role = $userInfo ['default_role'];
 					
 					if ($siteInfoNamespace->requestURL) {
 						$redirectURL = $siteInfoNamespace->requestURL;

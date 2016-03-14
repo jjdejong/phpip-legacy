@@ -7,6 +7,7 @@ class Application_Model_User {
 	protected $_password;
 	protected $_passwordsalt;
 	protected $_lastlogin;
+	protected $_default_role;
 	protected $_createDate;
 	protected $_primary = "ID";
 	protected $_dbTable;
@@ -59,12 +60,12 @@ class Application_Model_User {
 		$this->_adapter = $dbTable->getAdapter ();
 		return $this;
 	}
-	public function getDbTable($tableName = 'Application_Model_DbTable_Actor') {
+	public function getDbTable($tableName = 'Application_Model_DbTable_User') {
 		$this->setDbTable ( $tableName );
 		return $this->_dbTable;
 	}
 	public function getAll($username) {
-		$this->setDbTable ( 'Application_Model_DbTable_Actor' );
+		$this->setDbTable ( 'Application_Model_DbTable_User' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		
 		$selectQuery = $dbSelect->from ( array (
@@ -74,7 +75,7 @@ class Application_Model_User {
 		return $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 	}
 	public function updateLastLogin($userID) {
-		$this->setDbTable ( 'Application_Model_DbTable_Actor' );
+		$this->setDbTable ( 'Application_Model_DbTable_User' );
 		
 		$where = $this->_dbTable->getAdapter ()->quoteInto ( 'ID = ?', $userID );
 		$data = array (

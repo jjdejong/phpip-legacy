@@ -338,7 +338,7 @@ $(document).ready(function(){
      });
 
 
-     $('.filter-button').click(function(){
+     $('#show-all, #show-containers, #show-responsible').click(function(){
 		var url = '/matter/filter' + getFilterUrl();
          $.ajax({
              url: url,
@@ -399,20 +399,20 @@ if (isset ( $this->containers )) {
 	}
 }
 ?>
-	<div id="container-all" class="filter-button" style="float: left;">
+	<div id="container-all" style="float: left;">
 		<input type="radio" id="show-all" name="container-filter" value=0 <?=$show_all?> /> 
 		<label for="show-all">Show All</label> 
 		<input type="radio" id="show-containers" name="container-filter" value=1 <?=$show_conts?> /> 
 		<label for="show-containers">Show Containers</label>
 	</div>
-	<div id="actor-status" class="filter-button" style="float: left; margin-left: 20px;">
+	<div id="actor-status" style="float: left; margin-left: 20px;">
 		<input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?=!$this->display_style ? 'checked' : ''?> /> 
 		<label for="show-actor">Actor View</label> 
 		<input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?=$this->display_style ? 'checked' : ''?> /> 
 		<label for="show-status">Status View</label>
 	</div>
 	
-	<div id="mine-all" class="filter-button" style="float: left; margin-left: 20px;">
+	<div id="mine-all" style="float: left; margin-left: 20px;">
 		<input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?=$this->responsible ? 'checked' : ''?> /> 
 		<label for="show-responsible">Show Mine</label>
 	</div>

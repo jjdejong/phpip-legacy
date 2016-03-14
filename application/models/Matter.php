@@ -284,8 +284,13 @@ class Application_Model_Matter {
 			$paginated = false ) {
 		if (array_key_exists ( 'Inventor1', $multi_filter )) {
 			$inventor_filter = '';
-		} else
+		} else {
 			$inventor_filter = 'AND invlnk.display_order = 1';
+		}
+		
+		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
+		$userid = $siteInfoNamespace->userId;
+		$role = $siteInfoNamespace->role;
 		
 		$sql = "SELECT CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
 			matter.country AS country,
@@ -335,6 +340,8 @@ class Application_Model_Matter {
 		$where_clause = '';
 		if ($matter_category_display_type)
 			$where_clause = "AND matter_category.display_with = '$matter_category_display_type' ";
+		if ($role == 'CLI')
+			$where_clause .= "AND cli.id = '" . $userid . "' ";
 		
 		$having_clause = '';
 		if (! empty ( $multi_filter )) {
@@ -1384,30 +1391,6 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 				'login' => 'ifnull(t.assigned_to, m.responsible)' 
 		) )->where ( 'm.dead=0 AND t.done=0' )->group ( 'login' );
 		return $db->fetchAll ( $selectQuery );
-	}
-	
-	/**
-	 * returns full details of an open task
-	 * *
-	 */
-	public function getOpenTaskDetails($task_id = 0) {
-		if ($task_id == 0)
-			return false;
-		
-		$this->setDbTable ( 'Application_Model_DbTable_Task' );
-		$db = $this->_dbTable->getAdapter ();
-		$selectQuery = $db->select ()->from ( array (
-				't' => 'task' 
-		), array (
-				't.*',
-				'due_date' => 'DATE_FORMAT(t.due_date, "%d/%m/%Y")',
-				'DATE_FORMAT(t.done_date, "%d/%m/%Y")' 
-		) )->join ( array (
-				'en' => 'event_name' 
-		), 'en.code=t.code', array (
-				'task_name' => 'en.name' 
-		) )->where ( 't.ID = ?', $task_id );
-		return $db->fetchRow ( $selectQuery );
 	}
 	
 	/**

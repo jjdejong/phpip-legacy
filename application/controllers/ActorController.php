@@ -29,7 +29,7 @@ class ActorController extends Zend_Controller_Action {
 	 */
 	public function indexAction() {
 		// $this->_helper->layout->disableLayout();
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$this->view->actors = $actorModel->getAllActors ();
 	}
 	
@@ -37,7 +37,7 @@ class ActorController extends Zend_Controller_Action {
 	 * Displays all users from actor table
 	**/
 	public function usersAction() {
-	    $actorModel = new Application_Model_Actor();
+	    $actorModel = new Application_Model_DbTable_Actor();
 	    $this->view->users = $actorModel->getAllUsers();
 	}
 
@@ -50,7 +50,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->layout->disableLayout ();
 		$term = $this->_getParam ( 'term' );
 		$co = $this->_getParam ( 'co' );
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		if ($co == '0') {
 			$this->view->actors = $actorModel->getAllActors ( $term );
 			if (count ( $this->view->actors ) == 0)
@@ -71,7 +71,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->layout->disableLayout ();
 		$this->_helper->viewRenderer->setNoRender ();
 		$this->view->term = $this->_getParam ( 'term' );
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$matter_actors = $actorModel->getAllActors ( $this->view->term, 0 );
 		
 		echo json_encode ( $matter_actors );
@@ -85,7 +85,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->layout->disableLayout ();
 		$this->_helper->viewRenderer->setNoRender ();
 		$this->view->term = $this->_getParam ( 'term' );
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$actor_roles = $actorModel->getRoles ( $this->view->term );
 		
 		echo json_encode ( $actor_roles );
@@ -101,7 +101,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender ();
 		$this->view->term = $this->_getParam ( 'term' );
 		$this->view->role = $this->_getParam ( 'role' );
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$actors = $actorModel->getAllActors ( $this->view->term );
 		array_push ( $actors, array (
 				'id' => 'cna786',
@@ -122,7 +122,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender ();
 		$this->view->term = $this->_getParam ( 'term' );
 		$this->view->role = $this->_getParam ( 'role' );
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$this->view->matter_login = $actorModel->getAllLogins ( $this->view->term );
 		
 		echo json_encode ( $this->view->matter_login );
@@ -135,7 +135,7 @@ class ActorController extends Zend_Controller_Action {
 	public function addAction() {
 		$this->_helper->layout->disableLayout ();
 		$request = $this->getRequest ();
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$actorForm = new Application_Form_Actor_Add ();
 		if ($request->isPost ()) {
 			$post_data = $request->getPost ();
@@ -155,7 +155,7 @@ class ActorController extends Zend_Controller_Action {
 					echo json_encode ( $json_data );
 					return;
 				} else {
-					$this->view->sqlErrors = $actorModel->getError ();
+					//$this->view->sqlErrors = $actorModel->getError ();
 					$default_role = $actorForm->getValue ( 'default_role' );
 				}
 			} else {
@@ -182,7 +182,7 @@ class ActorController extends Zend_Controller_Action {
 	public function viewAction() {
 		$this->_helper->layout->disableLayout ();
 		$actor_id = $this->_getParam ( 'actor_id' );
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$actorInfo = $actorModel->getActorInfo ( $actor_id );
 		$this->view->enumOpts = $actorModel->getEnumSet ( 'actor', 'pay_category' );
 		$this->view->actorComments = $actorModel->getTableComments ( 'actor' );
@@ -205,11 +205,11 @@ class ActorController extends Zend_Controller_Action {
 		$field_name = $post_data ['field'];
 		$field_value = $post_data ['value'];
 		$dvalue = isset ( $post_data ['dvalue'] ) ? $post_data ['dvalue'] : NULL;
-		$actorModel = new Application_Model_Actor ();
+		$actorModel = new Application_Model_DbTable_Actor ();
 		$actorModel->updateActor ( $actor_id, $field_name, $field_value );
 		
-		if (! $actorModel->getError ()) {
-			if (isset ( $dvalue ) && ! $actorModel->getError ()) {
+		//if (! $actorModel->getErrors ()) {
+			if (isset ( $dvalue ) ) {
 				$field_value = $dvalue;
 			}
 			
@@ -223,9 +223,9 @@ class ActorController extends Zend_Controller_Action {
 			}
 			
 			echo $field_value;
-		} else {
-			echo $actorModel->getError ();
-		}
+		//} else {
+		//	echo $actorModel->getError ();
+		//}
 	}
 	
 	/**
@@ -237,7 +237,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->viewRenderer->setNoRender ();
 		if ($this->getRequest ()->isPost ()) {
 			$actor_id = $this->_getParam ( 'aid' );
-			$actorModel = new Application_Model_Actor ();
+			$actorModel = new Application_Model_DbTable_Actor ();
 			$result = $actorModel->deleteActor ( $actor_id );
 			echo $result;
 		}
@@ -251,7 +251,7 @@ class ActorController extends Zend_Controller_Action {
 	    $this->_helper->viewRenderer->setNoRender();
 	    if($this->getRequest()->isPost()){
 	        $actor_id = $this->_getParam('aid');
-	        $actorModel = new Application_Model_Actor();
+	        $actorModel = new Application_Model_DbTable_Actor();
 	        $result = $actorModel->permitUser($actor_id);
 	    }
 	  }
@@ -265,7 +265,7 @@ class ActorController extends Zend_Controller_Action {
 	    $this->_helper->viewRenderer->setNoRender();
 	    if($this->getRequest()->isPost()){
 	        $actor_id = $this->_getParam('aid');
-	        $actorModel = new Application_Model_Actor();
+	        $actorModel = new Application_Model_DbTable_Actor();
 	        $result = $actorModel->banUser($actor_id);
 	        $actorInfo = $actorModel->getActorInfo($actor_id);
 	        $userModel = new Application_Model_User();
@@ -282,7 +282,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->layout->disableLayout ();
 		if ($this->getRequest ()->isPost ()) {
 			$actor_id = $this->_getParam ( 'aid' );
-			$actorModel = new Application_Model_Actor ();
+			$actorModel = new Application_Model_DbTable_Actor ();
 			$this->view->matter_dependencies = $actorModel->getActorMatterDependencies ( $actor_id );
 			$this->view->other_actor_dependencies = $actorModel->getActorOtherActorDependencies ( $actor_id );
 		}
