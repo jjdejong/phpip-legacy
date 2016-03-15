@@ -245,15 +245,7 @@ $(document).ready(function(){
 		select: true,
 		indicator: '<span class="icon-busy" />',
 		placeholder: '...',
-		tooltip: 'Click to edit...',
-		callback: function(data){
-			var tid = $(this).attr('id');
-			if(data == '')
-				$('input[name=doneflag-'+tid+']').checked = false;
-			else
-				$('input[name=doneflag-'+tid+']').checked = true;
-			$('input[name=doneflag-'+tid+']').click();
-		}
+		tooltip: 'Click to edit...'
     });
 
     $('.tasklist-col-done > input[type=checkbox]').click(function(){
