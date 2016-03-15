@@ -104,7 +104,7 @@ class ActorController extends Zend_Controller_Action {
 		$actorModel = new Application_Model_DbTable_Actor ();
 		$actors = $actorModel->getAllActors ( $this->view->term );
 		array_push ( $actors, array (
-				'id' => 'cna786',
+				'id' => 'CreateActor',
 				'value' => '<font color="red">Create Actor</font>' 
 		) );
 		

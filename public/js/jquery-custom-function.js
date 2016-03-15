@@ -1,6 +1,6 @@
+// Used in content-inner-header.phtml
 $(document).ready(function(){
-	
-    $("#disablewindow").hide();
+/*    $("#disablewindow").hide();
     $("#popupdiv").hide();
     
     $(".navigation > li").click(function(){
@@ -11,7 +11,7 @@ $(document).ready(function(){
       $('.flake-dialog').css('display', 'none');
       $('#facade').css('display', 'none');
     });
-
+*/
    $('#matter-search').keypress(function(event){
 	var keycode = (event.keyCode ? event.keyCode : event.which);
  	if(keycode == '13'){
@@ -22,16 +22,13 @@ $(document).ready(function(){
 	}
    });
 
-
    $('#matter-ref-search').click(function(){
       var term = $('#matter-search').val();
       var option = $('#matter-option').val();
       var url = '/matter/filter/'+option+'/'+term;
       $(location).attr('href', url);
    });
-   /*$('#clear-matter-filters').click(function(){
-      $(location).attr('href', '/matter');
-   });*/
+
    $('.matter-navigation').click(function(){
       var rid = $(this).attr('id');
       var url = '/matter/matter-nav/rid/'+rid;

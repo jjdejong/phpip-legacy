@@ -63,7 +63,7 @@ $(document).ready(function(){
             minLength: 1,
             source: "/actor/get-all-actors",
             select: function( event, ui ) {
-                if(ui.item.id == 'cna786'){
+                if(ui.item.id == 'CreateActor'){
                     var drole = $('#rolebox').val().split('-');
                     $.ajax({
                         type: "GET",
@@ -78,7 +78,8 @@ $(document).ready(function(){
                     });
                     $('#actor-details-popup').css('display', 'block');
                 }else{
-                    $( "#actor-name" ).val(Encoder.htmlDecode(ui.item.value));
+                	var htmldecoded = $('<textarea/>').html(ui.item.value).text();
+                    $( "#actor-name" ).val(htmldecoded);
                     $( "#actor-id" ).val( ui.item.id );
                 }
                 return false;

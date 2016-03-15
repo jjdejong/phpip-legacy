@@ -21,24 +21,14 @@
 	);
 	
 	$this->headScript()->appendFile(
-    '/js/encoder.js',
-    'text/javascript'
-    );
-	
-	$this->headScript()->appendFile(
     '/js/jquery.jeditable.js',
     'text/javascript'
     );
 	
-	$this->headScript()->appendFile(
+	echo $this->headScript()->appendFile(
     '/js/jquery-custom-function.js',
     'text/javascript'
-    );
-	
-	echo $this->headScript()->appendFile(
-    '/js/jquery.selectbox-0.5.js',
-    'text/javascript'
-    ); ?>
+    );?>
     
 </head>
 <body <?= count($this->routeContext) ? ' class="' . implode(' ', array_unique($this->routeContext)) . '"' : '' ?> class="tundra">
