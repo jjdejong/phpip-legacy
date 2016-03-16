@@ -155,7 +155,7 @@ $(document).ready(function(){
 		type: 'autocomplete',
         autocomplete: {
 			minLength : 1,
-			source : "/matter/get-all-logins",
+			source : "/actor/get-all-logins",
 			select: function( event, ui ) {
 				this.value = ui.item.value;
 				$(event.target.form).submit();
@@ -175,7 +175,7 @@ $(document).ready(function(){
 
     $('#task_assigned_to').autocomplete({
         minLength: 1,
-        source: "/matter/get-all-logins",
+        source: "/actor/get-all-logins",
         select: function( event, ui ) {
             this.value = ui.item.value;
         }

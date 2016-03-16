@@ -30,7 +30,7 @@ $(document).ready(function(){
 
     $('#matter-responsible').autocomplete({
         minLength: 1,
-        source: "/matter/get-all-logins",
+        source: "/actor/get-all-logins",
         autoFocus: true,
         select: function( event, ui ) {
 			$( "#matter-responsible" ).val( ui.item.value );
