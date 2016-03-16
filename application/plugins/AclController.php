@@ -24,9 +24,10 @@ class Application_Plugins_AclController extends Zend_Controller_Plugin_Abstract 
 				$request->setControllerName ( 'auth' )
 					->setActionName ( 'login' );
 			} else {
-				$request->setControllerName ( 'error' )
+				throw new exception('Unauthorized');
+				/*$request->setControllerName ( 'error' )
 					->setActionName ( 'error' )
-					->setDispatched ( true );
+					->setDispatched ( true );*/
 			}
 		}
 	}
@@ -41,9 +42,6 @@ class Application_Plugins_AclController extends Zend_Controller_Plugin_Abstract 
 			$role = $siteInfoNamespace->role;
 			if ( $role != 'CLI')
 				$role = 'DBADM';
-			/*$authData = $this->_auth->getIdentity ();
-			$role = isset ( $authData->property->default_role ) ? strtoupper ( $authData->property->default_role ) : 'DBADM';*/
-			//print_r($this->_auth);
 		} else {
 			$role = 'guest';
 		}

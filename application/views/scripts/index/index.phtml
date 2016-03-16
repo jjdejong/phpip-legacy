@@ -264,6 +264,14 @@ $(document).ready(function(){
     $( "button, input:button").button();
     $("#radio-tasks").buttonset();
     $("#radio-renewals").buttonset();
+
+	var restricted = <?=$this->restricted?>;
+	if (restricted) {
+		$('.col-actions').show().hide();
+		$('.clear-tasks-box').show().hide();
+		$('.ui-buttonset').show().hide();
+		$('.editable').show().hide();
+	}
 });
 </script>
 <div id="home-wrap">
@@ -291,10 +299,14 @@ $(document).ready(function(){
 if(count($this->categories)){ ?>
 				<ul class="phpip-list" id="category-list">
 <?php 
-	foreach($this->categories as $matter): ?>
+	foreach($this->categories as $matter):
+		$filter = 'Cat/' . $matter['category_code'];
+		if (!$this->restricted)
+			$filter.= '/responsible/' . $this->responsible;
+			?>
     				<li>
     					<div class="col-cat">
-    						<a href="/matter/filter/Cat/<?=$matter['category_code']?>/responsible/<?=$this->responsible?>">
+    						<a href="/matter/filter/<?=$filter?>">
     							<?=$matter['category']." (".$matter['category_code'].")"?>
     							
     						</a>
@@ -351,7 +363,11 @@ if(count($this->open_tasks)): ?>
 		if ($open_task['posix_due_date'] < date('Y-m-d'))
 			$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
 		else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
-			$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';?>
+			$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
+			if($this->restricted)
+				$viewlink = 'javascript:void(0);';
+			else 
+				$viewlink = '/matter/view/id/' . $open_task['MID']; ?>
 					<li id="<?=$open_task['task_ID']?>">
 						<div class="col-task-name">
 							<a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>">
@@ -360,7 +376,7 @@ if(count($this->open_tasks)): ?>
 							</a>
 						</div>
 						<div class="col-task-matter">
-							<a href="/matter/view/id/<?=$open_task['MID']?>">
+							<a href="<?=$viewlink?>">
 								<?=$open_task['UID']?>
 								
 							</a>
@@ -396,7 +412,11 @@ endif; ?>
 if(count($this->users_list)): ?>
 				<ul class="phpip-list" id="users-task-count" >
 <?php 
-	foreach($this->users_list as $user){ 
+	foreach($this->users_list as $user){
+		if($this->restricted)
+			$userpagelink = 'javascript:void(0);';
+		else
+			$userpagelink = '/index/user-page/username/' . $user['login'];
 		if($user['no_of_tasks'] > 0){
 			if ($user['posix_urgent_date'] < date('Y-m-d'))
 				$user['urgent_date'] = '<span style="color:red; text-decoration:blink;">' .$user['urgent_date']. '</span>';
@@ -405,7 +425,7 @@ if(count($this->users_list)): ?>
 ?>
 					<li>
 						<div class="col-user-login">
-							<a href="/index/user-page/username/<?=$user['login']?>">
+							<a href="<?=$userpagelink?>">
 								<?=$user['login']?>
 								
 							</a>
@@ -455,12 +475,16 @@ if(count($this->ren_tasks)): ?>
 				<ul class="phpip-list" id="ren-tasks-list">
 <?php 
 	foreach($this->ren_tasks as $open_task){ 
+		if($this->restricted)
+			$viewlink = 'javascript:void(0);';
+			else
+				$viewlink = '/matter/view/id/' . $open_task['MID'];
 		$task_name  = $open_task['task_name'];
 		$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
 		if ($open_task['posix_due_date'] < date('Y-m-d'))
 			$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
 		else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
-			$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';?>
+			$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>'; ?>
 					<li id="<?=$open_task['task_ID']?>">
 						<div class="col-task-name">
 							<a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>-<?=$open_task['code']?>">
@@ -469,7 +493,7 @@ if(count($this->ren_tasks)): ?>
 							</a>
 						</div>
 						<div class="col-task-matter">
-							<a href="/matter/view/id/<?=$open_task['MID']?>">
+							<a href="<?=$viewlink?>">
 								<?=$open_task['UID']?>
 								
 							</a>

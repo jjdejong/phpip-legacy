@@ -6,6 +6,11 @@ class IndexController extends Zend_Controller_Action {
 	public function indexAction() {
 		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		$username = $siteInfoNamespace->username;
+		$role = $siteInfoNamespace->role;
+		if ( $role == 'CLI' )
+			$this->view->restricted = 1; // For removing controls that give acces to unavailable actions
+		else
+			$this->view->restricted = 0;
 		$matterModel = new Application_Model_Matter ();
 		$this->view->categories = $matterModel->getCategoryMatterCount ();
 		$this->view->open_tasks = $matterModel->getUserOpenTasks ();
@@ -21,6 +26,7 @@ class IndexController extends Zend_Controller_Action {
 		$this->view->ren_tasks = $matterModel->getUserOpenTasks ( $username, 1 );
 		$this->view->users_list = $matterModel->getUsersOpenTaskCount ();
 		$this->view->responsible = $username;
+		$this->view->restricted = 0; // This user-page action is not available from the index view
 		$this->render ( 'index' );
 	}
 	public function taskFilterAction() {
