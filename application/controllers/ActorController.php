@@ -53,11 +53,10 @@ class ActorController extends Zend_Controller_Action {
 		$actorModel = new Application_Model_DbTable_Actor ();
 		if ($co == '0') {
 			$this->view->actors = $actorModel->getAllActors ( $term );
-			if (count ( $this->view->actors ) == 0)
-				array_push ( $this->view->actors, array (
-						'id' => 'nomatch',
-						'name' => 'No match. Create Actor?' 
-				) );
+			array_push ( $this->view->actors, array (
+				'id' => 'nomatch',
+				'name' => 'Create Actor' 
+			) );
 		} else {
 			$this->view->actors = $actorModel->getAllActorsByCo ( $term );
 		}
@@ -79,18 +78,9 @@ class ActorController extends Zend_Controller_Action {
 	
 	/**
 	 * autocompletes roles from actor_role
-	 * * moved to RoleController
+	 * * getRolesAction moved to RoleController
 	 */
-	/*public function getRolesAction() {
-		$this->_helper->layout->disableLayout ();
-		$this->_helper->viewRenderer->setNoRender ();
-		$this->view->term = $this->_getParam ( 'term' );
-		$actorModel = new Application_Model_DbTable_Actor ();
-		$actor_roles = $actorModel->getRoles ( $this->view->term );
-		
-		echo json_encode ( $actor_roles );
-	}*/
-	
+
 	/**
 	 * gets all actors
 	 * used in autocomplete of actor fields

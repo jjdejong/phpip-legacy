@@ -145,10 +145,10 @@ $(document).ready(function(){
     });
 
     $.editable.addInputType('autocomplete', {
-                element : $.editable.types.text.element,
-                plugin : function(settings, original){
-                  $('input', this).autocomplete(settings.autocomplete);
-          }
+		element : $.editable.types.text.element,
+ 		plugin : function(settings, original){
+			$('input', this).autocomplete(settings.autocomplete);
+		}
     });
 
     $('.edit-assigned-to').editable('/matter/update-task', {

@@ -124,10 +124,8 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	public function getActorInfo($actor_id = 0) {
 		if (! $actor_id)
 			return null;
-		
-		$db = $this->getAdapter ();
-		$db->query ( 'SET NAMES utf8' );
-		$selectQuery = $db->select ()->from ( array (
+		$this->getAdapter ()->query ( 'SET NAMES utf8' );
+		$select = $this->select ()->from ( array (
 				'a' => 'actor' 
 		) )->joinLeft ( array (
 				'ac' => 'actor' 
@@ -161,8 +159,8 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 				'na' => 'country' 
 		), 'a.nationality = na.iso', array (
 				'nationality_name' => 'na.name' 
-		) )->where ( 'a.ID = ?', $actor_id );
-		return $db->fetchRow ( $selectQuery );
+		) )->where ( 'a.ID = ?', $actor_id )->setIntegrityCheck ( false );
+		return $this->fetchRow ( $select )->toArray ();
 	}
 	
 	/**
