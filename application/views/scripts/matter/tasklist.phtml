@@ -264,7 +264,7 @@ $(document).ready(function(){
         $.post('/matter/update-task', { task_id: tid, field: 'done', value: done_val }, function(data){
         	var event_id = <?=(isset($this->event_id)?$this->event_id:0)?>;
         	if ( event_id )
-        		$('#tasklist-pop-up').load("/matter/tasklist/event_id/<?=$this->event_id?>");
+        		$('#tasklist-pop-up').load("/matter/tasklist/event_id/<?=$this->event_id?>", {renewal: <?=$this->renewal?>});
         	else 
         		$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
         });

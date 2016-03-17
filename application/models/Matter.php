@@ -1027,16 +1027,6 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		} else
 			$data ["$field_name"] = $field_value;
 		
-		if ($field_name == 'due_date' && ! isset ( $rule_id ))
-			$data ['rule_used'] = NULL;
-		
-		if ($field_name == 'done') {
-			if ($field_value == 1)
-				$this->updateTaskDoneDate ( $task_id );
-			else
-				$data ['done_date'] = NULL;
-		}
-		
 		return $this->getDbTable ( 'Application_Model_DbTable_Task' )->update ( $data, array (
 				'ID = ?' => $task_id 
 		) );
@@ -1044,6 +1034,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	
 	/**
 	 * clears a set of tasks i.e., task.done is set to 1 on done_date or now()
+	 * CHECK with new done flag handled by trigger
 	 * *
 	 */
 	public function clearTasks($task_ids = array(), $done_date = '') {
@@ -1067,23 +1058,11 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	}
 	
 	/**
+	 * updateTaskDoneDate
 	 * updates task.done_date to if(due_date < now(), due_date, now())
+	 * Obsolete - done in trigger
 	 * *
 	 */
-	public function updateTaskDoneDate($task_id = 0) {
-		if (! $task_id)
-			return false;
-		$db = $this->getDbTable ( 'Application_Model_DbTable_Task' )->getAdapter ();
-		$selectQuery = $db->select ()->from ( array (
-				't' => 'task' 
-		) )->where ( "t.ID = " . $task_id . " AND done_date IS NULL" );
-		
-		$result = $db->fetchRow ( $selectQuery );
-		
-		if ($result) {
-			$db->query ( "UPDATE task set done_date = if(due_date < now(), due_date, now()) where ID=$task_id" );
-		}
-	}
 	
 	/**
 	 * updates an event record

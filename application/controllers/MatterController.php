@@ -480,7 +480,7 @@ class MatterController extends Zend_Controller_Action {
 		$field_name = $post_data ['field'];
 		$field_value = $post_data ['value'];
 		$rule_id = '';
-		if (isset ( $post_data ['rule_id'] ) && $post_data ['rule_id'])
+		if (isset ( $post_data ['rule_id'] ) && $post_data ['rule_id'] )
 			$rule_id = NULL;
 		
 		if ($field_name == 'done_date' && $field_value == '')
