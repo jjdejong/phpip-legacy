@@ -20,20 +20,6 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-    var role_search = "<?=$this->role_search?>";   
-
-    $('.role_search').click(function() { 
-        
-        role_search = $(this).val();
-         $.ajax({
-                type: "GET",
-                url: "/matter/map-actor-role/id/<?=$this->matter_id?>/role/<?=$this->role?>/role_search/" + role_search ,
-                success: function(data){
-                    $('#mapactor-pop-up').html(data);
-                }
-        });
-    });
-
 
     $('#rolebox').change(function(){
       var role_val = $('#rolebox').val().split('-');

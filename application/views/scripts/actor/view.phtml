@@ -230,7 +230,7 @@ $(document).ready(function(){
         onblur: 'submit',
         autocomplete: {
 			minLength: 1,
-			source : "/actor/get-roles",
+			source : "/role/get-roles",
 			select: function( event, ui ) {
 				this.value = ui.item.value;  // assign country name back to the form element
 				fvalue = ui.item.id; // Country code

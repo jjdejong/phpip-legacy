@@ -79,9 +79,9 @@ class ActorController extends Zend_Controller_Action {
 	
 	/**
 	 * autocompletes roles from actor_role
-	 * *
+	 * * moved to RoleController
 	 */
-	public function getRolesAction() {
+	/*public function getRolesAction() {
 		$this->_helper->layout->disableLayout ();
 		$this->_helper->viewRenderer->setNoRender ();
 		$this->view->term = $this->_getParam ( 'term' );
@@ -89,10 +89,10 @@ class ActorController extends Zend_Controller_Action {
 		$actor_roles = $actorModel->getRoles ( $this->view->term );
 		
 		echo json_encode ( $actor_roles );
-	}
+	}*/
 	
 	/**
-	 * gets all actors for a role
+	 * gets all actors
 	 * used in autocomplete of actor fields
 	 * *
 	 */
@@ -136,6 +136,7 @@ class ActorController extends Zend_Controller_Action {
 		$this->_helper->layout->disableLayout ();
 		$request = $this->getRequest ();
 		$actorModel = new Application_Model_DbTable_Actor ();
+		$roleModel = new Application_Model_DbTable_Role ();
 		$actorForm = new Application_Form_Actor_Add ();
 		if ($request->isPost ()) {
 			$post_data = $request->getPost ();
@@ -165,7 +166,7 @@ class ActorController extends Zend_Controller_Action {
 		} else {
 			$default_role = $this->_getParam ( 'role' );
 		}
-		$role_info = $actorModel->getActorRoleInfo ( $default_role );
+		$role_info = $roleModel->getRole ( $default_role );
 		$this->view->actorComments = $actorModel->getTableComments ( 'actor' );
 		$actorForm->getElement ( 'default_role' )->setValue ( $role_info ['name'] );
 		$enumOpts = $actorModel->getEnumSet ( 'actor', 'pay_category' );

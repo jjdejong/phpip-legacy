@@ -267,9 +267,8 @@ class MatterController extends Zend_Controller_Action {
 			$this->view->role_search = $this->view->role;
 		
 		$matterModel = new Application_Model_Matter ();
-		$actorModel = new Application_Model_DbTable_Actor ();
-		$this->view->role_name = $actorModel->getRoleName ( $this->view->role );
-		$this->view->all_roles = $actorModel->getAllRoles ();
+		$roleModel = new Application_Model_DbTable_Role ();
+		$this->view->all_roles = $roleModel->getAllRoles ();
 		
 		$this->view->container_id = $matterModel->getMatterContainer ( $this->view->matter_id );
 	}
@@ -304,12 +303,13 @@ class MatterController extends Zend_Controller_Action {
 		
 		$matterModel = new Application_Model_Matter ();
 		$actorModel = new Application_Model_DbTable_Actor ();
+		$roleModel = new Application_Model_DbTable_Role ();
 		$matter_record = $matterModel->getMatter ( $matter_id );
 		
 		$this->view->role_actors = $matterModel->getMatterActorsForRole ( $matter_record [0] ['container_ID'], $matter_id, $role_id );
 		$this->view->role = $this->view->role_actors [0] ['role_name'];
 		$this->view->matter_id = $matter_id;
-		$this->view->actor_role = $actorModel->getActorRoleInfo ( $role_id );
+		$this->view->actor_role = $roleModel->getRole ( $role_id );
 		$this->view->actors_count = count ( $this->view->role_actors );
 	}
 	
@@ -327,8 +327,8 @@ class MatterController extends Zend_Controller_Action {
 		$role_code = $this->getRequest ()->getPost ( 'role_code' );
 		$role_data = $this->getRequest ()->getPost ();
 		unset ( $role_data ['role_code'] );
-		$matterModel = new Application_Model_Matter ();
-		$matterModel->saveRole ( $role_code, $role_data );
+		$matterModel = new Application_Model_DbTable_Role ();
+		$matterModel->update ( $role_data, array ( 'code = ?' => $role_code ) );
 	}
 	
 	/**
@@ -346,13 +346,14 @@ class MatterController extends Zend_Controller_Action {
 		
 		$matterModel = new Application_Model_Matter ();
 		$actorModel = new Application_Model_DbTable_Actor ();
+		$roleModel = new Application_Model_DbTable_Role ();
 		$matter_id = $this->getRequest ()->getPost ( 'matter_ID' );
 		$data ['actor_ID'] = $this->getRequest ()->getPost ( 'actor_ID' );
 		$data ['role'] = $this->getRequest ()->getPost ( 'role' );
 		$container_id = $matterModel->getMatterContainer ( $matter_id );
 		$data ['actor_ref'] = $this->getRequest ()->getPost ( 'actor_ref' );
 		$role_shareable = $this->getRequest ()->getPost ( 'role_shareable' );
-		$data ['shared'] = $actorModel->isRoleShareable ( $data ['role'] );
+		$data ['shared'] = $roleModel->getRole ( $data ['role'] )['shareable'];
 		
 		if ($this->getRequest ()->getPost ( 'add_container' ) && $container_id) {
 			$data ['matter_ID'] = $container_id;
@@ -372,8 +373,6 @@ class MatterController extends Zend_Controller_Action {
 		if ($matterModel->getError ()) {
 			echo $matterModel->getError ();
 		}
-		if ($result)
-			echo "Actor linked to the Matter";
 	}
 	
 	/**

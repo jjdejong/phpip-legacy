@@ -11,65 +11,50 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	 * *
 	 */
 	public function getAllActors($term = null, $phy_person = null) {
-		$phy_query = "";
-		if (isset ( $phy_person )) {
-			$phy_query = "AND a.phy_person = " . $phy_person;
-		}
-		$db = $this->getAdapter ();
-		$db->query ( 'SET NAMES utf8' );
-		$selectQuery = $db->select ()->from ( array (
+		$this->getAdapter () ->query ( 'SET NAMES utf8' );
+		$select = $this->select ()->from ( array (
 				'a' => 'actor' 
 		), array (
 				'a.id',
 				'a.name',
 				'a.first_name',
 				'a.display_name',
-				'a.login' 
+				'a.login',
+				'value' => new Zend_Db_Expr ( "CONCAT_WS(', ', a.name, a.first_name, a.display_name)" )
 		) )->joinLeft ( array (
-				'aa' => 'actor' 
-		), 'aa.ID = a.company_ID', array (
-				'company_name' => 'aa.name' 
-		) )->where ( "a.name like '" . $term . "%' " . $phy_query )->order ( 'a.name asc' );
-		$result = $db->fetchAll ( $selectQuery );
-		foreach ( $result as $key => $actor ) {
-			$actor_display = $actor ['name'] . (($actor ['first_name'] == '') ? "" : (", " . $actor ['first_name'])) . (($actor ['display_name']) ? (" (" . $actor ['display_name'] . ")") : "");
-			$result [$key] ['value'] = htmlentities ( $actor_display );
-		}
-		return $result;
+				'c' => 'actor' 
+		), 'c.ID = a.company_ID', array (
+				'company_name' => 'c.name' 
+		) )->order ( 'a.name asc' );
+		if (isset ( $phy_person ))
+			$select->where ( 'a.phy_person = ?', $phy_person );
+		if (isset ( $term ))
+			$select->where ( 'a.name like ?', $term . '%');
+		return $this->fetchAll ( $select )->toArray ();
 	}
 	
 	/**
-	 * retrieves all users from actor table filterted by name
+	 * retrieves all users from actor table filtered by name
 	 * $term --search term
 	 */
-	public function getAllUsers($term = null) {
-		$db = $this->getAdapter ();
-		$db->query ( 'SET NAMES utf8' );
-		$dbSelect = $db->select ();
-		$selectQuery = $dbSelect->from ( 'actor', array (
+	public function getAllUsers() {
+		$this->getAdapter ()->query ( 'SET NAMES utf8' );
+		$select = $this->select()->from ( $this, array (
 				'id',
 				'name',
-				'first_name',
-				'display_name',
 				'default_role',
 				'login',
 				'last_login' 
-		) )->where ( "name like '" . $term . "%'  AND login is not null" )->order ( 'name asc' );
-		$result = $this->getAdapter ()->fetchAll ( $selectQuery );
-		foreach ( $result as $key => $actor ) {
-			$actor_display = $actor ['name'] . (($actor ['first_name'] == '') ? "" : (", " . $actor ['first_name'])) . (($actor ['display_name']) ? (" (" . $actor ['display_name'] . ")") : "");
-			$result [$key] ['value'] = htmlentities ( $actor_display );
-		}
-		return $result;
+		) )->where ( "login IS NOT NULL" )->order ( 'name ASC' );
+		return $this->fetchAll ( $select )->toArray ();
 	}
 	
 	/**
 	 * retrieves all actors from actor table filtered by company
 	 */
 	public function getAllActorsByCo($term = null) {
-		$db = $this->getAdapter ();
-		$db->query ( 'SET NAMES utf8' );
-		$selectQuery = $db->select ()->from ( array (
+		$this->getAdapter ()->query ( 'SET NAMES utf8' );
+		$select = $this->select ()->from ( array (
 				'a' => 'actor' 
 		), array (
 				'a.id',
@@ -78,16 +63,11 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 				'a.display_name',
 				'a.login' 
 		) )->joinLeft ( array (
-				'aa' => 'actor' 
-		), 'aa.ID = a.company_ID', array (
-				'company_name' => 'aa.name' 
-		) )->where ( "aa.name like '" . $term . "%'" )->order ( 'a.name asc' );
-		$result = $db->fetchAll ( $selectQuery );
-		foreach ( $result as $key => $actor ) {
-			$actor_display = $actor ['name'] . (($actor ['first_name'] == '') ? "" : (", " . $actor ['first_name'])) . (($actor ['display_name']) ? (" (" . $actor ['display_name'] . ")") : "");
-			$result [$key] ['value'] = htmlentities ( $actor_display );
-		}
-		return $result;
+				'c' => 'actor' 
+		), 'c.ID = a.company_ID', array (
+				'company_name' => 'c.name' 
+		) )->where ( "c.name LIKE ?", $term . "%" )->order ( 'a.name ASC' );
+		return $this->fetchAll ( $select )->toArray ();
 	}
 	
 	/**
@@ -95,116 +75,47 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	 * *
 	 */
 	public function getAllLogins($term = null) {
-		$db = $this->getAdapter ();
-		$db->query ( 'SET NAMES utf8' );
-		$selectQuery = $db->select ()->from ( array (
-				'a' => 'actor' 
-		), array (
-				'a.id',
-				'a.login as value',
-				'a.first_name',
-				'a.display_name' 
-		) )->where ( 'a.login like ? ', $term . '%' )->order ( 'a.login asc' );
-		return $db->fetchAll ( $selectQuery );
+		$this->getAdapter ()->query ( 'SET NAMES utf8' );
+		$select = $this->select ()->from ( $this, array (
+				'id',
+				'value' => 'login',
+				'first_name',
+				'display_name' 
+		) )->where ( 'login LIKE ? ', $term . '%' )->order ( 'login ASC' );
+		return $this->fetchAll ( $select )->toArray ();
 	}
 	
 	/**
 	 * returns actor_role.name for given actor_role.code
-	 * *
+	 * * getRoleName replaced by getRole in Role
 	 */
-	public function getRoleName($role = 0) {
-		if (! $role)
-			return false;
-		
-		$db = $this->getAdapter ();
-		$selectQuery = $db->select ()->from ( array (
-				'ar' => 'actor_role' 
-		), array (
-				'ar.code',
-				'ar.name' 
-		) )->where ( 'ar.code = ? ', $role )->order ( 'ar.name asc' );
-		return $db->fetchAll ( $selectQuery );
-	}
 	
 	/**
 	 * determines whether a role is shareable
 	 *
 	 * @return actor_role.shareable
-	 *
+	 * isRoleShareable replaced by getRole in Role
 	 */
-	public function isRoleShareable($role = 0) {
-		if (! $role)
-			return null;
-		
-		$db = $this->getAdapter ();
-		$selectQuery = $db->select ()->from ( array (
-				'ar' => 'actor_role' 
-		), array (
-				'ar.shareable' 
-		) )->where ( 'ar.code = ? ', $role );
-		$result = $db->fetchRow ( $selectQuery );
-		return $result ['shareable'];
-	}
 	
 	/**
 	 * retrieves all records from actor_role sorted by name asc
-	 * *
+	 * * getAllRoles moved to Role
 	 */
-	public function getAllRoles() {
-		$db = $this->getAdapter ();
-		$selectQuery = $db->select ()->from ( array (
-				'ar' => 'actor_role' 
-		), array (
-				'ar.code',
-				'ar.name',
-				'ar.shareable' 
-		) )->order ( 'ar.name asc' );
-		return $db->fetchAll ( $selectQuery );
-	}
 	
 	/**
 	 * retrieves all records from actor_role filtered by search term
-	 * *
+	 * * getRoles moved to Role
 	 */
-	public function getRoles($term = '') {
-		$db = $this->getAdapter ();
-		$selectQuery = $db->select ()->from ( array (
-				'ar' => 'actor_role' 
-		), array (
-				'id' => 'ar.code',
-				'value' => 'ar.name',
-				'ar.shareable' 
-		) )->order ( 'ar.name asc' )->where ( "ar.name like '" . $term . "%'" );
-		return $db->fetchAll ( $selectQuery );
-	}
 	
 	/**
 	 * retrives a record from actor_role for a given actor_role.code
-	 * *
+	 * * getActorRoleInfo replaced by getRole in Role
 	 */
-	public function getActorRoleInfo($role = null) {
-		if ($role) {
-			$db = $this->getAdapter ();
-			
-			$selectQuery = $db->select ()->from ( array (
-					'ar' => 'actor_role' 
-			) )->where ( "ar.code = ?", $role );
-			
-			return $db->fetchRow ( $selectQuery );
-		}
-	}
 	
 	/**
 	 * updates a record of actor_role
-	 * *
+	 * * saveRole obsoleted by directly used update() method 
 	 */
-	public function saveRole($role_code = null, $data = array()) {
-		if (! $role_code)
-			return false;
-		return $this->update ( $data, array (
-				'code = ?' => $role_code 
-		) );
-	}
 	
 	/**
 	 * retrieves full details of an actor
@@ -298,7 +209,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 			return;
 		
 		try {
-			$this->delete ( 'ID ='. $actor_id );
+			$this->delete ( 'ID = ?', $actor_id );
 			return true;
 		} catch ( Exception $e ) {
 			return $e->getMessage ();
@@ -311,7 +222,6 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	public function permitUser($actor_id = null) {
 		if (! $actor_id)
 			return;
-		//$this->setDbTable ( 'Application_Model_DbTable_Actor' );
 		$dbSelect = $this->getAdapter ()->select ();
 		
 		$selectQuery = $dbSelect->from ( array (
@@ -339,8 +249,6 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 		} catch ( Exception $e ) {
 			return "Unable to insert the user. ";
 		}
-		//$this->setDbTable ( 'Application_Model_DbTable_Actor' );
-		// $data['ipuser']=1;
 		$data ['password'] = md5 ( $passwd . 'salt' );
 		$data ['password_salt'] = 'salt';
 		$this->update ( $data, array (
@@ -354,7 +262,6 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	public function banUser($actor_id = null) {
 		if (! $actor_id)
 			return;
-		//$this->setDbTable ( 'Application_Model_DbTable_Actor' );
 		$dbSelect = $this->getAdapter ()->select ();
 		
 		$selectQuery = $dbSelect->from ( array (
@@ -392,8 +299,6 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	public function getActorMatterDependencies($actor_id = null) {
 		if (! $actor_id)
 			return;
-		
-		//$this->setDbTable ( 'Application_Model_DbTable_Actor' );
 		$matter_dependencies_stmt = $this->getAdapter ()->query ( "select matter.id,
           CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(matter.caseref, matter.country), matter.origin), matter.type_code), matter.idx) AS UID,
           actor_role.name as role
@@ -411,8 +316,6 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	public function getActorOtherActorDependencies($actor_id = null) {
 		if (! $actor_id)
 			return;
-		
-		//$this->setDbTable ( 'Application_Model_DbTable_Actor' );
 		$other_actor_dependencies_stmt = $this->getAdapter ()->query ( "select id, concat_ws(' ', name, first_name) as Actor,
          (case $actor_id
            when parent_id then 'Parent'
