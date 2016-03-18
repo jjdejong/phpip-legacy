@@ -479,8 +479,7 @@ $(document).ready(function(){
       //$('.ui-widget-overlay').show();
       	$('#facade').show();
       	$('#actor-details-popup').load("/actor/view", { actor_id: this.id }, function(){ 
-      		$(this).position({of: event, collision: "fit"});
-      		$("#actor-used-in").hide(); 
+      		$(this).position({of: event, collision: "fit"}); 
       	}).show().draggable();
     });
                   
@@ -914,4 +913,5 @@ if ($close_type)
 </div>
 <div id="add-matter-popup"></div>
 <div id="actor-details-popup" class="place-card"></div>
+<div id="actor-details-used-in" style="z-index: 1; position: fixed; bottom: 0; right: 10px;"></div>
 <div id="facade"></div>
