@@ -1,33 +1,7 @@
--- MySQL dump 10.13  Distrib 5.5.38, for debian-linux-gnu (x86_64)
---
--- Host: localhost    Database: phpip
--- ------------------------------------------------------
--- Server version	5.5.38-0ubuntu0.14.04.1-log
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Current Database: `phpip`
---
 
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `phpip` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `phpip`;
-
---
--- Table structure for table `actor`
---
-
-DROP TABLE IF EXISTS `actor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `actor` (
@@ -115,12 +89,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `actor_role`
---
-
-DROP TABLE IF EXISTS `actor_role`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `actor_role` (
@@ -172,12 +140,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `classifier`
---
-
-DROP TABLE IF EXISTS `classifier`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classifier` (
@@ -236,13 +198,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `classifier_list`
---
-
-DROP TABLE IF EXISTS `classifier_list`;
-/*!50001 DROP VIEW IF EXISTS `classifier_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `classifier_list` (
@@ -256,12 +211,6 @@ SET character_set_client = utf8;
   `display_order` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `classifier_type`
---
-
-DROP TABLE IF EXISTS `classifier_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classifier_type` (
@@ -309,12 +258,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `classifier_value`
---
-
-DROP TABLE IF EXISTS `classifier_value`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classifier_value` (
@@ -361,12 +304,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Table structure for table `country`
---
-
-DROP TABLE IF EXISTS `country`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `country` (
@@ -383,12 +320,6 @@ CREATE TABLE `country` (
   PRIMARY KEY (`iso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `debug`
---
-
-DROP TABLE IF EXISTS `debug`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `debug` (
@@ -399,12 +330,6 @@ CREATE TABLE `debug` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `default_actor`
---
-
-DROP TABLE IF EXISTS `default_actor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `default_actor` (
@@ -426,13 +351,6 @@ CREATE TABLE `default_actor` (
   CONSTRAINT `fk_dfltactor_role` FOREIGN KEY (`role`) REFERENCES `actor_role` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indicate which actors should be systematically added to new ';
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Temporary table structure for view `docmerge`
---
-
-DROP TABLE IF EXISTS `docmerge`;
-/*!50001 DROP VIEW IF EXISTS `docmerge`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `docmerge` (
@@ -487,12 +405,6 @@ SET character_set_client = utf8;
   `AnnuityFee` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `event`
---
-
-DROP TABLE IF EXISTS `event`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event` (
@@ -526,7 +438,7 @@ CREATE TABLE `event` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_before_insert` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_before_insert` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
 	DECLARE vdate DATE DEFAULT NULL;
 
 	SET new.creator = SUBSTRING_INDEX(USER(),'@',1);
@@ -567,7 +479,7 @@ trig: BEGIN
 
   
   DECLARE cur_rule CURSOR FOR 
-    SELECT task_rules.id, task, clear_task, delete_task, detail, days, months, years, recurring, end_of_month, use_parent, use_priority, cost, fee, currency, task_rules.responsible, event_name.unique
+    SELECT task_rules.id, task, clear_task, delete_task, detail, days, months, years, recurring, end_of_month, use_parent, use_priority, cost, fee, currency, task_rules.responsible, event_name.`unique`
     FROM task_rules, event_name, matter
     WHERE NEW.matter_ID=matter.ID
     AND event_name.code=task
@@ -717,11 +629,11 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_before_update` BEFORE UPDATE ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_before_update` BEFORE UPDATE ON `event` FOR EACH ROW BEGIN
 	DECLARE vdate DATE DEFAULT NULL;
-
-	SET new.updater=SUBSTRING_INDEX(USER(),'@',1);
 	
+	SET new.updater=SUBSTRING_INDEX(USER(),'@',1);
+	-- Date taken from Filed event in linked matter
 	IF NEW.alt_matter_ID IS NOT NULL THEN
 		SELECT event_date INTO vdate FROM event WHERE code='FIL' AND NEW.alt_matter_ID=matter_ID;
 		SET NEW.event_date = vdate;
@@ -741,7 +653,8 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_update` AFTER UPDATE ON `event` FOR EACH ROW trig: BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_after_update` AFTER UPDATE ON `event` FOR EACH ROW 
+trig: BEGIN
 
   DECLARE vdue_date, vbase_date DATE DEFAULT NULL;
   DECLARE vtask_id, vdays, vmonths, vyears, vrecurring, vpta, vid INT DEFAULT NULL;
@@ -845,7 +758,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
 	IF OLD.code IN ('PRI','PFIL') THEN
 		CALL recalculate_tasks(OLD.matter_ID, 'FIL');
 	END IF;
@@ -864,13 +777,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `event_list`
---
-
-DROP TABLE IF EXISTS `event_list`;
-/*!50001 DROP VIEW IF EXISTS `event_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `event_list` (
@@ -891,13 +797,6 @@ SET character_set_client = utf8;
   `dead` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Temporary table structure for view `event_lnk_list`
---
-
-DROP TABLE IF EXISTS `event_lnk_list`;
-/*!50001 DROP VIEW IF EXISTS `event_lnk_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `event_lnk_list` (
@@ -909,12 +808,6 @@ SET character_set_client = utf8;
   `country` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `event_name`
---
-
-DROP TABLE IF EXISTS `event_name`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event_name` (
@@ -947,7 +840,7 @@ CREATE TABLE `event_name` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `ename_before_insert` BEFORE INSERT ON `event_name` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `ename_before_insert` BEFORE INSERT ON `event_name` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -962,7 +855,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `ename_before_update` BEFORE UPDATE ON `event_name` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `ename_before_update` BEFORE UPDATE ON `event_name` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -977,7 +870,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `ename_after_update` AFTER UPDATE ON `event_name` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `ename_after_update` AFTER UPDATE ON `event_name` FOR EACH ROW BEGIN
 
 	IF IFNULL(NEW.default_responsible,0) != IFNULL(OLD.default_responsible,0) THEN
 		UPDATE task SET assigned_to=NEW.default_responsible
@@ -989,13 +882,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `filing_info`
---
-
-DROP TABLE IF EXISTS `filing_info`;
-/*!50001 DROP VIEW IF EXISTS `filing_info`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `filing_info` (
@@ -1011,12 +897,6 @@ SET character_set_client = utf8;
   `filing_number` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `matter`
---
-
-DROP TABLE IF EXISTS `matter`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matter` (
@@ -1038,7 +918,7 @@ CREATE TABLE `matter` (
   `updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Record modification date',
   `updater` char(16) DEFAULT NULL COMMENT 'ID of the user who last modified the record',
   PRIMARY KEY (`ID`),
-  UNIQUE KEY `UID` (`caseref`,`container_ID`,`origin`,`country`,`type_code`,`idx`),
+  UNIQUE KEY `UID` (`caseref`,`origin`,`country`,`type_code`,`idx`),
   KEY `country` (`country`) USING HASH,
   KEY `type` (`type_code`) USING HASH,
   KEY `origin` (`origin`) USING HASH,
@@ -1064,7 +944,7 @@ CREATE TABLE `matter` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_before_insert` BEFORE INSERT ON `matter` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_before_insert` BEFORE INSERT ON `matter` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1079,7 +959,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_after_insert` AFTER INSERT ON `matter` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_after_insert` AFTER INSERT ON `matter` FOR EACH ROW BEGIN
 	DECLARE vactorid, vshared INT DEFAULT NULL;
 	DECLARE vrole CHAR(5) DEFAULT NULL;
 
@@ -1111,7 +991,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_before_update` BEFORE UPDATE ON `matter` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_before_update` BEFORE UPDATE ON `matter` FOR EACH ROW BEGIN
 
 set new.updater=SUBSTRING_INDEX(USER(),'@',1);
 
@@ -1135,7 +1015,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_after_update` AFTER UPDATE ON `matter` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_after_update` AFTER UPDATE ON `matter` FOR EACH ROW BEGIN
 
 
 IF NEW.responsible != OLD.responsible THEN
@@ -1149,13 +1029,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `matter_actor_list`
---
-
-DROP TABLE IF EXISTS `matter_actor_list`;
-/*!50001 DROP VIEW IF EXISTS `matter_actor_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `matter_actor_list` (
@@ -1178,12 +1051,6 @@ SET character_set_client = utf8;
   `inherited` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `matter_actor_lnk`
---
-
-DROP TABLE IF EXISTS `matter_actor_lnk`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matter_actor_lnk` (
@@ -1221,7 +1088,7 @@ CREATE TABLE `matter_actor_lnk` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_before_insert` BEFORE INSERT ON `matter_actor_lnk` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `malnk_before_insert` BEFORE INSERT ON `matter_actor_lnk` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1236,7 +1103,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_after_insert` AFTER INSERT ON `matter_actor_lnk` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `malnk_after_insert` AFTER INSERT ON `matter_actor_lnk` FOR EACH ROW BEGIN
 DECLARE vcli_ann_agt INT DEFAULT NULL;
 
 
@@ -1262,19 +1129,12 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_before_update` BEFORE UPDATE ON `matter_actor_lnk` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `malnk_before_update` BEFORE UPDATE ON `matter_actor_lnk` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-ALTER DATABASE `phpip` CHARACTER SET utf8 COLLATE utf8_general_ci ;
-
---
--- Table structure for table `matter_category`
---
-
-DROP TABLE IF EXISTS `matter_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matter_category` (
@@ -1320,13 +1180,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `matter_status_list`
---
-
-DROP TABLE IF EXISTS `matter_status_list`;
-/*!50001 DROP VIEW IF EXISTS `matter_status_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `matter_status_list` (
@@ -1337,12 +1190,6 @@ SET character_set_client = utf8;
   `dead` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `matter_type`
---
-
-DROP TABLE IF EXISTS `matter_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matter_type` (
@@ -1384,13 +1231,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `sga2_list`
---
-
-DROP TABLE IF EXISTS `sga2_list`;
-/*!50001 DROP VIEW IF EXISTS `sga2_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `sga2_list` (
@@ -1416,12 +1256,6 @@ SET character_set_client = utf8;
   `updated` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `task`
---
-
-DROP TABLE IF EXISTS `task`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task` (
@@ -1501,19 +1335,30 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `task_before_update` BEFORE UPDATE ON `task` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `task_before_update` BEFORE UPDATE ON `task` FOR EACH ROW
+BEGIN
+	SET NEW.updater=SUBSTRING_INDEX(USER(),'@',1);
+	IF NEW.done_date IS NOT NULL AND OLD.done_date IS NULL AND OLD.done = 0 THEN
+		SET NEW.done = 1;
+	END IF;
+    	IF NEW.done_date IS NULL AND OLD.done_date IS NOT NULL AND OLD.done = 1 THEN
+		SET NEW.done = 0;
+	END IF;
+    	IF NEW.done = 1 AND OLD.done = 0 AND OLD.done_date IS NULL THEN
+		SET NEW.done_date = Least(OLD.due_date, Now());
+	END IF;
+    	IF NEW.done = 0 AND OLD.done = 1 AND OLD.done_date IS NOT NULL THEN
+		SET NEW.done_date = NULL;
+	END IF;
+	IF NEW.due_date != OLD.due_date AND old.rule_used IS NOT NULL THEN
+		SET NEW.rule_used = NULL;
+	END IF;
+END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `task_list`
---
-
-DROP TABLE IF EXISTS `task_list`;
-/*!50001 DROP VIEW IF EXISTS `task_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `task_list` (
@@ -1540,12 +1385,6 @@ SET character_set_client = utf8;
   `dead` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `task_rules`
---
-
-DROP TABLE IF EXISTS `task_rules`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_rules` (
@@ -1633,7 +1472,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trules_after_update` AFTER UPDATE ON `task_rules` FOR EACH ROW BEGIN	
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `trules_after_update` AFTER UPDATE ON `task_rules` FOR EACH ROW BEGIN	
 	IF (NEW.fee != OLD.fee OR NEW.cost != OLD.cost) THEN
 		UPDATE task SET fee=NEW.fee, cost=NEW.cost WHERE rule_used=NEW.id AND done=0;
 	END IF;
@@ -1643,13 +1482,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
---
--- Temporary table structure for view `tmp_main_matter_list`
---
-
-DROP TABLE IF EXISTS `tmp_main_matter_list`;
-/*!50001 DROP VIEW IF EXISTS `tmp_main_matter_list`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE TABLE `tmp_main_matter_list` (
@@ -1676,15 +1508,93 @@ SET character_set_client = utf8;
   `dead` tinyint NOT NULL
 ) ENGINE=MyISAM */;
 SET character_set_client = @saved_cs_client;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `lowerword`( str TEXT, word VARCHAR(5) ) RETURNS text CHARSET utf8
+    DETERMINISTIC
+BEGIN
+  DECLARE i INT DEFAULT 1;
+  DECLARE loc INT;
 
---
--- Dumping events for database 'phpip'
---
+  SET loc = LOCATE(CONCAT(word,' '), str, 2);
+  IF loc > 1 THEN
+    WHILE i <= LENGTH (str) AND loc <> 0 DO
+      SET str = INSERT(str,loc,LENGTH(word),LCASE(word));
+      SET i = loc+LENGTH(word);
+      SET loc = LOCATE(CONCAT(word,' '), str, i);
+    END WHILE;
+  END IF;
+  RETURN str;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `tcase`( str TEXT) RETURNS text CHARSET utf8
+    DETERMINISTIC
+BEGIN 
+  DECLARE c CHAR(1); 
+  DECLARE s TEXT; 
+  DECLARE i INT DEFAULT 1; 
+  DECLARE bool INT DEFAULT 1; 
+  DECLARE punct CHAR(17) DEFAULT ' ()[]{},.-_!@;:?/'; 
+  SET s = LCASE( str ); 
+  WHILE i <= LENGTH( str ) DO
+	SET c = SUBSTRING( s, i, 1 ); 
+	IF LOCATE( c, punct ) > 0 THEN 
+		SET bool = 1; 
+	ELSEIF bool=1 THEN  
+          IF c >= 'a' AND c <= 'z' THEN  
+              SET s = CONCAT(LEFT(s,i-1),UCASE(c),SUBSTRING(s,i+1)); 
+              SET bool = 0; 
+          ELSEIF c >= '0' AND c <= '9' THEN 
+            SET bool = 0; 
+          END IF; 
+	END IF; 
+		SET i = i+1; 
+  END WHILE;
 
---
--- Dumping routines for database 'phpip'
---
-/*!50003 DROP PROCEDURE IF EXISTS `recalculate_tasks` */;
+  SET s = lowerword(s, 'A');
+  SET s = lowerword(s, 'An');
+  SET s = lowerword(s, 'And');
+  SET s = lowerword(s, 'As');
+  SET s = lowerword(s, 'At');
+  SET s = lowerword(s, 'But');
+  SET s = lowerword(s, 'By');
+  SET s = lowerword(s, 'For');
+  SET s = lowerword(s, 'If');
+  SET s = lowerword(s, 'In');
+  SET s = lowerword(s, 'Of');
+  SET s = lowerword(s, 'On');
+  SET s = lowerword(s, 'Or');
+  SET s = lowerword(s, 'The');
+  SET s = lowerword(s, 'To');
+  SET s = lowerword(s, 'Via');
+
+  RETURN s; 
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1763,7 +1673,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `recreate_renewals` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1805,7 +1714,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 DROP PROCEDURE IF EXISTS `recreate_tasks` */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1971,18 +1879,8 @@ DELIMITER ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
---
--- Current Database: `phpip`
---
-
 USE `phpip`;
-
---
--- Final view structure for view `classifier_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `classifier_list`*/;
-/*!50001 DROP VIEW IF EXISTS `classifier_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -1995,13 +1893,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `docmerge`
---
-
 /*!50001 DROP TABLE IF EXISTS `docmerge`*/;
-/*!50001 DROP VIEW IF EXISTS `docmerge`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2009,7 +1901,7 @@ USE `phpip`;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `docmerge` AS select `matter`.`ID` AS `ID`,`matter`.`caseref` AS `NODOSSIER`,`matter`.`country` AS `PAYS`,`matter`.`origin` AS `ORIGINE`,concat(if(isnull(`matter`.`type_code`),'',concat('-',`matter`.`type_code`)),ifnull(cast(`matter`.`idx` as char(3) charset utf8),'')) AS `COMPLEMENT`,`matter`.`category_code` AS `PROTECTION`,date_format(`fil`.`event_date`,'%d/%m/%Y') AS `DEPOT`,`fil`.`detail` AS `NODEPOT`,date_format(`pub`.`event_date`,'%d/%m/%Y') AS `PUBLICATIO`,`pub`.`detail` AS `NOPUBLICAT`,NULL AS `DATEPRI`,group_concat(distinct concat(`pri`.`country`,`pri`.`detail`,' du ',date_format(`pri`.`event_date`,'%d/%m/%Y')) separator '
 ') AS `NOTITREPRI`,`pri`.`country` AS `PAYSPRIORI`,date_format(`grt`.`event_date`,'%d/%m/%Y') AS `Granted`,`grt`.`detail` AS `GrantNo`,date_format(`reg`.`event_date`,'%d/%m/%Y') AS `Registration`,`reg`.`detail` AS `RegNo`,date_format(`pr`.`event_date`,'%d/%m/%Y') AS `PubReg`,`pr`.`detail` AS `PubRegNo`,date_format(`allow`.`event_date`,'%d/%m/%Y') AS `ACCORD`,`allow`.`detail` AS `TEXTEACCOR`,date_format(`matter`.`expire_date`,'%d/%m/%Y') AS `EXPIRATION`,`cli`.`name` AS `CLI1NOM`,`cli`.`first_name` AS `CLI1NOM2`,`cli`.`address` AS `CLI1RUE1`,`cli`.`country` AS `CLI1PAYS`,if((`cli`.`address_billing` = ''),concat_ws('\n',`cli`.`name`,`cli`.`address`,`cli`.`country`),concat_ws('\n',`cli`.`address_billing`,`cli`.`country_billing`)) AS `BillingAddress`,`lcli`.`actor_ref` AS `REFERENC_1`,`cli`.`email` AS `email`,`cli`.`VAT_number` AS `VAT`,`titof`.`value` AS `TITREFRANC`,`titen`.`value` AS `TITREANGLA`,`tit`.`value` AS `Title`,`tm`.`value` AS `Trademark`,group_concat(distinct `class`.`value` separator '.') AS `Class`,group_concat(distinct concat_ws(' ',`inv`.`name`,`inv`.`first_name`) separator ' - ') AS `INV1NOM`,group_concat(distinct concat_ws('\n',concat_ws(' ',`inv`.`name`,`inv`.`first_name`),`inv`.`address`,`inv`.`country`,`inv`.`nationality`) separator '
 ') AS `INV1RUE1`,concat_ws('\n',group_concat(distinct `applc`.`name` separator '
@@ -2024,13 +1916,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `event_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `event_list`*/;
-/*!50001 DROP VIEW IF EXISTS `event_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2043,13 +1929,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `event_lnk_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `event_lnk_list`*/;
-/*!50001 DROP VIEW IF EXISTS `event_lnk_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2062,13 +1942,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `filing_info`
---
-
 /*!50001 DROP TABLE IF EXISTS `filing_info`*/;
-/*!50001 DROP VIEW IF EXISTS `filing_info`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2081,13 +1955,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `matter_actor_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `matter_actor_list`*/;
-/*!50001 DROP VIEW IF EXISTS `matter_actor_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2100,13 +1968,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `matter_status_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `matter_status_list`*/;
-/*!50001 DROP VIEW IF EXISTS `matter_status_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2119,13 +1981,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `sga2_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `sga2_list`*/;
-/*!50001 DROP VIEW IF EXISTS `sga2_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2133,18 +1989,12 @@ USE `phpip`;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
 /*!50001 VIEW `sga2_list` AS select `matter`.`ID` AS `UID`,`matter`.`dead` AS `dead`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,concat(ifnull(`matter`.`type_code`,''),ifnull(cast(`matter`.`idx` as char(3) charset utf8),'')) AS `complement`,`matter`.`category_code` AS `cat`,ifnull(group_concat(distinct `own`.`name` separator '; '),group_concat(distinct `cli`.`name` separator '; ')) AS `owner`,cast(ifnull(min(`own`.`small_entity`),min(`cli`.`small_entity`)) as char charset utf8) AS `small_entity`,`agtlnk`.`actor_ref` AS `refsga2`,`classifier`.`value` AS `title`,`fil`.`event_date` AS `filed`,`fil`.`detail` AS `appno`,`pub`.`event_date` AS `published`,`pub`.`detail` AS `pubno`,`grt`.`event_date` AS `granted`,`grt`.`detail` AS `grantno`,`matter`.`expire_date` AS `expire_date`,`aba`.`event_date` AS `abandoned`,cast(max(`updt`.`updated`) as date) AS `updated` from (((((((((`matter` left join (`matter_actor_lnk` `clilnk` join `actor` `cli`) on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `clilnk`.`matter_ID`) and (`clilnk`.`role` = 'APP') and (`cli`.`ID` = `clilnk`.`actor_ID`)))) left join (`matter_actor_lnk` `ownlnk` join `actor` `own`) on(((`matter`.`ID` = `ownlnk`.`matter_ID`) and (`ownlnk`.`role` = 'OWN') and (`own`.`ID` = `ownlnk`.`actor_ID`)))) left join (`matter_actor_lnk` `agtlnk` join `actor` `agt`) on(((`matter`.`ID` = `agtlnk`.`matter_ID`) and (`agtlnk`.`role` = 'ANN') and (`agt`.`ID` = `agtlnk`.`actor_ID`)))) left join `event` `fil` on(((`matter`.`ID` = `fil`.`matter_ID`) and (`fil`.`code` = 'FIL')))) left join `event` `pub` on(((`matter`.`ID` = `pub`.`matter_ID`) and (`pub`.`code` = 'PUB')))) left join `event` `grt` on(((`matter`.`ID` = `grt`.`matter_ID`) and (`grt`.`code` = 'GRT')))) left join `event` `aba` on(((`matter`.`ID` = `aba`.`matter_ID`) and (`aba`.`code` = 'ABA')))) left join (`classifier` join `classifier_type`) on(((`classifier`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`classifier`.`type_code` = `classifier_type`.`code`) and (`classifier_type`.`main_display` = 1) and (`classifier_type`.`display_order` = 2)))) join `event` `updt` on((`matter`.`ID` = `updt`.`matter_ID`))) where (`agt`.`name` = 'SGA2') group by `matter`.`ID` order by `matter`.`caseref`,`matter`.`container_ID`,`matter`.`origin`,`matter`.`country`,`matter`.`type_code`,`matter`.`idx` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `task_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `task_list`*/;
-/*!50001 DROP VIEW IF EXISTS `task_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2157,13 +2007,7 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-
---
--- Final view structure for view `tmp_main_matter_list`
---
-
 /*!50001 DROP TABLE IF EXISTS `tmp_main_matter_list`*/;
-/*!50001 DROP VIEW IF EXISTS `tmp_main_matter_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
@@ -2176,22 +2020,11 @@ USE `phpip`;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2014-10-21 16:11:19
--- MySQL dump 10.13  Distrib 5.5.38, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: phpip
 -- ------------------------------------------------------
--- Server version	5.5.38-0ubuntu0.14.04.1-log
+-- Server version	5.5.47-0ubuntu0.14.04.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -2210,24 +2043,24 @@ USE `phpip`;
 
 LOCK TABLES `actor_role` WRITE;
 /*!40000 ALTER TABLE `actor_role` DISABLE KEYS */;
-INSERT INTO `actor_role` VALUES ('AGT','Primary Agent',20,0,1,0,0,0,3,'NULL','NULL','root','2011-09-27 10:18:42','root'),
+INSERT INTO `actor_role` VALUES ('AGT','Primary Agent',20,0,1,0,0,0,3,NULL,NULL,'root','2016-03-16 15:49:49','root'),
 ('AGT2','Secondary Agent',22,0,1,0,0,0,3,NULL,'Usually the primary agent\'s agent','root@localhost','2011-05-05 09:17:57','root@localhost'),
-('ANN','Annuity Agent',21,0,1,0,0,0,3,'NULL','Agent in charge of renewals. \"Client handled\" is a special agent who, when added, will delete any renewals in the matter','root','2011-10-26 09:19:24','JJJ'),
-('APP','Applicant',3,1,1,0,0,0,1,'NULL','Assignee in the US, i.e. the owner upon filing','root','2011-10-27 15:34:13','root'),
-('CLI','Client',1,1,1,0,1,0,1,'NULL','The client we take instructions from and who we invoice ','root','2013-07-30 08:18:27','root'),
+('ANN','Annuity Agent',21,0,1,0,0,0,3,NULL,'Agent in charge of renewals. \"Client handled\" is a special agent who, when added, will delete any renewals in the matter','root','2016-03-16 15:49:49','root'),
+('APP','Applicant',3,1,1,0,0,0,1,NULL,'Assignee in the US, i.e. the owner upon filing','root','2016-03-16 15:49:49','root'),
+('CLI','Client',1,1,1,0,1,0,1,NULL,'The client we take instructions from and who we invoice ','root','2016-03-16 15:49:50','root'),
 ('CNT','Contact',30,1,1,1,0,0,4,NULL,'Client\'s contact person','root@localhost','2011-05-05 09:19:26','root@localhost'),
-('DEL','Delegate',31,1,0,0,0,0,4,'NULL','Another user allowed to manage the case','root','2011-10-11 09:31:00','root'),
+('DEL','Delegate',31,1,0,0,0,0,4,NULL,'Another user allowed to manage the case','root','2016-03-16 15:49:50','root'),
 ('FAGT','Former Agent',23,0,1,0,0,0,127,'#000000',NULL,'root','2012-08-06 09:03:14','root'),
-('FOWN','Former Owner',5,0,0,0,0,1,1,'NULL','To keep track of ownership history','root','2012-08-06 09:01:34','root'),
-('INV','Inventor',10,1,0,1,0,0,2,'NULL','NULL','root','2012-03-03 00:08:30',''),
-('LCN','Licensee',127,0,0,0,0,0,0,'NULL','NULL','root','2011-09-27 10:18:42','root'),
-('OFF','Patent Office',127,0,0,0,0,0,0,'NULL','NULL','root','2011-09-27 10:18:42','root'),
-('OPP','Opposing Party',127,0,0,0,0,0,0,'NULL','NULL','root','2014-10-14 07:40:44','root'),
+('FOWN','Former Owner',5,0,0,0,0,1,1,NULL,'To keep track of ownership history','root','2016-03-16 15:49:50','root'),
+('INV','Inventor',10,1,0,1,0,0,2,NULL,NULL,'root','2016-03-16 15:49:50','root'),
+('LCN','Licensee',127,0,0,0,0,0,0,NULL,NULL,'root','2016-03-16 15:49:50','root'),
+('OFF','Patent Office',127,0,0,0,0,0,0,NULL,NULL,'root','2016-03-16 15:49:50','root'),
+('OPP','Opposing Party',127,0,0,0,0,0,0,NULL,NULL,'root','2016-03-16 15:49:50','root'),
 ('OWN','Owner',4,0,1,0,1,1,1,'NULL','Use if different than applicant','root','2012-12-20 10:13:50','root'),
 ('PAY','Payor',2,1,0,0,1,0,1,'#000000','The actor who pays','root','2011-09-27 10:18:42','root'),
-('PTNR','Partner',127,1,0,0,0,0,0,'NULL','NULL','root','2011-09-27 10:18:42','root'),
+('PTNR','Partner',127,1,0,0,0,0,0,NULL,NULL,'root','2016-03-16 15:49:50','root'),
 ('TRA','Translator',127,0,0,0,0,1,127,'#000000',NULL,'root','2013-12-16 11:47:04',NULL),
-('WRI','Writer',127,1,0,0,0,0,0,'NULL','Person who follows the case','root','2011-10-24 10:03:08','JJJ');
+('WRI','Writer',127,1,0,0,0,0,0,NULL,'Person who follows the case','root','2016-03-16 15:49:50','root');
 /*!40000 ALTER TABLE `actor_role` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2536,8 +2369,9 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('ABO','Abandon Original','PAT','EP',1,0,NULL,0,1,0,0,'Abandon the originating patent that was re-designated in EP','root@localhost','2011-04-23 20:43:27','root@localhost'),
 ('ADV','Advisory Action','PAT','US',0,0,NULL,0,0,0,0,NULL,'root@localhost',NULL,NULL),
 ('ALL','Allowance','PAT',NULL,0,1,NULL,0,0,0,0,'Use also for R71.3 in EP','root@localhost','2011-03-20 16:15:45','root@localhost'),
-('APL','Appeal',NULL,NULL,0,1,NULL,1,0,0,0,'Filing notice of appeal or the like','root@localhost','2014-05-05 13:17:37','root'),
+('APL','Appeal',NULL,NULL,0,1,NULL,1,0,0,0,'Filing notice of appeal or the like','root@localhost','2014-11-17 16:23:35','root'),
 ('CAN','Cancelled','TM',NULL,0,1,NULL,0,0,0,1,NULL,'root','2014-10-09 08:54:39',NULL),
+('CLO','Closed','LTG',NULL,0,1,NULL,0,0,0,1,NULL,'root','2015-11-25 13:07:23',NULL),
 ('COM','Communication',NULL,NULL,0,0,NULL,0,0,0,0,'Communication regarding administrative or formal matters (missing parts, irregularities...)','root@localhost','2011-04-26 14:47:36','root@localhost'),
 ('CRE','Created',NULL,NULL,0,0,NULL,0,1,0,0,'Creation date of matter - for attaching tasks necessary before anything else','root','2011-10-09 19:41:17',NULL),
 ('DAPL','Decision on Appeal',NULL,NULL,0,1,NULL,0,0,0,0,'State outcome in detail field','root','2014-03-12 15:54:14','root'),
@@ -2551,6 +2385,7 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('EXA','Examiner Action',NULL,NULL,0,0,NULL,0,0,0,0,'AKA Office Action, i.e. anything related to substantive examination','root@localhost','2011-03-20 17:03:46','root@localhost'),
 ('EXAF','Examiner Action (Final)','PAT','US',0,0,NULL,0,0,0,0,NULL,'root','2013-10-10 16:09:24','root'),
 ('EXP','Expiry',NULL,NULL,0,1,NULL,0,1,0,1,'Do not use nor change - present for internal functionality','root@localhost','2013-12-17 13:31:30','root'),
+('FAP','File Notice of Appeal',NULL,NULL,1,0,NULL,1,0,0,0,NULL,'root','2016-01-30 11:46:54','root'),
 ('FBY','File by',NULL,NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost','2012-01-18 06:50:04','root'),
 ('FDIV','File Divisional','PAT',NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost','2011-04-23 20:44:30','root@localhost'),
 ('FIL','Filed',NULL,NULL,0,1,NULL,0,1,0,0,NULL,'root@localhost','2011-04-26 14:20:23','root@localhost'),
@@ -2558,10 +2393,12 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('FPR','Further Processing','PAT',NULL,1,0,NULL,1,0,0,0,NULL,'root@localhost','2011-10-09 22:29:42','root'),
 ('FRCE','File RCE','PAT','US',1,0,NULL,0,0,0,0,NULL,'root','2013-09-24 16:09:36',NULL),
 ('GRT','Granted','PAT',NULL,0,1,NULL,0,1,0,0,NULL,'root@localhost',NULL,NULL),
+('INV','Invalidated','TM','US',0,1,NULL,0,0,0,1,NULL,'root','2014-11-14 14:05:44','root'),
 ('LAP','Lapsed',NULL,NULL,0,1,NULL,0,1,0,1,NULL,'root@localhost','2011-03-16 10:42:48',NULL),
 ('NPH','National Phase','PAT','WO',1,0,NULL,0,1,1,0,NULL,'root@localhost','2012-09-18 13:14:14','root'),
 ('OPP','Opposition',NULL,'EP',0,1,NULL,0,0,0,0,NULL,'root@localhost','2011-03-23 07:32:55','root@localhost'),
 ('OPR','Oral Proceedings','PAT','EP',1,0,NULL,1,0,0,0,NULL,'root@localhost','2014-05-07 07:10:37','root'),
+('ORE','Opposition rejected','PAT','EP',0,1,NULL,0,0,0,0,NULL,'root','2015-01-09 09:02:05',NULL),
 ('PAY','Pay',NULL,NULL,1,0,NULL,0,0,0,0,'Use for any fees to be paid','root@localhost','2011-04-07 06:18:59','root@localhost'),
 ('PDES','Post designation','TM','WO',0,1,NULL,0,0,0,0,NULL,'root','2014-07-01 12:48:03',NULL),
 ('PFIL','Parent Filed','PAT',NULL,0,1,NULL,0,1,0,0,'Filing date of the parent (use only when the matter type is defined). Use as link to the parent matter.','root@localhost','2011-06-07 08:53:24','root@localhost'),
@@ -2581,7 +2418,7 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('REQ','Request Examination',NULL,NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost',NULL,NULL),
 ('RSTR','Restriction Req.','PAT','US',0,0,NULL,0,0,0,0,NULL,'root','2011-11-03 15:53:39','root'),
 ('SOL','Sold',NULL,NULL,0,1,NULL,0,0,0,1,NULL,'root','2014-01-24 14:38:50','root'),
-('SOP','Summons to Oral Proc.',NULL,'EP',0,0,NULL,0,0,0,0,NULL,'root','2011-11-03 17:09:54',NULL),
+('SOP','Summons to Oral Proc.',NULL,NULL,0,1,NULL,0,0,0,0,NULL,'root','2014-11-06 14:50:24','root'),
 ('SR','Search Report',NULL,NULL,0,0,NULL,0,0,0,0,NULL,'root@localhost',NULL,NULL),
 ('TRF','Transferred',NULL,NULL,0,1,NULL,0,1,0,1,'Case no longer followed','root@localhost','2011-03-20 17:09:21','root@localhost'),
 ('VAL','Validate','PAT','EP',1,0,NULL,0,1,0,0,'Validate granted EP in designated countries','root@localhost','2011-03-22 10:22:17','root@localhost'),
@@ -2629,9 +2466,8 @@ LOCK TABLES `matter_type` WRITE;
 INSERT INTO `matter_type` VALUES ('CIP','Continuation in Part','root','0000-00-00 00:00:00','root'),
 ('CNT','Continuation','root','0000-00-00 00:00:00','root'),
 ('DIV','Divisional','root','0000-00-00 00:00:00','root'),
-('PROV','Provisional','root','2013-01-30 16:07:05',NULL),
 ('REI','Reissue','root','0000-00-00 00:00:00','root'),
-('REX','Re-exam','root','0000-00-00 00:00:00','root');
+('REX','Re-examination','root','2016-01-30 11:40:39','root');
 /*!40000 ALTER TABLE `matter_type` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -2662,7 +2498,7 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (20,1,'PROD','PRI',0,0,'PAT','US',NULL,NULL,'Decl. and Assignment',0,12,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-12-05 13:08:15','root'),
 (21,1,'FBY','PRI',0,0,'PAT',NULL,NULL,NULL,'Priority Deadline',0,12,0,0,0,'FIL',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-11-10 10:22:11','root'),
 (22,1,'NPH','FIL',0,0,'PAT','WO',NULL,NULL,NULL,0,30,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-09-02 14:13:42','root'),
-(23,1,'REQ','FIL',0,0,'PAT','WO',NULL,NULL,NULL,0,22,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2012-02-08 22:44:38','root'),
+(23,1,'REQ','FIL',0,0,'PAT','WO',NULL,NULL,NULL,0,22,0,0,0,'EXA',NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2015-12-17 10:54:10','root'),
 (24,1,'DBY','REC',0,0,'PAT',NULL,NULL,NULL,NULL,0,2,0,0,0,'PRI',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-10-21 07:33:15','root'),
 (25,1,'PRID','PRI',0,1,'PAT',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root@localhost','2011-11-04 08:03:27','root'),
 (26,1,'EHK','PUB',0,0,'PAT','CN',NULL,NULL,NULL,0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-09-02 14:13:42','root'),
@@ -2681,7 +2517,7 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (40,1,'FPR','DW',0,0,'PAT','EP',NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-09 22:41:20','root'),
 (41,1,'REP','PSR',0,0,'PAT','EP',NULL,NULL,'R70(2)',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-01-11 14:54:08','root'),
 (42,1,'NPH','PRI',0,0,'PAT',NULL,'WO',NULL,NULL,0,30,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-14 07:20:28',NULL),
-(43,1,'PAY','FIL',0,0,'PAT','FR',NULL,NULL,'Filing fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,526.00,'EUR',NULL,NULL,'root','2013-02-25 15:02:53','root'),
+(43,1,'PAY','FIL',0,0,'PAT','FR',NULL,NULL,'Filing fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,546.00,'EUR',NULL,NULL,'root','2015-07-01 12:52:53','root'),
 (44,1,'PAY','FIL',0,0,'PAT','EP',NULL,NULL,'Filing fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,1280.00,'EUR',NULL,NULL,'root','2013-02-25 15:02:42','root'),
 (45,1,'VAL','GRT',0,0,'PAT',NULL,'EP',NULL,NULL,0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-17 13:42:58',NULL),
 (46,1,'REP','RSTR',0,0,'PAT','US',NULL,NULL,'Restriction Req.',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-03 15:58:40',NULL),
@@ -2689,9 +2525,9 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (48,1,'APL','REF',0,0,'PAT',NULL,NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-03 16:38:31',NULL),
 (49,1,'PROD','REF',0,0,'PAT',NULL,NULL,NULL,'Grounds of Appeal',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-08-08 16:12:53','root'),
 (52,1,'REP','COM',0,0,'OP','EP',NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-03 18:06:54',NULL),
-(53,1,'REQ','FIL',0,0,'PAT','KR',NULL,NULL,NULL,0,0,5,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:37:48','root'),
-(54,1,'REQ','FIL',0,0,'PAT','CA',NULL,NULL,NULL,0,0,5,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:37:55','root'),
-(55,1,'REQ','FIL',0,0,'PAT','CN',NULL,NULL,NULL,0,0,3,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-02-08 22:45:31','root'),
+(53,1,'REQ','FIL',0,0,'PAT','KR',NULL,NULL,NULL,0,0,5,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:10','root'),
+(54,1,'REQ','FIL',0,0,'PAT','CA',NULL,NULL,NULL,0,0,5,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:11','root'),
+(55,1,'REQ','FIL',0,0,'PAT','CN',NULL,NULL,NULL,0,0,3,0,0,'EXA',NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:11','root'),
 (56,1,'PAY','ALL',0,0,'PAT','CA',NULL,NULL,'Grant Fees',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:06','root'),
 (57,1,'PROD','PRI',0,0,'PAT',NULL,NULL,NULL,'Priority Docs',0,16,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:12','root'),
 (58,1,'PAY','FIL',0,0,'PAT','WO',NULL,NULL,'Filing Fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:17','root'),
@@ -2707,43 +2543,43 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (68,1,'PAY','PSR',0,0,'PAT','EP',NULL,NULL,'Designation Fees',0,6,0,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-04-24 13:37:49','root'),
 (69,1,'REP','PSR',0,0,'PAT','EP',NULL,NULL,'Written Opinion',0,6,0,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-04-24 13:36:45',NULL),
 (70,1,'REQ','PRI',0,0,'PAT','IN',NULL,NULL,NULL,0,48,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-06-30 16:54:01','root'),
-(102,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'2',0,0,1,0,1,NULL,NULL,1,0,NULL,NULL,36.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:16:34','root'),
-(103,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'3',0,0,2,0,1,NULL,NULL,1,0,NULL,NULL,36.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:16:42','root'),
-(104,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'4',0,0,3,0,1,NULL,NULL,1,0,NULL,NULL,36.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:16:46','root'),
-(105,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'5',0,0,4,0,1,NULL,NULL,1,0,NULL,NULL,36.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:16:52','root'),
-(106,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'6',0,0,5,0,1,NULL,NULL,1,0,NULL,NULL,72.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:00','root'),
-(107,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'7',0,0,6,0,1,NULL,NULL,1,0,NULL,NULL,92.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:05','root'),
-(108,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'8',0,0,7,0,1,NULL,NULL,1,0,NULL,NULL,130.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:15','root'),
-(109,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'9',0,0,8,0,1,NULL,NULL,1,0,NULL,NULL,170.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:22','root'),
-(110,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'10',0,0,9,0,1,NULL,NULL,1,0,NULL,NULL,210.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:24','root'),
-(111,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'11',0,0,10,0,1,NULL,NULL,1,0,NULL,NULL,250.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:28','root'),
-(112,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'12',0,0,11,0,1,NULL,NULL,1,0,NULL,NULL,290.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:33','root'),
-(113,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'13',0,0,12,0,1,NULL,NULL,1,0,NULL,NULL,330.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:37','root'),
-(114,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'14',0,0,13,0,1,NULL,NULL,1,0,NULL,NULL,380.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:42','root'),
-(115,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'15',0,0,14,0,1,NULL,NULL,1,0,NULL,NULL,430.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:46','root'),
-(116,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'16',0,0,15,0,1,NULL,NULL,1,0,NULL,NULL,490.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:50','root'),
-(117,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'17',0,0,16,0,1,NULL,NULL,1,0,NULL,NULL,550.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:17:54','root'),
-(118,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'18',0,0,17,0,1,NULL,NULL,1,0,NULL,NULL,620.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:18:05','root'),
-(119,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'19',0,0,18,0,1,NULL,NULL,1,0,NULL,NULL,690.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:18:08','root'),
-(120,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'20',0,0,19,0,1,NULL,NULL,1,0,NULL,NULL,760.00,0,'EUR',NULL,NULL,'root@localhost','2013-01-30 13:18:11','root'),
-(203,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'3',0,0,2,0,1,NULL,NULL,1,0,NULL,NULL,465.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:01','root'),
-(204,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'4',0,0,3,0,1,NULL,NULL,1,0,NULL,NULL,580.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:06','root'),
-(205,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'5',0,0,4,0,1,NULL,NULL,1,0,NULL,NULL,810.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:10','root'),
-(206,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'6',0,0,5,0,1,NULL,NULL,1,0,NULL,NULL,1040.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:14','root'),
-(207,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'7',0,0,6,0,1,NULL,NULL,1,0,NULL,NULL,1155.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:18','root'),
-(208,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'8',0,0,7,0,1,NULL,NULL,1,0,NULL,NULL,1265.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:22','root'),
-(209,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'9',0,0,8,0,1,NULL,NULL,1,0,NULL,NULL,1380.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:25','root'),
-(210,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'10',0,0,9,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:29','root'),
-(211,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'11',0,0,10,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:32','root'),
-(212,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'12',0,0,11,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:35','root'),
-(213,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'13',0,0,12,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:36','root'),
-(214,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'14',0,0,13,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:37','root'),
-(215,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'15',0,0,14,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:39','root'),
-(216,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'16',0,0,15,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:40','root'),
-(217,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'17',0,0,16,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:46','root'),
-(218,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'18',0,0,17,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:47','root'),
-(219,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'19',0,0,18,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:48','root'),
-(220,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'20',0,0,19,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,0,'EUR',NULL,NULL,'root','2014-03-18 15:44:51','root'),
+(102,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'2',0,0,1,0,1,NULL,NULL,1,0,NULL,NULL,38.00,72.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:10','root'),
+(103,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'3',0,0,2,0,1,NULL,NULL,1,0,NULL,NULL,38.00,72.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:15','root'),
+(104,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'4',0,0,3,0,1,NULL,NULL,1,0,NULL,NULL,38.00,72.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:19','root'),
+(105,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'5',0,0,4,0,1,NULL,NULL,1,0,NULL,NULL,38.00,72.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:23','root'),
+(106,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'6',0,0,5,0,1,NULL,NULL,1,0,NULL,NULL,76.00,97.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:27','root'),
+(107,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'7',0,0,6,0,1,NULL,NULL,1,0,NULL,NULL,96.00,97.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:31','root'),
+(108,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'8',0,0,7,0,1,NULL,NULL,1,0,NULL,NULL,136.00,97.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:36','root'),
+(109,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'9',0,0,8,0,1,NULL,NULL,1,0,NULL,NULL,180.00,97.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:41','root'),
+(110,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'10',0,0,9,0,1,NULL,NULL,1,0,NULL,NULL,220.00,97.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:46','root'),
+(111,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'11',0,0,10,0,1,NULL,NULL,1,0,NULL,NULL,260.00,127.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:53','root'),
+(112,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'12',0,0,11,0,1,NULL,NULL,1,0,NULL,NULL,300.00,127.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:53:58','root'),
+(113,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'13',0,0,12,0,1,NULL,NULL,1,0,NULL,NULL,350.00,127.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:02','root'),
+(114,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'14',0,0,13,0,1,NULL,NULL,1,0,NULL,NULL,400.00,127.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:08','root'),
+(115,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'15',0,0,14,0,1,NULL,NULL,1,0,NULL,NULL,450.00,127.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:13','root'),
+(116,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'16',0,0,15,0,1,NULL,NULL,1,0,NULL,NULL,510.00,168.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:19','root'),
+(117,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'17',0,0,16,0,1,NULL,NULL,1,0,NULL,NULL,570.00,168.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:24','root'),
+(118,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'18',0,0,17,0,1,NULL,NULL,1,0,NULL,NULL,640.00,168.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:29','root'),
+(119,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'19',0,0,18,0,1,NULL,NULL,1,0,NULL,NULL,720.00,168.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:33','root'),
+(120,1,'REN','FIL',0,0,'PAT','FR',NULL,NULL,'20',0,0,19,0,1,NULL,NULL,1,0,NULL,NULL,790.00,168.00,'EUR',NULL,NULL,'root@localhost','2015-07-01 12:54:43','root'),
+(203,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'3',0,0,2,0,1,NULL,NULL,1,0,NULL,NULL,465.00,168.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:01','root'),
+(204,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'4',0,0,3,0,1,NULL,NULL,1,0,NULL,NULL,580.00,183.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:06','root'),
+(205,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'5',0,0,4,0,1,NULL,NULL,1,0,NULL,NULL,810.00,204.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:10','root'),
+(206,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'6',0,0,5,0,1,NULL,NULL,1,0,NULL,NULL,1040.00,230.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:14','root'),
+(207,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'7',0,0,6,0,1,NULL,NULL,1,0,NULL,NULL,1155.00,255.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:18','root'),
+(208,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'8',0,0,7,0,1,NULL,NULL,1,0,NULL,NULL,1265.00,260.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:22','root'),
+(209,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'9',0,0,8,0,1,NULL,NULL,1,0,NULL,NULL,1380.00,275.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:25','root'),
+(210,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'10',0,0,9,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root@localhost','2014-03-18 15:44:29','root'),
+(211,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'11',0,0,10,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:32','root'),
+(212,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'12',0,0,11,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:35','root'),
+(213,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'13',0,0,12,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:36','root'),
+(214,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'14',0,0,13,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:37','root'),
+(215,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'15',0,0,14,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:39','root'),
+(216,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'16',0,0,15,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:40','root'),
+(217,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'17',0,0,16,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:46','root'),
+(218,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'18',0,0,17,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:47','root'),
+(219,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'19',0,0,18,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:48','root'),
+(220,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'20',0,0,19,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:51','root'),
 (234,1,'PAY','ALL',0,0,'PAT','CN',NULL,NULL,'Grant Fees',76,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-09-21 14:10:24','root'),
 (235,1,'REP','SR',0,0,'PAT','WO',NULL,NULL,'Written Opinion',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-03-07 16:32:14','root'),
 (236,1,'PAY','ALL',0,0,'PAT','US',NULL,NULL,'Grant Fees',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-05-18 12:46:08','root'),
@@ -2752,35 +2588,35 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (239,1,'WAT','PUB',0,0,'TM','EM',NULL,NULL,'Opposition deadline',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-06-19 09:49:18',NULL),
 (240,1,'WAT','PUB',0,0,'TM','US',NULL,NULL,'Opposition deadline',30,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-06-19 09:50:06',NULL),
 (242,1,'PROD','REG',0,0,'TM','US',NULL,NULL,'Declaration of use',0,66,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'délai à 5 ans et demi','root','2013-10-15 11:01:57','root'),
-(1001,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1002,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1003,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1004,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1005,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1011,1,'REN','REG',0,0,'TM','CA',NULL,NULL,'15',0,0,15,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1012,1,'REN','REG',0,0,'TM','CA',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1013,1,'REN','REG',0,0,'TM','CA',NULL,NULL,'45',0,0,45,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1081,1,'REN','REG',0,0,'TM','US',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1082,1,'REN','REG',0,0,'TM','US',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1083,1,'REN','REG',0,0,'TM','US',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1084,1,'REN','REG',0,0,'TM','US',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1085,1,'REN','REG',0,0,'TM','US',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1091,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1092,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1093,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1094,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1101,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1102,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1103,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1104,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1121,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1122,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1123,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1124,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1131,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1132,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1133,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1134,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
+(1001,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:20','root'),
+(1002,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:21','root'),
+(1003,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:22','root'),
+(1004,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:24','root'),
+(1005,1,'REN','FIL',0,0,'TM',NULL,NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:25','root'),
+(1011,1,'REN','REG',0,0,'TM','CA',NULL,NULL,'15',0,0,15,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:27','root'),
+(1012,1,'REN','REG',0,0,'TM','CA',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:29','root'),
+(1013,1,'REN','REG',0,0,'TM','CA',NULL,NULL,'45',0,0,45,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:31','root'),
+(1081,1,'REN','REG',0,0,'TM','US',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:07:59','root'),
+(1082,1,'REN','REG',0,0,'TM','US',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:16','root'),
+(1083,1,'REN','REG',0,0,'TM','US',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:19','root'),
+(1084,1,'REN','REG',0,0,'TM','US',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:21','root'),
+(1085,1,'REN','REG',0,0,'TM','US',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:22','root'),
+(1091,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:24','root'),
+(1092,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:25','root'),
+(1093,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:26','root'),
+(1094,1,'REN','REG',0,0,'TM','JP',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:29','root'),
+(1101,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:27','root'),
+(1102,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:30','root'),
+(1103,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:31','root'),
+(1104,1,'REN','REG',0,0,'TM','KR',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:33','root'),
+(1121,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:34','root'),
+(1122,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:35','root'),
+(1123,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:36','root'),
+(1124,1,'REN','REG',0,0,'TM','BR',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:37','root'),
+(1131,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:38','root'),
+(1132,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:39','root'),
+(1133,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:40','root'),
+(1134,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:41','root'),
 (1181,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Annexure to Form 3',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:33','root'),
 (1182,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Deed of Assignment',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:36','root'),
 (1183,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Power',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:45','root'),
@@ -2799,28 +2635,28 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1196,1,'REN','FIL',0,0,'DSG','EM',NULL,NULL,'3',0,0,15,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-05-16 13:19:34','root'),
 (1197,1,'REN','FIL',0,0,'DSG','EM',NULL,NULL,'4',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-05-16 13:19:35','root'),
 (1198,1,'REN','FIL',0,0,'DSG','EM',NULL,NULL,'5',0,0,25,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-05-16 13:19:36','root'),
-(1211,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1212,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1213,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1214,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1215,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1216,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1217,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1218,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1219,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1220,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1221,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1222,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1223,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1224,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
-(1225,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-06-19 10:45:50','root'),
+(1211,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:42','root'),
+(1212,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:43','root'),
+(1213,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:44','root'),
+(1214,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:45','root'),
+(1215,1,'REN','REG',0,0,'TM','DK',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:47','root'),
+(1216,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:48','root'),
+(1217,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:49','root'),
+(1218,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:51','root'),
+(1219,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:52','root'),
+(1220,1,'REN','REG',0,0,'TM','NO',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:53','root'),
+(1221,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:54','root'),
+(1222,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:55','root'),
+(1223,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:56','root'),
+(1224,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:59','root'),
+(1225,1,'REN','REG',0,0,'TM','FI',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:07','root'),
 (1228,1,'REP','EXA',0,0,'PAT','TW',NULL,NULL,'Exam Report',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-07-25 12:28:59','root'),
-(1230,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'10',0,11,9,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-13 13:59:59','root'),
-(1231,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'20',0,11,19,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-13 14:00:54','root'),
-(1232,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'30',0,11,29,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-13 14:00:55','root'),
-(1233,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'40',0,11,39,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-13 14:00:56','root'),
-(1234,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'50',0,11,49,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-13 14:00:57','root'),
-(1235,1,'REN','FIL',0,0,'TM','SA',NULL,NULL,'10',0,8,9,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL','10 ans Hegira','root','2013-07-01 13:57:15','root'),
+(1230,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'10',0,11,9,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:09','root'),
+(1231,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'20',0,11,19,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:11','root'),
+(1232,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'30',0,11,29,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:12','root'),
+(1233,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'40',0,11,39,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:14','root'),
+(1234,1,'REN','PR',0,0,'TM','TW',NULL,NULL,'50',0,11,49,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:15','root'),
+(1235,1,'REN','FIL',0,0,'TM','SA',NULL,NULL,'10',0,8,9,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root','10 ans Hegira','root','2014-11-12 10:09:17','root'),
 (1236,1,'REP','EXA',0,0,'PAT','JP',NULL,NULL,'Exam Report',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-07-25 12:29:23','root'),
 (1237,1,'REP','EXA',0,0,'TM','US',NULL,NULL,'Exam Report',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-07-31 16:36:26',NULL),
 (1238,1,'REP','EXA',0,0,'TM','KR',NULL,NULL,'Exam Report',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-08-07 09:34:45',NULL),
@@ -2836,34 +2672,45 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1248,1,'PROD','EXA',0,0,'TM','KR',NULL,NULL,'POA',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-17 14:03:44',NULL),
 (1249,1,'PROD','EXA',0,0,'TM','CN',NULL,NULL,'POA',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-17 14:04:03',NULL),
 (1250,1,'PROD','EXA',0,0,'TM','IL',NULL,NULL,'POA',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-17 14:04:22',NULL),
-(1251,1,'PROD','REF',0,0,'TM',NULL,NULL,NULL,'Grounds of Appeal',45,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-09-19 10:26:18',NULL),
-(1252,1,'PROD','REF',0,0,'TM',NULL,NULL,NULL,'POA',45,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2013-09-19 10:26:43','root'),
+(1251,1,'PROD','REF',0,0,'TM',NULL,NULL,NULL,'Grounds of Appeal',45,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:18','root'),
+(1252,1,'PROD','REF',0,0,'TM',NULL,NULL,NULL,'POA',45,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:19','root'),
 (1253,1,'REP','EXA',0,0,'TM','CA',NULL,NULL,'Exam Report',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-20 11:10:30','root'),
 (1254,1,'REP','EXA',0,0,'TM','TH',NULL,NULL,'Exam Report',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-20 13:43:06','root'),
 (1258,1,'REP','EXAF',0,0,'PAT','US',NULL,NULL,'Final OA',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-04 12:23:02',NULL),
 (1259,1,'PROD','REG',0,0,'TM','US',NULL,NULL,'Declaration of use',0,114,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'délai à 9 ans et demi','root','2013-10-15 11:02:03','root'),
 (1260,1,'REP','COM',0,0,'TM','WO',NULL,NULL,'Irregularity',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-11-06 14:43:17',NULL),
 (1262,1,'PROD','APL',0,0,'TM','EM',NULL,NULL,'Statement of Grounds ',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-11-12 15:14:22',NULL),
-(1263,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'10',0,0,10,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-06 15:51:27','root'),
-(1267,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'20',0,0,20,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-06 15:51:22',NULL),
-(1268,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'30',0,0,30,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-06 15:51:57',NULL),
-(1269,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'40',0,0,40,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-06 15:52:39',NULL),
-(1270,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'50',0,0,50,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-01-06 15:52:59',NULL),
+(1263,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'10',0,0,10,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:26','root'),
+(1267,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'20',0,0,20,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:28','root'),
+(1268,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'30',0,0,30,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:30','root'),
+(1269,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'40',0,0,40,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:32','root'),
+(1270,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'50',0,0,50,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:33','root'),
 (1271,1,'REP','COM',0,0,'TM','FR',NULL,NULL,'Irregularity',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-02-03 10:44:48',NULL),
-(1272,1,'REN','REG',0,0,'TM','LB',NULL,NULL,'15',0,0,15,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-04-10 08:33:20','root'),
-(1273,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-04-22 13:01:10','root'),
-(1274,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-04-22 13:01:43',NULL),
-(1275,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-04-22 13:02:02',NULL),
-(1277,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-04-22 13:02:27',NULL),
-(1278,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','NULL',NULL,'root','2014-04-22 13:02:46',NULL),
+(1272,1,'REN','REG',0,0,'TM','LB',NULL,NULL,'15',0,0,15,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:34','root'),
+(1273,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'10',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:35','root'),
+(1274,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'20',0,0,20,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:37','root'),
+(1275,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:38','root'),
+(1277,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:39','root'),
+(1278,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:43','root'),
 (1280,1,'PROD','SOP',0,0,'PAT','EP',NULL,NULL,'Comments',10,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-05-07 07:12:20','root'),
 (1281,1,'OPR','SOP',0,0,'PAT','EP',NULL,NULL,NULL,10,5,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-05-07 07:10:52','root'),
-(1282,1,'PAY','ALL',0,0,'TM','JP',NULL,NULL,'Grant Fees',30,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-05-23 08:00:10',NULL),
-(1283,1,'PAY','REG',0,0,'TM','JP',NULL,NULL,'2nd part of individual fee',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-06-26 11:15:01','root'),
-(1289,1,'EOP','PRI',0,0,'PAT','WO',NULL,NULL,'End of procedure',33,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-07-07 12:39:18',NULL),
+(1282,1,'PAY','ALL',0,0,'TM','JP',NULL,NULL,'2nd part of individual fee',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-05 16:13:42','root'),
 (1290,1,'REN','FIL',0,0,'SO','FR',NULL,NULL,'Soleau',0,0,5,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:12:28',NULL),
 (1291,1,'WAT','FIL',0,0,'SO','FR',NULL,NULL,'End of protection',0,114,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:14:53','root'),
-(1292,1,'EXP','FIL',0,0,'SO','FR',NULL,NULL,NULL,0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:14:24',NULL);
+(1292,1,'EXP','FIL',0,0,'SO','FR',NULL,NULL,NULL,0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:14:24',NULL),
+(1299,1,'OPR','SOP',0,0,'POP',NULL,NULL,NULL,NULL,0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-06 14:48:23','root'),
+(1300,1,'PROD','SOP',0,0,'POP',NULL,NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-06 14:49:50',NULL),
+(1301,1,'PROD','PRI',0,0,'PAT','US','WO',NULL,'Decl. and Assignment',0,30,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-14 13:00:44','root'),
+(1302,1,'REQ','FIL',0,0,'PAT','BR',NULL,NULL,NULL,0,0,3,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-01-05 16:39:05',NULL),
+(1303,1,'APL','ORE',0,0,'POP','EP',NULL,NULL,'File Appeal',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-01-09 09:09:04','root'),
+(1304,1,'PROD','ORE',0,0,'POP','EP',NULL,NULL,'Grounds of Appeal',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-01-09 09:09:07','root'),
+(1305,1,'PRID','FIL',0,0,'DSG',NULL,NULL,NULL,NULL,0,6,0,0,0,'PRI',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Priority deadline is inserted only if no priority event exists','root','2015-12-17 08:37:47',NULL),
+(1306,1,'PRID','PRI',0,1,'DSG',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root','2015-12-17 10:41:57',NULL),
+(1307,1,'PRID','PRI',0,1,'TM',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root','2015-12-17 10:43:44',NULL),
+(1308,1,'REN','FIL',0,0,'DSG','WO',NULL,NULL,'1',0,0,5,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 13:35:47','root'),
+(1309,1,'REN','FIL',0,0,'DSG','WO',NULL,NULL,'2',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 13:36:12','root'),
+(1310,1,'PROD','REC',0,0,'OPI',NULL,NULL,NULL,'Opinion',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-02-26 14:26:26','root'),
+(1311,1,'PROD','REC',0,0,'SR',NULL,NULL,NULL,'Report',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-02-26 14:26:26','root');
 /*!40000 ALTER TABLE `task_rules` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -2876,12 +2723,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-21 16:11:19
--- MySQL dump 10.13  Distrib 5.5.38, for debian-linux-gnu (x86_64)
+-- Dump completed on 2016-03-21 11:13:52
+-- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (x86_64)
 --
 -- Host: localhost    Database: phpip
 -- ------------------------------------------------------
--- Server version	5.5.38-0ubuntu0.14.04.1-log
+-- Server version	5.5.47-0ubuntu0.14.04.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -2914,7 +2761,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-10-21 16:11:19
+-- Dump completed on 2016-03-21 11:13:52
 
 -- User creation
 CREATE USER 'phpip'@'localhost' IDENTIFIED BY 'changeme'; 
