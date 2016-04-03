@@ -1,10 +1,6 @@
 <?php
 class Application_Plugins_AclController extends Zend_Controller_Plugin_Abstract {
 	
-	/**
-	 *
-	 * @var Zend_Auth
-	 */
 	protected $_auth;
 	protected $_acl;
 	protected $_action;
@@ -24,10 +20,10 @@ class Application_Plugins_AclController extends Zend_Controller_Plugin_Abstract 
 				$request->setControllerName ( 'auth' )
 					->setActionName ( 'login' );
 			} else {
-				throw new exception('Unauthorized');
-				/*$request->setControllerName ( 'error' )
-					->setActionName ( 'error' )
-					->setDispatched ( true );*/
+				// If unauthorized, display specific page
+				$request->setControllerName ( 'auth' )
+					->setActionName ( 'unauthorized' )
+					->setDispatched ( true );
 			}
 		}
 	}
@@ -45,7 +41,6 @@ class Application_Plugins_AclController extends Zend_Controller_Plugin_Abstract 
 		} else {
 			$role = 'guest';
 		}
-		//echo $role;
 		return $role;
 	}
 }
