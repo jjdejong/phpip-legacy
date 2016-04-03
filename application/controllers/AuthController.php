@@ -89,6 +89,7 @@ class AuthController extends Zend_Controller_Action {
 		$this->_helper->redirector ( 'login', 'auth' );
 	}
 	public function unauthorizedAction() {
+		$this->_helper->layout->disableLayout ();
 		$this->_helper->viewRenderer->setNoRender ();
 		echo 'You are not authorized to access this resource';
 	}
