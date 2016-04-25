@@ -385,7 +385,7 @@ class Application_Model_Matter {
 	
 	/**
 	 * gets complete details of a matter from matter table
-	 * *
+	 * * (usefulness questionable)
 	 */
 	public function getMatter($matter_id = 0) {
 		if (! $matter_id)
@@ -414,8 +414,98 @@ class Application_Model_Matter {
 	}
 	
 	/**
-	 * returns container_ID of a matter
+	 * Gets merge data for a matter
 	 * *
+	 */
+	public function getMatterMergeData($matter_id = 0) {
+		if (! $matter_id)
+			return;
+	
+			$this->setDbTable ( 'Application_Model_DbTable_Matter' );
+			$dbStmt = $this->_dbTable->getAdapter ()->query ( "SELECT matter.ID,
+	CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(matter.caseref, matter.country), matter.origin), matter.type_code), matter.idx) AS OurRef,
+    matter.country AS CountryCode,
+    matter.category_code AS Category,
+    DATE_FORMAT(fil.event_date, '%d/%m/%Y') AS Filed,
+    fil.detail AS FilingNo,
+    DATE_FORMAT(pub.event_date, '%d/%m/%Y') AS Published,
+    pub.detail AS PubNo,
+    GROUP_CONCAT(CONCAT(pri.country, pri.detail, ': ', DATE_FORMAT(pri.event_date, '%d/%m/%Y')) SEPARATOR '\n') AS PriorityData,
+    DATE_FORMAT(grt.event_date, '%d/%m/%Y') AS Granted,
+    grt.detail AS GrantNo,
+    DATE_FORMAT(reg.event_date, '%d/%m/%Y') AS Registration,
+    reg.detail AS RegNo,
+    DATE_FORMAT(pr.event_date, '%d/%m/%Y') AS PubReg,
+    pr.detail AS PubRegNo,
+    DATE_FORMAT(allow.event_date, '%d/%m/%Y') AS Allowance,
+    allow.detail AS AllowDetail,
+    DATE_FORMAT(matter.expire_date, '%d/%m/%Y') AS Expires,
+    cli.name AS Client,
+    cli.first_name AS ClientMore,
+    cli.address AS ClientAddress,
+    cli.country AS ClientCountryCode,
+    IF(cli.address_billing = '',
+		CONCAT_WS(CHAR(10), cli.name, cli.address, cli.country),
+        CONCAT_WS(CHAR(10), cli.address_billing, cli.country_billing)) AS BillingAddress,
+	lcli.actor_ref AS ClientRef,
+    cli.email AS email,
+    cli.VAT_number AS VAT,
+    titof.value AS TitleOfficial,
+    titen.value AS TitleEN,
+    tit.value AS Title,
+    tm.value AS Trademark,
+    GROUP_CONCAT(class.value SEPARATOR '.') AS Class,
+    GROUP_CONCAT(CONCAT_WS(' ', inv.name, inv.first_name) ORDER BY linv.display_order ASC SEPARATOR ' - ') AS Inventors,
+    GROUP_CONCAT(CONCAT_WS(CHAR(10), CONCAT_WS(' ', inv.name, inv.first_name), inv.address, inv.country, inv.nationality) ORDER BY linv.display_order ASC SEPARATOR '\n') AS InvAddresses,
+	GROUP_CONCAT(DISTINCT CONCAT_WS(CHAR(10), applc.name, appl.name) SEPARATOR '\n') AS Applicants,
+	IF(GROUP_CONCAT(COALESCE(ownc.name, own.name)) IS NOT NULL,
+        GROUP_CONCAT(DISTINCT CONCAT_WS(CHAR(10), ownc.name, own.name) SEPARATOR '\n'),
+        GROUP_CONCAT(DISTINCT CONCAT_WS(CHAR(10), applc.name, appl.name) SEPARATOR '\n')) AS Owners,
+	CONCAT_WS(CHAR(10), agt.name, agt.address, agt.country) AS Agent,
+    lagt.actor_ref AS AgentRef,
+    resp.name AS Responsible,
+    wri.name AS Writer,
+    cnt.name AS Contact,
+    ann.name AS AnnAgt,
+    ren.detail AS AnnuityNo,
+    DATE_FORMAT(ren.due_date, '%d/%m/%Y') AS AnnuityDue,
+    ren.cost AS AnnuityCost,
+    ren.fee AS AnnuityFee
+FROM
+	matter
+	LEFT JOIN (matter_actor_lnk linv JOIN actor inv) ON IFNULL(matter.container_ID, matter.ID) = linv.matter_ID AND linv.role = 'INV' AND inv.ID = linv.actor_ID
+	LEFT JOIN (matter_actor_lnk lcli JOIN actor cli) ON IFNULL(matter.container_ID, matter.ID) = lcli.matter_ID AND lcli.role = 'CLI' AND lcli.display_order = 1 AND cli.ID = lcli.actor_ID
+	LEFT JOIN (matter_actor_lnk lappl JOIN actor appl) ON matter.ID = lappl.matter_ID AND lappl.role = 'APP' AND appl.ID = lappl.actor_ID
+	LEFT JOIN (matter_actor_lnk lapplc JOIN actor applc) ON matter.container_ID = lapplc.matter_ID AND lapplc.role = 'APP' AND lapplc.shared = 1 AND applc.ID = lapplc.actor_ID
+	LEFT JOIN (matter_actor_lnk lown JOIN actor own) ON matter.ID = lown.matter_ID AND lown.role = 'OWN' AND own.ID = lown.actor_ID
+	LEFT JOIN (matter_actor_lnk lownc JOIN actor ownc) ON matter.container_ID = lownc.matter_ID AND lownc.role = 'OWN' AND lownc.shared = 1 AND ownc.ID = lownc.actor_ID
+	LEFT JOIN (matter_actor_lnk lann JOIN actor ann) ON matter.ID = lann.matter_ID AND lann.role = 'ANN' AND ann.ID = lann.actor_ID
+	LEFT JOIN (matter_actor_lnk lcnt JOIN actor cnt) ON IFNULL(matter.container_ID, matter.ID) = lcnt.matter_ID AND lcnt.role = 'CNT' AND cnt.ID = lcnt.actor_ID
+	LEFT JOIN (matter_actor_lnk lagt JOIN actor agt) ON matter.ID = lagt.matter_ID AND lagt.role = 'AGT' AND agt.ID = lagt.actor_ID
+	LEFT JOIN (matter_actor_lnk lwri JOIN actor wri) ON matter.ID = lwri.matter_ID AND lwri.role = 'WRI' AND wri.ID = lwri.actor_ID
+	LEFT JOIN `event` fil ON fil.matter_ID = matter.ID AND fil.`code` = 'FIL'
+	LEFT JOIN `event` pub ON pub.matter_ID = matter.ID AND pub.`code` = 'PUB'
+	LEFT JOIN `event` grt ON grt.matter_ID = matter.ID AND grt.`code` = 'GRT'
+	LEFT JOIN `event` reg ON reg.matter_ID = matter.ID AND reg.`code` = 'REG'
+	LEFT JOIN `event` pr ON pr.matter_ID = matter.ID AND pr.`code` = 'PR'
+	LEFT JOIN event_lnk_list pri ON pri.matter_ID = matter.ID AND pri.`code` = 'PRI'
+	LEFT JOIN `event` allow ON allow.matter_ID = matter.ID AND allow.`code` = 'ALL'
+	LEFT JOIN task_list ren ON ren.matter_ID = matter.ID AND ren.`code` = 'REN' AND ren.done = 0
+	LEFT JOIN task t ON t.trigger_ID = ren.trigger_ID AND t.`code` = 'REN' AND t.done = 0 AND ren.due_date > t.due_date
+	LEFT JOIN classifier titof ON titof.matter_ID = IFNULL(matter.container_ID, matter.ID) AND titof.type_code = 'TITOF'
+	LEFT JOIN classifier titen ON titen.matter_ID = IFNULL(matter.container_ID, matter.ID) AND titen.type_code = 'TITEN'
+	LEFT JOIN classifier tit ON tit.matter_ID = IFNULL(matter.container_ID, matter.ID) AND tit.type_code = 'TIT'
+	LEFT JOIN classifier tm ON tm.matter_ID = IFNULL(matter.container_ID, matter.ID) AND tm.type_code = 'TM'
+	LEFT JOIN classifier class ON class.matter_ID = IFNULL(matter.container_ID, matter.ID) AND class.type_code = 'TMCL'
+	JOIN actor resp ON resp.login = matter.responsible
+WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
+	
+			return $dbStmt->fetchAll ();
+	}
+	
+	/**
+	 * returns container_ID of a matter
+	 * * (usefulness questionable)
 	 */
 	public function getMatterContainer($matter_id = 0) {
 		if (! $matter_id)

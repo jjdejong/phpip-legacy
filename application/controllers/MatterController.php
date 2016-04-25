@@ -1360,4 +1360,73 @@ class MatterController extends Zend_Controller_Action {
 		fseek ( $export_csv, 0 );
 		fpassthru ( $export_csv );
 	}
+	
+	/**
+	 * Exports Matter detail for merging
+	 * *
+	 */
+	public function exportMergeDataAction() {
+		$this->_helper->viewRenderer->setNoRender ();
+		$this->_helper->layout->disableLayout ();
+	
+		$matter_id = $this->_getParam ( 'id' );
+	
+		$matterModel = new Application_Model_Matter ();
+		$export = $matterModel->getMatterMergeData ( $matter_id );
+	
+		$this->getResponse ()->setHeader ( 'Content-Type', 'application/csv' )->setHeader ( 'Content-disposition', 'attachment; filename=matter-merge.csv' );
+		$export_csv = fopen ( 'php://memory', 'w' );
+		$captions = array ('id',
+				'NODOSSIER',
+				'PAYS',
+				'PROTECTION',
+				'DEPOT',
+				'NODEPOT',
+				'PUBLICATIO',
+				'NOPUBLICAT',
+				'NOTITREPRI',
+				'Granted',
+				'GrantNo',
+				'Registration',
+				'RegNo',
+				'PubReg',
+				'PubRegNo',
+				'ACCORD',
+				'TEXTEACCOR',
+				'EXPIRATION',
+				'CLI1NOM',
+				'CLI1NOM2',
+				'CLI1RUE1',
+				'CLI1PAYS',
+				'BillingAddress',
+				'REFERENC_1',
+				'email',
+				'VAT',
+				'TITREFRANC',
+				'TITREANGLA',
+				'Title',
+				'Trademark',
+				'Class',
+				'INV1NOM',
+				'INV1RUE1',
+				'DEP1NOM',
+				'TIT1NOM',
+				'CORRNOM',
+				'REFERENCEC',
+				'RESPONSABL',
+				'Writer',
+				'Contact',
+				'AnnAgt',
+				'AnnuityNo',
+				'AnnuityDue',
+				'AnnuityCost',
+				'AnnuityFee'
+		);
+		fputcsv ( $export_csv, $captions, ';' );
+		foreach ( $export as $row ) {
+			fputcsv ( $export_csv, array_map ( "utf8_decode", $row ), ';' );
+		}
+		fseek ( $export_csv, 0 );
+		fpassthru ( $export_csv );
+	}
 }
