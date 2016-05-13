@@ -27,9 +27,6 @@ body,
     background-color: #B5D9E5;
     padding:5px;
     display: inline-block;
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px;
-    border-radius:5px;
     box-shadow:2px 2px 1px #888;
     -moz-box-shadow:2px 2px 1px #888;
     -webkit-box-shadow:2px 2px 1px #888;
@@ -79,8 +76,6 @@ body,
         border: 1px solid #BBB;
         border-top-left-radius: 5px;
         border-top-right-radius: 5px;
-        -moz-border-radius-topleft: 5px;
-        -moz-border-radius-topright: 5px;
         -webkit-border-top-left-radius: 5px;
         -webkit-border-top-right-radius: 5px;
         font-size: 1.4em;
@@ -108,10 +103,6 @@ body,
                 }
             #header ul.navigation ul a {
                 margin: 0;
-                border-radius: 0;
-                -moz-border-radius: 0;
-                -webkit-border-radius: 0;
-                border-radius: 0;
                 font-size: 1.2em;
                 font-weight: normal;
             }
@@ -123,17 +114,11 @@ body,
     width: 90%;
     text-align: left;
     background-color: wheat;
-    -moz-border-radius-topleft: 15px;
-    -moz-border-radius-topright: 15px;
     -webkit-border-top-left-radius: 15px;
     -webkit-border-top-right-radius: 15px;
-    -moz-border-radius-bottomleft: 15px;
-    -moz-border-radius-bottomright: 15px;
     -webkit-border-bottom-left-radius: 15px;
     -webkit-border-bottom-right-radius: 15px;
     padding: 20px 20px 25px 20px;*/
- /*   -webkit-border-radius: 10px;
-    -moz-border-radius:10px 10px 10px 10px;
     -moz-box-shadow:-3px 3px 15px -6px #000000 inset;
     background:none repeat scroll 0 0 #B5D9E5;
     border-color:#2C5985 #2C5985 #7DACD2 #7DACD2;
@@ -218,9 +203,6 @@ ul.navigation li a {
     text-decoration:none;
     background: #1E4262;
     padding:10px;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    border-radius: 6px;
 }
 
 #logo a{
@@ -230,7 +212,6 @@ ul.navigation li a {
 
 #Email,#Password {
     width:68%;
-    -moz-border-radius:5px 5px 5px 5px;
     border:medium none;
     display:block;
     height:auto;
@@ -255,9 +236,6 @@ dd {
 
 .button-style{
     background: #1E4262;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    border-radius: 4px;
     border:1px;
     color: #FFF;
     padding:5px 15px;

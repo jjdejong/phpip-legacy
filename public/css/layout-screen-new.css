@@ -20,7 +20,6 @@ body{
     margin: auto;
     color: #000 ;
     width: 100%;
-    border-radius: 0 0 10px 10px;
     box-shadow:3px 3px 15px -6px #000000 inset;
     height:60px;
 }
@@ -52,7 +51,6 @@ body{
     margin: 5px 60px 0px 0px;
     padding:8px;
     background: #4E7291 none repeat scroll 0 0;
-    border-radius: 4px;
   /*  border-style:inset;
     border: 1px solid #082036; */
     font-weight: bold;
@@ -69,7 +67,6 @@ body{
     color: #ccc;
     background: #4E7291 none repeat scroll 0 0;
     padding: 3px 4px;
-    border-radius: 3px;
 }
 
 a{
@@ -99,7 +96,6 @@ li{
     background-image: -moz-linear-gradient(top,  #C8E8F3,  #EEF);
     background-image: -webkit-gradient(linear, left top, left bottom, from(#C8E8F3), to(#EEF));
     background-color: #C8E8F3;
-    border-radius: 10px 10px 0 0;
     min-height: 400px
 }
 #content{
@@ -120,7 +116,6 @@ li{
     border-right: 1px solid #2E5272;
     min-height: 400px;
     height:auto !important;
-    border-radius: 5px;
     background-color:#B5D9E5;
     border: 3px solid #B5D9E5;
     clear:both;
@@ -145,7 +140,6 @@ li{
 	border-style:inset;
 	height:100%;
 	min-height: 380px;
-	border-radius:4px;
 	margin-top:5px;
 }
 
@@ -153,7 +147,6 @@ li{
     padding: 4px;
     display: inline-block;
     width: 98.6%;
-    border-radius:5px;
     background-color: whitesmoke;
     border: 1px solid;
     min-height:400px;
@@ -177,7 +170,6 @@ li{
     height: auto;
     background: white;
     /*margin: 100px 20% 0 20%; */
-    border-radius: 10px;
     display:none;
     /*z-index: 101;*/
 }
@@ -199,7 +191,6 @@ li{
     background: #FF4444;
     text-align: center;
     float: right;
-    border-radius: 3px;
     padding:3px;
     margin-top:-2px;
 }
@@ -218,7 +209,6 @@ li{
     padding: 0.5%;
     display: inline-block;
     width: 98.6%;
-    border-radius: 5px;
     background-color: whitesmoke;
     border: 1px solid ;
 }
@@ -349,14 +339,12 @@ li{
     display: inline-block;
     vertical-align: middle;
     margin-right: 10px;
-    border-radius: 5px;
 }
 
 .page-icon{
     font-size: 12px;
     font-weight: bolder;
     background: #C8E8F3;
-    border-radius: 2px;
     color: white;
     text-align: center;
     width:18px;
@@ -388,7 +376,6 @@ li{
     padding-left:10px;
 }
 .listrow {
-    border-radius: 5px;
     background:none repeat scroll 0 0 #B5D9E5;
     display:table;
     margin: 0px 5px 5px;
@@ -417,7 +404,6 @@ li{
 
 .list-block-info {
     background: #B5D9E5;
-    border-radius: 4px 0 0 4px;
     width: 24%;
 }
 
@@ -431,7 +417,6 @@ li{
     background-color: #FFFFFF;
     border: 1px solid #DDD;
     border-style:inset;
-    border-radius: 4px;
 }
 
 .list-block-action {
@@ -468,7 +453,6 @@ li{
     display:inline-block;
     text-align: right;
     margin: 0 6px 0 0;
-    border-radius: 5px;
     border:2px solid beige;
     display:inline-block;
     text-align:center;
@@ -482,7 +466,6 @@ li{
     display:block;
     text-align: right;
     margin: 0px 0px 5px;
-    border-radius: 3px;
     border:2px solid #1E4262;
     text-align:center;
     width:38px;
@@ -516,12 +499,10 @@ li{
 
 input {   
     border: 1px solid;
-    border-radius: 2px ;
 }
 
 select {
     border: 1px solid;
-    border-radius: 2px ;
     width: 200px;
 }
 
@@ -553,11 +534,9 @@ select {
 }
 
 .navigation li:first-child {
-	border-radius: 6px 0 0 6px;
 	border-left:none;
 }
 .navigation li:last-child {
-	border-radius: 0 6px 6px 0;
 	border-right:none;
 }
 
@@ -577,13 +556,11 @@ select {
 .navigation ul li{
   display:block;
   background:  #fff;
-  border-radius: 0px;
   width: auto;
   text-align: center;
   text-shadow: 0 1px 0 #FFF;
   border: 0px;/* 1px solid #ddd; */
   border-bottom: 1px solid #ddd;
-  border-radius:0px;
   margin:1px 0px;
   text-align: left;
   padding: 0px;
@@ -609,7 +586,6 @@ select {
 /*left:784px; */
   background-color: #FFF;
   padding:3px;
-  border-radius:0px 0px 4px 4px;
   box-shadow:2px 2px 1px #7E7267;
   border: 1px solid #CCC;
 }
@@ -618,17 +594,14 @@ select {
   position: relative;
   top:0px;
   padding:0px;
-  border-radius:0px;
   box-shadow:none;
   border: none;
 }
 
 .navigation ul li:first-child {
-		border-radius: 0px;
 		border-left:none;
 }
 .navigation ul li:last-child {
-		border-radius: 0px;
 		border-right:none;
 }
 
@@ -644,7 +617,6 @@ select {
     background: #1E4262;
     padding: 5px;
     text-align: center;
-    border-radius: 5px;
    /* box-shadow:2px 2px 1px #888; */
     border: 1px solid #1E4262;
     border-style: outset;
@@ -672,19 +644,16 @@ select {
 
 .listrow-tab-select, .listrow-tab-selected {
     width: 100%;
-    border-radius:2px;
     /*z-index: 4*/;
 }
 
 .listrow-tab-select:hover, .listrow-tab-selected:hover {
     width: 100%;
     background: palegreen;
-    border-radius:2px;
     cursor: pointer;
 }
 
 .list-button {
-    border-radius:5px;
     background:none repeat scroll 0 0 Tomato;
     color:White;
     float:right;
@@ -694,7 +663,6 @@ select {
 }
 
 .htmlbutton {
-    border-radius:5px;
     background:none repeat scroll 0 0 Tomato;
     color:White;
     font-weight:bold;
@@ -712,14 +680,12 @@ select {
     width: 97.5%;
     background: none repeat scroll 0 0 #1E4262;
     color: white;
-    border-radius:5px;
     padding: 5px;
     text-align: center;
 }
 
 #group-list-box {
  /*  background-color:#B5D9E5;
-   border-radius:5px;
    border: 1px solid white; */
 }
 
@@ -747,7 +713,6 @@ select {
 
 .button-style{
     background: #1E4262;
-    border-radius: 4px;
     border:1px solid #1E4262;
     color: #FFF;
     padding:2px 8px;
@@ -760,7 +725,6 @@ select {
 }
 
 .pr-input-text{
-    border-radius: 5px;
     padding:3px 4px;
     border:1px solid #888;
     border-style:inset;
@@ -771,7 +735,6 @@ select {
     background-color: #B5D9E5;
     padding:5px;
     display: inline-block;
-    border-radius:5px;
     box-shadow:2px 2px 1px #888;
 }
 
@@ -779,13 +742,11 @@ select {
     background-color: #B5D9E5;
     padding:5px;
     display: inline-block;
-    border-radius:0 5px 5px 5px;
     box-shadow:2px 2px 1px #888;
 }
 
 .pr-label{
     background-color: #1E4262;
-    border-radius: 4px;
     padding:5px 10px;
     color: #FFF;
 }
@@ -795,7 +756,6 @@ select {
     background: #1E4262;
     text-align: center;
     float: right;
-    border-radius:10px;
     padding:3px;
 }
 
@@ -816,7 +776,6 @@ div.selectbox-wrapper {
   overflow:auto;
   background-color: #FFF;
   padding:0px;
-  border-radius:0px 0px 4px 4px;
   box-shadow:2px 2px 1px #7E7267;
   border: 1px solid #CCC;
   font-size: 15px;
