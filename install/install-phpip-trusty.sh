@@ -18,13 +18,13 @@ a2enmod rewrite
 echo "127.0.0.1    phpip.local" >> /etc/hosts
 sed -i "s/^; include/include/" /etc/php5/mods-available/zend-framework.ini
 php5enmod zend-framework
-sed -i "s/^short_open_tag = Off/short_open_tag = On/" /etc/php5/apache2/php.ini
+# sed -i "s/^short_open_tag = Off/short_open_tag = On/" /etc/php5/apache2/php.ini
 echo "
 ********************************
-Getting phpIP from Google Code
+Getting phpIP from GitHub
 ********************************"
 cd /var/www
-git clone https://code.google.com/p/phpip/
+git clone https://github.com/jjdejong/phpip.git
 cp phpip/install/conf/phpip.conf /etc/apache2/sites-enabled/
 service apache2 reload
 echo "
