@@ -438,7 +438,7 @@ CREATE TABLE `event` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_before_insert` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_before_insert` BEFORE INSERT ON `event` FOR EACH ROW BEGIN
 	DECLARE vdate DATE DEFAULT NULL;
 
 	SET new.creator = SUBSTRING_INDEX(USER(),'@',1);
@@ -629,7 +629,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_before_update` BEFORE UPDATE ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_before_update` BEFORE UPDATE ON `event` FOR EACH ROW BEGIN
 	DECLARE vdate DATE DEFAULT NULL;
 	
 	SET new.updater=SUBSTRING_INDEX(USER(),'@',1);
@@ -653,7 +653,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_after_update` AFTER UPDATE ON `event` FOR EACH ROW 
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_update` AFTER UPDATE ON `event` FOR EACH ROW 
 trig: BEGIN
 
   DECLARE vdue_date, vbase_date DATE DEFAULT NULL;
@@ -758,7 +758,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
 	IF OLD.code IN ('PRI','PFIL') THEN
 		CALL recalculate_tasks(OLD.matter_ID, 'FIL');
 	END IF;
@@ -840,7 +840,7 @@ CREATE TABLE `event_name` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `ename_before_insert` BEFORE INSERT ON `event_name` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `ename_before_insert` BEFORE INSERT ON `event_name` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -855,7 +855,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `ename_before_update` BEFORE UPDATE ON `event_name` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `ename_before_update` BEFORE UPDATE ON `event_name` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -870,7 +870,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `ename_after_update` AFTER UPDATE ON `event_name` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `ename_after_update` AFTER UPDATE ON `event_name` FOR EACH ROW BEGIN
 
 	IF IFNULL(NEW.default_responsible,0) != IFNULL(OLD.default_responsible,0) THEN
 		UPDATE task SET assigned_to=NEW.default_responsible
@@ -944,7 +944,7 @@ CREATE TABLE `matter` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_before_insert` BEFORE INSERT ON `matter` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_before_insert` BEFORE INSERT ON `matter` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -959,7 +959,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_after_insert` AFTER INSERT ON `matter` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_after_insert` AFTER INSERT ON `matter` FOR EACH ROW BEGIN
 	DECLARE vactorid, vshared INT DEFAULT NULL;
 	DECLARE vrole CHAR(5) DEFAULT NULL;
 
@@ -991,7 +991,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_before_update` BEFORE UPDATE ON `matter` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_before_update` BEFORE UPDATE ON `matter` FOR EACH ROW BEGIN
 
 set new.updater=SUBSTRING_INDEX(USER(),'@',1);
 
@@ -1015,7 +1015,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `matter_after_update` AFTER UPDATE ON `matter` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `matter_after_update` AFTER UPDATE ON `matter` FOR EACH ROW BEGIN
 
 
 IF NEW.responsible != OLD.responsible THEN
@@ -1088,7 +1088,7 @@ CREATE TABLE `matter_actor_lnk` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `malnk_before_insert` BEFORE INSERT ON `matter_actor_lnk` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_before_insert` BEFORE INSERT ON `matter_actor_lnk` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1103,7 +1103,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `malnk_after_insert` AFTER INSERT ON `matter_actor_lnk` FOR EACH ROW BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_after_insert` AFTER INSERT ON `matter_actor_lnk` FOR EACH ROW BEGIN
 DECLARE vcli_ann_agt INT DEFAULT NULL;
 
 
@@ -1129,7 +1129,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `malnk_before_update` BEFORE UPDATE ON `matter_actor_lnk` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_before_update` BEFORE UPDATE ON `matter_actor_lnk` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1335,7 +1335,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `task_before_update` BEFORE UPDATE ON `task` FOR EACH ROW
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `task_before_update` BEFORE UPDATE ON `task` FOR EACH ROW
 BEGIN
 	SET NEW.updater=SUBSTRING_INDEX(USER(),'@',1);
 	IF NEW.done_date IS NOT NULL AND OLD.done_date IS NULL AND OLD.done = 0 THEN
@@ -1472,7 +1472,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`%`*/ /*!50003 TRIGGER `trules_after_update` AFTER UPDATE ON `task_rules` FOR EACH ROW BEGIN	
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `trules_after_update` AFTER UPDATE ON `task_rules` FOR EACH ROW BEGIN	
 	IF (NEW.fee != OLD.fee OR NEW.cost != OLD.cost) THEN
 		UPDATE task SET fee=NEW.fee, cost=NEW.cost WHERE rule_used=NEW.id AND done=0;
 	END IF;
@@ -1901,7 +1901,7 @@ USE `phpip`;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `docmerge` AS select `matter`.`ID` AS `ID`,`matter`.`caseref` AS `NODOSSIER`,`matter`.`country` AS `PAYS`,`matter`.`origin` AS `ORIGINE`,concat(if(isnull(`matter`.`type_code`),'',concat('-',`matter`.`type_code`)),ifnull(cast(`matter`.`idx` as char(3) charset utf8),'')) AS `COMPLEMENT`,`matter`.`category_code` AS `PROTECTION`,date_format(`fil`.`event_date`,'%d/%m/%Y') AS `DEPOT`,`fil`.`detail` AS `NODEPOT`,date_format(`pub`.`event_date`,'%d/%m/%Y') AS `PUBLICATIO`,`pub`.`detail` AS `NOPUBLICAT`,NULL AS `DATEPRI`,group_concat(distinct concat(`pri`.`country`,`pri`.`detail`,' du ',date_format(`pri`.`event_date`,'%d/%m/%Y')) separator '
 ') AS `NOTITREPRI`,`pri`.`country` AS `PAYSPRIORI`,date_format(`grt`.`event_date`,'%d/%m/%Y') AS `Granted`,`grt`.`detail` AS `GrantNo`,date_format(`reg`.`event_date`,'%d/%m/%Y') AS `Registration`,`reg`.`detail` AS `RegNo`,date_format(`pr`.`event_date`,'%d/%m/%Y') AS `PubReg`,`pr`.`detail` AS `PubRegNo`,date_format(`allow`.`event_date`,'%d/%m/%Y') AS `ACCORD`,`allow`.`detail` AS `TEXTEACCOR`,date_format(`matter`.`expire_date`,'%d/%m/%Y') AS `EXPIRATION`,`cli`.`name` AS `CLI1NOM`,`cli`.`first_name` AS `CLI1NOM2`,`cli`.`address` AS `CLI1RUE1`,`cli`.`country` AS `CLI1PAYS`,if((`cli`.`address_billing` = ''),concat_ws('\n',`cli`.`name`,`cli`.`address`,`cli`.`country`),concat_ws('\n',`cli`.`address_billing`,`cli`.`country_billing`)) AS `BillingAddress`,`lcli`.`actor_ref` AS `REFERENC_1`,`cli`.`email` AS `email`,`cli`.`VAT_number` AS `VAT`,`titof`.`value` AS `TITREFRANC`,`titen`.`value` AS `TITREANGLA`,`tit`.`value` AS `Title`,`tm`.`value` AS `Trademark`,group_concat(distinct `class`.`value` separator '.') AS `Class`,group_concat(distinct concat_ws(' ',`inv`.`name`,`inv`.`first_name`) separator ' - ') AS `INV1NOM`,group_concat(distinct concat_ws('\n',concat_ws(' ',`inv`.`name`,`inv`.`first_name`),`inv`.`address`,`inv`.`country`,`inv`.`nationality`) separator '
 ') AS `INV1RUE1`,concat_ws('\n',group_concat(distinct `applc`.`name` separator '
@@ -1989,7 +1989,7 @@ USE `phpip`;
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`%` SQL SECURITY DEFINER */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `sga2_list` AS select `matter`.`ID` AS `UID`,`matter`.`dead` AS `dead`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,concat(ifnull(`matter`.`type_code`,''),ifnull(cast(`matter`.`idx` as char(3) charset utf8),'')) AS `complement`,`matter`.`category_code` AS `cat`,ifnull(group_concat(distinct `own`.`name` separator '; '),group_concat(distinct `cli`.`name` separator '; ')) AS `owner`,cast(ifnull(min(`own`.`small_entity`),min(`cli`.`small_entity`)) as char charset utf8) AS `small_entity`,`agtlnk`.`actor_ref` AS `refsga2`,`classifier`.`value` AS `title`,`fil`.`event_date` AS `filed`,`fil`.`detail` AS `appno`,`pub`.`event_date` AS `published`,`pub`.`detail` AS `pubno`,`grt`.`event_date` AS `granted`,`grt`.`detail` AS `grantno`,`matter`.`expire_date` AS `expire_date`,`aba`.`event_date` AS `abandoned`,cast(max(`updt`.`updated`) as date) AS `updated` from (((((((((`matter` left join (`matter_actor_lnk` `clilnk` join `actor` `cli`) on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `clilnk`.`matter_ID`) and (`clilnk`.`role` = 'APP') and (`cli`.`ID` = `clilnk`.`actor_ID`)))) left join (`matter_actor_lnk` `ownlnk` join `actor` `own`) on(((`matter`.`ID` = `ownlnk`.`matter_ID`) and (`ownlnk`.`role` = 'OWN') and (`own`.`ID` = `ownlnk`.`actor_ID`)))) left join (`matter_actor_lnk` `agtlnk` join `actor` `agt`) on(((`matter`.`ID` = `agtlnk`.`matter_ID`) and (`agtlnk`.`role` = 'ANN') and (`agt`.`ID` = `agtlnk`.`actor_ID`)))) left join `event` `fil` on(((`matter`.`ID` = `fil`.`matter_ID`) and (`fil`.`code` = 'FIL')))) left join `event` `pub` on(((`matter`.`ID` = `pub`.`matter_ID`) and (`pub`.`code` = 'PUB')))) left join `event` `grt` on(((`matter`.`ID` = `grt`.`matter_ID`) and (`grt`.`code` = 'GRT')))) left join `event` `aba` on(((`matter`.`ID` = `aba`.`matter_ID`) and (`aba`.`code` = 'ABA')))) left join (`classifier` join `classifier_type`) on(((`classifier`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`classifier`.`type_code` = `classifier_type`.`code`) and (`classifier_type`.`main_display` = 1) and (`classifier_type`.`display_order` = 2)))) join `event` `updt` on((`matter`.`ID` = `updt`.`matter_ID`))) where (`agt`.`name` = 'SGA2') group by `matter`.`ID` order by `matter`.`caseref`,`matter`.`container_ID`,`matter`.`origin`,`matter`.`country`,`matter`.`type_code`,`matter`.`idx` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
