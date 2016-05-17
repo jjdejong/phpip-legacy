@@ -359,6 +359,10 @@ $(document).ready(function(){
          if($(this).val().length != 0 && $(this).val().length < 3 && ($(this).attr("id") == "filter-ref" || $(this).attr("id") == "filter-title")){
              return false;
          }
+		if($(this).val().length != 0)
+			$(this).css("background-color", "bisque");
+		else
+			$(this).css("background-color", "white");
 		var url = '/matter/filter' + getFilterUrl();
          $.ajax({
              url: url,
