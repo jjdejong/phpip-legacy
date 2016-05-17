@@ -86,38 +86,6 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	}
 	
 	/**
-	 * returns actor_role.name for given actor_role.code
-	 * * getRoleName replaced by getRole in Role
-	 */
-	
-	/**
-	 * determines whether a role is shareable
-	 *
-	 * @return actor_role.shareable
-	 * isRoleShareable replaced by getRole in Role
-	 */
-	
-	/**
-	 * retrieves all records from actor_role sorted by name asc
-	 * * getAllRoles moved to Role
-	 */
-	
-	/**
-	 * retrieves all records from actor_role filtered by search term
-	 * * getRoles moved to Role
-	 */
-	
-	/**
-	 * retrives a record from actor_role for a given actor_role.code
-	 * * getActorRoleInfo replaced by getRole in Role
-	 */
-	
-	/**
-	 * updates a record of actor_role
-	 * * saveRole obsoleted by directly used update() method 
-	 */
-	
-	/**
 	 * retrieves full details of an actor
 	 * *
 	 */
@@ -175,6 +143,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 		$data = array ();
 		$data ["$field_name"] = $field_value != "" ? $field_value : NULL;
 		
+		$this->getAdapter ()->query ( 'SET NAMES utf8' );
 		try {
 			$this->update ( $data, array (
 					'ID = ?' => $actor_id 
@@ -190,6 +159,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	 * *
 	 */
 	public function addActor($actor = array()) {
+		$this->getAdapter ()->query ( 'SET NAMES utf8' );
 		try {
 			$this->insert ( $actor );
 			return $this->getAdapter ()->lastInsertID ();
