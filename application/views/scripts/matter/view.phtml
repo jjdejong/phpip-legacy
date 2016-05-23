@@ -694,7 +694,8 @@ foreach ( $this->matter_events as $event ) :
 	else if ($event ['code'] == 'FIL' && $country_code == 'FR' && $category == 'PAT')
 		$href = 'http://regbrvfr.inpi.fr/register/application?number=' . $CC . $cleanednumber;
 	else if ($event ['code'] == 'FIL' && $country_code == 'FR' && $category == 'TM') {
-		$cleanednumber = substr ( $cleanednumber, - 7 );
+		if (substr ($event ['event_date'], -4 ) >= '2000')
+			$cleanednumber = substr ( $cleanednumber, - 7 );
 		$href = 'http://bases-marques.inpi.fr/Typo3_INPI_Marques/marques_resultats_liste.html?baseFr=on&baseCommu=on&baseInter=on&rechercher=Rechercher&recherche=recherche&numero=' . $cleanednumber;
 	} else if ($event ['code'] == 'FIL' && $country_code == 'GB')
 		$href = 'http://www.ipo.gov.uk/p-ipsum/Case/ApplicationNumber/' . $CC . $cleanednumber;
