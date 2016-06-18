@@ -146,7 +146,6 @@ class ActorController extends Zend_Controller_Action {
 					echo json_encode ( $json_data );
 					return;
 				} else {
-					//$this->view->sqlErrors = $actorModel->getError ();
 					$default_role = $actorForm->getValue ( 'default_role' );
 				}
 			} else {
@@ -159,8 +158,6 @@ class ActorController extends Zend_Controller_Action {
 		$role_info = $roleModel->getRole ( $default_role );
 		$this->view->actorComments = $actorModel->getTableComments ( 'actor' );
 		$actorForm->getElement ( 'default_role' )->setValue ( $role_info ['name'] );
-		$enumOpts = $actorModel->getEnumSet ( 'actor', 'pay_category' );
-		$actorForm->getElement ( 'pay_category' )->setMultiOptions ( $enumOpts );
 		$this->view->actorForm = $actorForm;
 		$this->view->default_role = $role_info ['name'];
 		$this->view->default_role_code = $role_info ['code'];
@@ -175,7 +172,6 @@ class ActorController extends Zend_Controller_Action {
 		$actor_id = $this->_getParam ( 'actor_id' );
 		$actorModel = new Application_Model_DbTable_Actor ();
 		$actorInfo = $actorModel->getActorInfo ( $actor_id );
-		$this->view->enumOpts = $actorModel->getEnumSet ( 'actor', 'pay_category' );
 		$this->view->actorComments = $actorModel->getTableComments ( 'actor' );
 		$this->view->actor = $actorInfo;
 	}

@@ -150,12 +150,13 @@ class Application_Form_Actor_Add extends Zend_Form
                     'class' => 'actor-input'
                 ));
 
-         $this->addElement('select', 'pay_category', array(
+         $this->addElement('radio', 'warn', array(
                     'label' => '',
                     'filters' => array('StringTrim'),
-                    'required' => true,
-                    'class' => 'actor-input',
-                    'registerInArrayValidator' => false
+                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'separator' => '',
+                    'label_style' => 'width:83px; vertical-align:top; margin-left:0px;',
+                    'value' => '0'
                 ));
 
          $this->addElement('textarea', 'notes', array(

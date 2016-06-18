@@ -276,8 +276,14 @@
 	font-style: italic;
 }
 
+.actor-warn {
+	color: red;
+}
+
 .matter-actor {
 	cursor: pointer;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 #actor-details-popup {
@@ -641,7 +647,7 @@ if (!empty ( $this->matter_actors )) :
 				
 			</div>
 			<?php else:?>
-			<div id="<?=$actor ['actor_ID']?>" class="matter-actor <?=($actor ['inherited'] ? ' actor-inherit' : '')?>">
+			<div id="<?=$actor ['actor_ID']?>" class="matter-actor <?=$actor ['inherited'] ? ' actor-inherit' : ''?><?=$actor ['warn'] ? ' actor-warn' : ''?>">
 				<?=$actor_display_name?>
 				
 			</div>
