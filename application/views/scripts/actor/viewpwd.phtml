@@ -1,0 +1,29 @@
+<style type="text/css">
+#submit-element{
+    margin-left: 125px;
+}
+#auth_failed{
+display:block;
+color: #F00;
+font-size: 11px;
+font-weight: bold;
+text-align:center;
+margin-bottom:10px;
+}
+</style>
+<?php
+
+      $this->form->setAction($this->url())
+                      ->setMethod('post')
+                      ->setEncType('multipart/form-data');
+
+if(isset($this->change_error)){
+	echo '<div id="auth_failed" >' . $this->change_error . "</div>";
+}
+?>
+<form action="<?= $this->escape($this->form->getAction()) ?>" method="<?= $this->form->getMethod() ?>" enctype= "<?=$this->form->getEncType() ?>" accept-charset="utf-8">
+<?
+      echo $this->form->Password;
+      echo $this->form->submit;
+?>
+</form>

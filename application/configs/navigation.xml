@@ -75,6 +75,12 @@
                             <title>Log out</title>
                             <uri>/auth/logout</uri>
                         </logout>
+                        <password>
+                            <label>Change password</label>
+                            <id>password</id>
+                            <title>Change password</title>
+                            <uri>/actor/viewpwd</uri>
+                        </password>
                     </pages>
                 </account>
 	    </pages>

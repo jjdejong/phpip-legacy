@@ -39,16 +39,22 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	 */
 	public function getAllUsers() {
 		$this->getAdapter ()->query ( 'SET NAMES utf8' );
-		$select = $this->select()->from ( $this, array (
-				'id',
-				'name',
-				'default_role',
-				'login',
-				'last_login' 
-		) )->where ( "login IS NOT NULL" )->order ( 'name ASC' );
+		$select = $this->select ()->from ( array (
+				'a' => 'actor' 
+		), array (
+				'a.id',
+				'a.name',
+				'a.last_login',
+				'a.login' 
+		) )->where ( "a.login IS NOT NULL" )->order ( 'name ASC' )
+		->joinLeft ( array (
+				'ar' => 'actor_role' 
+		), 'a.default_role = ar.code', array (
+				'drole_name' => 'ar.name' 
+		) )
+		->setIntegrityCheck(false);
 		return $this->fetchAll ( $select )->toArray ();
 	}
-	
 	/**
 	 * retrieves all actors from actor table filtered by company
 	 */
@@ -85,6 +91,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 		return $this->fetchAll ( $select )->toArray ();
 	}
 	
+
 	/**
 	 * retrieves full details of an actor
 	 * *
@@ -142,7 +149,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 		
 		$data = array ();
 		$data ["$field_name"] = $field_value != "" ? $field_value : NULL;
-		
+
 		$this->getAdapter ()->query ( 'SET NAMES utf8' );
 		try {
 			$this->update ( $data, array (
@@ -182,6 +189,37 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 		} catch ( Exception $e ) {
 			return $e->getMessage ();
 		}
+	}
+
+	/**
+	 * change the password of an user
+	 */
+	public function changepwdUser( $newpwd = null) {
+		if ( $newpwd == null)
+			return "No new pwd";
+		$config = Zend_Registry::get ( 'config' );
+		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
+		$username = $siteInfoNamespace->username;
+		$password = $siteInfoNamespace->password;
+		$userId =  $siteInfoNamespace->userId;
+		$db_detail = $this->getAdapter ()->getConfig ();
+		$host = $db_detail ['host'];
+		try {
+			$dbm = new PDO ( "mysql:host=$host;dbname=mysql", $username, $password );
+		} catch ( Exception $e ) {
+			return 'Access denied';
+		}
+		try {
+                        echo "Update in phpip";
+                        $data ['password'] = md5 ( $newpwd . 'salt' );
+                        $data ['password_salt'] = 'salt';
+                        $this->update ( $data, array ( 'ID = ?' => $userId ) );
+			$sql1 = "SET PASSWORD FOR '" .$username . "'@'localhost' =PASSWORD('" . $newpwd ."')";
+			$count = $dbm->exec( $sql1 );
+		} catch ( Exception $e ) {
+			return "Unable to update password.";
+		}
+                $siteInfoNamespace->password = $newpwd;
 	}
 	
 	/**

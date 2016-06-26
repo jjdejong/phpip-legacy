@@ -33,6 +33,15 @@ class ActorController extends Zend_Controller_Action {
 		$this->view->actors = $actorModel->getAllActors ();
 	}
 	
+	public function viewuserAction() {
+		$this->_helper->layout->disableLayout ();
+		$actor_id = $this->_getParam ( 'actor_id' );
+		$actorModel = new Application_Model_DbTable_Actor ();
+		$actorInfo = $actorModel->getActorInfo ( $actor_id );
+		$this->view->enumOpts = $actorModel->getEnumSet ( 'actor', 'pay_category' );
+		$this->view->actor = $actorInfo;
+	}
+
 	/**
 	 * Displays all users from actor table
 	**/
@@ -229,6 +238,52 @@ class ActorController extends Zend_Controller_Action {
 			echo $result;
 		}
 	}
+
+	/**
+	 * View for changing the user's password
+	 * *
+	 */
+	public function viewpwdAction() {
+		/*$this->_helper->layout->disableLayout (); 
+		$actor_id = $this->userID ;
+		$actorModel = new Application_Model_DbTable_Actor ();
+		$actorInfo = $actorModel->getActorInfo ( $actor_id );
+		$this->view->actor = $actorInfo;*/
+	        $request = $this->getRequest();
+		$form    = new Application_Form_Actor_Changepwd();
+	 
+		if ($this->getRequest()->isPost()) {
+		   if ($form->isValid($request->getPost())) {
+                	$newpwd = $form->getValue('Password');
+			$userModel = new Application_Model_DbTable_Actor();
+			$result = $userModel->changepwdUser( $newpwd);
+			if ($result->isValid ()) {
+                            $this->_helper->redirector ( 'index', 'index' );
+                            }
+                        else {
+                            $this->view->change_error = "Unable to change the password";
+                        }
+			}
+		}
+	 
+		$this->view->form = $form;
+	}
+
+	/**
+	 * change the password of a user
+	**/
+	  public function changepwdAction()
+	  {
+	    $this->_helper->layout->disableLayout();
+	    $this->_helper->viewRenderer->setNoRender();
+	    if($this->getRequest()->isPost()){
+		$newpwd = $this->_getParam('newpwd');
+		$userModel = new Application_Model_DbTable_Actor();
+		$result = $userModel->changepwdUser($newpwd);
+		echo $result;
+		$this->_helper->redirector ( 'index', 'index' );
+	    }
+	  }
 
 	/**
 	 * permit a user
