@@ -549,7 +549,8 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 		), 'a.ID = mal.actor_ID', array (
 				'a.name',
 				'a.first_name',
-				'a.display_name' 
+				'a.display_name',
+				'a.warn'
 		) )->joinLeft ( array (
 				'ar' => 'actor_role' 
 		), 'mal.role = ar.code', array (

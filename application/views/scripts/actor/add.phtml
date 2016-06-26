@@ -299,7 +299,7 @@ $(document).ready(function(){
                     first_name: $('#first_name').val(),
                     display_name: $('#login').val(),
                     default_role: $('#default_role-code').val(),
-                    function : $('#function').val(),
+                    function: $('#function').val(),
                     parent_ID:$('#parent_company-id').val(),
                     company_ID: $('#Employer-id').val(),
                     site_ID: $('#WorkSite-id').val(),
@@ -316,7 +316,7 @@ $(document).ready(function(){
                     phone: $('#phone').val(),
                     phone2: $('#phone2').val(),
                     fax: $('#fax').val(),
-                    pay_category: $('#pay_category').val(),
+                    warn: $('#warn').val(),
                     notes: $('#notes').val(),
                     VAT_number: $('#VAT_number').val(),
                   },
@@ -415,8 +415,8 @@ $(document).ready(function(){
 	</fieldset>
 	<fieldset class="actor-info-set">
 		<legend>Other details</legend>
-		<label for="pay_category" title="<?=$this->actorComments['pay_category']?>">Pay Category</label>
-			<?=$this->actorForm->getElement('pay_category');?>
+		<label for="warn" title="<?=$this->actorComments['warn']?>">Warn</label>
+			<?=$this->actorForm->getElement('warn');?>
 		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT No.</label>
 			<?=$this->actorForm->getElement('VAT_number');?>
 		<label for="notes" title="<?=$this->actorComments['notes']?>">Notes</label>

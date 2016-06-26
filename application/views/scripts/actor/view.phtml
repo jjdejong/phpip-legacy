@@ -130,25 +130,6 @@ $(document).ready(function(){
 		}
     });
     
-    $('.select-editable').editable('/actor/update', {
-		submitdata: function(value,settings){
-			var actor_id = $('#actor-id').val();
-			var field_name = $(this).attr('id');
-			return { 
-				actor_id : actor_id , 
-				field : field_name
-			}
-		},
-		data: { <?php foreach($this->enumOpts as $key => $value){ echo "'".$value."' : '".$value."',"; }?> },
-		type: 'select',
-		placeholder: '',
-		select: true,
-		indicator : '<span class="icon-busy" />',
-		tooltip: 'Click to edit...',
-		submit: 'ok',
-		cancel: 'cancel'
-    });
-
 	var fvalue = '';
 	var dvalue = '';
 	
@@ -251,6 +232,10 @@ $(document).ready(function(){
         $.post('/actor/update', { actor_id : $('#actor-id').val(), field : 'small_entity', value: $('input[name=small_entity]:checked').val()});
     });
 
+    $('input[name=warn]').change(function(){
+        $.post('/actor/update', { actor_id : $('#actor-id').val(), field : 'warn', value: $('input[name=warn]:checked').val()});
+    });
+
     $('.delete-actor').click(function(){
 	    var del_conf = confirm("Deleting Actor from table. Are you sure?");
 		if(del_conf == 1){
@@ -308,16 +293,16 @@ $(document).ready(function(){
 		<label for="WorkSite" title="<?=$this->actorComments['site_ID']?>">Work site</label> 
 		<span class="actor-input-wide auto-editable" id="site_ID"><?=$this->actor['site_name']?></span> 
 		<label for="phy_person" title="<?=$this->actorComments['phy_person']?>">Physical person</label> 
-		<span class="actor-input-narrow opt-editable" id="phy_person">
-			<input type="radio" name="phy_person" value="1" <?php echo ($this->actor['phy_person'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;
-			<input type="radio" name="phy_person" value="0" <?php echo ($this->actor['phy_person'])? '' :'checked="checked"'; ?> />NO
+		<span class="actor-input-narrow" id="phy_person">
+			<input type="radio" name="phy_person" value="1" <?=$this->actor['phy_person'] ? 'checked="checked"' : ""?> />YES&nbsp;&nbsp;
+			<input type="radio" name="phy_person" value="0" <?=$this->actor['phy_person'] ? '' :'checked="checked"'?> />NO
 		</span>
 		<label for="nationality" title="<?=$this->actorComments['nationality']?>">Nationality</label>
 		<span class="actor-input-wide country-editable" id="nationality"><?=$this->actor['nationality_name']?></span>
 		<label for="small_entity" title="<?=$this->actorComments['small_entity']?>">Small entity</label>
-		<span class="actor-input-narrow opt-editable" id="small_entity">
-			<input type="radio" name="small_entity" value="1" <?php echo ($this->actor['small_entity'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;
-			<input type="radio" name="small_entity" value="0" <?php echo ($this->actor['small_entity'])? '' :'checked="checked"'; ?> />NO
+		<span class="actor-input-narrow" id="small_entity">
+			<input type="radio" name="small_entity" value="1" <?=$this->actor['small_entity'] ? 'checked="checked"' : ""?> />YES&nbsp;&nbsp;
+			<input type="radio" name="small_entity" value="0" <?=$this->actor['small_entity'] ? '' :'checked="checked"'?> />NO
 		</span>
 	</fieldset>
 	<fieldset class="actor-info-set">
@@ -345,13 +330,16 @@ $(document).ready(function(){
 	</fieldset>
 	<fieldset class="actor-info-set">
 		<legend>Other details</legend>
-		<label for="pay_category" title="<?=$this->actorComments['pay_category']?>">Pay category</label>
-		<span class="actor-input-wide select-editable" id="pay_category"><?=$this->actor['pay_category']?></span>
+		<label for="warn" title="<?=$this->actorComments['warn']?>">Warn</label>
+ 		<span class="actor-input-wide" id="warn">
+			<input type="radio" name="warn" value="1" <?=$this->actor['warn'] ? 'checked="checked"' : ""?> />YES&nbsp;&nbsp;
+			<input type="radio" name="warn" value="0" <?=$this->actor['warn'] ? '' :'checked="checked"'?> />NO		
+ 		</span>
 		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT no.</label> 
 		<span class="actor-input-narrow editable" id="VAT_number"><?=$this->actor['VAT_number']?></span>
 		<label for="notes" title="<?=$this->actorComments['notes']?>">Notes</label>
 		<span class="actor-input-wide teditable" id="notes"><?=$this->actor['notes']?></span>
-		<button title="Actor used in" id="actor-used-in" style="float: right; margin-top: 10px">
+		<button title="Actor used in" id="actor-used-in" style="float: right; margin-top: 10px;">
 			Used in
 			<span class="ui-icon ui-icon-arrowthick-1-e" style="float: right;"></span>
 		</button>
