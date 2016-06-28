@@ -44,6 +44,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 		), array (
 				'a.id',
 				'a.name',
+				'a.default_role',
 				'a.last_login',
 				'a.login' 
 		) )->where ( "a.login IS NOT NULL" )->order ( 'name ASC' )
