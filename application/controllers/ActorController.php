@@ -257,13 +257,13 @@ class ActorController extends Zend_Controller_Action {
                 	$newpwd = $form->getValue('Password');
 			$userModel = new Application_Model_DbTable_Actor();
 			$result = $userModel->changepwdUser( $newpwd);
-			if ($result->isValid ()) {
+			if ($result == 'Password updated') {
                             $this->_helper->redirector ( 'index', 'index' );
                             }
                         else {
-                            $this->view->change_error = "Unable to change the password";
+                            $this->view->change_error = "Unable to change the password: ".$result;
                         }
-			}
+		   }
 		}
 	 
 		$this->view->form = $form;

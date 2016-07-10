@@ -221,6 +221,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 			return "Unable to update password.";
 		}
                 $siteInfoNamespace->password = $newpwd;
+                return 'Password updated';
 	}
 	
 	/**
