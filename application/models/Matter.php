@@ -725,7 +725,7 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	}
 	
 	/**
-	 * retrieves all renewal tasks for a matter
+	 * retrieves the next two open renewal tasks for a matter
 	 * *
 	 */
 	public function getOpenTasksREN($matter_id = 0) { // RENewal
