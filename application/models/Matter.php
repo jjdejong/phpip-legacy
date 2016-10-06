@@ -299,7 +299,7 @@ class Application_Model_Matter {
 			event_name.name AS Status,
 			status.event_date AS Status_date,
 			COALESCE(cli.display_name, clic.display_name, cli.name, clic.name) AS Client,
-			clilnk.actor_ref AS ClRef,
+			COALESCE(clilnk.actor_ref, lclic.actor_ref) AS ClRef,
 			COALESCE(agt.display_name, agt.name) AS Agent,
 			agtlnk.actor_ref AS AgtRef,
 			classifier.value AS Title,
