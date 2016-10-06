@@ -298,9 +298,9 @@ class Application_Model_Matter {
 			matter.origin,
 			event_name.name AS Status,
 			status.event_date AS Status_date,
-			IFNULL(cli.display_name, cli.name) AS Client,
+			COALESCE(cli.display_name, clic.display_name, cli.name, clic.name) AS Client,
 			clilnk.actor_ref AS ClRef,
-			IFNULL(agt.display_name, agt.name) AS Agent,
+			COALESCE(agt.display_name, agt.name) AS Agent,
 			agtlnk.actor_ref AS AgtRef,
 			classifier.value AS Title,
 			CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
@@ -317,10 +317,12 @@ class Application_Model_Matter {
 			del.login AS delegate,
 			matter.dead,
 			IF(isnull(matter.container_ID),1,0) AS Ctnr
-			FROM matter IGNORE INDEX (category)
-			  JOIN matter_category FORCE INDEX (PRIMARY) ON (matter.category_code = matter_category.code)
-			  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
-			    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
+			FROM matter
+			  JOIN matter_category ON (matter.category_code = matter_category.code)
+			  LEFT JOIN (matter_actor_lnk clilnk JOIN actor cli) 
+			    ON (matter.ID = clilnk.matter_ID AND clilnk.role = 'CLI' AND cli.ID = clilnk.actor_ID)
+			  LEFT JOIN (matter_actor_lnk lclic JOIN actor clic) 
+				ON (matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1 AND clic.ID = lclic.actor_ID) 
 			  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
 			    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . " AND inv.ID = invlnk.actor_ID)
 			  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
