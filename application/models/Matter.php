@@ -320,7 +320,7 @@ class Application_Model_Matter {
 			FROM matter IGNORE INDEX (category)
 			  JOIN matter_category FORCE INDEX (PRIMARY) ON (matter.category_code = matter_category.code)
 			  LEFT JOIN (matter_actor_lnk clilnk, actor cli) 
-			    ON (IFNULL(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI' AND clilnk.display_order=1 AND cli.ID = clilnk.actor_ID) 
+			    ON ((matter.ID = clilnk.matter_ID OR(matter.container_ID = clilnk.matter_ID AND clilnk.shared)) AND clilnk.role = 'CLI' AND cli.ID = clilnk.actor_ID) 
 			  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
 			    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . " AND inv.ID = invlnk.actor_ID)
 			  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
