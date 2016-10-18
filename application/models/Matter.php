@@ -343,7 +343,7 @@ class Application_Model_Matter {
 		if ($matter_category_display_type)
 			$where_clause = "AND matter_category.display_with = '$matter_category_display_type' ";
 		if ($role == 'CLI')
-			$where_clause .= "AND cli.id = '" . $userid . "' ";
+			$where_clause .= "AND '" . $userid . "' IN (cli.id, clic.id)";
 		
 		$having_clause = '';
 		if (! empty ( $multi_filter )) {
