@@ -2039,10 +2039,6 @@ USE `phpip`;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-SET FOREIGN_KEY_CHECKS = 1;
-COMMIT;
-SET AUTOCOMMIT = 1;
-
 --
 -- Dumping data for table `actor_role`
 --
@@ -2768,6 +2764,10 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-03-21 11:13:52
+
+SET FOREIGN_KEY_CHECKS = 1;
+COMMIT;
+SET AUTOCOMMIT = 1;
 
 -- User creation
 CREATE USER 'phpip'@'localhost' IDENTIFIED BY 'changeme'; 
