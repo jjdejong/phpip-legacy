@@ -183,9 +183,9 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	public function deleteActor($actor_id = null) {
 		if (! $actor_id)
 			return;
-		
+		$where = $this->getAdapter()->quoteInto ( 'ID = ?', $actor_id );
 		try {
-			$this->delete ( 'ID = ?', $actor_id );
+			$this->delete ( $where );
 			return true;
 		} catch ( Exception $e ) {
 			return $e->getMessage ();
@@ -193,7 +193,7 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 	}
 
 	/**
-	 * change the password of an user
+	 * change the password of a user
 	 */
 	public function changepwdUser( $newpwd = null) {
 		if ( $newpwd == null)
@@ -286,13 +286,13 @@ class Application_Model_DbTable_Actor extends Zend_Db_Table_Abstract
 		try {
 			$dbm = new PDO ( "mysql:host=$host;dbname=mysql", $username, $password );
 		} catch ( Exception $e ) {
-			return 'Echec de la connexion à la base de données ' . $e;
+			return 'Failed connection to the database ' . $e;
 		}
 		try {
 			$sql1 = "DROP USER '" . $login . "'@'%'";
 			$dbm->exec ( $sql1 );
 		} catch ( Exception $e ) {
-			return "Echec de la suppression : " . $e->getMessage ();
+			return "Failed deletion: " . $e->getMessage ();
 		}
 		$data ['login'] = null;
 		$this->update ( $data, array (
