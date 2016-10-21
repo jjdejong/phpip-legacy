@@ -413,7 +413,7 @@ CREATE TABLE `event` (
   `ID` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `code` char(5) NOT NULL COMMENT 'Link to event_names table',
   `matter_ID` int(11) NOT NULL,
-  `event_date` date NOT NULL DEFAULT '0000-00-00',
+  `event_date` date NOT NULL,
   `alt_matter_ID` int(11) DEFAULT NULL COMMENT 'Essentially for priority claims. ID of prior patent this event refers to',
   `detail` varchar(45) DEFAULT NULL COMMENT 'Numbers or short comments',
   `notes` varchar(150) DEFAULT NULL,
@@ -1670,47 +1670,6 @@ proc: BEGIN
 	END IF;
 
 END proc ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `recreate_renewals`()
-begin
-	declare vtriggerid int;
-	declare done int default FALSE;
-	declare cur cursor for select event.id from matter 
-		join matter_actor_lnk mal on (matter.id=mal.matter_id and mal.role='ANN' and mal.actor_id=410)
-		join event on (matter.id=event.matter_id)
-		where (caseref like '500%' or caseref like '510%' or caseref like '600%' or caseref like '610%')
-		and event.code in ('FIL','REG','PR')
-		and not exists (select 1 from task_list tl where matter.id=tl.matter_id and code='REN')
-		and dead=0
-		and origin is null;
-
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-	open cur;
-
-	cur_loop: loop
-		fetch cur into vtriggerid;
-		IF done THEN 
-			LEAVE cur_loop; 
-		END IF;
-		
-	end loop;
-
-	close cur;
-end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
