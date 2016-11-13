@@ -1,0 +1,191 @@
+<style type="text/css" >
+#rules-box{
+  display:block;
+  border-radius: 0px 4px 4px 4px;
+}
+#rules-list{
+  margin: 0px;
+  padding: 0px;
+  max-height:300px;
+  overflow:auto;
+}
+.phpip-lists{
+    margin:0px 5px 5px;
+    padding: 4px;
+    float:left;
+    background: #B5D9E5;
+    display:block;
+    border-radius: 0px 4px 4px 4px;
+    box-shadow: 2px 2px 1px #888888;
+}
+.phpip-list li{
+    list-style: none;
+    color: #3F3F38;
+    border-bottom: 1px solid #DDD;
+    background: #FFF;
+}
+.phpip-list li:hover {
+    background: #C8E8F3;
+}
+.list-headers {
+    background: #1E4262;
+    color: #FFF;
+    border-radius: 4px 4px 0 0;
+    border: none;
+    padding: 4px 6px;
+}
+.phpip-list li:last-child {
+    border-radius: 0 0 4px 4px;
+}
+.col-task{
+    display:inline-block;
+    padding: 4px 0px 4px 6px;
+    width: 100px;
+}
+.col-trigger{
+    display:inline-block;
+    width: 100px;
+}
+.col-category{
+    display:inline-block;
+    width: 100px;
+}
+.col-country{
+    display:inline-block;
+    width: 200px;
+}
+.col-origin{
+    display:inline-block;
+    width: 100px;
+}
+.col-type{
+    display:inline-block;
+    width: 70px;
+}
+.col-notes{
+    display:inline-block;
+    width: 200px;
+}
+.col-delete{
+    display:none;
+    width: 40px;
+    text-align: center;
+}
+.home-box{
+  float:left;
+}
+#rules-tab{
+  background: #B5D9E5;
+  display:block;
+  border-radius: 4px 4px 0px 0px;
+  width:40px;
+  padding: 5px 5px 0px;
+}
+.rule-list-row{
+  cursor: pointer;
+}
+#rule-details-popup{
+  display: none;
+  /*z-index: 101;
+  position: absolute;*/
+	width: 670px;
+}
+.filter-input{
+  border-radius: 4px;
+  border: 1px inset #555;
+  font-size: 9px;
+  padding: 2px 1px;
+  width: 50px;
+}
+/*#rule-details-content{
+	width: 99.5%;
+}*/
+#rule-details-nav{
+  text-align:center;
+  display: none;
+}
+#rule-details-nav img{
+  margin-left: 10px;
+  cursor: pointer;
+}
+.rule-list-row:hover .col-delete{
+	display: inline-block;
+}
+.rule-navigation{
+	margin-bottom: 5px;
+}
+
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.rule-list-row').click(function(){
+		$('#rule-details-popup').load('/rule/viewrule', { 'rule_id': $(this).attr('id') }).show();
+  });
+
+  $('#task').keyup(function(){
+		$('#rule-table-list').load('/rule/filter/co/0/term/'+$(this).val());
+  });
+
+  $('#rule-country').keyup(function(){
+		$('#rule-table-list').load('/rule/filter/co/1/term/'+$(this).val());
+  });
+
+  $('.delete-from-list').click(function(){
+	    var del_conf = confirm("Deleting rule from table. The rule will only be deleted if not used in other tables.");
+		if(del_conf == 1){
+	    	var aid = $(this).attr('id');
+	    	$.ajax({
+	      	url : '/rule/delete',
+	      	type: 'POST',
+	      	data: { aid:aid },
+	      	success: function(data){
+	        	if(isNaN(parseInt(data)))
+	          		alert(data); 
+	        	else 
+		        	location.reload();     
+          	}
+			});
+		}
+	    return false;
+  });
+
+  $( "button, input:button" ).button();
+
+});
+</script>
+<div id="rules-tab">Rules</div>
+<div id="rules-box" class="place-card">
+<?php if(count($this->ruleslist)): ?>
+    <div class="list-headers">
+    	<div class="col-task">Task <input type="text" size=20 name="task" id="task" class="filter-input" /></div>
+        <div class="col-trigger">Trigger event</div>
+        <div class="col-category">Category</div>
+    	<div class="col-country">Country <input type="text" size=20 name="rule-country" id="rule-country" class="filter-input" /></div>
+        <div class="col-origin">Origin</div>
+        <div class="col-type">Type</div>
+        <div class="col-notes">Detail</div>
+    	<div class="col-delete" >Delete</div>
+    </div>
+<div id="rule-table-list">
+<ul class="phpip-list" id="rules-list">
+<?php foreach($this->ruleslist as $rule): ?>
+    <li class="rule-list-row" id="<?=$rule['rule_id']?>">
+    	
+    	<div class="col-task"><?=htmlentities($rule['task'])?></div>
+        <div class="col-trigger"><?=htmlentities($rule['trigger_event_name'])?></div>
+        <div class="col-category"><?=htmlentities($rule['category_name'])?></div>
+    	<div class="col-country"><?=htmlentities($rule['country_name'])?></div>
+        <div class="col-origin"><?=htmlentities($rule['origin'])?></div>
+        <div class="col-type"><?=htmlentities($rule['f_type'])?></div>
+        <div class="col-notes"><?=htmlentities($rule['detail'])?></div>
+    	<div class="col-delete" >
+    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$rule['rule_id']?>" style="float:right;" title="Delete rule"></span>
+    	</div>
+    </li>
+<?php endforeach; ?>
+</ul>
+</div>
+<?php   endif; ?>
+</div>
+<div id="rule-details-popup" class="place-card" style="float: left"></div>
+<div id="facade"></div>
