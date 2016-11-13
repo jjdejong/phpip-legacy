@@ -61,6 +61,12 @@
                             <title>Users</title>
                             <uri>/actor/users</uri>
                         </users>
+                        <rules>
+                            <label>Edit rules</label>
+                            <id>rules</id>
+                            <title>Users</title>
+                            <uri>/rule</uri>
+                        </rules>
                     </pages>
                 </tables>
                 <account>
