@@ -31,7 +31,7 @@ class RuleController extends Zend_Controller_Action
 **/
   public function indexAction()
   {
-    $filter_array['value'] = $this->_getParam('value');
+    /*$filter_array['value'] = $this->_getParam('value');
     $filter_array['field'] = $this->_getParam('filter');
 
     $get_sort = $this->_getParam('sort');
@@ -49,14 +49,14 @@ class RuleController extends Zend_Controller_Action
     $mfs->sort_dir = $sort_dir;
     $mfs->multi_sort = array();
     $mfs->display_style = $this->view->display_style;
-    $mfs->category_display = $this->view->category_display;
+    $mfs->category_display = $this->view->category_display;*/
 
     $ruleModel = new Application_Model_DbTable_Rule();
-    $ruleslist = $ruleModel->fetchRules($filter_array, $sort_field, $sort_dir, array(), false, false);
-
+    //$ruleslist = $ruleModel->fetchRules($filter_array, $sort_field, $sort_dir, array(), false, false);
+    $ruleslist = $ruleModel->getAllRules();
     $this->view->ruleslist = $ruleslist;
-    $this->view->sort_id = 'task';
-    $this->view->sort_dir = 'asc';
+//    $this->view->sort_id = 'task';
+//    $this->view->sort_dir = 'asc';
   }
 
 /**
