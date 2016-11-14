@@ -158,12 +158,12 @@ $(document).ready(function(){
 <?php if(count($this->ruleslist)): ?>
     <div class="list-headers">
     	<div class="col-task">Task <input type="text" size=20 name="task" id="task" class="filter-input" /></div>
+        <div class="col-notes">Detail</div>
         <div class="col-trigger">Trigger event</div>
         <div class="col-category">Category</div>
     	<div class="col-country">Country <input type="text" size=20 name="rule-country" id="rule-country" class="filter-input" /></div>
         <div class="col-origin">Origin</div>
         <div class="col-type">Type</div>
-        <div class="col-notes">Detail</div>
     	<div class="col-delete" >Delete</div>
     </div>
 <div id="rule-table-list">
@@ -171,13 +171,13 @@ $(document).ready(function(){
 <?php foreach($this->ruleslist as $rule): ?>
     <li class="rule-list-row" id="<?=$rule['rule_id']?>">
     	
-    	<div class="col-task"><?=htmlentities($rule['task'])?></div>
+    	<div class="col-task"><?=htmlentities($rule['task_name'])?></div>
+        <div class="col-notes"><?=htmlentities($rule['detail'])?></div>
         <div class="col-trigger"><?=htmlentities($rule['trigger_event_name'])?></div>
         <div class="col-category"><?=htmlentities($rule['category_name'])?></div>
     	<div class="col-country"><?=htmlentities($rule['country_name'])?></div>
         <div class="col-origin"><?=htmlentities($rule['origin'])?></div>
         <div class="col-type"><?=htmlentities($rule['f_type'])?></div>
-        <div class="col-notes"><?=htmlentities($rule['detail'])?></div>
     	<div class="col-delete" >
     		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$rule['rule_id']?>" style="float:right;" title="Delete rule"></span>
     	</div>

@@ -57,13 +57,13 @@ $(document).ready(function(){
 <?php foreach($this->ruleslist as $rule): ?>
     <li class="rule-list-row" id="<?=$rule['rule_id']?>">
         
-        <div class="col-task"><?=htmlentities($rule['task'])?></div>
+        <div class="col-task"><?=htmlentities($rule['task_name'])?></div>
+        <div class="col-notes"><?=htmlentities(@$rule['detail'])?></div>
         <div class="col-trigger"><?=htmlentities(@$rule['trigger_event_name'])?></div>
         <div class="col-category"><?=htmlentities(@$rule['category_name'])?></div>
         <div class="col-country"><?=htmlentities(@$rule['country_name'])?></div>
         <div class="col-origin"><?=htmlentities(@$rule['origin_name'])?></div>
         <div class="col-type"><?=htmlentities(@$rule['f_type'])?></div>
-        <div class="col-notes"><?=htmlentities(@$rule['detail'])?></div>
         <div class="col-delete" >
                 <span class="delete-from-list ui-icon ui-icon-trash" id="<?=$rule['rule_id']?>" style="float:right;" title="Delete rule"></span>
         </div>

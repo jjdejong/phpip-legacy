@@ -129,7 +129,7 @@ class RuleController extends Zend_Controller_Action
                         $this->view->ruleslist = $ruleModel->getAllRules ( $term );
                         array_push ( $this->view->ruleslist, array (
                                 'rule_id' => 'nomatch',
-                                'task' => 'Create Rule' 
+                                'task_name' => 'Create Rule' 
                         ) );
                 } else {
                         $this->view->ruleslist = $ruleModel->getAllRulesByCountry ( $term );

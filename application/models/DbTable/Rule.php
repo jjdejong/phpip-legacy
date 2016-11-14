@@ -157,12 +157,14 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
                         mc.category AS category_name,
                         o.name AS origin_name,
                         an.name AS abort_on_name,
-                        en.name AS trigger_event_name
+                        en.name AS trigger_event_name,
+                        tn.name AS task_name
 
                         FROM task_rules AS r
                         LEFT JOIN country AS c ON r.for_country = c.iso 
                         LEFT JOIN country AS o ON r.for_origin = o.iso 
                         LEFT JOIN event_name AS en ON r.trigger_event = en.code 
+                        LEFT JOIN event_name AS tn ON r.task = tn.code 
                         LEFT JOIN event_name AS an ON r.abort_on = an.code
                         LEFT JOIN matter_category AS mc ON r.for_category = mc.code ";
                 
@@ -227,7 +229,7 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
                                 'detail' => 'r.detail' 
                 ) )->joinLeft ( array (
                                 'c' => 'country' 
-                ), 'c.iso = r.for_country', array (
+                ), 'r.for_country = c.iso', array (
                                 'country_name' => 'c.name' 
                 ) )->joinLeft ( array (
                                 'o' => 'country' 
@@ -238,17 +240,17 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
                 ), 'mc.code = r.for_category', array (
                                 'category_name' => 'mc.category' 
                 ) )->joinLeft ( array (
+                                'tn' => 'event_name' 
+                ), 'tn.code = r.task', array (
+                                'task_name' => 'tn.name' 
+                ) )->joinLeft ( array (
+                                'mt' => 'matter_type' 
+                ), 'mt.code = r.for_type', array (
+                                'for_type_name' => 'mt.type' 
+                ) )->joinLeft ( array (
                                 'en' => 'event_name' 
                 ), 'en.code = r.trigger_event', array (
                                 'trigger_event_name' => 'en.name' 
-                ) )->joinLeft ( array (
-                                'cn' => 'event_name' 
-                ), 'cn.code = r.condition_event', array (
-                                'condition_event_name' => 'cn.name' 
-                ) )->joinLeft ( array (
-                                'an' => 'event_name' 
-                ), 'an.code = r.abort_on', array (
-                                'abort_on_name' => 'an.name' 
                 ) )->order ( 'r.task asc' );
                 if (isset ( $term ))
                         $select->where ( 'r.task like ?', $term . '%');
@@ -291,6 +293,10 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
                                 'an' => 'event_name' 
                 ), 'an.code = r.abort_on', array (
                                 'abort_on_name' => 'an.name' 
+                ) )->joinLeft ( array (
+                                'tn' => 'event_name' 
+                ), 'tn.code = r.task', array (
+                                'task_name' => 'tn.name' 
                 ) )->where ( "r.for_country LIKE ?", $term . "%" )->order ( 'r.task ASC' );
                 $select = $select->setIntegrityCheck(false);
                 return $this->fetchAll ( $select )->toArray ();
