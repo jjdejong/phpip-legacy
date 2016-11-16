@@ -121,41 +121,7 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
         
         public function getAllRules($term = null) {
                 $this->getAdapter () ->query ( 'SET NAMES utf8' );
-                $select = $this->select ()->from ( array (
-                                'r' => 'task_rules' 
-                ), array (
-                                'rule_id' =>'r.id',
-                                'task' =>'r.task',
-                                'category' =>'r.for_category',
-                                'country' => 'r.for_country',
-                                'origin' => 'r.for_origin',
-                                'f_type' => 'r.for_type',
-                                'detail' => 'r.detail' 
-                ) )->joinLeft ( array (
-                                'c' => 'country' 
-                ), 'r.for_country = c.iso', array (
-                                'country_name' => 'c.name' 
-                ) )->joinLeft ( array (
-                                'o' => 'country' 
-                ), 'o.iso = r.for_origin', array (
-                                'origin_name' => 'o.name' 
-                ) )->joinLeft ( array (
-                                'mc' => 'matter_category' 
-                ), 'mc.code = r.for_category', array (
-                                'category_name' => 'mc.category' 
-                ) )->joinLeft ( array (
-                                'tn' => 'event_name' 
-                ), 'tn.code = r.task', array (
-                                'task_name' => 'tn.name' 
-                ) )->joinLeft ( array (
-                                'mt' => 'matter_type' 
-                ), 'mt.code = r.for_type', array (
-                                'for_type_name' => 'mt.type' 
-                ) )->joinLeft ( array (
-                                'en' => 'event_name' 
-                ), 'en.code = r.trigger_event', array (
-                                'trigger_event_name' => 'en.name' 
-                ) )->order ( 'r.task asc' );
+                $select = $this->selectRule()->order ( 'r.task asc' );
                 if (isset ( $term ))
                         $select->where ( 'r.task like ?', $term . '%');
                 $select = $select->setIntegrityCheck(false);
@@ -167,7 +133,13 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
          */
         public function getAllRulesByCountry($term = null) {
                 $this->getAdapter ()->query ( 'SET NAMES utf8' );
-               $select = $this->select ()->from ( array (
+                $select = $this->selectRule()->where ( "r.for_country LIKE ?", $term . "%" )->order ( 'r.task ASC' );
+                $select = $select->setIntegrityCheck(false);
+                return $this->fetchAll ( $select )->toArray ();
+        }
+
+        protected function selectRule() {
+                $select = $this->select ()->from ( array (
                                 'r' => 'task_rules' 
                 ), array (
                                 'rule_id' =>'r.id',
@@ -194,16 +166,15 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
                 ), 'en.code = r.trigger_event', array (
                                 'trigger_event_name' => 'en.name' 
                 ) )->joinLeft ( array (
-                                'an' => 'event_name' 
-                ), 'an.code = r.abort_on', array (
-                                'abort_on_name' => 'an.name' 
+                                'mt' => 'matter_type' 
+                ), 'mt.code = r.for_type', array (
+                                'for_type_name' => 'mt.type' 
                 ) )->joinLeft ( array (
                                 'tn' => 'event_name' 
                 ), 'tn.code = r.task', array (
                                 'task_name' => 'tn.name' 
-                ) )->where ( "r.for_country LIKE ?", $term . "%" )->order ( 'r.task ASC' );
-                $select = $select->setIntegrityCheck(false);
-                return $this->fetchAll ( $select )->toArray ();
+                ) );
+                return $select;
         }
 
         /**
