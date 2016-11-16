@@ -421,18 +421,18 @@ $(document).ready(function(){
 		<legend>Rule details</legend>
 		<label for="task" title="<?=$this->ruleComments['task']?>"><b>Task</b></label>
 			<?=$this->ruleForm->getElement('task_name')?>
-		<label title="<?=$this->ruleComments['active']?>">Is active</label>
-                        <?=$this->ruleForm->getElement('active')?>
+                <label for="detail" title="<?=$this->ruleComments['detail']?>">Detail</label>
+                        <?=$this->ruleForm->getElement('detail')?>
                 <label for="for_country_name" title="<?=$this->ruleComments['for_country']?>">Country</label>
                         <?=$this->ruleForm->getElement('for_country_name')?>
+                <label title="<?=$this->ruleComments['active']?>">Is active</label>
+                        <?=$this->ruleForm->getElement('active')?>
                 <label for="for_category_name" title="<?=$this->ruleComments['for_category']?>">Category</label>
                         <?=$this->ruleForm->getElement('for_category_name')?>
                 <label for="for_origin_name" title="<?=$this->ruleComments['for_origin']?>">Origin</label>
                         <?=$this->ruleForm->getElement('for_origin_name')?>
                 <label for="for_type_name" title="<?=$this->ruleComments['for_type']?>">Type</label>
                         <?=$this->ruleForm->getElement('for_type_name')?>
-                <label for="detail" title="<?=$this->ruleComments['detail']?>">Detail</label>
-                        <?=$this->ruleForm->getElement('detail')?>
                 <label for="notes" title="<?=$this->ruleComments['notes']?>">Notes</label>
                         <?=$this->ruleForm->getElement('notes')?>
 	</fieldset>
