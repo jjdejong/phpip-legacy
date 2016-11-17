@@ -300,6 +300,7 @@ class Application_Model_Matter {
 			status.event_date AS Status_date,
 			COALESCE(cli.display_name, clic.display_name, cli.name, clic.name) AS Client,
 			COALESCE(clilnk.actor_ref, lclic.actor_ref) AS ClRef,
+			COALESCE(app.display_name, app.name) AS Applicant,
 			COALESCE(agt.display_name, agt.name) AS Agent,
 			agtlnk.actor_ref AS AgtRef,
 			classifier.value AS Title,
@@ -327,6 +328,8 @@ class Application_Model_Matter {
 			    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . " AND inv.ID = invlnk.actor_ID)
 			  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
 			    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
+			  LEFT JOIN (matter_actor_lnk applnk, actor app) 
+			    ON (matter.ID = applnk.matter_ID AND applnk.role = 'APP' AND applnk.display_order = 1 AND app.ID = applnk.actor_ID)
 			  LEFT JOIN (matter_actor_lnk dellnk, actor del) 
 			    ON (ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' AND del.ID = dellnk.actor_ID)  
 			  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
@@ -354,7 +357,7 @@ class Application_Model_Matter {
 					else
 						$having_clause .= "AND ";
 					if ($key == 'responsible')
-						$having_clause .= "(responsible = '$value' OR delegate = '$value') ";
+						$having_clause .= "'$value' IN (responsible, delegate) ";
 					else
 						$having_clause .= "$key LIKE '$value%' ";
 				}
