@@ -27,6 +27,7 @@ cd /var/www
 git clone https://github.com/jjdejong/phpip.git
 cp phpip/install/conf/phpip.conf /etc/apache2/sites-enabled/
 service apache2 reload
+mv phpip/application/configs/application.ini.example phpip/application/configs/application.ini
 echo "
 ********************************
 Installing database.

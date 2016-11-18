@@ -435,7 +435,7 @@ $(document).ready(function(){
             type: 'textarea',
             submitdata: function(value,settings){
               var cid = $(this).attr('id');
-              return { cid : cid }
+              return { cid : cid };
             },
             select: true,
             submit: 'OK',
@@ -448,7 +448,7 @@ $(document).ready(function(){
         $('#matter-notes').editable('/matter/update-matter', {
             type: 'textarea',
             submitdata: function(value,settings){
-              return { matter_id: $('#this-matter-id').val(), field: 'notes' }
+              return { matter_id: $('#this-matter-id').val(), field: 'notes' };
             },
             submit: 'OK',
             cancel: 'X',
