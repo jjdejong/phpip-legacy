@@ -123,7 +123,7 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
                 $this->getAdapter () ->query ( 'SET NAMES utf8' );
                 $select = $this->selectRule()->order ( 'r.task asc' );
                 if (isset ( $term ))
-                        $select->where ( 'r.task like ?', $term . '%');
+                        $select->where ( 'tn.name like ?', $term . '%');
                 $select = $select->setIntegrityCheck(false);
                 return $this->fetchAll ( $select )->toArray ();
         }
