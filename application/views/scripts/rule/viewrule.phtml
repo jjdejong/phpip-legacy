@@ -418,21 +418,21 @@ $(document).ready(function(){
                 <span class="rule-input-narrow responsible-editable" id="responsible"><?=$this->rule['responsible_name']?></span>
                 <label for="days" title="<?=$this->ruleComments['days']?>">Days</label>
                 <span class="rule-input-wide editable" id="days"><?=$this->rule['days']?></span>
+                <label for="cost" title="<?=$this->ruleComments['cost']?>">Cost</label> 
+                <span class="rule-input-narrow editable" id="cost"><?=$this->rule['cost']?></span>
+                <label for="fee" title="<?=$this->ruleComments['fee']?>">Fee</label> 
+                <span class="rule-input-narrow editable" id="fee"><?=$this->rule['fee']?></span>
+                <label for="months" title="<?=$this->ruleComments['months']?>">Months</label>
+                <span class="rule-input-wide editable" id="months"><?=$this->rule['months']?></span>
+                <label for="currency" title="<?=$this->ruleComments['currency']?>">Currency</label>
+                <span class="rule-input-wide editable" id="currency"><?=$this->rule['currency']?></span>
+                <label for="years" title="<?=$this->ruleComments['years']?>">Years</label>
+                <span class="rule-input-wide editable" id="years"><?=$this->rule['years']?></span>
                 <label for="end_of_month" title="<?=$this->ruleComments['end_of_month']?>">End of month</label>
                 <span class="rule-input-narrow opt-editable" id="end_of_month">
                         <input type="radio" name="end_of_month" value="1" <?php echo ($this->rule['end_of_month'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;
                         <input type="radio" name="end_of_month" value="0" <?php echo ($this->rule['end_of_month'])? '' :'checked="checked"'; ?> />NO
                 </span>
-                <label for="months" title="<?=$this->ruleComments['months']?>">Months</label>
-                <span class="rule-input-wide editable" id="months"><?=$this->rule['months']?></span>
-                <label for="cost" title="<?=$this->ruleComments['cost']?>">Cost</label> 
-                <span class="rule-input-narrow editable" id="cost"><?=$this->rule['cost']?></span>
-                <label for="years" title="<?=$this->ruleComments['years']?>">Years</label>
-                <span class="rule-input-wide editable" id="years"><?=$this->rule['years']?></span>
-                <label for="fee" title="<?=$this->ruleComments['fee']?>">Fee</label> 
-                <span class="rule-input-narrow editable" id="fee"><?=$this->rule['fee']?></span>
-                <label for="currency" title="<?=$this->ruleComments['currency']?>">Currency</label>
-                <span class="rule-input-wide editable" id="currency"><?=$this->rule['currency']?></span>
 		<button title="Delete rule" class="delete-rule" id="<?=$this->rule['rule_id']?>" style="float: right; margin-top: 10px; margin-right: 16px;">
 			<span class="ui-icon ui-icon-trash" style="float: left;"></span>
 			Delete
