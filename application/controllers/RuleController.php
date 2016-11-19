@@ -149,8 +149,8 @@ class RuleController extends Zend_Controller_Action
                         $post_data = $request->getPost ();
                         if ($ruleForm->isValid ( $post_data )) {
                                 
+                                $task_name = $post_data ['task_name'];
                                 foreach ( $post_data as $key => $data ) {
-                                echo "$key : $data<BR>";
                                         if ($data == "" || substr($key, -5) == '_name')
                                                 unset ( $post_data [$key] );
                                 }
@@ -159,18 +159,13 @@ class RuleController extends Zend_Controller_Action
                                 if ($rule_id) {
                                         $this->_helper->viewRenderer->setNoRender ();
                                         $json_data = array ();
-                                        $json_data ['rule_name'] = $post_data ['task'];
+                                        $json_data ['rule_name'] = $task_name;
                                         $json_data ['rule_id'] = $rule_id;
                                         echo json_encode ( $json_data );
                                         return;
                                 }
                         } else {
                                 $this->view->formErrors = $ruleForm->getMessages ();
-                                
-                                foreach ( $post_data as $key => $data ) {
-                                       echo "$key : $data |<BR>";
-                                }
-                                
                         }
                 }
                 $this->view->ruleComments = $ruleModel->getTableComments ( 'task_rules' );
