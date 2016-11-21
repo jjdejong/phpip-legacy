@@ -117,7 +117,7 @@ $(document).ready(function(){
 		$('#rule-details-popup').load('/rule/viewrule', { 'rule_id': $(this).attr('id') }).show();
   });
 
-  $('#task').keyup(function(){
+  $('#task-filter').keyup(function(){
 		$('#rule-table-list').load('/rule/filter/co/0/term/'+$(this).val());
   });
 
@@ -152,7 +152,7 @@ $(document).ready(function(){
 <div id="rules-box" class="place-card">
 <?php if(count($this->ruleslist)): ?>
     <div class="list-headers">
-    	<div class="col-task">Task <input type="text" size=20 name="task" id="task" class="filter-input" /></div>
+    	<div class="col-task">Task <input type="text" size=20 name="task-filter" id="task-filter" class="filter-input" /></div>
         <div class="col-notes">Detail</div>
         <div class="col-trigger">Trigger event</div>
         <div class="col-category">Category</div>
