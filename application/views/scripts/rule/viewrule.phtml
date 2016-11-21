@@ -221,6 +221,39 @@ $(document).ready(function(){
                 select: true
     });
 
+    $('.task-editable').editable('/rule/update', {
+        type: 'autocomplete',
+        autocomplete: {
+                        minLength: 1,
+                        source: "/rule/get-task-names",
+                        select: function( event, ui ) {
+                        this.value = ui.item.value;  // assign task name back to the form element
+                                fvalue = ui.item.id; // Task code
+                                dvalue = ui.item.value;
+                        $(event.target.form).submit(); //submit the form
+                        }
+        },
+        submitdata: function(value, settings){
+                        var field_name = $(this).attr('id');
+                        return { 
+                                rule_id: $('#rule-id').val(), 
+                                field: field_name,
+                                value: fvalue,
+                                dvalue: dvalue 
+                        }
+                },
+                callback : function(value, settings) { // Reset variables after submission
+                        fvalue = '';
+                        dvalue = '';
+                },
+                id: 'field', // the object id is the form field name
+                placeholder: '',
+                indicator: '<span class="icon-busy" />',
+                tooltip: 'Click to edit...',
+                select: true
+    });
+
+
     $('.event-editable').editable('/rule/update', {
         type: 'autocomplete',
         autocomplete: {
@@ -252,7 +285,6 @@ $(document).ready(function(){
                 tooltip: 'Click to edit...',
                 select: true
     });
-
 
     $('.responsible-editable').editable('/rule/update', {
         type: 'autocomplete',
@@ -363,7 +395,7 @@ $(document).ready(function(){
 	<fieldset class="rule-info-set">
 		<legend>Task rule details - ID: <?=$this->rule['rule_id']?></legend>
 		<label for="task" class="required-field" title="<?=$this->ruleComments['task']?>">Task</label> 
-		<span class="rule-input-wide event-editable" id="task"><?=htmlentities($this->rule['task_name'])?></span>
+		<span class="rule-input-wide task-editable" id="task"><?=htmlentities($this->rule['task_name'])?></span>
                 <label for="detail" title="<?=$this->ruleComments['detail']?>">Detail</label>
                 <span class="rule-input-narrow editable" id="detail"><?=$this->rule['detail']?></span><BR />
                 <label for="for_country" title="<?=$this->ruleComments['for_country']?>">Country</label>
@@ -420,14 +452,14 @@ $(document).ready(function(){
                 <span class="rule-input-wide editable" id="days"><?=$this->rule['days']?></span>
                 <label for="cost" title="<?=$this->ruleComments['cost']?>">Cost</label> 
                 <span class="rule-input-narrow editable" id="cost"><?=$this->rule['cost']?></span>
-                <label for="fee" title="<?=$this->ruleComments['fee']?>">Fee</label> 
-                <span class="rule-input-narrow editable" id="fee"><?=$this->rule['fee']?></span>
                 <label for="months" title="<?=$this->ruleComments['months']?>">Months</label>
                 <span class="rule-input-wide editable" id="months"><?=$this->rule['months']?></span>
-                <label for="currency" title="<?=$this->ruleComments['currency']?>">Currency</label>
-                <span class="rule-input-wide editable" id="currency"><?=$this->rule['currency']?></span>
+                <label for="fee" title="<?=$this->ruleComments['fee']?>">Fee</label> 
+                <span class="rule-input-narrow editable" id="fee"><?=$this->rule['fee']?></span>
                 <label for="years" title="<?=$this->ruleComments['years']?>">Years</label>
                 <span class="rule-input-wide editable" id="years"><?=$this->rule['years']?></span>
+                <label for="currency" title="<?=$this->ruleComments['currency']?>">Currency</label>
+                <span class="rule-input-narrow editable" id="currency"><?=$this->rule['currency']?></span>
                 <label for="end_of_month" title="<?=$this->ruleComments['end_of_month']?>">End of month</label>
                 <span class="rule-input-narrow opt-editable" id="end_of_month">
                         <input type="radio" name="end_of_month" value="1" <?php echo ($this->rule['end_of_month'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;

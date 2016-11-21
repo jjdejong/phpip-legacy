@@ -372,7 +372,6 @@ $(document).ready(function(){
             success: function(response, status, xhr){
                 if(response.length < 100){
                     var resObj = $.parseJSON(''+response);
-                    $( "#rule" ).val( resObj.rule_name );
                     $( "#rule-id" ).val( resObj.rule_id );
                     $('#rule-details-popup').css('display', 'none');
                 }else{
