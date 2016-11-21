@@ -310,12 +310,16 @@ $(document).ready(function(){
     });
 
     $('#use_after').datepicker({
-        dateFormat: 'dd/mm/yy',
+        dateFormat : "dd/mm/yy",
+        altField : "#use_after_alt",
+        altFormat: "yy-mm-dd"
     });
     $('use_after').datepicker('setDate', new Date());
 
     $('#use_before').datepicker({
-        dateFormat: 'dd/mm/yy',
+        dateFormat : "dd/mm/yy",
+        altField : "#use_before_alt",
+        altFormat: "yy-mm-dd"
     });
     $('use_before').datepicker('setDate', new Date());
 
@@ -360,8 +364,8 @@ $(document).ready(function(){
                     condition_event: $('#condition_event').val(), 
                     use_parent: $('input[name=use_parent]:checked').val(), 
                     use_priority: $('input[name=use_priority]:checked').val(), 
-                    use_after: $('#use_after').val(),   
-                    use_before: $('#use_before').val(),   
+                    use_after: $('#use_after_alt').val(),   
+                    use_before: $('#use_before_alt').val(),   
                     cost: $('#cost').val(),    
                     fee: $('#fee').val(),
                     currency: $('#currency').val(),
@@ -503,6 +507,14 @@ $(document).ready(function(){
                         value="" 
                         id="responsible" 
                         name="responsible" /> 
+                <input type="hidden" 
+                        value="" 
+                        id="use_before_alt" 
+                        name="use_before_alt" /> 
+                <input type="hidden" 
+                        value="" 
+                        id="use_after_alt" 
+                        name="use_after_alt" /> 
 
 		<div style="text-align: center; margin-top: 5px;">
 			<input type="button" 

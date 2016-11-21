@@ -151,6 +151,7 @@ class RuleController extends Zend_Controller_Action
                                 
                                 $task_name = $post_data ['task_name'];
                                 foreach ( $post_data as $key => $data ) {
+                                        echo $key.' : '.$data.'<BR />';
                                         if ($data == "" || substr($key, -5) == '_name')
                                                 unset ( $post_data [$key] );
                                 }

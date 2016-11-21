@@ -424,14 +424,14 @@ $(document).ready(function(){
                         <input type="radio" name="use_parent" value="0" <?php echo ($this->rule['use_parent'])? '' :'checked="checked"'; ?> />NO
                 </span>
                 <label for="use_before" title="<?=$this->ruleComments['use_before']?>">Use before</label>
-                <span class="rule-input-wide date-editable" id="use_before"><?=$this->rule['use_before']?></span>
+                <span class="rule-input-wide date-editable" id="use_before"><?=date_format(date_create($this->rule['use_before']),"d/m/Y")?></span>
                 <label for="clear_task" title="<?=$this->ruleComments['clear_task']?>">Clear task</label> 
                 <span class="rule-input-narrow opt-editable" id="clear_task">
                         <input type="radio" name="clear_task" value="1" <?php echo ($this->rule['clear_task'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;
                         <input type="radio" name="clear_task" value="0" <?php echo ($this->rule['clear_task'])? '' :'checked="checked"'; ?> />NO
                 </span>
                 <label for="use_after" title="<?=$this->ruleComments['use_after']?>">Use after</label>
-                <span class="rule-input-wide date-editable" id="use_after"><?=$this->rule['use_after']?></span>
+                <span class="rule-input-wide date-editable" id="use_after"><?=date_format(date_create($this->rule['use_after']),"d/m/Y")?></span>
 		<label for="delete_task" title="<?=$this->ruleComments['delete_task']?>">Delete task</label> 
                 <span class="rule-input-narrow opt-editable" id="delete_task">
                         <input type="radio" name="delete_task" value="1" <?php echo ($this->rule['delete_task'])? 'checked="checked"' : ""; ?> />YES&nbsp;&nbsp;
