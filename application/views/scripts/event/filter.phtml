@@ -1,0 +1,67 @@
+<script type="text/javascript">
+$(document).ready(function(){
+  $('.event-list-row').click(function(){
+    var event_id = $(this).attr('id');
+    $('#facade').css('display','block');
+    if(event_id == 'nomatch'){
+        $.ajax({
+            type: "GET",
+            url: '/event/add',
+            success: function(data){
+            	$('#event-details-popup').empty();
+    	        $('#event-details-popup').html(data);
+    	        $('#event-details-popup').css('display', 'block');
+    	        $('#facade').css('display','none');
+    	        $('#name').focus();
+            }
+        });
+    } else {
+	    $.ajax({
+	      url: '/event/viewevent',
+	      type: 'POST',
+	      data: { event_id:event_id },
+	      success: function(data){
+	        $('#event-details-popup').empty();
+	        $('#event-details-popup').html(data);
+	        $('#event-details-popup').css('display', 'block');
+	        $('#facade').css('display','none');
+	      }
+	    });
+    }
+  });
+
+  $('.delete-from-list').click(function(){
+    var del_conf = confirm("Deleting Event name from table. Are you sure?");
+	if(del_conf == 1){
+    var aid = $(this).attr('id');
+    console.log('Delete event name '+aid);
+    $.ajax({
+      url : '/event/delete',
+      type: 'POST',
+      data: { aid:aid },
+      success: function(data){
+         if(isNaN(parseInt(data)))
+             alert(data);
+         else
+        	 location.reload();
+      }    
+      });
+	}
+    return false;
+  });
+});
+</script>
+
+<ul class="phpip-list" id="events-list">
+<?php foreach($this->eventslist as $event): ?>
+    <li class="event-list-row" id="<?=$event['event_id']?>">
+        
+        <div class="col-code"><?=htmlentities($event['code'])?></div>
+        <div class="col-name"><?=htmlentities(@$event['name'])?></div>
+        <div class="col-notes"><?=htmlentities(@$event['notes'])?></div>
+        <div class="col-delete" >
+                <span class="delete-from-list ui-icon ui-icon-trash" id="<?=$event['event_id']?>" style="float:right;" title="Delete event"></span>
+        </div>
+    </li>
+<?php endforeach; ?>
+</ul>

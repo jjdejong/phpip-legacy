@@ -5,7 +5,6 @@
 	display: block;
 	border: 1px inset #888;
 	padding: 5px;
-	border-radius: 0px 0px 5px 5px;
 }
 
 #add-rule-content label {
@@ -18,7 +17,6 @@
 
 .actor-input {
 	width: 170px;
-	border-radius: 3px;
 	border: 1px inset #888;
 	padding: 1px 2px;
 	vertical-align: top;
@@ -29,7 +27,6 @@
 	background: #f00;
 	float: right;
 	padding: 2px 4px 0px;
-	border-radius: 3px;
 	cursor: pointer;
 	font-family: arial;
 }
@@ -41,7 +38,6 @@
 	color: #FFF;
 	padding: 5px;
 	border: 1px solid #1E4262;
-	border-radius: 5px 5px 0px 0px;
 }
 
 .validation-errors {
@@ -57,7 +53,6 @@
 .rule-info-set {
 	background: #EFEFEF;
 	border: 1px inset #888;
-	border-radius: 5px;
 }
 </style>
 
@@ -315,12 +310,16 @@ $(document).ready(function(){
     });
 
     $('#use_after').datepicker({
-        dateFormat: 'dd/mm/yy',
+        dateFormat : "dd/mm/yy",
+        altField : "#use_after_alt",
+        altFormat: "yy-mm-dd"
     });
     $('use_after').datepicker('setDate', new Date());
 
-    $('use_before').datepicker({
-        dateFormat: 'dd/mm/yy',
+    $('#use_before').datepicker({
+        dateFormat : "dd/mm/yy",
+        altField : "#use_before_alt",
+        altFormat: "yy-mm-dd"
     });
     $('use_before').datepicker('setDate', new Date());
 
@@ -338,13 +337,13 @@ $(document).ready(function(){
         $.ajax({
             url: '/rule/add',
             type: 'POST',
-            data: { active: $('input[name=active]').val(),
+            data: { active: $('input[name=active]:checked').val(),
                     task_name: $('#task_name').val(), 
                     task: $('#task').val(), 
                     trigger_event_name: $('#trigger_event_name').val(), 
                     trigger_event: $('#trigger_event').val(), 
-                    clear_task: $('input[name=clear_task').val(), 
-                    delete_task: $('input[name=delete_task').val(), 
+                    clear_task: $('input[name=clear_task]:checked').val(), 
+                    delete_task: $('input[name=delete_task]:checked').val(), 
                     for_category_name: $('#for_category_name').val(), 
                     for_category: $('#for_category').val(), 
                     for_country: $('#for_country').val(), 
@@ -357,16 +356,16 @@ $(document).ready(function(){
                     days: $('#days').val(), 
                     months: $('#months').val(),
                     years: $('#years').val(),
-                    recurring: $('input[name=recurring').val(),
-                    end_of_month: $('input[name=end_of_month').val(), 
+                    recurring: $('input[name=recurring]:checked').val(),
+                    end_of_month: $('input[name=end_of_month]:checked').val(), 
                     abort_on_name: $('#abort_on_name').val(), 
                     abort_on: $('#abort_on').val(), 
                     condition_event_name: $('#condition_event_name').val(), 
                     condition_event: $('#condition_event').val(), 
-                    use_parent: $('input[name=use_parent').val(), 
-                    use_priority: $('input[name=use_priority').val(), 
-                    use_after: $('#use_after').val(),   
-                    use_before: $('#use_before').val(),   
+                    use_parent: $('input[name=use_parent]:checked').val(), 
+                    use_priority: $('input[name=use_priority]:checked').val(), 
+                    use_after: $('#use_after_alt').val(),   
+                    use_before: $('#use_before_alt').val(),   
                     cost: $('#cost').val(),    
                     fee: $('#fee').val(),
                     currency: $('#currency').val(),
@@ -377,7 +376,6 @@ $(document).ready(function(){
             success: function(response, status, xhr){
                 if(response.length < 100){
                     var resObj = $.parseJSON(''+response);
-                    $( "#rule" ).val( resObj.rule_name );
                     $( "#rule-id" ).val( resObj.rule_id );
                     $('#rule-details-popup').css('display', 'none');
                 }else{
@@ -427,7 +425,7 @@ $(document).ready(function(){
                         <?=$this->ruleForm->getElement('for_country_name')?>
                 <label title="<?=$this->ruleComments['active']?>">Is active</label>
                         <?=$this->ruleForm->getElement('active')?>
-                <label for="for_category_name" title="<?=$this->ruleComments['for_category']?>">Category</label>
+                <label for="for_category_name" title="<?=$this->ruleComments['for_category']?>"><b>Category</b></label>
                         <?=$this->ruleForm->getElement('for_category_name')?>
                 <label for="for_origin_name" title="<?=$this->ruleComments['for_origin']?>">Origin</label>
                         <?=$this->ruleForm->getElement('for_origin_name')?>
@@ -509,6 +507,14 @@ $(document).ready(function(){
                         value="" 
                         id="responsible" 
                         name="responsible" /> 
+                <input type="hidden" 
+                        value="" 
+                        id="use_before_alt" 
+                        name="use_before_alt" /> 
+                <input type="hidden" 
+                        value="" 
+                        id="use_after_alt" 
+                        name="use_after_alt" /> 
 
 		<div style="text-align: center; margin-top: 5px;">
 			<input type="button" 
