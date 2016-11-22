@@ -94,7 +94,6 @@ li{
     float: left;
     padding: 5px;
     background-image: -moz-linear-gradient(top,  #C8E8F3,  #EEF);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#C8E8F3), to(#EEF));
     background-color: #C8E8F3;
     min-height: 400px
 }
@@ -130,7 +129,6 @@ li{
     vertical-align: top;
     height: 100%;
     background-image: -moz-linear-gradient(top,  #C8E8F3,  #EEF);
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#C8E8F3), to(#EEF));
     min-height: 400px;
 }
 
