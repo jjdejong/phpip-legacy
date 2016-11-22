@@ -158,6 +158,10 @@ class RuleController extends Zend_Controller_Action
                                 $rule_id = $ruleModel->addRule ( $post_data );
                                 if ($rule_id) {
                                         $this->_helper->viewRenderer->setNoRender ();
+                                        $json_data = array ();
+                                        $json_data ['rule_name'] = $task_name;
+                                        $json_data ['rule_id'] = $rule_id;
+                                        echo json_encode ( $json_data );
                                         return;
                                 }
                         } else {
