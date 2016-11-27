@@ -122,18 +122,15 @@ class RuleController extends Zend_Controller_Action
          */
         public function filterAction() {
                 $this->_helper->layout->disableLayout ();
-                $term = $this->_getParam ( 'term' );
-                $co = $this->_getParam ( 'co' );
+                $Task = $this->_getParam ( 'Task' );
+                $Trigger = $this->_getParam ( 'Trigger' );
+                $Country = $this->_getParam ( 'Country' );
                 $ruleModel = new Application_Model_DbTable_Rule ();
-                if ($co == '0') {
-                        $this->view->ruleslist = $ruleModel->getAllRules ( $term );
-                        array_push ( $this->view->ruleslist, array (
-                                'rule_id' => 'nomatch',
-                                'task_name' => 'Create Rule' 
-                        ) );
-                } else {
-                        $this->view->ruleslist = $ruleModel->getAllRulesByCountry ( $term );
-                }
+                $this->view->ruleslist = $ruleModel->getAllRules ( $Task, $Trigger, $Country );
+                array_push ( $this->view->ruleslist, array (
+                        'rule_id' => 'nomatch',
+                        'task_name' => 'Create Rule' 
+                ) );
         }
 
          /**

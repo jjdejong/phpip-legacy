@@ -41,7 +41,7 @@
 }
 .col-trigger{
     display:inline-block;
-    width: 100px;
+    width: 150px;
 }
 .col-category{
     display:inline-block;
@@ -53,7 +53,7 @@
 }
 .col-origin{
     display:inline-block;
-    width: 100px;
+    width: 80px;
 }
 .col-type{
     display:inline-block;
@@ -61,7 +61,7 @@
 }
 .col-notes{
     display:inline-block;
-    width: 200px;
+    width: 180px;
 }
 .col-delete{
     display:none;
@@ -112,17 +112,43 @@
 
 </style>
 <script type="text/javascript">
+function getFilterUrl()
+{
+        var task = $('#filter-task').val().replace(/\//,"~~");
+        var trigger = $('#filter-trigger').val();
+        var country = $('#filter-country').val();
+        var url = '';
+        if(task != '')
+                url = url + '/Task/'+task;
+        if(country != '')
+                url = url + '/Country/'+country;
+        if(trigger != '')
+                url = url + '/Trigger/'+trigger;
+        return url;
+}
+                  
 $(document).ready(function(){
-  $('.rule-list-row').click(function(){
+
+     $('.filter-input').keyup(function(){
+                if($(this).val().length != 0)
+                        $(this).css("background-color", "bisque");
+                else
+                        $(this).css("background-color", "white");
+                var url = '/rule/filter' + getFilterUrl();
+         $.ajax({
+             url: url,
+             type: 'GET',
+             data: { },
+             success: function(data){
+                 $('#rules-list').empty();
+                 $('#rules-list').html(data);
+                 window.history.pushState('', 'phpIP' , url);
+             }
+         });
+     });
+
+     $('.rule-list-row').click(function(){
 		$('#rule-details-popup').load('/rule/viewrule', { 'rule_id': $(this).attr('id') }).show();
-  });
-
-  $('#task-filter').keyup(function(){
-		$('#rule-table-list').load('/rule/filter/co/0/term/'+$(this).val());
-  });
-
-  $('#rule-country').keyup(function(){
-		$('#rule-table-list').load('/rule/filter/co/1/term/'+$(this).val());
   });
 
   $('.delete-from-list').click(function(){
@@ -152,11 +178,11 @@ $(document).ready(function(){
 <div id="rules-box" class="place-card">
 <?php if(count($this->ruleslist)): ?>
     <div class="list-headers">
-    	<div class="col-task">Task <input type="text" size=20 name="task-filter" id="task-filter" class="filter-input" /></div>
+    	<div class="col-task">Task <input type="text" size=12 name="filter-task" id="filter-task" class="filter-input" /></div>
         <div class="col-notes">Detail</div>
-        <div class="col-trigger">Trigger event</div>
+        <div class="col-trigger">Trigger event <input type="text" size=12 name="filter-trigger" id="filter-trigger" class="filter-input" /></div>
         <div class="col-category">Category</div>
-    	<div class="col-country">Country <input type="text" size=20 name="rule-country" id="rule-country" class="filter-input" /></div>
+    	<div class="col-country">Country <input type="text" size=12 name="filter-country" id="filter-country" class="filter-input" /></div>
         <div class="col-origin">Origin</div>
         <div class="col-type">Type</div>
     	<div class="col-delete" >Delete</div>
