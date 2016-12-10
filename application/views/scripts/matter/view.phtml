@@ -317,18 +317,21 @@
 $(document).ready(function(){
 
         $("#MatterStatus").click(function(){
+        	$('.ui-widget-overlay').show();
             $('#event-pop-up').load("/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>", function(){
             	$(this).show();
             }).css($(this).offset()).draggable();
         }); 
 
         $("#MatterOpenTasks").click(function(){
+        	$('.ui-widget-overlay').show();
         	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>", function(){
             	$(this).show();
             }).css('top', $(this).offset().top).draggable();
         });
 
         $("#MatterRenTasks").click(function(){
+        	$('.ui-widget-overlay').show();
             trig_id = <?=(isset($this->matter_open_tasks_ren[0]) ? $this->matter_open_tasks_ren[0]['trigger_ID'] : 0) ?>;
             if(trig_id == 0) return false;
          	$('#tasklist-pop-up').load(
@@ -341,6 +344,7 @@ $(document).ready(function(){
         }); 
 
         $("#MatterClassifier").click(function(){
+        	$('.ui-widget-overlay').show();
             $('#classifier-popup').load("/matter/classifierlist/id/<?=$this->matter_record[0]['ID']?>", function(){
             	$(this).show();
             }).css('top', $(this).offset().top).draggable();
