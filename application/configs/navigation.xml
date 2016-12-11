@@ -71,7 +71,7 @@
                             <label>Edit event names</label>
                             <id>events</id>
                             <title>Event names</title>
-                            <uri>/rule</uri>
+                            <uri>/event</uri>
                         </events>
                     </pages>
                 </tables>
