@@ -64,9 +64,15 @@
                         <rules>
                             <label>Edit rules</label>
                             <id>rules</id>
-                            <title>Users</title>
+                            <title>Rules</title>
                             <uri>/rule</uri>
                         </rules>
+                        <events>
+                            <label>Edit event names</label>
+                            <id>events</id>
+                            <title>Event names</title>
+                            <uri>/rule</uri>
+                        </events>
                     </pages>
                 </tables>
                 <account>
