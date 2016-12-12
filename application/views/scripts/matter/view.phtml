@@ -318,36 +318,28 @@ $(document).ready(function(){
 
         $("#MatterStatus").click(function(){
         	$('.ui-widget-overlay').show();
-            $('#event-pop-up').load("/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>", function(){
-            	$(this).show();
-            }).css($(this).offset()).draggable();
+            $('#event-pop-up').load("/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>")
+            .css($(this).offset()).show().draggable();
         }); 
 
         $("#MatterOpenTasks").click(function(){
         	$('.ui-widget-overlay').show();
-        	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>", function(){
-            	$(this).show();
-            }).css('top', $(this).offset().top).draggable();
+        	$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_record[0]['ID']?>")
+        	.css('top', $(this).offset().top).show().draggable();
         });
 
         $("#MatterRenTasks").click(function(){
         	$('.ui-widget-overlay').show();
             trig_id = <?=(isset($this->matter_open_tasks_ren[0]) ? $this->matter_open_tasks_ren[0]['trigger_ID'] : 0) ?>;
             if(trig_id == 0) return false;
-         	$('#tasklist-pop-up').load(
-                "/matter/tasklist/event_id/" + trig_id,
-                { renewal: 1 },
-                function(){
-            		$(this).show();
-            	}
-            ).css('top', $(this).offset().top).draggable();
+         	$('#tasklist-pop-up').load("/matter/tasklist/event_id/" + trig_id, { renewal: 1 })
+         	.css('top', $(this).offset().top).show().draggable();
         }); 
 
         $("#MatterClassifier").click(function(){
         	$('.ui-widget-overlay').show();
-            $('#classifier-popup').load("/matter/classifierlist/id/<?=$this->matter_record[0]['ID']?>", function(){
-            	$(this).show();
-            }).css('top', $(this).offset().top).draggable();
+            $('#classifier-popup').load("/matter/classifierlist/id/<?=$this->matter_record[0]['ID']?>")
+            .css('top', $(this).offset().top).show().draggable();
         });
  
         $(".add-actor").click(function(){
@@ -355,7 +347,7 @@ $(document).ready(function(){
             $('.ui-widget-overlay').show();
             //$('#facade').show();
             $('#mapactor-pop-up').load("/matter/map-actor-role/id/<?=$this->matter_record[0]['ID']?>/role/" + role[2])
-            .css({'top': $(this).offset().top, 'right': 150})
+            .css({top: $(this).offset().top, right: 150})
             .show().draggable();
         });
 
@@ -369,7 +361,7 @@ $(document).ready(function(){
             	matter_id: $('input[name=matterId]').val(), 
             	container_id: container_id, 
             	role_id: role_id 
-            }).css({'width':'840px', 'top': $(this).offset().top})
+            }).css({width: 840, top: $(this).offset().top})
             .show().draggable();
         });
 
@@ -382,57 +374,45 @@ $(document).ready(function(){
         });
 
         $('#clone-matter-link').click(function(){
-          //$('.ui-widget-overlay').show();
-          $('#facade').show();
-          $.ajax({
-            url: '/matter/clone',
-            type: 'GET',
-            data: { 
+			//$('.ui-widget-overlay').show();
+			$('#facade').show();
+			$.get('/matter/clone', { 
             	category_id: $(this).attr('data-code'), 
             	country: $(this).attr('data-country'), 
             	origin: $(this).attr('data-origin'), 
             	type: $(this).attr('data-type') 
             },
-            success: function(data){
+            function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
-            }
-          });
+            });
         });
                   
         $('#child-matter-link').click(function(){
-          //$('.ui-widget-overlay').show();
-          $('#facade').show();
-          $.ajax({
-            url: '/matter/child',
-            type: 'GET',
-            data: { 
+			//$('.ui-widget-overlay').show();
+			$('#facade').show();
+			$.get('/matter/child', { 
             	caseref: $(this).attr('data-caseref'), 
             	category_id : $(this).attr('data-code'), 
             	country: $(this).attr('data-country'), 
             	origin: $(this).attr('data-origin'), 
             	type: $(this).attr('data-type') 
             },
-            success: function(data){
+            function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
-            }
-          });
+            });
         });
 
         $('#national-matter-link').click(function(){
-          //$('.ui-widget-overlay').show();
-          $('#facade').show();
-          $.ajax({
-            url: '/matter/national',
-            type: 'GET',
-            data: { 
+			//$('.ui-widget-overlay').show();
+			$('#facade').show();
+			$.get('/matter/national', { 
             	caseref: $(this).attr('data-caseref'), 
             	category_id: $(this).attr('data-code'), 
             	country: $(this).attr('data-country') 
             },
-            success: function(data){
+            function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
-            }
-          });
+            });
         });
 
         $('.title-editable').editable('/matter/edit-classifier', {

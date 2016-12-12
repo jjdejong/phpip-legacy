@@ -145,7 +145,7 @@ $(document).ready(function(){
 					$('#facade').hide();
 					$(location).attr("href", '/matter/view/id/'+data);
 				} else
-                      alert("Clone matter failed");
+					alert("Clone matter failed");
             });
         }
    });
@@ -181,7 +181,7 @@ $(document).ready(function(){
                     $('#facade').hide();
                     $(location).attr("href", '/matter/view/id/'+data);
                 } else
-                      alert("Child matter failed");
+					alert("Child matter failed");
             });
         }
    });
@@ -273,7 +273,7 @@ $(document).ready(function(){
 <div class="place-card">
 	<div id="add-matter-head">
 <?=$this->matter_title?>
-</div>
+	</div>
 	<div id="add-matter">
 		<div class="validation-errors"></div>
 		<form method="post" action="" id="add-matter-form" accept-charset="utf-8">

@@ -183,14 +183,12 @@ $(document).ready(function(){
     $('.add-cat-matter').click(function(){
         $('#facade').show();
         $('#add-matter-popup').css( $(this).offset() );
-        $.ajax({
-          url: '/matter/add',
-          type: 'GET',
-          data: { category_id : $(this).attr('id') },
-          success: function(data){
-             $('#add-matter-popup').html(data).show();
-          }
-        });
+        $.get('/matter/add', 
+			{ category_id : $(this).attr('id') },
+			function(data){
+				$('#add-matter-popup').html(data).show().draggable();
+			}
+		);
     });
 
     $('.done-date').datepicker({
@@ -208,17 +206,15 @@ $(document).ready(function(){
              alert("No tasks selected for clearing!");
              return;
         }
-        $.ajax({
-          url: '/matter/clear-tasks',
-          type: 'POST',
-          data: { task_ids: tids, done_date: $('#open-done-date').val() },
-          success:function(data){
-            if(!isNaN(parseInt(data)))
-              location.reload();
-            else
-              alert(data);
-          }
-        });
+        $.post('/matter/clear-tasks',
+			{ task_ids: tids, done_date: $('#open-done-date').val() },
+			function(data){
+				if(!isNaN(parseInt(data)))
+					location.reload();
+				else
+					alert(data);
+			}
+		);
     });
 
     $('#clear-ren-tasks').click(function(){
@@ -231,17 +227,15 @@ $(document).ready(function(){
              alert("No tasks selected for clearing!");
              return;
         }
-        $.ajax({
-          url: '/matter/clear-tasks',
-          type: 'POST',
-          data: { task_ids: tids, done_date: $('#ren-done-date').val() },
-          success:function(data){
-            if(!isNaN(parseInt(data)))
-              location.reload();
-            else
-              alert(data);
-          }
-        });
+		$.post('/matter/clear-tasks', 
+			{ task_ids: tids, done_date: $('#ren-done-date').val() },
+			function(data){
+				if(!isNaN(parseInt(data)))
+					location.reload();
+				else
+					alert(data);
+			}
+		);
     });
 
     $("input[name='open-tasks-filter']").change(function(){
