@@ -148,7 +148,7 @@ $(document).ready(function(){
      });
 
      $('.rule-list-row').click(function(){
-		$('#rule-details-popup').load('/rule/viewrule', { 'rule_id': $(this).attr('id') }).show();
+		$('#rule-details-popup').load('/rule/view', { 'rule_id': $(this).attr('id') }).show();
   });
 
   $('.delete-from-list').click(function(){

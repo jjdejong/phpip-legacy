@@ -40,7 +40,7 @@ class EventController extends Zend_Controller_Action
  * displays and offers in-place edit of event details
 **/
 
-    public function vieweventAction() {
+    public function viewAction() {
                 $this->_helper->layout->disableLayout ();
                 $event_id = $this->_getParam ( 'event_id' );
                 $eventModel = new Application_Model_DbTable_EventName ();

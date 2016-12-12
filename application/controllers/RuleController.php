@@ -63,7 +63,7 @@ class RuleController extends Zend_Controller_Action
  * displays and offers in-place edit of rule details
 **/
 
-    public function viewruleAction() {
+    public function viewAction() {
                 $this->_helper->layout->disableLayout ();
                 $rule_id = $this->_getParam ( 'rule_id' );
                 $ruleModel = new Application_Model_DbTable_Rule ();

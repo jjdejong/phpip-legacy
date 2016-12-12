@@ -98,7 +98,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
   $('.event-list-row').click(function(){
-		$('#event-details-popup').load('/event/viewevent', { 'event_id': $(this).attr('id') }).show();
+		$('#event-details-popup').load('/event/view', { 'event_id': $(this).attr('id') }).show();
   });
 
   $('#filter-code').keyup(function(){
