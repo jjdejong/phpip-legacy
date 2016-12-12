@@ -364,18 +364,16 @@ $(document).ready(function(){
     $('.delete-event').click(function(){
         var conf_event_del = confirm("Deleting the event will also delete the linked tasks");
         if(conf_event_del){
-			$.ajax({
-				url: '/matter/delete-event',
-				type: 'post',
-				data: { eid: $(this).attr('id') },
-				success: function(data){
+			$.post('/matter/delete-event', 
+				{ eid: $(this).attr('id') },
+				function(data){
 					if(!isNaN(parseInt(data))){
 						$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
 					} else {
 						alert(data);
 					}
 				}
-			}); 
+			); 
 		}
 	});
     $("button, input:button").button();
@@ -429,7 +427,7 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 		<div class="status-row task-row" id="<?=$event_task['ID']?>">
 			<span class="tasklist-col-detail editable" title="Click to edit detail">
 				<?=$event_task['task_name']?>
-				<?php if ($event_task ['detail'] != "") echo ": " . $event_task ['detail']; ?>
+				<?=$event_task ['detail'] != "" ? ": " . $event_task ['detail'] : ''?>
 			</span> 
 			<span id="<?=$event_task['ID']?>" class="tasklist-col-due_date editable-due-date" data-rule_id="<?=$event_task['rule_used']?>">
 				<?=$event_task['due_date']?>
@@ -470,7 +468,6 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 endforeach; ?>
 	</div>
 </div>
-<div id="pr-confirm"></div>
 <div id="add-task-popup" class="listrow">
 	<input type="text" id="popup-label" value=""
 		style="font-weight: bold; background-color: transparent; border: 0px; margin-bottom: 2px" />
