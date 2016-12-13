@@ -60,15 +60,6 @@
     max-height: 320px;
     overflow: auto;
 }
-.col-cat{
-    display:inline-block;
-    width: 180px;
-}
-.col-count{
-    display:inline-block;
-    width: 100px;
-    text-align: right;
-}
 .col-actions{
     display: inline-block;
     width: 50px;
@@ -268,18 +259,18 @@ $(document).ready(function(){
 					Categories for <em><?=$this->responsible?></em>
 				</div>
 				<div class="clear-tasks-box">
-					<button class="add-cat-matter" style="display:block;" id="Patent-PAT">New matter</button>
+					<button class="add-cat-matter" style="display:block; margin-top: -5px" id="Patent-PAT">New matter</button>
 				</div>
 			</div>
 			<div id="" class="home-card">
     			<div class="list-headers">
-    				<div class="col-cat">
+    				<span style="display: inline-block; width: 180px;">
     					Category
-    				</div>
-    				<div class="col-count">
+    				</span>
+    				<span style="display:inline-block; width: 100px; text-align: right;">
     					Count
-    				</div>
-    				<div class="col-actions">&nbsp;</div>
+    				</span>
+    				<span class="col-actions">&nbsp;</span>
     			</div>
 <?php 
 if(count($this->categories)){ ?>
@@ -291,21 +282,21 @@ if(count($this->categories)){ ?>
 			$filter.= '/responsible/' . $this->responsible;
 			?>
     				<li>
-    					<div class="col-cat">
+    					<span style="display: inline-block; width: 180px;">
     						<a href="/matter/filter/<?=$filter?>">
     							<?=$matter['category']." (".$matter['category_code'].")"?>
     							
     						</a>
-    					</div>
-    					<div class="col-count">
+    					</span>
+    					<span style="display:inline-block; width: 100px; text-align: right;">
     						<?=$matter['no_of_matters']?>
     						
-    					</div>
-    					<div class="col-actions">
+    					</span>
+    					<span class="col-actions">
     						<a href="javascript:void(0);" class="add-cat-matter" id="<?=$matter['category']?>-<?=$matter['category_code']?>" title="New <?=$matter['category']?>">
     							<span class="ui-icon ui-icon-plusthick" style="float: right;"></span>
     						</a>
-    					</div>
+    					</span>
     				</li>
 <?php 
 	endforeach; ?>
@@ -319,7 +310,7 @@ if(count($this->categories)){ ?>
 if(count($this->open_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open tasks
-					<span id="radio-tasks" style="float: right;">
+					<span id="radio-tasks" style="float: right; margin-top: -5px;">
 						<input type="radio" name="open-tasks-filter" id="open-tasks-all" value="0" checked="checked" />
 						<label for="open-tasks-all" style="width: 50px;">All</label>
 						<input type="radio" name="open-tasks-filter" id="open-tasks-assigned" value="1" />
@@ -327,7 +318,7 @@ if(count($this->open_tasks)): ?>
 					</span>
 				</div>
 
-				<div class="clear-tasks-box">
+				<div class="clear-tasks-box" style="margin-top: -7px;">
 					<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 2px 8px;" />
 					<label for="open-done-date" ></label>
 					<input type="text" value="" id="open-done-date" class="done-date" />
@@ -437,14 +428,14 @@ endif;?>
 if(count($this->ren_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open renewals
-					<span id="radio-renewals" style="float: right;">
+					<span id="radio-renewals" style="float: right; margin-top: -5px;">
 						<input type="radio" name="open-rens-filter" id="open-rens-all" value="0" checked="checked" />
 						<label for="open-rens-all" style="width: 50px;">All</label>
 						<input type="radio" name="open-rens-filter" id="open-rens-assigned" value="1" />
 						<label for="open-rens-assigned" style="width: 50px;">Mine</label>
 					</span>
 				</div>
-				<div class="clear-tasks-box">
+				<div class="clear-tasks-box" style="margin-top: -7px;">
 					<input type="button" id="clear-ren-tasks" value="Clear selected on" style="padding: 2px 8px;" />
 					<label for="ren-done-date" ></label>
 					<input type="text" value="" id="ren-done-date" class="done-date" />

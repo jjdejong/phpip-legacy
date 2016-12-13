@@ -43,7 +43,7 @@
 
 .tasklist-col-notes {
 	display: inline-block;
-	width: 168px;
+	width: 160px;
 	vertical-align: top;
 	overflow: hidden;
 }
@@ -100,6 +100,7 @@
 
 .add-task-toevent {
 	cursor: pointer;
+	width: 50px;
 }
 
 .event-actions {
@@ -107,16 +108,20 @@
 }
 
 .event-head {
+	margin-top: 12px;
 	height: 18px;
-	vertical-align: top;
+	border-bottom: 1px #DDD solid;
+	font-weight: bold;
 }
 
 .event-head:hover .event-actions {
 	display: inline-block;
+	vertical-align: top;
 }
 
 .task-row:hover .delete-task {
 	display: inline-block;
+	vertical-align: top;
 }
 
 .task-row:hover {
@@ -399,7 +404,7 @@ $(document).ready(function(){
 		<span class="tasklist-col-notes">Notes</span> 
 		<span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"></span>
 	</div>
-	<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width: 99%; height: auto; background: whitesmoke;">
+	<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; height: auto; background: whitesmoke;">
 <?php
 $event_id = '';
 foreach ( $this->matter_event_tasks as $event_task ) :
@@ -407,19 +412,16 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 	if ($event_id != $event_task ['event_ID']):			
 		$event_id = $event_task ['event_ID'];
 ?>
-		<div style="height: 15px;"></div>
-		<div class="status-row event-head" style="border-bottom: 1px solid #DDD;">
-			<span style="vertical-align: top;">
-				<b><?=$event_task['event_name'] . ": " . $event_task['event_date'] ?></b>
+		<div class="event-head">
+			<span class="tasklist-col-detail">
+				<?=$event_task['event_name'] . ": " . $event_task['event_date'] ?>
 			</span>
-			<div class="event-actions" style="width: 48px">
-				<span class="add-task-toevent" id="<?=$event_id?>" title="Add task to <?=$event_task['event_name']?>">
-					<span class="ui-icon ui-icon-plusthick" style="float: left;"></span>
-				</span>
-				<span class="delete-event" style="cursor: pointer;" id="<?=$event_id?>" title="Delete event">
-					<span class="ui-icon ui-icon-trash" style="float: right;"></span>
-				</span>
-			</div>
+			<span class="event-actions add-task-toevent" id="<?=$event_id?>" title="Add task to <?=$event_task['event_name']?>">
+				<span class="ui-icon ui-icon-plusthick"></span>
+			</span>
+			<span class="event-actions delete-event" style="cursor: pointer;" id="<?=$event_id?>" title="Delete event">
+				<span class="ui-icon ui-icon-trash"></span>
+			</span>
 		</div>
 <?php
 	endif;
