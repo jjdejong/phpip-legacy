@@ -26,6 +26,7 @@
 	background-color: #1E4262;
 	padding: 5px 10px;
 	margin-bottom: 10px;
+	width: 100%;
 }
 
 .row-tab {
@@ -583,7 +584,7 @@ if (count ( @$classifier_arr )) {
 	</div>
 </div>
 
-<div class="listrow">
+<div class="listrow" style="width: 980px;">
 	<div class="headlistrow">
 		Actors
 		<span id="responsible-actor-span">
@@ -646,7 +647,7 @@ endif;?>
 
 <!-- Status box (main events) -->
 
-<div class="listrow" style="width: 49.5%;">
+<div class="listrow" style="width: 485px;">
 	<div class="headlistrow" id="MatterStatus" style="margin-left: 3px;" title="Click for more detail">
 		<span class="status-col-name">Status</span>
 		<span class="status-col-date">Date</span> 
@@ -727,7 +728,7 @@ endforeach;
 
 <!-- Matter Open Tasks -->
 
-<div class="listrow" style="width: 49%;">
+<div class="listrow" style="width: 484px;">
 	<div class="headlistrow" id="MatterOpenTasks" style="margin-left: 3px;" title="Click for more detail">
 		<span class="task-col-name">
 			Open tasks
@@ -774,9 +775,10 @@ endforeach;
 	</div>
 </div>
 
+
 <!-- Matter Open Renewals -->
 
-<div class="listrow" style="width: 25% !important;">
+<div class="listrow" style="width: 240px;">
 	<div class="headlistrow" id="MatterRenTasks" title="Click for more detail">
 		<span class="renewal-col-name">
 			Renewals</span> 
@@ -826,12 +828,12 @@ endif;
 	</div>
 </div>
 
+<!-- Classifiers -->
 
 <?php 
-// Matter Classifier
 $trigger_id = "";
 ?>
-<div class="listrow" style="width: 39% !important;">
+<div class="listrow" style="width: 370px;">
 	<div class="headlistrow" id="MatterClassifier" title="Click for more detail">
 		<span class="status-col-name">
 			Classifier
@@ -890,8 +892,9 @@ if ($close_type)
 	</div>
 </div>
 
-<?php //notes?>
-<div class="listrow" style="width: 33%">
+<!-- Notes -->
+
+<div class="listrow" style="width: 350px;">
 	<div class="headlistrow">
 		<span class="status-col-name">Notes</span>
 	</div>
