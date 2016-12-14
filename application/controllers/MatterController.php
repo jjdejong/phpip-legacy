@@ -1335,6 +1335,7 @@ class MatterController extends Zend_Controller_Action {
 				'Status date',
 				'Client',
 				'Client Ref',
+				'Applicant',
 				'Agent',
 				'Agent Ref',
 				'Title',
