@@ -504,7 +504,7 @@ else
 		<?=$this->matter_record[0]['category']?>
 		<br/>
     	<span style="color: white; font-size: 16px; margin-right: 5px;" class="<?=$matter_dead?>">
-    		<a href="/matter/filter/Ref/<?=$this->matter_record[0]['caseref']?>" style="color: white;" title="See family">
+    		<a href="/matter/filter/Ref/<?=$this->matter_record[0]['caseref']?>" style="color: white;" title="<?=$this->translate->_('See family')?>">
     			<?=$this->matter_record[0]['UID']?>
     		</a>
     		<button id="current-matter-edit" title="Advanced edit" style="background: transparent; border: transparent;">
@@ -513,13 +513,13 @@ else
 		</span>
 <?php if ($this->matter_parent) {?>
 		<br/>
-		<a id="parent-matter" href="/matter/view/id/<?=$this->matter_parent [0] ['ID']?>" title="See parent">
+		<a id="parent-matter" href="/matter/view/id/<?=$this->matter_parent [0] ['ID']?>" title="<?=$this->translate->_('See parent')?>">
 			<?=$this->matter_parent [0] ['UID']?> (<?=$this->matter_parent [0] ['category_code']?>)
 		</a>
 <?php };
 if ($this->matter_container) { ?>
 		<br/>
-		<a id="container-matter" href="/matter/view/id/<?=$this->matter_container [0] ['ID']?>" title="See container">
+		<a id="container-matter" href="/matter/view/id/<?=$this->matter_container [0] ['ID']?>" title="<?=$this->translate->_('See container')?>">
 			<?=$this->matter_container [0] ['UID']?> (<?=$this->matter_container [0] ['category_code']?>)
 		</a>
 <?php }; ?>
@@ -532,7 +532,7 @@ if ($this->matter_container) { ?>
 				data-type="<?=$this->matter_record[0]['type_code']?>"
 				data-code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
 				<span class="ui-icon ui-icon-copy" style="float: left;"></span>
-				Clone matter
+				<?=$this->translate->_('Clone matter')?>
 			</button>
 			<button id="child-matter-link"
 				data-caseref="<?=$this->matter_record[0]['caseref']?>"
@@ -541,7 +541,7 @@ if ($this->matter_container) { ?>
 				data-type="<?=$this->matter_record[0]['type_code']?>"
 				data-code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
 				<span class="ui-icon ui-icon-link" style="float: left;"></span> 
-				New child
+				<?=$this->translate->_('New child')?>
 			</button>
 <?php if($this->national_phase){ ?>
 			<button id="national-matter-link"
@@ -551,7 +551,7 @@ if ($this->matter_container) { ?>
 				data-type="<?=$this->matter_record[0]['type_code']?>"
 				data-code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
 				<span class="ui-icon ui-icon-flag" style="float: left;"></span>
-				Enter nat. phase
+				<?=$this->translate->_('Enter nat. phase')?>
 			</button>
 <?php } ?>
 		</div>
@@ -593,11 +593,11 @@ if (count ( @$classifier_arr )) {
 <?php
 	endforeach	;
 } else
-	echo "...Hover the mouse here to add a title item...";
+	echo $this->translate->_("...Hover the mouse here to add a title item...");
 ?>
 			<button id="add-classifier-link" data-code="<?=$this->matter_record[0]['category_code']?>" style="position: absolute; width: 120px; margin-left: 50px">
 				<span class="ui-icon ui-icon-plusthick" style="float: left;"></span>
-				Add title item
+				<?=$this->translate->_('Add title item')?>
 			</button>
 		</div>
 	</div>
@@ -605,12 +605,12 @@ if (count ( @$classifier_arr )) {
 
 <div class="listrow">
 	<div class="list-matter-block">
-		Actors
+		<?=$this->translate->_('Actors')?>
 		<span id="responsible-actor-span">
-			Responsible: <?=$this->matter_record[0]['responsible']?>
+			<?=$this->translate->_('Responsible:')?> <?=$this->matter_record[0]['responsible']?>
 		</span>
 		<button style="float: right; margin-top: -2px;" id="new-actor-0" class="add-actor">
-			Add Actor
+			<?=$this->translate->_('Add Actor')?>
 		</button>
 	</div>
 	<div class="list-matter-block-info" style="height: 150px; width: 99%">
@@ -667,10 +667,10 @@ endif;?>
 <!-- Status box (main events) -->
 
 <div class="listrow" style="width: 462px; display: inline-block;">
-	<div class="status-row" id="MatterStatus" style="margin-left: 5px;" title="Click for more detail">
-		<span class="status-col-name">Status</span>
-		<span class="status-col-date">Date</span> 
-		<span class="status-col-number">Number</span>
+	<div class="status-row" id="MatterStatus" style="margin-left: 5px;" title="<?=$this->translate->_('Click for more detail')?>">
+		<span class="status-col-name"><?=$this->translate->_('Status')?></span>
+		<span class="status-col-date"><?=$this->translate->_('Date')?></span> 
+		<span class="status-col-number"><?=$this->translate->_('Number')?></span>
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
 	<div class="list-matter-block-info" style="width: 98%">
@@ -750,10 +750,10 @@ endforeach;
 <div class="listrow" style="width: 462px; display: inline-block;">
 	<div class="status-row" id="MatterOpenTasks" style="margin-left: 5px;" title="Click for more detail">
 		<span class="task-col-name">
-			Open tasks
+			<?=$this->translate->_('Open tasks')?>
 		</span>
 		<span class="status-col-date">
-			Due
+			<?=$this->translate->_('Due')?>
 		</span> 
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
@@ -799,9 +799,9 @@ endforeach;
 <div class="listrow" style="display: inline-block; width: 200px !important;">
 	<div class="status-row" id="MatterRenTasks" title="Click for more detail">
 		<span class="renewal-col-name">
-			Renewals</span> 
+			<?=$this->translate->_('Renewals')?></span> 
 		<span class="renewal-col-date">
-			Due</span> 
+			<?=$this->translate->_('Due')?></span> 
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
 	<div class="list-matter-block-info" style="width: 97%">
@@ -839,7 +839,7 @@ endforeach;
 		<div class="status-row">&nbsp;</div>
 <?php
 if (isset ( $this->matter_expiry ['expire_date'] )) :
-	echo "Expiry: " . $this->matter_expiry ['expire_date'];
+	echo $this->translate->_('Expiry:') . $this->matter_expiry ['expire_date'];
 	echo ($this->matter_expiry ['term_adjust'] > 0) ? "<br>(PTA: " . $this->matter_expiry ['term_adjust'] . " days)" : "";
 endif;
 ?>
@@ -852,9 +852,9 @@ endif;
 $trigger_id = "";
 ?>
 <div class="listrow" style="display: inline-block; width: 394px !important;">
-	<div class="status-row" id="MatterClassifier" title="Click for more detail">
+	<div class="status-row" id="MatterClassifier" title="<?=$this->translate->_('Click for more detail')?>">
 		<span class="status-col-name">
-			Classifier
+			<?=$this->translate->_('Classifier')?>
 		</span>
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
@@ -913,7 +913,7 @@ if ($close_type)
 <?php //notes?>
 <div class="listrow" style="display: inline-block; width: 304px">
 	<div class="status-row">
-		<span class="status-col-name">Notes</span>
+		<span class="status-col-name"><?=$this->translate->_('Notes')?></span>
 	</div>
 	<div class="list-matter-block-info" style="width: 97%">
 		<div class="status-row" style="margin: 5px 5px; min-height: 55px;" id="matter-notes">

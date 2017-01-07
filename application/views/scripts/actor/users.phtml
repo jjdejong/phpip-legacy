@@ -118,15 +118,15 @@ $(document).ready(function(){
 
 });
 </script>
-<div id="actors-tab">phpIP users (these are simply actors that have a login defined)</div>
+<div id="actors-tab"><?=$this->translate->_('phpIP users (these are simply actors that have a login defined)')?></div>
 <div id="actors-box" class="place-card">
 <?php if(count($this->users)): ?>
     <div class="list-headers">
-    	<div class="col-name">Name</div>
-    	<div class="col-firstname">Login</div>
-    	<div class="col-display">Role</div>
-    	<div class="col-company">Last login</div>
-    	<div class="col-delete" >Delete</div>
+    	<div class="col-name"><?=$this->translate->_('Name')?></div>
+    	<div class="col-firstname"><?=$this->translate->_('Login')?></div>
+    	<div class="col-display"><?=$this->translate->_('Role')?></div>
+    	<div class="col-company"><?=$this->translate->_('Last login')?></div>
+    	<div class="col-delete" ><?=$this->translate->_('Delete')?></div>
     </div>
 <div id="actor-table-list">
 <ul class="phpip-list" id="actors-list">
@@ -137,7 +137,7 @@ $(document).ready(function(){
     	<div class="col-display"><?=htmlentities($actor['default_role'])?></div>
     	<div class="col-company"><?=htmlentities($actor['last_login'])?></div>
     	<div class="col-delete">
-    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" title="Delete user"></span>
+    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" title="<?=$this->translate->_('Delete user')?>"></span>
     	</div>
     </li>
 <?php endforeach; ?>

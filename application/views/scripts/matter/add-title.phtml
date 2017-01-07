@@ -124,7 +124,7 @@ $(document).ready(function(){
 	<div id="add-classifier">
 		<div class="validation-errors"></div>
 		<form method="post" action="" id="add-classifier-form" accept-charset="utf-8">
-			<label for="classifier-type">Classifier Type</label> 
+			<label for="classifier-type"><?=$this->translate->_('Classifier Type')?></label> 
 			<select id="classifier-type">
 				<option value="">select type</option>
 				<?php
@@ -139,8 +139,8 @@ $(document).ready(function(){
 			<label for="classifier-value">Value</label>
 			<textarea id="classifier-value"></textarea>
 			<div id="add-classifier-actions">
-				<input type="button" id="add-classifier-submit" value="Add Item" />
-				<input type="button" id="add-classifier-cancel" value="Cancel" />
+				<input type="button" id="add-classifier-submit" value="<?=$this->translate->_('Add Item')?>" />
+				<input type="button" id="add-classifier-cancel" value="<?=$this->translate->_('Cancel')?>" />
 			</div>
 		</form>
 	</div>

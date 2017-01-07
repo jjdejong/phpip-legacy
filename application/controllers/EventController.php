@@ -24,6 +24,8 @@ class EventController extends Zend_Controller_Action
     $siteInfoNamespace = new Zend_Session_Namespace('siteInfoNamespace');
     $this->userID = $siteInfoNamespace->userId;
     $this->username = $siteInfoNamespace->username;
+    $this->translate = Zend_Registry::get('ZT');
+    $this->view->translate = $this->translate;
   }
 
 /**
@@ -93,6 +95,7 @@ class EventController extends Zend_Controller_Action
          * *
          */
         public function filterAction() {
+                $this->translate = Zend_Registry::get('ZT');
                 $this->_helper->layout->disableLayout ();
                 $term = $this->_getParam ( 'term' );
                 $co = $this->_getParam ( 'co' );
@@ -101,7 +104,7 @@ class EventController extends Zend_Controller_Action
                         $this->view->eventslist = $eventModel->getAllEvents ( $term );
                         array_push ( $this->view->eventslist, array (
                                 'event_id' => 'nomatch',
-                                'code' => 'Create Event Name' 
+                                'code' => $translate->_('Create Event Name') 
                         ) );
                 } else {
                         $this->view->eventslist = $eventModel->getAllEventsByName ( $term );

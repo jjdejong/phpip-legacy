@@ -277,7 +277,7 @@ $(document).ready(function(){
 	<div id="add-matter">
 		<div class="validation-errors"></div>
 		<form method="post" action="" id="add-matter-form" accept-charset="utf-8">
-			<label for="matter-category" style="font-weight: bold;">Category</label>
+			<label for="matter-category" style="font-weight: bold;"><?=$this->translate->_('Category')?></label>
 			<input type="text" 
 				name="matter-category" 
 				id="matter-category"
@@ -288,7 +288,7 @@ $(document).ready(function(){
 				name="matter-category-code" 
 				id="matter-category-code"
 				value="<?=$this->category_code?>" /> 
-			<label for="matter-country" style="font-weight: bold;">Country</label> 
+			<label for="matter-country" style="font-weight: bold;"><?=$this->translate->_('Country')?></label> 
 			<input type="text"
 				name="matter-country" 
 				id="matter-country"
@@ -299,7 +299,7 @@ $(document).ready(function(){
 				name="matter-country-id" 
 				id="matter-country-id"
 				value="<?=$this->country_code?>" /> 
-			<label for="matter-origin">Origin</label>
+			<label for="matter-origin"><?=$this->translate->_('Origin')?></label>
 			<input type="text" 
 				name="matter-origin" 
 				id="matter-origin"
@@ -309,7 +309,7 @@ $(document).ready(function(){
 				name="matter-origin-id" 
 				id="matter-origin-id"
 				value="<?=$this->origin_code?>" /> 
-			<label for="matter-type">Type</label>
+			<label for="matter-type"><?=$this->translate->_('Type')?></label>
 			<input type="text" 
 				name="matter-type" 
 				id="matter-type"
@@ -319,7 +319,7 @@ $(document).ready(function(){
 				name="matter-type-id" 
 				id="matter-type-id"
 				value="<?=$this->type_code?>" /> 
-			<label for="matter-caseref" style="font-weight: bold;">Caseref</label>
+			<label for="matter-caseref" style="font-weight: bold;"><?=$this->translate->_('Caseref')?></label>
 			<?php if(isset($this->child)){?>
 				<span id="matter-caseref" class="display-field"><?=$this->caseref?></span>
 			<?php }else { ?>
@@ -333,7 +333,7 @@ $(document).ready(function(){
 			<input type="hidden" 
 				name="matter-caseref-id" id="matter-caseref-id"
 				value="<?=$this->caseref?>" /> 
-			<label for="matter-responsible" style="font-weight: bold;">Responsible</label> 
+			<label for="matter-responsible" style="font-weight: bold;"><?=$this->translate->_('Responsible')?></label> 
 			<input type="text" 
 				name="matter-responsible" 
 				id="matter-responsible"
@@ -343,28 +343,28 @@ $(document).ready(function(){
 
 			<?php if(isset($this->child)){ ?>
 			<div id="child-matter-options">
-				<span>Current matter as a : </span> 
+				<span><?=$this->translate->_('Current matter as a : ')?></span> 
 				<input type="radio"
 					name="child-matter-priority" 
 					value="1" checked="checked"
 					id="current-priority-matter" />
-				<label for="current-priority-matter">PRIORITY</label>
+				<label for="current-priority-matter"><?=$this->translate->_('PRIORITY')?></label>
 				<input type="radio" 
 					name="child-matter-priority" 
 					value="0"
 					id="current-parent-matter" />
-				<label for="current-parent-matter">PARENT</label><br>
-				<span>Child matter as : </span> 
+				<label for="current-parent-matter"><?=$this->translate->_('PARENT')?></label><br>
+				<span><?=$this->translate->_('Child matter as : ')?></span> 
 				<input type="radio"
 					name="child-matter-container" 
 					value="1"
 					id="child-independent-matter" />
-				<label for="child-independent-matter">Independent Container</label> 
+				<label for="child-independent-matter"><?=$this->translate->_('Independent Container')?></label> 
 				<input type="radio" 
 					name="child-matter-container" 
 					value="0"
 					checked="checked" id="child-inherit-matter" />
-				<label for="child-inherit-matter">Inherits its information</label>
+				<label for="child-inherit-matter"><?=$this->translate->_('Inherits its information')?></label>
 			</div>
 			<?php } ?>
 
@@ -376,7 +376,7 @@ $(document).ready(function(){
 				<input type="button" 
 					name="add-matter-cancel" 
 					id="add-matter-cancel"
-					value="Cancel" />
+					value="<?=$this->translate->_('Cancel')?>" />
 			</div>
 		</form>
 	</div>

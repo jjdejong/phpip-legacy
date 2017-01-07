@@ -55,8 +55,10 @@
 }
 
 </style>
-
-<div id='content-right-title'>Statistics</div>
+<?php
+$translate = Zend_Registry::get('ZT');
+?>
+<div id='content-right-title'><?=$translate->_("Statistics")?></div>
 <div class="inner-right">
 <?php echo $this->navigation()->breadcrumbs()->setIndent(8);
 #echo $this->navigation()->menu();

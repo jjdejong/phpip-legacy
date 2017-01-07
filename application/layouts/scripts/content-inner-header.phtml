@@ -8,16 +8,17 @@ $controller = strtolower ( $controller );
 
 $action = $cFront->getRequest ()->getActionName ();
 $action = strtolower ( $action );
+$translate = Zend_Registry::get('ZT');
 $header = '';
 if ($module != 'default') {
-	$header = "<a href=\"/$module\">$module</a>";
+	$header = "<a href=\"/$module\">".$this->translate->_($module)."</a>";
 }
 
 if ($controller != 'index') {
 	if ($header != '') {
 		$header .= " - ";
 	}
-	$header .= "<a href=\"/$module/$controller\">$controller</a>";
+	$header .= "<a href=\"/$module/$controller\">".$this->translate->_($controller)."</a>";
 }
 
 if ($header != '') {
@@ -35,10 +36,10 @@ if ($header != '') {
 	<div id="inner-header-search">
 		<input id="matter-search" type="text" name="matter_search" /> 
 		<select style="width: 100px;" id="matter-option" name="search_field">
-			<option value="Ref" selected>caseref</option>
-			<option value="Responsible">Responsible</option>
+			<option value="Ref" selected><?=$translate->_("caseref")?></option>
+			<option value="Responsible"><?=$translate->_("Responsible")?></option>
 		</select> 
-		<input id="matter-ref-search" type="button" name="search" value="Quick Search" />
+		<input id="matter-ref-search" type="button" name="search" value=<?=$translate->_("Quick Search")?> />
 	</div>
 <?php
 	}

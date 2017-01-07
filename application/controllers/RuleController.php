@@ -121,6 +121,7 @@ class RuleController extends Zend_Controller_Action
          * *
          */
         public function filterAction() {
+                $translate = Zend_Registry::get('ZT');
                 $this->_helper->layout->disableLayout ();
                 $Task = $this->_getParam ( 'Task' );
                 $Trigger = $this->_getParam ( 'Trigger' );
@@ -129,7 +130,7 @@ class RuleController extends Zend_Controller_Action
                 $this->view->ruleslist = $ruleModel->getAllRules ( $Task, $Trigger, $Country );
                 array_push ( $this->view->ruleslist, array (
                         'rule_id' => 'nomatch',
-                        'task_name' => 'Create Rule' 
+                        'task_name' => $translate->_('Create Rule') 
                 ) );
         }
 

@@ -4,6 +4,7 @@ class Application_Form_Rule_Add extends Zend_Form
 {
     public function init()
     {
+         $translate = Zend_Registry::get('ZT');
          $this->setMethod('post');
 
          $this->addElement('text', 'task_name', array(
@@ -87,7 +88,7 @@ class Application_Form_Rule_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
                     'value' => '1'
@@ -97,7 +98,7 @@ class Application_Form_Rule_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -107,7 +108,7 @@ class Application_Form_Rule_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -117,7 +118,7 @@ class Application_Form_Rule_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -127,7 +128,7 @@ class Application_Form_Rule_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -137,7 +138,7 @@ class Application_Form_Rule_Add extends Zend_Form
          $this->addElement('radio', 'end_of_month', array(
                     'label' => '',
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -194,7 +195,7 @@ class Application_Form_Rule_Add extends Zend_Form
          $this->addElement('radio', 'recurring', array(
                     'label' => '',
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
                     'value' => '0'

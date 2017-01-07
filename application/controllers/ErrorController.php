@@ -1,10 +1,11 @@
 <?php
 class ErrorController extends Zend_Controller_Action {
 	public function errorAction() {
+                $translate = Zend_Registry::get('ZT');
 		$errors = $this->_getParam ( 'error_handler' );
 		
 		if (! $errors) {
-			$this->view->message = 'You have reached the error page';
+			$this->view->message = $translate->_('You have reached the error page');
 			return;
 		}
 		
@@ -15,12 +16,12 @@ class ErrorController extends Zend_Controller_Action {
 				
 				// 404 error -- controller or action not found
 				$this->getResponse ()->setHttpResponseCode ( 404 );
-				$this->view->message = 'Page not found';
+				$this->view->message = $translate->_('Page not found');
 				break;
 			default :
 				// application error
 				$this->getResponse ()->setHttpResponseCode ( 500 );
-				$this->view->message = 'Application error';
+				$this->view->message = $translate->_('Application error');
 				break;
 		}
 		

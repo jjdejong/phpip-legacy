@@ -271,19 +271,19 @@ $(document).ready(function(){
 		<div id="categories-box" class="home-box">
 			<div class="home-box-header">
 				<div class="list-header">
-					Categories for <em><?=$this->responsible?></em>
+					<?= $this->translate->_('Categories for')?> <em><?=$this->responsible?></em>
 				</div>
 				<div class="clear-tasks-box">
-					<button class="add-cat-matter" style="display:block;" id="Patent-PAT">New matter</button>
+					<button class="add-cat-matter" style="display:block;" id="Patent-PAT"><?= $this->translate->_('New matter')?></button>
 				</div>
 			</div>
 			<div id="" class="home-card">
     			<div class="list-headers">
     				<div class="col-cat">
-    					Category
+    					<?= $this->translate->_('Category')?>
     				</div>
     				<div class="col-count">
-    					Count
+    					<?= $this->translate->_('Count')?>
     				</div>
     				<div class="col-actions">&nbsp;</div>
     			</div>
@@ -324,17 +324,17 @@ if(count($this->categories)){ ?>
 <?php 
 if(count($this->open_tasks)): ?>
 			<div class="home-box-header">
-				<div class="list-header">Open tasks
+				<div class="list-header"><?= $this->translate->_('Open tasks')?>
 					<span id="radio-tasks" style="float: right;">
 						<input type="radio" name="open-tasks-filter" id="open-tasks-all" value="0" checked="checked" />
-						<label for="open-tasks-all" style="width: 50px;">All</label>
+						<label for="open-tasks-all" style="width: 50px;"><?= $this->translate->_('All')?></label>
 						<input type="radio" name="open-tasks-filter" id="open-tasks-assigned" value="1" />
-						<label for="open-tasks-assigned" style="width: 50px;">Mine</label>
+						<label for="open-tasks-assigned" style="width: 50px;"><?= $this->translate->_('Mine')?></label>
 					</span>
 				</div>
 
 				<div class="clear-tasks-box">
-					<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 2px 8px;" />
+					<input type="button" id="clear-open-tasks" value="<?= $this->translate->_('Clear selected on')?>" style="padding: 2px 8px;" />
 					<label for="open-done-date" ></label>
 					<input type="text" value="" id="open-done-date" class="done-date" />
 					<input type="hidden" value="" id="alt-date" />
@@ -342,10 +342,10 @@ if(count($this->open_tasks)): ?>
 			</div>
 			<div id="" class="home-card">
 				<div class="list-headers">
-					<div class="col-task-name">Task</div>
-					<div class="col-task-matter">Matter</div>
-					<div class="col-task-due_date">Due date</div>
-					<div class="col-actions">Close</div>
+					<div class="col-task-name"><?= $this->translate->_('Task')?></div>
+					<div class="col-task-matter"><?= $this->translate->_('Matter')?></div>
+					<div class="col-task-due_date"><?= $this->translate->_('Due date')?></div>
+					<div class="col-actions"><?= $this->translate->_('Close')?></div>
 				</div>
 				<ul class="phpip-list" id="open-tasks-list">
 <?php 
@@ -392,13 +392,13 @@ endif; ?>
 	<div id="home-bottom" >
 		<div id="users-box" class="home-box">
 			<div class="home-box-header">
-				<div class="list-header">Users tasks</div>
+				<div class="list-header"><?= $this->translate->_('Users tasks')?></div>
 			</div>
 			<div id="" class="home-card">
 				<div class="list-headers">
-					<div class="col-user-login">User</div>
-					<div class="col-open-count">Open Tasks</div>
-					<div class="col-most-urgent">Most urgent</div>
+					<div class="col-user-login"><?= $this->translate->_('User')?></div>
+					<div class="col-open-count"><?= $this->translate->_('Open Tasks')?></div>
+					<div class="col-most-urgent"><?= $this->translate->_('Most urgent')?></div>
 				</div>
 <?php 
 if(count($this->users_list)): ?>
@@ -442,16 +442,16 @@ endif;?>
 <?php 
 if(count($this->ren_tasks)): ?>
 			<div class="home-box-header">
-				<div class="list-header">Open renewals
+				<div class="list-header"><?= $this->translate->_('Open renewals')?>
 					<span id="radio-renewals" style="float: right;">
 						<input type="radio" name="open-rens-filter" id="open-rens-all" value="0" checked="checked" />
-						<label for="open-rens-all" style="width: 50px;">All</label>
+						<label for="open-rens-all" style="width: 50px;"><?= $this->translate->_('All')?></label>
 						<input type="radio" name="open-rens-filter" id="open-rens-assigned" value="1" />
-						<label for="open-rens-assigned" style="width: 50px;">Mine</label>
+						<label for="open-rens-assigned" style="width: 50px;"><?=$this->translate->_('Mine')?></label>
 					</span>
 				</div>
 				<div class="clear-tasks-box">
-					<input type="button" id="clear-ren-tasks" value="Clear selected on" style="padding: 2px 8px;" />
+					<input type="button" id="clear-ren-tasks" value="<?= $this->translate->_('Clear selected on')?>" style="padding: 2px 8px;" />
 					<label for="ren-done-date" ></label>
 					<input type="text" value="" id="ren-done-date" class="done-date" />
 					<input type="hidden" value="" id="alt-date" />
@@ -459,10 +459,10 @@ if(count($this->ren_tasks)): ?>
 			</div>
 			<div id="" class="home-card">
 				<div class="list-headers">
-					<div class="col-task-name">Task</div>
-					<div class="col-task-matter">Matter</div>
-					<div class="col-task-due_date">Due date</div>
-					<div class="col-actions">Close</div>
+					<div class="col-task-name"><?= $this->translate->_('Task')?></div>
+					<div class="col-task-matter"><?= $this->translate->_('Matter')?></div>
+					<div class="col-task-due_date"><?= $this->translate->_('Due date')?></div>
+					<div class="col-actions"><?= $this->translate->_('Close')?></div>
 				</div>
 				<ul class="phpip-list" id="ren-tasks-list">
 <?php 
@@ -499,7 +499,7 @@ if(count($this->ren_tasks)): ?>
 								name="clear-task-<?=$open_task['task_ID']?>" 
 								id="<?=$open_task['task_ID']?>" 
 								class="clear-ren-task button-style" 
-								value="Clear">
+								value="><?= $this->translate->_('Clear')?>">
 						</div>
 					</li>
 <?php 

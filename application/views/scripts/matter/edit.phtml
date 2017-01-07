@@ -257,7 +257,7 @@ $(document).ready(function(){
 </style>
 <div class="place-card">
 	<div id="edit-matter-head">
-		Advanced Matter edition <span class="close-button">X</span>
+		<?=$this->translate->_('Advanced Matter edition')?> <span class="close-button">X</span>
 	</div>
 	<div id="edit-matter">
 		<div class="validation-errors"></div>
@@ -266,7 +266,7 @@ $(document).ready(function(){
 			id="current-matter-id" 
 			value="<?=$this->matter['ID']?>" /> 
 		<label for="matter-category" class="required-field">
-			Category
+			<?=$this->translate->_('Category')?>
 		</label>
 <?php 
 if($this->cat_edit){?>
@@ -295,7 +295,7 @@ if($this->cat_edit){?>
 			id="matter-category-code" 
 			value="<?=$this->matter['category_code']?>" />
 		<label for="matter-country" class="required-field">
-			Country
+			<?=$this->translate->_('Country')?>
 		</label>
 <?php 
 if($this->country_edit){ ?>
@@ -317,7 +317,7 @@ if($this->country_edit){ ?>
 			id="matter-country-id" 
 			value="<?=$this->matter['country']?>" /> 
 		<label for="matter-origin">
-			Origin
+			<?=$this->translate->_('Origin')?>
 		</label>
 		<input type="text" 
 			name="matter-origin" 
@@ -329,7 +329,7 @@ if($this->country_edit){ ?>
 			id="matter-origin-id" 
 			value="<?=$this->origin_code?>" /> 
 		<label for="matter-type">
-			Type
+			<?=$this->translate->_('Type')?>
 		</label>
 		<select name="matter-type" id="matter-type" style="width: 176px;">
 			<option value=""></option>
@@ -346,7 +346,7 @@ foreach ( $this->types as $type ) {
 	} ?>
 		</select> 
 		<label for="matter-caseref" class="required-field">
-			Caseref
+			<?=$this->translate->_('Caseref')?>
 		</label>
 		<input type="text" 
 			name="matter-caseref" 
@@ -359,7 +359,7 @@ foreach ( $this->types as $type ) {
 			id="matter-caseref-prev" 
 			value="<?=$this->matter['caseref']?>" /> 
 		<label for="matter-responsible" class="required-field">
-			Responsible
+			<?=$this->translate->_('Responsible')?>
 		</label> 
 		<input type="text" 
 			name="matter-responsible" 
@@ -368,7 +368,7 @@ foreach ( $this->types as $type ) {
 			class="required" 
 			onfocus="this.select()" /> 
 		<label for="matter-parent-id">
-			Parent
+			<?=$this->translate->_('Parent')?>
 		</label>
 		<input type="text" 
 			name="matter-parent" 
@@ -380,7 +380,7 @@ foreach ( $this->types as $type ) {
 			id="matter-parent-id" 
 			value="<?=$this->parent_id?>" /> 
 		<label for="matter-container-id">
-			Container
+			<?=$this->translate->_('Container')?>
 		</label>
 		<input type="text" 
 			name="matter-container" 
@@ -400,13 +400,13 @@ foreach ( $this->types as $type ) {
 			value="<?=$this->matter['idx']?>" 
 			onfocus="this.select()" /> 
 		<label for="matter-dead">
-			Dead
+			<?=$this->translate->_('Dead')?>
 		</label> 
-		<span id="matter-dead" class="display-field" title="This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status" style="cursor: help;">
-			<?php echo ($this->matter['dead'])? "Yes":"No" ;?>
+		<span id="matter-dead" class="display-field" title="<?=$this->translate->_("This value is changed automatically by inserting or deleting killer events, such as 'Abandoned', in the Status")?>" style="cursor: help;">
+			<?php echo ($this->matter['dead'])? $this->translate->_('Yes'):$this->translate->_('No') ;?>
 		</span>
 		<label for="matter-pta">
-			Term adjust
+			<?=$this->translate->_('Term adjust')?>
 		</label> 
 		<input type="text" 
 			name="matter-pta" 
@@ -415,14 +415,13 @@ foreach ( $this->types as $type ) {
 			onfocus="this.select()" />
 		<div id="edit-matter-actions">
 			<button name="edit-matter-cancel" id="edit-matter-cancel" style="float: right;">
-				<span class="ui-icon ui-icon-cancel" style="float: left;"></span>Cancel
+				<span class="ui-icon ui-icon-cancel" style="float: left;"></span><?=$this->translate->_('Cancel')?>
 			</button>
 			<button name="edit-matter-submit" id="edit-matter-submit" style="float: right;">
-				<span class="ui-icon ui-icon-disk" style="float: left;"></span>Save
+				<span class="ui-icon ui-icon-disk" style="float: left;"></span><?=$this->translate->_('Save')?>
 			</button>
 			<button id="delete-matter" data-mid="<?=$this->matter['ID']?>" style="color: red;">
-				<span class="ui-icon ui-icon-trash" style="float: left;"></span>Delete
-				Matter
+				<span class="ui-icon ui-icon-trash" style="float: left;"></span><?=$this->translate->_('Delete Matter')?>
 			</button>
 		</div>
 	</div>

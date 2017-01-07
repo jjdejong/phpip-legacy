@@ -2,6 +2,11 @@
 class AuthController extends Zend_Controller_Action {
 	public function init() {
 		/* Initialize action controller here */
+                $this->translate = Zend_Registry::get('ZT');
+                $this->view->translate = $this->translate ;
+                $siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
+                $this->translate->setlocale($siteInfoNamespace->lang);
+                $this->view->translate = $this->translate ;
 	}
 	public function indexAction() {
 	}
@@ -13,7 +18,7 @@ class AuthController extends Zend_Controller_Action {
 		if ($identity && $identity != "") {
 			$this->_helper->redirector ( 'index', 'index' );
 		} else {
-			$authTable = new Application_Model_DbTable_Actor ();
+                        $authTable = new Application_Model_DbTable_Actor ();
 			$loginForm = new Application_Form_Auth_Login ( $_POST );
 			$modelUser = new Application_Model_User ();
 			
@@ -40,7 +45,11 @@ class AuthController extends Zend_Controller_Action {
 					$siteInfoNamespace->username = $userInfo ['login'];
 					$siteInfoNamespace->password = $loginForm->getValue ( 'Password' );
 					$siteInfoNamespace->role = $userInfo ['default_role'];
-					
+					$locale = $loginForm->getValue ('Language');
+                                        if ($translate->isAvailable($locale)) {
+                                            $translate->setLocale($locale);
+                                            $siteInfoNamespace->lang = $locale;
+                                            }
 					if ($siteInfoNamespace->requestURL) {
 						$redirectURL = $siteInfoNamespace->requestURL;
 						$siteInfoNamespace->requestURL = "";
@@ -55,18 +64,18 @@ class AuthController extends Zend_Controller_Action {
 					$code = array ();
 					switch ($result->getCode ()) {
 						case Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND :
-							$auth_error = "Username not found!";
-							$code [$result->getCode ()] = "Username not found!";
+							$auth_error = $this->translate->_("Username not found!");
+							$code [$result->getCode ()] = $auth_error;
 							break;
 						case Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID :
-							$auth_error = "Invalid password!";
-							$code [$result->getCode ()] = "Invalid password!";
+							$auth_error = $this->translate->_("Invalid password!");
+							$code [$result->getCode ()] = $auth_error;
 							break;
 						case Zend_Auth_Result::SUCCESS :
-							$code [$result->getCode ()] = "success";
+							$code [$result->getCode ()] = $this->translate->_("success");
 							break;
 						case Zend_Auth_Result::FAILURE_IDENTITY_AMBIGUOUS :
-							$code [$result->getCode ()] = "ambiguous";
+							$code [$result->getCode ()] = $this->translate->_("ambiguous");
 							break;
 						default :
 							break;
@@ -91,6 +100,6 @@ class AuthController extends Zend_Controller_Action {
 	public function unauthorizedAction() {
 		$this->_helper->layout->disableLayout ();
 		$this->_helper->viewRenderer->setNoRender ();
-		echo 'You are not authorized to access this resource';
+		echo $this->translate->_('You are not authorized to access this resource');
 	}
 }

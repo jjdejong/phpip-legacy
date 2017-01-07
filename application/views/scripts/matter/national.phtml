@@ -150,7 +150,7 @@ $(document).ready(function(){
 
 <div class="place-card">
 	<div id="add-matter-head">
-		Enter national phase <?=$this->caseref ?> <?=$this->country_code?>
+		<?=$this->translate->_('Enter national phase')?> <?=$this->caseref ?> <?=$this->country_code?>
 	</div>
 	<div id="add-matter">
 		<div class="validation-errors"></div>
@@ -168,10 +168,10 @@ $(document).ready(function(){
 				id="matter-origin-id"
 				value="<?=$this->country_code?>" /> 
 			<label style="font-weight: bold; margin-left: 30px; width: 250px; text-align: left; display: inline-block">
-				Country
+				<?=$this->translate->_('Country')?>
 			</label>
 			<label style="font-weight: bold; text-align: center; width: 100px; display: inline-block">
-				Entered date
+				<?=$this->translate->_('Entered date')?>
 			</label>
 			<div id="national-phases" style="display: block;">
 <?php
@@ -193,7 +193,7 @@ foreach ( $this->country_options as $cflag ) {?>
 						name="alt_entered_date[<?=$i?>]" 
 						id="alt-entered-date-<?=$i?>"
 						value="" /> 
-					<span class="national-matter-remove ui-icon ui-icon-trash" id="<?=$i?>" title="Remove" style="float: left;"></span>
+					<span class="national-matter-remove ui-icon ui-icon-trash" id="<?=$i?>" title="<?=$this->translate->_('Remove')?>" style="float: left;"></span>
 				</div>
 <?php 
 	$i++; 
@@ -211,12 +211,12 @@ foreach ( $this->country_options as $cflag ) {?>
 				<input type="button" 
 					name="national-matter-cancel"
 					id="national-matter-cancel" 
-					value="Cancel"
+					value="<?=$this->translate->_('Cancel')?>"
 					style="float: right; margin-left: 4px;" /> 
 				<input type="button"
 					name="national-matter-submit" 
 					id="national-matter-submit"
-					value="Submit" 
+					value="<?=$this->translate->_('Submit')?>" 
 					style="float: right;" />
 			</div>
 		</form>

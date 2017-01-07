@@ -21,6 +21,8 @@ class MatterController extends Zend_Controller_Action {
 		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		$this->userID = $siteInfoNamespace->userId;
 		$this->username = $siteInfoNamespace->username;
+                $this->translate = Zend_Registry::get('ZT');
+                $this->view->translate = $this->translate;
 	}
 	
 	/**
@@ -91,8 +93,8 @@ class MatterController extends Zend_Controller_Action {
 			$matter_ref = $matterModel->getMatterRefPrefix ( $category_arr [1] );
 			$caseref = $matterModel->getMatterCaseref ( $matter_ref ['ref_prefix'] );
 			$this->view->caseref = $caseref [0] ['id'];
-			$this->view->matter_title = "Add new Matter";
-			$this->view->matter_cap = "Add Matter";
+			$this->view->matter_title = $this->translate->_("Add new Matter");
+			$this->view->matter_cap = $this->translate->_("Add Matter");
 			$this->view->matter_cap_id = "add-matter-submit";
 		}
 	}
@@ -620,7 +622,7 @@ class MatterController extends Zend_Controller_Action {
 		if ($matterModel->getError ())
 			echo $matterModel->getError ();
 		else if ($result)
-			echo "Task added";
+			echo $this->translate->_("Task added");
 	}
 	
 	/**
@@ -650,7 +652,7 @@ class MatterController extends Zend_Controller_Action {
 		if ($matterModel->getError ())
 			echo $matterModel->getError ();
 		else if ($result)
-			echo "Event added";
+			echo $this->translate->_("Event added");
 	}
 	
 	/**
@@ -917,14 +919,14 @@ class MatterController extends Zend_Controller_Action {
 			
 			$result = $matterModel->save ( $matter );
 			if (! $result) {
-				$msg = "Failed to clone matter";
+				$msg = $this->translate->_("Failed to clone matter");
 				$this->view->matter_status = false;
 				echo "false";
 			} else {
 				$matterModel->cloneActors ( $matter_id, $result );
 				$matterModel->cloneClassifiers ( $matter_id, $result );
 				$matterModel->clonePriorities ( $matter_id, $result );
-				$msg = "Matter cloned successfully";
+				$msg = $this->translate->_("Matter cloned successfully");
 				$this->view->matter_status = true;
 				echo $result;
 			}
@@ -948,7 +950,7 @@ class MatterController extends Zend_Controller_Action {
 			$matter_ref = $matterModel->getMatterRefPrefix ( $category_arr [1] );
 			$caseref = $matterModel->getMatterCaseref ( $matter_ref ['ref_prefix'] );
 			$this->view->caseref = $caseref [0] ['id'];
-			$this->view->matter_title = "Clone to new Matter";
+			$this->view->matter_title = $this->translate->_("Clone to new Matter");
 			
 			$origin_arr = $matterModel->getCountryByCode ( $origin );
 			$this->view->origin_name = $origin_arr ['name'];
@@ -958,7 +960,7 @@ class MatterController extends Zend_Controller_Action {
 			$this->view->type_name = $type_arr ['type'];
 			$this->view->type_code = $type_arr ['code'];
 			
-			$this->view->matter_cap = "Clone Matter";
+			$this->view->matter_cap = $this->translate->_("Clone Matter");
 			$this->view->matter_cap_id = "clone-matter-submit";
 			$this->render ( 'add' );
 		}
@@ -1001,7 +1003,7 @@ class MatterController extends Zend_Controller_Action {
 			
 			$result = $matterModel->child ( $matter );
 			if (! $result) {
-				$msg = "Failed to create child matter";
+				$msg = $this->translate->_("Failed to create child matter");
 				$this->view->matter_status = false;
 				echo "false";
 			} else {
@@ -1017,7 +1019,7 @@ class MatterController extends Zend_Controller_Action {
 				} else {
 					$matterModel->childPriClaimEvent ( $matter_id, $result );
 				}
-				$msg = "Child Matter created successfully";
+				$msg = $this->translate->_("Child Matter created successfully");
 				$this->view->matter_status = true;
 				echo $result;
 			}
@@ -1036,22 +1038,22 @@ class MatterController extends Zend_Controller_Action {
 			
 			$this->view->category = $category_arr [0];
 			$this->view->category_code = $category_arr [1];
-			$this->view->country_name = $country_arr [0];
+			$this->view->country_name =  $this->translate->_($country_arr [0]);
 			$this->view->country_code = $country_arr [1];
 			$this->view->username = $this->username;
 			
 			$this->view->caseref = $caseref;
-			$this->view->matter_title = "New Child Matter";
+			$this->view->matter_title = $this->translate->_("New Child Matter");
 			
 			$origin_arr = $matterModel->getCountryByCode ( $origin );
-			$this->view->origin_name = $origin_arr ['name'];
+			$this->view->origin_name = $this->translate->_($origin_arr ['name']);
 			$this->view->origin_code = $origin_arr ['iso'];
 			
 			$type_arr = $matterModel->getTypeCode ( $type_code );
 			$this->view->type_name = $type_arr ['type'];
 			$this->view->type_code = $type_arr ['code'];
 			
-			$this->view->matter_cap = "New Child";
+			$this->view->matter_cap = $this->translate->_("New Child");
 			$this->view->matter_cap_id = "child-matter-submit";
 			$this->view->child = 1;
 			$this->render ( 'add' );
@@ -1119,7 +1121,7 @@ class MatterController extends Zend_Controller_Action {
 			
 			$this->view->category = $category_arr [0];
 			$this->view->category_code = $category_arr [1];
-			$this->view->country_name = $country_arr [0];
+			$this->view->country_name =  $this->translate->_($country_arr [0]);
 			$this->view->country_code = $country_arr [1];
 			$this->view->username = $this->username;
 			$this->view->caseref = $caseref;
@@ -1328,30 +1330,30 @@ class MatterController extends Zend_Controller_Action {
 		$export_csv = fopen ( 'php://memory', 'w' );
 		$captions = array (
 				'Omnipat',
-				'Country',
-				'Cat',
-				'Origin',
-				'Status',
-				'Status date',
-				'Client',
-				'Client Ref',
-				'Agent',
-				'Agent Ref',
-				'Title',
-				'Inventor 1',
-				'Filed',
-				'FilNo',
-				'Published',
-				'Pub. No',
-				'Granted',
-				'Grt No',
-				'ID',
-				'container_ID',
-				'parent_ID',
-				'Responsible',
-				'Delegate',
-				'Dead',
-				'Ctnr' 
+				$this->translate->_('Country'),
+				$this->translate->_('Cat'),
+				$this->translate->_('Origin'),
+				$this->translate->_('Status'),
+				$this->translate->_('Status date'),
+				$this->translate->_('Client'),
+				$this->translate->_('Client Ref'),
+				$this->translate->_('Agent'),
+				$this->translate->_('Agent Ref'),
+				$this->translate->_('Title'),
+				$this->translate->_('Inventor 1'),
+				$this->translate->_('Filed'),
+				$this->translate->_('FilNo'),
+				$this->translate->_('Published'),
+				$this->translate->_('Pub. No'),
+				$this->translate->_('Granted'),
+				$this->translate->_('Grt No'),
+				$this->translate->_('ID'),
+				$this->translate->_('container_ID'),
+				$this->translate->_('parent_ID'),
+				$this->translate->_('Responsible'),
+				$this->translate->_('Delegate'),
+				$this->translate->_('Dead'),
+				$this->translate->_('Ctnr')
 		);
 		fputcsv ( $export_csv, $captions, ';' );
 		foreach ( $export as $row ) {
@@ -1377,50 +1379,50 @@ class MatterController extends Zend_Controller_Action {
 		$this->getResponse ()->setHeader ( 'Content-Type', 'application/csv' )->setHeader ( 'Content-disposition', 'attachment; filename=matter-merge.csv' );
 		$export_csv = fopen ( 'php://memory', 'w' );
 		$captions = array ('id',
-				'NODOSSIER',
-				'PAYS',
-				'PROTECTION',
-				'DEPOT',
-				'NODEPOT',
-				'PUBLICATIO',
-				'NOPUBLICAT',
-				'NOTITREPRI',
-				'Granted',
-				'GrantNo',
-				'Registration',
-				'RegNo',
-				'PubReg',
-				'PubRegNo',
-				'ACCORD',
-				'TEXTEACCOR',
-				'EXPIRATION',
-				'CLI1NOM',
-				'CLI1NOM2',
-				'CLI1RUE1',
-				'CLI1PAYS',
-				'BillingAddress',
-				'REFERENC_1',
-				'email',
-				'VAT',
-				'TITREFRANC',
-				'TITREANGLA',
-				'Title',
-				'Trademark',
-				'Class',
-				'INV1NOM',
-				'INV1RUE1',
-				'DEP1NOM',
-				'TIT1NOM',
-				'CORRNOM',
-				'REFERENCEC',
-				'RESPONSABL',
-				'Writer',
-				'Contact',
-				'AnnAgt',
-				'AnnuityNo',
-				'AnnuityDue',
-				'AnnuityCost',
-				'AnnuityFee'
+			        $this->translate->_('NODOSSIER'),
+			        $this->translate->_('PAYS'),
+			        $this->translate->_('PROTECTION'),
+			        $this->translate->_('DEPOT'),
+			        $this->translate->_('NODEPOT'),
+			        $this->translate->_('PUBLICATIO'),
+			        $this->translate->_('NOPUBLICAT'),
+			        $this->translate->_('NOTITREPRI'),
+			        $this->translate->_('Granted'),
+			        $this->translate->_('GrantNo'),
+			        $this->translate->_('Registration'),
+			        $this->translate->_('RegNo'),
+			        $this->translate->_('PubReg'),
+			        $this->translate->_('PubRegNo'),
+			        $this->translate->_('ACCORD'),
+			        $this->translate->_('TEXTEACCOR'),
+			        $this->translate->_('EXPIRATION'),
+			        $this->translate->_('CLI1NOM'),
+			        $this->translate->_('CLI1NOM2'),
+			        $this->translate->_('CLI1RUE1'),
+			        $this->translate->_('CLI1PAYS'),
+			        $this->translate->_('BillingAddress'),
+			        $this->translate->_('REFERENC_1'),
+			        $this->translate->_('email'),
+			        $this->translate->_('VAT'),
+			        $this->translate->_('TITREFRANC'),
+			        $this->translate->_('TITREANGLA'),
+			        $this->translate->_('Title'),
+			        $this->translate->_('Trademark'),
+			        $this->translate->_('Class'),
+			        $this->translate->_('INV1NOM'),
+			        $this->translate->_('INV1RUE1'),
+			        $this->translate->_('DEP1NOM'),
+			        $this->translate->_('TIT1NOM'),
+			        $this->translate->_('CORRNOM'),
+			        $this->translate->_('REFERENCEC'),
+			        $this->translate->_('RESPONSABL'),
+			        $this->translate->_('Writer'),
+			        $this->translate->_('Contact'),
+			        $this->translate->_('AnnAgt'),
+			        $this->translate->_('AnnuityNo'),
+			        $this->translate->_('AnnuityDue'),
+			        $this->translate->_('AnnuityCost'),
+			        $this->translate->_('AnnuityFee')
 		);
 		fputcsv ( $export_csv, $captions, ';' );
 		foreach ( $export as $row ) {
