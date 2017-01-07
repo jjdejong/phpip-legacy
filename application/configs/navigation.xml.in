@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'  ?>
+<configdata  xmlns:its="http://www.w3.org/2005/11/its" its:version="1.0">
+    <nav>
+        <toplevelnav>
+            <label its:translate="yes">Top Level Nav</label>
+            <uri></uri>
+            <pages>
+                <dashboard>
+                    <label its:translate="yes">Home</label>
+                    <id its:translate="no">home</id>
+                    <title>Home</title>
+                    <uri its:translate="yes">/</uri>
+                </dashboard>
+                <matter>
+                    <label its:translate="yes">Matter</label>
+                    <id its:translate="no">matter</id>
+                    <title>Matter</title>
+                    <uri its:translate="no">/matter</uri>
+                    <pages>
+                        <displaypat>
+                            <label its:translate="no">PAT</label>
+                            <id its:translate="no">pat</id>
+                            <title its:translate="no">PAT</title>
+                            <uri its:translate="no">/matter/index/display/pat</uri>
+                        </displaypat>
+                        <displaytm>
+                            <label its:translate="no">TM</label>
+                            <id its:translate="no">tm</id>
+                            <title its:translate="no">TM</title>
+                            <uri its:translate="no">/matter/index/display/tm</uri>
+                        </displaytm>
+                        <displayltg>
+                            <label its:translate="no">LTG</label>
+                            <id its:translate="no">ltg</id>
+                            <title its:translate="yes">LTG</title>
+                            <uri its:translate="no">/matter/index/display/ltg</uri>
+                        </displayltg>
+                        <displayoth>
+                            <label its:translate="no">OTH</label>
+                            <id its:translate="no">oth</id>
+                            <title its:translate="no">OTH</title>
+                            <uri its:translate="no">/matter/index/display/oth</uri>
+                        </displayoth>
+                    </pages>
+
+                </matter>
+                <tables>
+                    <label its:translate="yes">Tables</label>
+                    <id its:translate="no">tables</id>
+                    <title>Tables</title>
+                    <uri its:translate="no">/actor</uri>
+                    <pages>
+                        <actors>
+                            <label>Actors</label>
+                            <id its:translate="no">actors</id>
+                            <title>Actors</title>
+                            <uri its:translate="no">/actor</uri>
+                        </actors>
+                        <users>
+                            <label its:translate="yes">Users</label>
+                            <id its:translate="no">users</id>
+                            <title>Users</title>
+                            <uri its:translate="no">/actor/users</uri>
+                        </users>
+                        <rules>
+                            <label its:translate="yes">Edit rules</label>
+                            <id its:translate="no">rules</id>
+                            <title>Users</title>
+                            <uri its:translate="no">/rule</uri>
+                        </rules>
+                    </pages>
+                </tables>
+                <account>
+                    <label its:translate="yes">Account</label>
+                    <id its:translate="no">account</id>
+                    <title>Account</title>
+                    <uri its:translate="no">/</uri>
+                    <pages>
+                        <logout>
+                            <label its:translate="yes">Logout</label>
+                            <id its:translate="no" >logout</id>
+                            <title>Log out</title>
+                            <uri its:translate="no">/auth/logout</uri>
+                        </logout>
+                        <password>
+                            <label its:translate="yes">Change password</label>
+                            <id its:translate="no">password</id>
+                            <title>Change password</title>
+                            <uri its:translate="no">/actor/viewpwd</uri>
+                        </password>
+                    </pages>
+                </account>
+	    </pages>
+        </toplevelnav>
+    </nav>
+</configdata>
