@@ -1,0 +1,1203 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: phpIP 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-01-07 18:40+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#. (itstool) path: toplevelnav/label
+#: configs/navigation.xml.in:5
+msgid "Top Level Nav"
+msgstr ""
+
+#. (itstool) path: dashboard/label
+#. (itstool) path: dashboard/title
+#: configs/navigation.xml.in:9 configs/navigation.xml.in:11
+msgid "Home"
+msgstr ""
+
+#. (itstool) path: dashboard/uri
+#: configs/navigation.xml.in:12
+msgid "/"
+msgstr ""
+
+#. (itstool) path: matter/label
+#. (itstool) path: matter/title
+#: configs/navigation.xml.in:15 configs/navigation.xml.in:17
+#: views/scripts/index/index.phtml:346 views/scripts/index/index.phtml:463
+msgid "Matter"
+msgstr ""
+
+#. (itstool) path: displayltg/title
+#: configs/navigation.xml.in:35
+msgid "LTG"
+msgstr ""
+
+#. (itstool) path: tables/label
+#. (itstool) path: tables/title
+#: configs/navigation.xml.in:48 configs/navigation.xml.in:50
+msgid "Tables"
+msgstr ""
+
+#. (itstool) path: actors/label
+#. (itstool) path: actors/title
+#: configs/navigation.xml.in:54 configs/navigation.xml.in:56
+#: views/scripts/actor/index.phtml:137 views/scripts/matter/view.phtml:608
+msgid "Actors"
+msgstr ""
+
+#. (itstool) path: users/label
+#. (itstool) path: users/title
+#. (itstool) path: rules/title
+#: configs/navigation.xml.in:60 configs/navigation.xml.in:62
+#: configs/navigation.xml.in:68
+msgid "Users"
+msgstr ""
+
+#. (itstool) path: rules/label
+#: configs/navigation.xml.in:66
+msgid "Edit rules"
+msgstr ""
+
+#. (itstool) path: account/label
+#. (itstool) path: account/title
+#: configs/navigation.xml.in:74 configs/navigation.xml.in:76
+msgid "Account"
+msgstr ""
+
+#. (itstool) path: logout/label
+#: configs/navigation.xml.in:80
+msgid "Logout"
+msgstr ""
+
+#. (itstool) path: logout/title
+#: configs/navigation.xml.in:82
+msgid "Log out"
+msgstr ""
+
+#. (itstool) path: password/label
+#. (itstool) path: password/title
+#: configs/navigation.xml.in:86 configs/navigation.xml.in:88
+msgid "Change password"
+msgstr ""
+
+#: controllers/ActorController.php:69 controllers/ActorController.php:109
+msgid "Create Actor"
+msgstr ""
+
+#: controllers/ActorController.php:262
+msgid "Password updated"
+msgstr ""
+
+#: controllers/ActorController.php:266
+msgid "Unable to change the password: "
+msgstr ""
+
+#: controllers/AuthController.php:73
+msgid "Username not found!"
+msgstr ""
+
+#: controllers/AuthController.php:77
+msgid "Invalid password!"
+msgstr ""
+
+#: controllers/AuthController.php:81
+msgid "success"
+msgstr ""
+
+#: controllers/AuthController.php:84
+msgid "ambiguous"
+msgstr ""
+
+#: controllers/AuthController.php:109
+msgid "You are not authorized to access this resource"
+msgstr ""
+
+#: controllers/ErrorController.php:8
+msgid "You have reached the error page"
+msgstr ""
+
+#: controllers/ErrorController.php:19
+msgid "Page not found"
+msgstr ""
+
+#: controllers/ErrorController.php:24
+msgid "Application error"
+msgstr ""
+
+#: controllers/EventController.php:107
+msgid "Create Event Name"
+msgstr ""
+
+#: controllers/MatterController.php:96
+msgid "Add new Matter"
+msgstr ""
+
+#: controllers/MatterController.php:97
+msgid "Add Matter"
+msgstr ""
+
+#: controllers/MatterController.php:625
+msgid "Task added"
+msgstr ""
+
+#: controllers/MatterController.php:655
+msgid "Event added"
+msgstr ""
+
+#: controllers/MatterController.php:922
+msgid "Failed to clone matter"
+msgstr ""
+
+#: controllers/MatterController.php:929
+msgid "Matter cloned successfully"
+msgstr ""
+
+#: controllers/MatterController.php:953
+msgid "Clone to new Matter"
+msgstr ""
+
+#: controllers/MatterController.php:963
+msgid "Clone Matter"
+msgstr ""
+
+#: controllers/MatterController.php:1006
+msgid "Failed to create child matter"
+msgstr ""
+
+#: controllers/MatterController.php:1022
+msgid "Child Matter created successfully"
+msgstr ""
+
+#: controllers/MatterController.php:1046
+msgid "New Child Matter"
+msgstr ""
+
+#: controllers/MatterController.php:1056
+msgid "New Child"
+msgstr ""
+
+#: controllers/MatterController.php:1333 views/scripts/actor/view.phtml:312
+#: views/scripts/matter/add.phtml:291 views/scripts/matter/edit.phtml:298
+#: views/scripts/matter/national.phtml:171
+msgid "Country"
+msgstr ""
+
+#: controllers/MatterController.php:1334
+msgid "Cat"
+msgstr ""
+
+#: controllers/MatterController.php:1335 views/scripts/matter/add.phtml:302
+#: views/scripts/matter/edit.phtml:320
+msgid "Origin"
+msgstr ""
+
+#: controllers/MatterController.php:1336 views/scripts/matter/index.phtml:443
+#: views/scripts/matter/view.phtml:671
+msgid "Status"
+msgstr ""
+
+#: controllers/MatterController.php:1337
+msgid "Status date"
+msgstr ""
+
+#: controllers/MatterController.php:1338 views/scripts/matter/index.phtml:455
+msgid "Client"
+msgstr ""
+
+#: controllers/MatterController.php:1339
+msgid "Client Ref"
+msgstr ""
+
+#: controllers/MatterController.php:1340 views/scripts/matter/index.phtml:465
+msgid "Agent"
+msgstr ""
+
+#: controllers/MatterController.php:1341
+msgid "Agent Ref"
+msgstr ""
+
+#: controllers/MatterController.php:1342 controllers/MatterController.php:1409
+msgid "Title"
+msgstr ""
+
+#: controllers/MatterController.php:1343
+msgid "Inventor 1"
+msgstr ""
+
+#: controllers/MatterController.php:1344 views/scripts/matter/index.phtml:485
+msgid "Filed"
+msgstr ""
+
+#: controllers/MatterController.php:1345
+msgid "FilNo"
+msgstr ""
+
+#: controllers/MatterController.php:1346 views/scripts/matter/index.phtml:495
+msgid "Published"
+msgstr ""
+
+#: controllers/MatterController.php:1347
+msgid "Pub. No"
+msgstr ""
+
+#: controllers/MatterController.php:1348 controllers/MatterController.php:1390
+#: views/scripts/matter/index.phtml:505
+msgid "Granted"
+msgstr ""
+
+#: controllers/MatterController.php:1349
+msgid "Grt No"
+msgstr ""
+
+#: controllers/MatterController.php:1350
+msgid "ID"
+msgstr ""
+
+#: controllers/MatterController.php:1351
+msgid "container_ID"
+msgstr ""
+
+#: controllers/MatterController.php:1352
+msgid "parent_ID"
+msgstr ""
+
+#: controllers/MatterController.php:1353
+#: layouts/scripts/content-inner-header.phtml:40
+#: views/scripts/matter/add.phtml:336 views/scripts/matter/edit.phtml:362
+msgid "Responsible"
+msgstr ""
+
+#: controllers/MatterController.php:1354
+msgid "Delegate"
+msgstr ""
+
+#: controllers/MatterController.php:1355 views/scripts/matter/edit.phtml:403
+msgid "Dead"
+msgstr ""
+
+#: controllers/MatterController.php:1356
+msgid "Ctnr"
+msgstr ""
+
+#: controllers/MatterController.php:1382
+msgid "NODOSSIER"
+msgstr ""
+
+#: controllers/MatterController.php:1383
+msgid "PAYS"
+msgstr ""
+
+#: controllers/MatterController.php:1384
+msgid "PROTECTION"
+msgstr ""
+
+#: controllers/MatterController.php:1385
+msgid "DEPOT"
+msgstr ""
+
+#: controllers/MatterController.php:1386
+msgid "NODEPOT"
+msgstr ""
+
+#: controllers/MatterController.php:1387
+msgid "PUBLICATIO"
+msgstr ""
+
+#: controllers/MatterController.php:1388
+msgid "NOPUBLICAT"
+msgstr ""
+
+#: controllers/MatterController.php:1389
+msgid "NOTITREPRI"
+msgstr ""
+
+#: controllers/MatterController.php:1391
+msgid "GrantNo"
+msgstr ""
+
+#: controllers/MatterController.php:1392
+msgid "Registration"
+msgstr ""
+
+#: controllers/MatterController.php:1393
+msgid "RegNo"
+msgstr ""
+
+#: controllers/MatterController.php:1394
+msgid "PubReg"
+msgstr ""
+
+#: controllers/MatterController.php:1395
+msgid "PubRegNo"
+msgstr ""
+
+#: controllers/MatterController.php:1396
+msgid "ACCORD"
+msgstr ""
+
+#: controllers/MatterController.php:1397
+msgid "TEXTEACCOR"
+msgstr ""
+
+#: controllers/MatterController.php:1398
+msgid "EXPIRATION"
+msgstr ""
+
+#: controllers/MatterController.php:1399
+msgid "CLI1NOM"
+msgstr ""
+
+#: controllers/MatterController.php:1400
+msgid "CLI1NOM2"
+msgstr ""
+
+#: controllers/MatterController.php:1401
+msgid "CLI1RUE1"
+msgstr ""
+
+#: controllers/MatterController.php:1402
+msgid "CLI1PAYS"
+msgstr ""
+
+#: controllers/MatterController.php:1403
+msgid "BillingAddress"
+msgstr ""
+
+#: controllers/MatterController.php:1404
+msgid "REFERENC_1"
+msgstr ""
+
+#: controllers/MatterController.php:1405
+msgid "email"
+msgstr ""
+
+#: controllers/MatterController.php:1406
+msgid "VAT"
+msgstr ""
+
+#: controllers/MatterController.php:1407
+msgid "TITREFRANC"
+msgstr ""
+
+#: controllers/MatterController.php:1408
+msgid "TITREANGLA"
+msgstr ""
+
+#: controllers/MatterController.php:1410
+msgid "Trademark"
+msgstr ""
+
+#: controllers/MatterController.php:1411
+msgid "Class"
+msgstr ""
+
+#: controllers/MatterController.php:1412
+msgid "INV1NOM"
+msgstr ""
+
+#: controllers/MatterController.php:1413
+msgid "INV1RUE1"
+msgstr ""
+
+#: controllers/MatterController.php:1414
+msgid "DEP1NOM"
+msgstr ""
+
+#: controllers/MatterController.php:1415
+msgid "TIT1NOM"
+msgstr ""
+
+#: controllers/MatterController.php:1416
+msgid "CORRNOM"
+msgstr ""
+
+#: controllers/MatterController.php:1417
+msgid "REFERENCEC"
+msgstr ""
+
+#: controllers/MatterController.php:1418
+msgid "RESPONSABL"
+msgstr ""
+
+#: controllers/MatterController.php:1419
+msgid "Writer"
+msgstr ""
+
+#: controllers/MatterController.php:1420
+msgid "Contact"
+msgstr ""
+
+#: controllers/MatterController.php:1421
+msgid "AnnAgt"
+msgstr ""
+
+#: controllers/MatterController.php:1422
+msgid "AnnuityNo"
+msgstr ""
+
+#: controllers/MatterController.php:1423
+msgid "AnnuityDue"
+msgstr ""
+
+#: controllers/MatterController.php:1424
+msgid "AnnuityCost"
+msgstr ""
+
+#: controllers/MatterController.php:1425
+msgid "AnnuityFee"
+msgstr ""
+
+#: controllers/RuleController.php:133
+msgid "Create Rule"
+msgstr ""
+
+#: forms/Actor/Add.php:69 forms/Actor/Add.php:85 forms/Actor/Add.php:157
+#: forms/Event/Add.php:42 forms/Event/Add.php:52 forms/Event/Add.php:62
+#: forms/Event/Add.php:72 forms/Event/Add.php:82 forms/Event/Add.php:92
+#: forms/Rule/Add.php:91 forms/Rule/Add.php:101 forms/Rule/Add.php:111
+#: forms/Rule/Add.php:121 forms/Rule/Add.php:131 forms/Rule/Add.php:141
+#: forms/Rule/Add.php:198 views/scripts/matter/edit.phtml:406
+msgid "No"
+msgstr ""
+
+#: forms/Actor/Add.php:69 forms/Actor/Add.php:85 forms/Actor/Add.php:157
+#: forms/Event/Add.php:42 forms/Event/Add.php:52 forms/Event/Add.php:62
+#: forms/Event/Add.php:72 forms/Event/Add.php:82 forms/Event/Add.php:92
+#: forms/Rule/Add.php:91 forms/Rule/Add.php:101 forms/Rule/Add.php:111
+#: forms/Rule/Add.php:121 forms/Rule/Add.php:131 forms/Rule/Add.php:141
+#: forms/Rule/Add.php:198 views/scripts/matter/edit.phtml:406
+msgid "Yes"
+msgstr ""
+
+#: forms/Actor/Changepwd.php:12
+msgid "New password"
+msgstr ""
+
+#: forms/Actor/Changepwd.php:17
+msgid "Change"
+msgstr ""
+
+#: forms/Auth/Login.php:13
+msgid "Username"
+msgstr ""
+
+#: forms/Auth/Login.php:19
+msgid "Language"
+msgstr ""
+
+#: forms/Auth/Login.php:23
+msgid "Password"
+msgstr ""
+
+#: forms/Auth/Login.php:28 views/scripts/actor/add.phtml:375
+#: views/scripts/actor/users.phtml:126 views/scripts/actor/view.phtml:283
+msgid "Login"
+msgstr ""
+
+#: layouts/scripts/content-inner-header.phtml:39
+msgid "caseref"
+msgstr ""
+
+#: layouts/scripts/content-inner-header.phtml:42
+msgid "Quick Search"
+msgstr ""
+
+#: layouts/scripts/content-right.phtml:61
+msgid "Statistics"
+msgstr ""
+
+#: layouts/scripts/layout.phtml:8
+msgid "phpIP - IP portfolio management"
+msgstr ""
+
+#: layouts/scripts/layout.phtml:50
+msgid "Connected as"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:368
+msgid "Actor details"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:369 views/scripts/actor/index.phtml:141
+#: views/scripts/actor/users.phtml:125 views/scripts/actor/view.phtml:277
+#: views/scripts/matter/map-actor-role.phtml:130
+#: views/scripts/matter/role-actors.phtml:382
+msgid "Name"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:371 views/scripts/actor/index.phtml:142
+#: views/scripts/actor/view.phtml:279
+msgid "Firstname"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:373 views/scripts/actor/index.phtml:143
+#: views/scripts/actor/view.phtml:281
+msgid "Display name"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:377 views/scripts/actor/view.phtml:285
+msgid "Default role"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:379 views/scripts/actor/view.phtml:287
+msgid "Function"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:381 views/scripts/actor/view.phtml:289
+msgid "Employer"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:383 views/scripts/actor/view.phtml:291
+msgid "Parent company"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:385 views/scripts/actor/view.phtml:293
+msgid "Work site"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:387 views/scripts/actor/view.phtml:295
+msgid "Physical person"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:389 views/scripts/actor/view.phtml:300
+msgid "Nationality"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:391 views/scripts/actor/view.phtml:302
+msgid "Small entity"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:396 views/scripts/actor/view.phtml:310
+msgid "Address"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:398
+msgid "country"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:400 views/scripts/actor/view.phtml:314
+msgid "Address mailing"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:402 views/scripts/actor/view.phtml:316
+msgid "Country mailing"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:404 views/scripts/actor/view.phtml:318
+msgid "Address billing"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:406 views/scripts/actor/view.phtml:320
+msgid "Country billing"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:408 views/scripts/actor/view.phtml:322
+msgid "Email"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:410 views/scripts/actor/view.phtml:324
+msgid "Phone"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:412 views/scripts/actor/view.phtml:326
+msgid "Phone 2"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:414 views/scripts/actor/view.phtml:328
+msgid "Fax"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:418
+msgid "Other details"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:419 views/scripts/actor/view.phtml:333
+msgid "Warn"
+msgstr ""
+
+#: views/scripts/actor/add.phtml:421 views/scripts/actor/view.phtml:338
+msgid "VAT No."
+msgstr ""
+
+#: views/scripts/actor/add.phtml:423 views/scripts/actor/view.phtml:340
+#: views/scripts/matter/eventlist.phtml:253
+#: views/scripts/matter/eventlist.phtml:305
+#: views/scripts/matter/tasklist.phtml:401
+#: views/scripts/matter/tasklist.phtml:500 views/scripts/matter/view.phtml:916
+msgid "Notes"
+msgstr ""
+
+#: views/scripts/actor/filter.phtml:63 views/scripts/actor/index.phtml:156
+#: views/scripts/actor/view.phtml:346
+msgid "Delete actor"
+msgstr ""
+
+#: views/scripts/actor/index.phtml:144
+#: views/scripts/matter/role-actors.phtml:388
+msgid "Company"
+msgstr ""
+
+#: views/scripts/actor/index.phtml:145 views/scripts/actor/users.phtml:129
+#: views/scripts/actor/view.phtml:348
+msgid "Delete"
+msgstr ""
+
+#: views/scripts/actor/used-in.phtml:50
+msgid "Ref"
+msgstr ""
+
+#: views/scripts/actor/used-in.phtml:51 views/scripts/actor/users.phtml:127
+#: views/scripts/matter/map-actor-role.phtml:109
+msgid "Role"
+msgstr ""
+
+#: views/scripts/actor/used-in.phtml:72
+msgid "Other Actor Dependencies"
+msgstr ""
+
+#: views/scripts/actor/used-in.phtml:75
+msgid "Actor"
+msgstr ""
+
+#: views/scripts/actor/used-in.phtml:76
+msgid "Dependency"
+msgstr ""
+
+#: views/scripts/actor/users.phtml:121
+msgid "phpIP users (these are simply actors that have a login defined)"
+msgstr ""
+
+#: views/scripts/actor/users.phtml:128
+msgid "Last login"
+msgstr ""
+
+#: views/scripts/actor/users.phtml:140
+msgid "Delete user"
+msgstr ""
+
+#: views/scripts/actor/view.phtml:270
+msgid "Actor Information"
+msgstr ""
+
+#: views/scripts/actor/view.phtml:276
+msgid "Actor details - ID:"
+msgstr ""
+
+#: views/scripts/actor/view.phtml:343
+msgid "Used in"
+msgstr ""
+
+#: views/scripts/auth/logout.phtml:1
+msgid ""
+"View script for controller <b>Auth</b> and script/action name <b>logout</b>"
+msgstr ""
+
+#: views/scripts/index/index.phtml:274
+msgid "Categories for"
+msgstr ""
+
+#: views/scripts/index/index.phtml:277
+msgid "New matter"
+msgstr ""
+
+#: views/scripts/index/index.phtml:283 views/scripts/matter/add.phtml:280
+#: views/scripts/matter/edit.phtml:269
+msgid "Category"
+msgstr ""
+
+#: views/scripts/index/index.phtml:286
+msgid "Count"
+msgstr ""
+
+#: views/scripts/index/index.phtml:327 views/scripts/matter/view.phtml:753
+msgid "Open tasks"
+msgstr ""
+
+#: views/scripts/index/index.phtml:330 views/scripts/index/index.phtml:448
+msgid "All"
+msgstr ""
+
+#: views/scripts/index/index.phtml:332 views/scripts/index/index.phtml:450
+msgid "Mine"
+msgstr ""
+
+#: views/scripts/index/index.phtml:337 views/scripts/index/index.phtml:454
+msgid "Clear selected on"
+msgstr ""
+
+#: views/scripts/index/index.phtml:345 views/scripts/index/index.phtml:462
+msgid "Task"
+msgstr ""
+
+#: views/scripts/index/index.phtml:347 views/scripts/index/index.phtml:464
+#: views/scripts/matter/tasklist.phtml:391
+#: views/scripts/matter/tasklist.phtml:482
+msgid "Due date"
+msgstr ""
+
+#: views/scripts/index/index.phtml:348 views/scripts/index/index.phtml:465
+msgid "Close"
+msgstr ""
+
+#: views/scripts/index/index.phtml:395
+msgid "Users tasks"
+msgstr ""
+
+#: views/scripts/index/index.phtml:399
+msgid "User"
+msgstr ""
+
+#: views/scripts/index/index.phtml:400
+msgid "Open Tasks"
+msgstr ""
+
+#: views/scripts/index/index.phtml:401
+msgid "Most urgent"
+msgstr ""
+
+#: views/scripts/index/index.phtml:445
+msgid "Open renewals"
+msgstr ""
+
+#: views/scripts/index/index.phtml:502
+msgid "Clear"
+msgstr ""
+
+#: views/scripts/matter/add-classifier.phtml:177
+msgid "Add new Classifier"
+msgstr ""
+
+#: views/scripts/matter/add-classifier.phtml:182
+#: views/scripts/matter/add-title.phtml:127
+msgid "Classifier Type"
+msgstr ""
+
+#: views/scripts/matter/add-classifier.phtml:184
+msgid "Select type"
+msgstr ""
+
+#: views/scripts/matter/add-classifier.phtml:197
+msgid "Value"
+msgstr ""
+
+#: views/scripts/matter/add-classifier.phtml:202
+#: views/scripts/matter/eventlist.phtml:254
+#: views/scripts/matter/eventlist.phtml:311
+msgid "Refers to"
+msgstr ""
+
+#: views/scripts/matter/add-classifier.phtml:206
+#: views/scripts/matter/add-title.phtml:143 views/scripts/matter/add.phtml:379
+#: views/scripts/matter/edit.phtml:418
+#: views/scripts/matter/eventlist.phtml:321
+#: views/scripts/matter/map-actor-role.phtml:158
+#: views/scripts/matter/national.phtml:214
+#: views/scripts/matter/tasklist.phtml:503
+msgid "Cancel"
+msgstr ""
+
+#: views/scripts/matter/add-classifier.phtml:207
+msgid "Add Classifier"
+msgstr ""
+
+#: views/scripts/matter/add-title.phtml:142
+msgid "Add Item"
+msgstr ""
+
+#: views/scripts/matter/add.phtml:312 views/scripts/matter/edit.phtml:332
+msgid "Type"
+msgstr ""
+
+#: views/scripts/matter/add.phtml:322 views/scripts/matter/edit.phtml:349
+msgid "Caseref"
+msgstr ""
+
+#: views/scripts/matter/add.phtml:346
+msgid "Current matter as a : "
+msgstr ""
+
+#: views/scripts/matter/add.phtml:351
+msgid "PRIORITY"
+msgstr ""
+
+#: views/scripts/matter/add.phtml:356
+msgid "PARENT"
+msgstr ""
+
+#: views/scripts/matter/add.phtml:357
+msgid "Child matter as : "
+msgstr ""
+
+#: views/scripts/matter/add.phtml:362
+msgid "Independent Container"
+msgstr ""
+
+#: views/scripts/matter/add.phtml:367
+msgid "Inherits its information"
+msgstr ""
+
+#: views/scripts/matter/classifierlist.phtml:314
+msgid "All classifiers"
+msgstr ""
+
+#: views/scripts/matter/classifierlist.phtml:316
+msgid "Link to matter"
+msgstr ""
+
+#: views/scripts/matter/classifierlist.phtml:317
+#: views/scripts/matter/classifierlist.phtml:339
+msgid "Add classifier"
+msgstr ""
+
+#: views/scripts/matter/classifierlist.phtml:338
+msgid "Add classifier to type"
+msgstr ""
+
+#: views/scripts/matter/classifierlist.phtml:342
+msgid "Delete classifier type"
+msgstr ""
+
+#: views/scripts/matter/classifierlist.phtml:370
+msgid "Delete classifier"
+msgstr ""
+
+#: views/scripts/matter/edit.phtml:260
+msgid "Advanced Matter edition"
+msgstr ""
+
+#: views/scripts/matter/edit.phtml:371
+msgid "Parent"
+msgstr ""
+
+#: views/scripts/matter/edit.phtml:383
+msgid "Container"
+msgstr ""
+
+#: views/scripts/matter/edit.phtml:405
+msgid ""
+"This value is changed automatically by inserting or deleting killer events, "
+"such as 'Abandoned', in the Status"
+msgstr ""
+
+#: views/scripts/matter/edit.phtml:409
+msgid "Term adjust"
+msgstr ""
+
+#: views/scripts/matter/edit.phtml:421
+#: views/scripts/matter/role-actors.phtml:374
+msgid "Save"
+msgstr ""
+
+#: views/scripts/matter/edit.phtml:424
+msgid "Delete Matter"
+msgstr ""
+
+#: views/scripts/matter/eventlist.phtml:250
+msgid "All Events"
+msgstr ""
+
+#: views/scripts/matter/eventlist.phtml:251
+#: views/scripts/matter/index.phtml:449
+#: views/scripts/matter/role-actors.phtml:394
+#: views/scripts/matter/view.phtml:672
+msgid "Date"
+msgstr ""
+
+#: views/scripts/matter/eventlist.phtml:252
+#: views/scripts/matter/eventlist.phtml:300
+#: views/scripts/matter/view.phtml:673
+msgid "Number"
+msgstr ""
+
+#: views/scripts/matter/eventlist.phtml:257
+msgid "Add Event"
+msgstr ""
+
+#: views/scripts/matter/eventlist.phtml:285
+msgid "Event Name"
+msgstr ""
+
+#: views/scripts/matter/eventlist.phtml:294
+msgid "Event date"
+msgstr ""
+
+#: views/scripts/matter/eventlist.phtml:322
+msgid "Add event"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:405
+msgid "Show All"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:407
+msgid "Show Containers"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:411
+msgid "Actor View"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:413
+msgid "Status View"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:418
+msgid "Show Mine"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:422
+msgid "Export"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:426
+msgid "Clear filters"
+msgstr ""
+
+#: views/scripts/matter/index.phtml:479
+msgid "Inventor"
+msgstr ""
+
+#: views/scripts/matter/map-actor-role.phtml:106
+#: views/scripts/matter/view.phtml:613
+msgid "Add Actor"
+msgstr ""
+
+#: views/scripts/matter/map-actor-role.phtml:111
+msgid "Select"
+msgstr ""
+
+#: views/scripts/matter/map-actor-role.phtml:134
+msgid "Ref."
+msgstr ""
+
+#: views/scripts/matter/map-actor-role.phtml:145
+msgid "Add actor to container"
+msgstr ""
+
+#: views/scripts/matter/map-actor-role.phtml:152
+msgid "Add actor to current matter only"
+msgstr ""
+
+#: views/scripts/matter/map-actor-role.phtml:157
+msgid "Add"
+msgstr ""
+
+#: views/scripts/matter/national.phtml:153
+msgid "Enter national phase"
+msgstr ""
+
+#: views/scripts/matter/national.phtml:174
+msgid "Entered date"
+msgstr ""
+
+#: views/scripts/matter/national.phtml:196
+msgid "Remove"
+msgstr ""
+
+#: views/scripts/matter/national.phtml:219
+msgid "Submit"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:350
+msgid "Configure fields to display for this role"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:358
+msgid "Shareable"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:360
+msgid "Show ref"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:362
+msgid "Show company"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:364
+msgid "Show rate"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:366
+msgid "Show date"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:370
+msgid "Notes:"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:385
+msgid "Actor ref"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:391
+msgid "Rate"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:397
+msgid "Shared"
+msgstr ""
+
+#: views/scripts/matter/role-actors.phtml:400
+msgid "Delete Actor"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:389
+msgid "All renewals"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:389
+msgid "All tasks"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:392
+msgid "Done"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:393
+msgid "Done date"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:394
+#: views/scripts/matter/tasklist.phtml:487
+msgid "Cost"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:395
+#: views/scripts/matter/tasklist.phtml:490
+msgid "Fee"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:396
+msgid "Cur."
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:398
+msgid "Time"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:400
+msgid "Assigned To"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:418
+msgid "Add task to"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:421
+msgid "Delete event"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:444
+msgid "Click to edit cost"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:447
+msgid "Click to edit fee"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:450
+#: views/scripts/matter/tasklist.phtml:458
+msgid "Click to edit"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:454
+msgid "Click to edit (HH:MM:SS)"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:461
+msgid "Click to edit notes"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:464
+msgid "Delete task"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:479
+msgid "Task Name"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:485
+msgid "Detail"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:495
+msgid "Time spent"
+msgstr ""
+
+#: views/scripts/matter/tasklist.phtml:504
+msgid "Add task"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:507
+msgid "See family"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:516
+msgid "See parent"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:522
+msgid "See container"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:535
+msgid "Clone matter"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:544
+msgid "New child"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:554
+msgid "Enter nat. phase"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:596
+msgid "...Hover the mouse here to add a title item..."
+msgstr ""
+
+#: views/scripts/matter/view.phtml:600
+msgid "Add title item"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:610
+msgid "Responsible:"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:670 views/scripts/matter/view.phtml:855
+msgid "Click for more detail"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:756 views/scripts/matter/view.phtml:804
+msgid "Due"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:802
+msgid "Renewals"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:842
+msgid "Expiry:"
+msgstr ""
+
+#: views/scripts/matter/view.phtml:857
+msgid "Classifier"
+msgstr ""
+
+#: views/scripts/pagination.phtml:55
+msgid " in "
+msgstr ""

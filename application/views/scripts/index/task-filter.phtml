@@ -35,7 +35,7 @@ foreach ( $this->open_tasks as $open_task ) {
 		
 	</div>
 	<div class="col-actions">
-		<input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="Clear" />
+		<input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="<?=$this->translate->_('Clear')?>" />
 	</div>
 </li>
 <?php } ?>

@@ -21,6 +21,8 @@ class ActorController extends Zend_Controller_Action {
 		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		$this->userID = $siteInfoNamespace->userId;
 		$this->username = $siteInfoNamespace->username;
+                $this->translate = Zend_Registry::get('ZT');
+                $this->view->translate = $this->translate ;
 	}
 
 	/**
@@ -64,7 +66,7 @@ class ActorController extends Zend_Controller_Action {
 			$this->view->actors = $actorModel->getAllActors ( $term );
 			array_push ( $this->view->actors, array (
 				'id' => 'nomatch',
-				'name' => 'Create Actor' 
+				'name' => $this->translate->_('Create Actor') 
 			) );
 		} else {
 			$this->view->actors = $actorModel->getAllActorsByCo ( $term );
@@ -104,7 +106,7 @@ class ActorController extends Zend_Controller_Action {
 		$actors = $actorModel->getAllActors ( $this->view->term );
 		array_push ( $actors, array (
 				'id' => 'CreateActor',
-				'value' => '<font color="red">Create Actor</font>' 
+				'value' => '<font color="red">'.$this->translate->_('Create Actor').'</font>' 
 		) );
 		
 		$this->view->matter_actor = $actors;
@@ -257,11 +259,11 @@ class ActorController extends Zend_Controller_Action {
                 	$newpwd = $form->getValue('Password');
 			$userModel = new Application_Model_DbTable_Actor();
 			$result = $userModel->changepwdUser( $newpwd);
-			if ($result == 'Password updated') {
+			if ($result == $this->translate->_('Password updated')) {
                             $this->_helper->redirector ( 'index', 'index' );
                             }
                         else {
-                            $this->view->change_error = "Unable to change the password: ".$result;
+                            $this->view->change_error = $this->translate->_("Unable to change the password: ").$result;
                         }
 		   }
 		}

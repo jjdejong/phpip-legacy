@@ -47,8 +47,8 @@ $(document).ready(function(){
 		class="close-used-in ui-icon ui-icon-close" style="float: right;"
 		title="Close"></span>
 	<div class="list-row">
-		<div class="col">Ref</div>
-		<div class="col">Role</div>
+		<div class="col"><?=$this->translate->_('Ref')?></div>
+		<div class="col"><?=$this->translate->_('Role')?></div>
 	</div>
 	<div style="width: 210px; height: 200px; overflow: auto">
 <?php 
@@ -69,11 +69,11 @@ foreach($this->matter_dependencies as $matter){
 </div>
 
 <div class="listrow">
-	<span>Other Actor Dependencies</span> 
+	<span><?=$this->translate->_('Other Actor Dependencies')?></span> 
 	<span class="close-used-in ui-icon ui-icon-close" style="float: right;" title="Close"></span>
 	<div class="list-row">
-		<div class="col">Actor</div>
-		<div class="col">Dependency</div>
+		<div class="col"><?=$this->translate->_('Actor')?></div>
+		<div class="col"><?=$this->translate->_('Dependency')?></div>
 	</div>
 	<div style="width: 210px; height: 200px; overflow: auto">
 <?php 

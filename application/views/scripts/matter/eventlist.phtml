@@ -247,14 +247,14 @@ $add_empty_row = 0;
 <div id="MatterAllEventBlock" class="listrow">
 	<div id="MatterAllEvent" class="status-row"
 		style="display: inline-block; height: 23px;">
-		<span class="eventlist-col-name" style="margin-left: 5px;">All Events</span>
-		<span class="eventlist-col-event_date">Date</span> 
-		<span class="eventlist-col-detail">Number</span> 
-		<span class="eventlist-col-notes">Notes</span> 
-		<span class="eventlist-col-refer">Refers to</span>
+		<span class="eventlist-col-name" style="margin-left: 5px;"><?=$this->translate->_('All Events')?></span>
+		<span class="eventlist-col-event_date"><?=$this->translate->_('Date')?></span> 
+		<span class="eventlist-col-detail"><?=$this->translate->_('Number')?></span> 
+		<span class="eventlist-col-notes"><?=$this->translate->_('Notes')?></span> 
+		<span class="eventlist-col-refer"><?=$this->translate->_('Refers to')?></span>
 		<span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"></span>
 	</div>
-	<button id="add-event" style="float: right; margin-top: -2px;">Add Event</button>
+        <button id="add-event" style="float: right; margin-top: -2px;"><?=$this->translate->_('Add Event')?></button>
 	<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; height: auto; background: whitesmoke;">
 <?php
 foreach ( $this->matter_events as $matter_event ) :
@@ -282,7 +282,7 @@ endforeach; ?>
 			name="matter_id" 
 			value="<?=$this->matter_id?>"
 			id="matter_id" /> 
-		<label for="event_name"><b>Event Name</b></label> 
+		<label for="event_name"><b><?=$this->translate->_('Event Name')?></b></label> 
 		<input type="text" 
 			name="event_name" 
 			id="event_name"
@@ -291,24 +291,24 @@ endforeach; ?>
 			name="event_id" 
 			id="event_id"
 			value="" /> 
-		<label for="event_date">Event date </label> 
+		<label for="event_date"><?=$this->translate->_('Event date')?> </label> 
 		<input type="text" 
 			name="event_date" 
 			id="event_date" 
 			value="" />
 		<br> 
-		<label for="event_detail">Number </label> 
+		<label for="event_detail"><?=$this->translate->_('Number')?> </label> 
 		<input type="text"
 			name="event_detail" 
 			id="event_detail" 
 			value="" /> 
-		<label for="event_notes">Notes </label> 
+		<label for="event_notes"><?=$this->translate->_('Notes')?> </label> 
 		<input type="text"
 			name="event_notes" 
 			id="event_notes" 
 			value="" />
 			<br> 
-		<label for="event_refers">Refers to </label> 
+		<label for="event_refers"><?=$this->translate->_('Refers to')?> </label> 
 		<input type="text"
 			name="event_refers" 
 			id="event_refers" 
@@ -318,7 +318,7 @@ endforeach; ?>
 			name="alt_matter_id" 
 			id="alt_matter_id" 
 			value="" />
-		<button name="add_event_cancel" id="add-event-cancel" style="float: right;">Cancel</button>
-		<button name="add_event_submit" id="add-event-submit" style="float: right;">Add event</button>
+		<button name="add_event_cancel" id="add-event-cancel" style="float: right;"><?=$this->translate->_('Cancel')?></button>
+		<button name="add_event_submit" id="add-event-submit" style="float: right;"><?=$this->translate->_('Add event')?></button>
 	</div>
 </div>

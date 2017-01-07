@@ -44,6 +44,6 @@
         <?php else: ?>
             <span class="disabled"><?= $this->last; ?></span>
         <?php endif; ?>
-        &nbsp; Showing <?php echo $this->firstItemNumber, '-', $this->lastItemNumber, ' in ', $this->totalItemCount; ?>
+        &nbsp; Showing <?php echo $this->firstItemNumber, '-', $this->lastItemNumber, $this->translate->_(' in '), $this->totalItemCount; ?>
     </div>
  </div>

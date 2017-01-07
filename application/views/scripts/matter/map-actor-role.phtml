@@ -103,12 +103,12 @@ $( "#actor-name" ).focus();
 </script>
 <div class="listrow" style="width: 350px">
 	<div id="MatterAddActor" class="status-row">
-		<span class="eventlist-col-name" style="margin-left: 5px;">Add Actor</span>
+		<span class="eventlist-col-name" style="margin-left: 5px;"><?=$this->translate->_('Add Actor')?></span>
 	</div>
 	<div class="list-matter-block-info" style="max-height: 350px; min-height: 100px; width: 98%; height: auto; background: whitesmoke;">
-		<span class="formtitle">Role</span> 
+		<span class="formtitle"><?=$this->translate->_('Role')?></span> 
 		<select id="rolebox" name="role_select">
-			<option value='0-0'>Select</option> 
+			<option value='0-0'><?=$this->translate->_('Select')?></option> 
 <?php
 $cont_yes = "";
 $cont_no = "";
@@ -127,11 +127,11 @@ else
 ?>
 		</select> 
 		<br> 
-		<span class="formtitle">Name</span> 
+		<span class="formtitle"><?=$this->translate->_('Name')?></span> 
 		<input id="actor-name" size="30" /> 
 		<input type="hidden" id="actor-id" /> 
 		<br>
-		<span class="formtitle">Ref.</span> 
+		<span class="formtitle"><?=$this->translate->_('Ref.')?></span> 
 		<input id="actor-ref" size="30" />
 		<input type="hidden" id="matter-id" value="<?=$this->matter_id?>" /> 
 		<br>
@@ -142,20 +142,20 @@ if($this->container_id): ?>
 			value="<?=$this->container_id?>" 
 			id="container_yes" 
 			<?=$cont_yes?> />
-		<label for="container_yes">Add actor to container</label>
+		<label for="container_yes"><?=$this->translate->_('Add actor to container')?></label>
 		<br> 
 		<input type="radio" 
 			name="matter_container" 
 			value='0' 
 			id="container_no"
 			<?=$cont_no?> /> 
-		<label for="container_no">Add actor to current matter only</label> 
+		<label for="container_no"><?=$this->translate->_('Add actor to current matter only')?></label> 
 		<br>
 <?php 
 endif; ?>
 		<div style="float: right;">
-			<button id="submit">Add</button>
-			<button id="cancel">Cancel</button>
+			<button id="submit"><?=$this->translate->_('Add')?></button>
+			<button id="cancel"><?=$this->translate->_('Cancel')?></button>
 		</div>
 	</div>
 </div>

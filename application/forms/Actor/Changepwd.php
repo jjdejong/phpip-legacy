@@ -4,16 +4,17 @@ class Application_Form_Actor_Changepwd extends Zend_Form
 {
     public function init()
     {
+        $translate = Zend_Registry::get('ZT');
         $this->setMethod('post');
  
  
         $this->addElement('password', 'Password', array(
-            'label' => 'New password',
+            'label' => $translate->_('New password'),
             ));
  
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
-            'label'    => 'Change',
+            'label'    => $translate->_('Change'),
             )); 
     }
 }

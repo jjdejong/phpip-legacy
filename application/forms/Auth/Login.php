@@ -4,22 +4,28 @@ class Application_Form_Auth_Login extends Zend_Form
 {
     public function init()
     {
+        $translate = Zend_Registry::get('ZT');
+
         $this->setMethod('post');
  
         $this->addElement(
             'text', 'Email', array(
-                'label' => 'Username',
+                'label' => $translate->_('Username'),
                 'required' => true,
                 'filters'    => array('StringTrim'),
             ));
  
+        $this->addElement('text', 'Language', array(
+            'label' => $translate->_('Language'),
+            ));
+ 
         $this->addElement('password', 'Password', array(
-            'label' => 'Password',
+            'label' => $translate->_('Password'),
             ));
  
         $this->addElement('submit', 'submit', array(
             'ignore'   => true,
-            'label'    => 'Login',
+            'label'    => $translate->_('Login'),
             )); 
     }
 }

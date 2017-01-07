@@ -174,14 +174,14 @@ $(document).ready(function(){
 </style>
 <div class="place-card">
 	<div id="add-classifier-head">
-		Add new Classifier <span class="close-button">X</span>
+		<?=$this->translate->_('Add new Classifier')?> <span class="close-button">X</span>
 	</div>
 	<div id="add-classifier">
 		<div class="validation-errors"></div>
 		<form method="post" action="" id="add-classifier-form" accept-charset="utf-8">
-			<label for="classifier-type">Classifier Type</label> 
+			<label for="classifier-type"><?=$this->translate->_('Classifier Type')?></label> 
 			<select id="classifier-type">
-				<option value="">Select type</option>
+				<option value=""><?=$this->translate->_('Select type')?></option>
 				<?php
 				if ($this->classifier_types) {
 					foreach ( $this->classifier_types as $classifier ) {
@@ -194,17 +194,17 @@ $(document).ready(function(){
 					}
 				} ?>
 			</select>
-			<label for="classifier-value">Value</label>
+			<label for="classifier-value"><?=$this->translate->_('Value')?></label>
 			<textarea id="classifier-value" style="vertical-align: top; width: 200px;"></textarea>
 			<input type="hidden" id="classifier-value-id" value="" /> 
 			<label for="classifier-url">URL</label> 
 			<input type="text" id="classifier-url" value="" /> 
-			<label for="classifier-refers">Refers to</label> 
+			<label for="classifier-refers"><?=$this->translate->_('Refers to')?></label> 
 			<input type="text" id="classifier-refers" value="" /> 
 			<input type="hidden" id="classifier-refers-id" value="" />
 			<div id="add-classifier-actions">
-				<input type="button" id="add-classifier-cancel" value="Cancel" /> 
-				<input type="button" id="add-classifier-submit" value="Add Classifier" />
+				<input type="button" id="add-classifier-cancel" value="<?=$this->translate->_('Cancel')?>" /> 
+				<input type="button" id="add-classifier-submit" value="<?=$this->translate->_('Add Classifier')?>" />
 			</div>
 		</form>
 	</div>

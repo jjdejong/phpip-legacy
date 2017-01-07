@@ -134,15 +134,15 @@ $(document).ready(function(){
 
 });
 </script>
-<div id="actors-tab">Actors</div>
+<div id="actors-tab"><?=$this->translate->_('Actors')?></div>
 <div id="actors-box" class="place-card">
 <?php if(count($this->actors)): ?>
     <div class="list-headers">
-    	<div class="col-name">Name <input type="text" size=20 name="actor-name" id="actor-name" class="filter-input" /></div>
-    	<div class="col-firstname">Firstname</div>
-    	<div class="col-display">Display name</div>
-    	<div class="col-company">Company <input type="text" size=20 name="actor-company" id="actor-company" class="filter-input" /></div>
-    	<div class="col-delete" >Delete</div>
+    	<div class="col-name"><?=$this->translate->_('Name')?> <input type="text" size=20 name="actor-name" id="actor-name" class="filter-input" /></div>
+    	<div class="col-firstname"><?=$this->translate->_('Firstname')?></div>
+    	<div class="col-display"><?=$this->translate->_('Display name')?></div>
+    	<div class="col-company"><?=$this->translate->_('Company')?> <input type="text" size=20 name="actor-company" id="actor-company" class="filter-input" /></div>
+    	<div class="col-delete" ><?=$this->translate->_('Delete')?></div>
     </div>
 <div id="actor-table-list">
 <ul class="phpip-list" id="actors-list">
@@ -153,7 +153,7 @@ $(document).ready(function(){
     	<div class="col-display"><?=htmlentities($actor['display_name'])?></div>
     	<div class="col-company"><?=htmlentities($actor['company_name'])?></div>
     	<div class="col-delete" >
-    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"></span>
+    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="<?=$this->translate->_('Delete actor')?>"></span>
     	</div>
     </li>
 <?php endforeach; ?>

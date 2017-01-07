@@ -56,6 +56,7 @@
 }
 </style>
 
+
 <script type="text/javascript">
 $(document).ready(function(){
     $('#Employer').autocomplete({
@@ -364,62 +365,62 @@ $(document).ready(function(){
 	?>
 <form id="add-actor-form" method="post" action="" accept-charset="utf-8">
 	<fieldset class="actor-info-set">
-		<legend>Actor details</legend>
-		<label for="name" title="<?=$this->actorComments['name']?>"><b>Name</b></label>
+		<legend><?=$this->translate->_('Actor details')?></legend>
+		<label for="name" title="<?=$this->actorComments['name']?>"><b><?=$this->translate->_('Name')?></b></label>
 			<?=$this->actorForm->getElement('name')?>
-		<label for="first_name" title="<?=$this->actorComments['first_name']?>">Firstname</label>
+		<label for="first_name" title="<?=$this->actorComments['first_name']?>"><?=$this->translate->_('Firstname')?></label>
 			<?=$this->actorForm->getElement('first_name')?>
-		<label for="display_name" title="<?=$this->actorComments['display_name']?>">Display Name</label>
+		<label for="display_name" title="<?=$this->actorComments['display_name']?>"><?=$this->translate->_('Display name')?></label>
 			<?=$this->actorForm->getElement('display_name')?>
-		<label for="login" title="<?=$this->actorComments['login']?>">Login</label>
+		<label for="login" title="<?=$this->actorComments['login']?>"><?=$this->translate->_('Login')?></label>
 			<?=$this->actorForm->getElement('login')?>
-		<label for="default_role" title="<?=$this->actorComments['default_role']?>">Default role</label>
+		<label for="default_role" title="<?=$this->actorComments['default_role']?>"><?=$this->translate->_('Default role')?></label>
 			<?=$this->actorForm->getElement('default_role')?>
-		<label for="function" title="<?=$this->actorComments['function']?>">Function</label>
+		<label for="function" title="<?=$this->actorComments['function']?>"><?=$this->translate->_('Function')?></label>
 			<?=$this->actorForm->getElement('function')?>
-		<label for="Employer" title="<?=$this->actorComments['company_ID']?>">Employer</label>
+		<label for="Employer" title="<?=$this->actorComments['company_ID']?>"><?=$this->translate->_('Employer')?></label>
 			<?=$this->actorForm->getElement('Employer')?>
-		<label for="parent_company" title="<?=$this->actorComments['parent_ID']?>">Parent Company</label>
+		<label for="parent_company" title="<?=$this->actorComments['parent_ID']?>"><?=$this->translate->_('Parent company')?></label>
 			<?=$this->actorForm->getElement('parent_company')?>
-		<label for="WorkSite" title="<?=$this->actorComments['site_ID']?>">Work Site</label>
+		<label for="WorkSite" title="<?=$this->actorComments['site_ID']?>"><?=$this->translate->_('Work site')?></label>
 			<?=$this->actorForm->getElement('WorkSite')?>
-		<label for="phy_person" title="<?=$this->actorComments['phy_person']?>">Physical Person</label>
+		<label for="phy_person" title="<?=$this->actorComments['phy_person']?>"><?=$this->translate->_('Physical person')?></label>
 			<?=$this->actorForm->getElement('phy_person')?>
-		<label for="nationality" title="<?=$this->actorComments['nationality']?>">Nationality</label>
+		<label for="nationality" title="<?=$this->actorComments['nationality']?>"><?=$this->translate->_('Nationality')?></label>
 			<?=$this->actorForm->getElement('nationality')?>
-		<label for="small_entity" title="<?=$this->actorComments['small_entity']?>">Small Entity</label>
+		<label for="small_entity" title="<?=$this->actorComments['small_entity']?>"><?=$this->translate->_('Small entity')?></label>
 			<?=$this->actorForm->getElement('small_entity')?>
 	</fieldset>
 	<fieldset class="actor-info-set">
 		<legend>Contact details</legend>
-		<label for="address" title="<?=$this->actorComments['address']?>">Address</label>
+		<label for="address" title="<?=$this->actorComments['address']?>"><?=$this->translate->_('Address')?></label>
 			<?=$this->actorForm->getElement('address')?>
-		<label for="country" title="<?=$this->actorComments['country']?>">country</label>
+		<label for="country" title="<?=$this->actorComments['country']?>"><?=$this->translate->_('country')?></label>
 			<?=$this->actorForm->getElement('country')?>
-		<label for="address_mailing" title="<?=$this->actorComments['address_mailing']?>">Address mailing</label>
+		<label for="address_mailing" title="<?=$this->actorComments['address_mailing']?>"><?=$this->translate->_('Address mailing')?></label>
 			<?=$this->actorForm->getElement('address_mailing')?>
-		<label for="country_mailing" title="<?=$this->actorComments['country_mailing']?>">Country mailng</label>
+		<label for="country_mailing" title="<?=$this->actorComments['country_mailing']?>"><?=$this->translate->_('Country mailing')?></label>
 			<?=$this->actorForm->getElement('country_mailing')?>
-		<label for="address_billing" title="<?=$this->actorComments['address_billing']?>">Address Billing</label>
+		<label for="address_billing" title="<?=$this->actorComments['address_billing']?>"><?=$this->translate->_('Address billing')?></label>
 			<?=$this->actorForm->getElement('address_billing')?>
-		<label for="country_billing" title="<?=$this->actorComments['country_billing']?>">Country Billing</label>
+		<label for="country_billing" title="<?=$this->actorComments['country_billing']?>"><?=$this->translate->_('Country billing')?></label>
 			<?=$this->actorForm->getElement('country_billing')?>
-		<label for="email" title="<?=$this->actorComments['email']?>">Email</label>
+		<label for="email" title="<?=$this->actorComments['email']?>"><?=$this->translate->_('Email')?></label>
 			<?=$this->actorForm->getElement('email')?>
-		<label for="phone" title="<?=$this->actorComments['phone']?>">Phone</label>
+		<label for="phone" title="<?=$this->actorComments['phone']?>"><?=$this->translate->_('Phone')?></label>
 			<?=$this->actorForm->getElement('phone')?>
-		<label for="phone2" title="<?=$this->actorComments['phone2']?>">Phone 2</label>
+		<label for="phone2" title="<?=$this->actorComments['phone2']?>"><?=$this->translate->_('Phone 2')?></label>
 			<?=$this->actorForm->getElement('phone2')?>
-		<label for="fax" title="<?=$this->actorComments['fax']?>">Fax</label>
+		<label for="fax" title="<?=$this->actorComments['fax']?>"><?=$this->translate->_('Fax')?></label>
 			<?=$this->actorForm->getElement('fax')?>
 	</fieldset>
 	<fieldset class="actor-info-set">
-		<legend>Other details</legend>
-		<label for="warn" title="<?=$this->actorComments['warn']?>">Warn</label>
+		<legend><?=$this->translate->_('Other details')?></legend>
+		<label for="warn" title="<?=$this->actorComments['warn']?>"><?=$this->translate->_('Warn')?></label>
 			<?=$this->actorForm->getElement('warn');?>
-		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT No.</label>
+		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>"><?=$this->translate->_('VAT No.')?></label>
 			<?=$this->actorForm->getElement('VAT_number');?>
-		<label for="notes" title="<?=$this->actorComments['notes']?>">Notes</label>
+		<label for="notes" title="<?=$this->actorComments['notes']?>"><?=$this->translate->_('Notes')?></label>
 			<?=$this->actorForm->getElement('notes');?>
 	</fieldset>
 		<input type="hidden" 

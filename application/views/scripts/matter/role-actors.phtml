@@ -347,7 +347,7 @@ $(document).ready(function(){
 		<?php if(isset($this->actor_role)): ?>
 
 		<div style="width: 160px"><?php echo $this->actor_role['name'] . " (" .$this->actor_role['code'].")"?>
-			<a href="javascript:void(0);" id="edit-role-info" title="Configure fields to display for this role">
+			<a href="javascript:void(0);" id="edit-role-info" title="<?=$this->translate->_('Configure fields to display for this role')?>">
 			<span class="ui-icon ui-icon-wrench" style="float: right;"></span>
 			</a>
 		</div>
@@ -355,23 +355,23 @@ $(document).ready(function(){
 			<div id="role-info">
 				<div id="flag">
 					<input type="checkbox" name="shareable" id="shareable" <?php echo ($this->actor_role['shareable'])? 'checked="checked"': ''; ?>></input>
-					<label for="shareable">Shareable</label>
+					<label for="shareable"><?=$this->translate->_('Shareable')?></label>
 					<input type="checkbox" name="show_ref" id="show_ref" <?php echo ($this->actor_role['show_ref'])? 'checked="checked"': ''; ?>></input>
-					<label for="show_ref">Show ref</label>
+					<label for="show_ref"><?=$this->translate->_('Show ref')?></label>
 					<input type="checkbox" name="show_company" id="show_company" <?php echo ($this->actor_role['show_company'])? 'checked="checked"': ''; ?>></input>
-					<label for="show_company">Show company</label>
+					<label for="show_company"><?=$this->translate->_('Show company')?></label>
 					<input type="checkbox" name="show_rate" id="show_rate" <?php echo ($this->actor_role['show_rate'])? 'checked="checked"': ''; ?>></input>
-					<label for="show_rate">Show rate</label>
+					<label for="show_rate"><?=$this->translate->_('Show rate')?></label>
 					<input type="checkbox" name="show_date" id="show_date" <?php echo ($this->actor_role['show_date'])? 'checked="checked"': ''; ?>></input>
-					<label for="show_date">Show date</label>
+					<label for="show_date"><?=$this->translate->_('Show date')?></label>
 				</div>
 				<br>
 				<br>
-				<label style="vertical-align: top;">Notes:</label>
+				<label style="vertical-align: top;"><?=$this->translate->_('Notes:')?></label>
 				<textarea name="role_notes" cols="80" rows="2"><?=$this->actor_role['notes']?></textarea>
 				<br>
 				<br>
-				<input type="button" value="Save" name="save_role" />&nbsp;&nbsp;&nbsp;&nbsp;
+				<input type="button" value="<?=$this->translate->_('Save')?>" name="save_role" />&nbsp;&nbsp;&nbsp;&nbsp;
 				<input type="button" value="Cancel" name="cancel_role" />
 			</div>
 		<?php endif;?>
@@ -379,25 +379,25 @@ $(document).ready(function(){
 			<div id="role-actors-head">
 				<ul>
 					<li style="width: 156px;">
-						Name
+						<?=$this->translate->_('Name')?>
 					</li>
 					<li <?= $this->actor_role['show_ref'] ? '' : 'style="display:none;"' ?> class="actor_ref">
-						Actor ref
+						<?=$this->translate->_('Actor ref')?>
 					</li>
 					<li <?= $this->actor_role['show_company'] ? '' : 'style="display:none;"' ?> class="actor_comp">
-						Company
+						<?=$this->translate->_('Company')?>
 					</li>
 					<li <?= $this->actor_role['show_rate'] ? 'style="width:45px;"' : 'style="display:none;"' ?> class="actor_rate">
-						Rate
+						<?=$this->translate->_('Rate')?>
 					</li>
 					<li <?= $this->actor_role['show_date'] ? 'style="width:70px;"' : 'style="display:none;"' ?> class="actor_date">
-						Date
+						<?=$this->translate->_('Date')?>
 					</li>
 					<li style="width: 45px;">
-						Shared
+						<?=$this->translate->_('Shared')?>
 					</li>
 					<li style="border: none;">
-						<img src="" alt="" width=16 height=16 title="Delete Actor"></img>
+						<img src="" alt="" width=16 height=16 title="<?=$this->translate->_('Delete Actor')?>"></img>
 					</li>
 				</ul>
 			</div>

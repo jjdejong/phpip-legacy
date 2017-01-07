@@ -4,6 +4,7 @@ class Application_Form_Event_Add extends Zend_Form
 {
     public function init()
     {
+         $translate = Zend_Registry::get('ZT');
          $this->setMethod('post');
 
          $this->addElement('text', 'code', array(
@@ -38,7 +39,7 @@ class Application_Form_Event_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:83px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -48,7 +49,7 @@ class Application_Form_Event_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:83px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -58,7 +59,7 @@ class Application_Form_Event_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:83px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -68,7 +69,7 @@ class Application_Form_Event_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:83px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -78,7 +79,7 @@ class Application_Form_Event_Add extends Zend_Form
                     'label' => '',
                     'required' => true,
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:83px;vertical-align:top;margin-left:0px;',
                     'value' => '0'
@@ -88,7 +89,7 @@ class Application_Form_Event_Add extends Zend_Form
          $this->addElement('radio', 'killer', array(
                     'label' => '',
                     'filters' => array('StringTrim'),
-                    'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
+                    'multiOptions' => array( '1' => $translate->_('Yes'), '0' => $translate->_('No') ),
                     'separator' => '',
                     'label_style' => 'width:83px;vertical-align:top;margin-left:0px;',
                     'value' => '0'

@@ -4,6 +4,8 @@ class RoleController extends Zend_Controller_Action {
 		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		$this->userID = $siteInfoNamespace->userId;
 		$this->username = $siteInfoNamespace->username;
+                $this->translate = Zend_Registry::get('ZT');
+                $this->view->translate = $this->translate;
 	}
 	public function indexAction() {
 		//$this->_helper->layout->disableLayout();

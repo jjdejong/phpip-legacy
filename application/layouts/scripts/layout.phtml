@@ -2,13 +2,15 @@
 
 <html>
 <head>
-<?= $this->headTitle('phpIP - IP portfolio management') ?>
+<?php
+$translate = Zend_Registry::get('ZT');
+?>
+<?= $this->headTitle($translate->_('phpIP - IP portfolio management'));?>
 
-<?= $this->headMeta() ?>
+<?= $this->headMeta(); ?>
 
 <?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen')
-	->headLink()->prependStylesheet($this->baseUrl('/js/jquery-ui.css'), 'screen') ?>
-	
+	->headLink()->prependStylesheet($this->baseUrl('/js/jquery-ui.css'), 'screen'); ?>
 <?php
 	$this->headScript()->appendFile(
     '/js/jquery-2.1.4.js',
@@ -45,7 +47,7 @@
 <?php
 if ($this->login && $this->login != "" ){ ?>
 				<div id="loggedin">
-					<?="Connected as " . $this->firstname ?>
+					<?= $translate->_("Connected as") ." ". $this->firstname ?>
 					
 				</div>
 				<?=$this->render('content-left.phtml') ?>

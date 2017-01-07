@@ -60,7 +60,7 @@ $(document).ready(function(){
     	<div class="col-display"><?=htmlentities(@$actor['display_name'])?></div>
     	<div class="col-company"><?=htmlentities(@$actor['company_name'])?></div>
     	<div class="col-delete" >
-    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="Delete actor"></span>
+    		<span class="delete-from-list ui-icon ui-icon-trash" id="<?=$actor['id']?>" style="float:right;" title="<?=$this->translate->_("Delete actor")?>" ></span>
     	</div>
     </li>
 <?php endforeach; ?>

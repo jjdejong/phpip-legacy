@@ -1,6 +1,8 @@
 <?php
 class IndexController extends Zend_Controller_Action {
 	public function init() {
+                $this->translate = Zend_Registry::get('ZT');
+                $this->view->translate = $this->translate;
 		/* Initialize action controller here */
 	}
 	public function indexAction() {
