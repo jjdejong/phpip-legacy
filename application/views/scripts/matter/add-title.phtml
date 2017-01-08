@@ -14,11 +14,11 @@ $(document).ready(function(){
         $('.validation-errors').empty();
         if($("#classifier-type").val() == ''){
             invalid = true;
-            $('.validation-errors').append('<span class="errors">* Select classifier type</span>');
+            $('.validation-errors').append('<?= $this->translate->_('<span class="errors">* Select classifier type</span>') ?>');
         }
         if($("#classifier-value").val() == ''){
             invalid = true;
-            $('.validation-errors').append('<span class="errors">* Classifier value is required</span>');
+            $('.validation-errors').append('<?= $this->translate->_('<span class="errors">* Classifier value is required</span>') ?>');
         }
         if(invalid)
             $('.validation-errors').css('display', 'block');
@@ -119,14 +119,14 @@ $(document).ready(function(){
 </style>
 <div class="place-card">
 	<div id="add-classifier-head">
-		Add new Classifier <span class="close-button">X</span>
+		<?=$this->translate->_('Add new Classifier')?> <span class="close-button">X</span>
 	</div>
 	<div id="add-classifier">
 		<div class="validation-errors"></div>
 		<form method="post" action="" id="add-classifier-form" accept-charset="utf-8">
 			<label for="classifier-type"><?=$this->translate->_('Classifier Type')?></label> 
 			<select id="classifier-type">
-				<option value="">select type</option>
+				<option value=""><?=$this->translate->_('select type')?></option>
 				<?php
 				if ($this->classifier_types) {
 					foreach ( $this->classifier_types as $classifier ) {
@@ -136,7 +136,7 @@ $(document).ready(function(){
 					}
 				}	?>
 			</select> 
-			<label for="classifier-value">Value</label>
+			<label for="classifier-value"><?=$this->translate->_('Value')?></label>
 			<textarea id="classifier-value"></textarea>
 			<div id="add-classifier-actions">
 				<input type="button" id="add-classifier-submit" value="<?=$this->translate->_('Add Item')?>" />

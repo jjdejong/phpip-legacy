@@ -65,7 +65,7 @@ $(document).ready(function(){
         $('.validation-errors').empty();
         <?php if($this->cat_edit){?>
         if($('#matter-category').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Category requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?=$this->translate->_('Category requires a value') ?></span>');
             invalid = true;
         } else {
             $('#matter-category-code').val($('#matter-category').val());
@@ -73,22 +73,22 @@ $(document).ready(function(){
         <?php }?>
 
         if($('#matter-country-id').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Country requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?=$this->translate->_('Country requires a value') ?></span>');
             $('#matter-country').focus();
             invalid = true;
         }
         if($('#matter-caseref').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Caseref requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?=$this->translate->_('Caseref requires a value') ?></span>');
             $('#matter-caseref').focus();
             invalid = true;
         }
         if($('#matter-responsible').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Responsible requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?=$this->translate->_('Responsible requires a value') ?></span>');
             $('#matter-responsible').focus();
             invalid = true;
         }
         if (isNaN($('#matter-idx').val())){
-        	$('.validation-errors').append('<span class="errors">Index (Idx) should be a number</span>');
+        	$('.validation-errors').append('<span class="errors"><?=$this->translate->_('Index (Idx) should be a number') ?></span>');
         	$('#matter-idx').focus();
             invalid = true;
         }
@@ -130,7 +130,7 @@ $(document).ready(function(){
                 success: function(data){
                     var cdata = data.split('-');
                     if( cdata[0] == 'caseidx' ){
-                      var conf = confirm("Are you sure you wish to change the matter's family? If yes, you may need to change the parent and container information too");
+                      var conf = confirm("<?=$this->translate->_('Are you sure you wish to change the matter's family? If yes, you may need to change the parent and container information too') ?>");
                       if(conf == 1){
                         $('#matter-idx').val(cdata[1]);
                         $('#edit-matter-submit').click();
@@ -151,7 +151,7 @@ $(document).ready(function(){
    $('#delete-matter').click(function(){
         var mid = $(this).attr('data-mid');
         var caseref = $('#matter-caseref').val();
-        var conf = confirm("Do you really want to delete this Matter?");
+        var conf = confirm("<?=$this->translate->_('Do you really want to delete this Matter?') ?>");
         if(conf == 1){
           $.ajax({
             url:'/matter/delete',

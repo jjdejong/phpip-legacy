@@ -130,9 +130,9 @@ $(document).ready(function(){
       placeholder: '...',
       select: true,
       type: 'tautocomplete',
-      submit: 'Ok',
-      cancel: 'Cancel',
-      onblur: 'submit',
+      submit: '<?= $this->translate->_("Ok") ?>',
+      cancel: '<?= $this->translate->_("Cancel") ?>',
+      onblur: '<?= $this->translate->_("submit") ?>',
       autocomplete: {
         minLength : 0,
         source : function(request, response){
@@ -182,7 +182,7 @@ $(document).ready(function(){
       placeholder: '...',
       select : true,
       indicator : '<span class="icon-busy" />',
-      tooltip: 'Click to edit....',
+      tooltip: '<?= $this->translate->_("Click to edit...") ?>',
       submitdata: function(value, settings){
         var cid = $(this).parent().attr('id');
         return { classifier_id: cid, field: 'url' }
@@ -231,7 +231,7 @@ $(document).ready(function(){
 
     $('.delete-classifier').click(function(){
       var cid = $(this).parent().attr('id');
-      var del_confirm = confirm("Do you want to delete classifier?");
+      var del_confirm = confirm("<?= $this->translate->_("Do you want to delete classifier?") ?>");
       if(del_confirm){
         $.ajax({
             url: '/matter/delete-classifier',
@@ -258,7 +258,7 @@ $(document).ready(function(){
 
     $('.delete-classifier-type').click(function(){
       var type_code = $(this).attr('id');
-      var del_confirm = confirm("Do you want to delete all classifiers of type "+ type_code +" ?");
+      var del_confirm = confirm("<?= $this->translate->_("Do you want to delete all classifiers of type") ?> "+ type_code +" ?");
       if(del_confirm){
         $.ajax({
             url: '/matter/delete-classifiers',

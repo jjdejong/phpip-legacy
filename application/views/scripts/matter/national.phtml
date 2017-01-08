@@ -19,7 +19,7 @@ $(document).ready(function(){
                     $('#facade').hide();
                     $(location).attr("href", '/matter/filter/Ref/' + $('#matter-caseref-id').val() + '/origin/' + $('#matter-origin-id').val());
 				}else
-					alert("Adding national phases failed");
+					alert("<?=$this->translate->_('Adding national phases failed') ?>");
             });
         }
    });

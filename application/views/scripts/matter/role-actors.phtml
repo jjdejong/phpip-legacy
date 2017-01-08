@@ -299,9 +299,9 @@ $(document).ready(function(){
 		    }
 		});
         if(matter_id == actor_mid)
-		    $('#pr-confirm').text("The actor will be deleted from the current matter only");
+		    $('#pr-confirm').text("<?=$this->translate->_('The actor will be deleted from the current matter only') ?>");
         else
-		    $('#pr-confirm').text("The actor will be deleted from all matters in the family");
+		    $('#pr-confirm').text("<?=$this->translate->_('The actor will be deleted from all matters in the family') ?>");
 		$('#pr-confirm').dialog("open");
 	});
 

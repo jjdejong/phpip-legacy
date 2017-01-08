@@ -68,19 +68,19 @@ $(document).ready(function(){
         var invalid = false;
         $('.validation-errors').empty();
         if($('#matter-category-code').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Category requires a correct value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Category requires a correct value") ?></span>');
             invalid = true;
         }
         if($('#matter-country-id').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Country requires a correct value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Country requires a correct value") ?></span>');
             invalid = true;
         }
         if($('#matter-caseref').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Caseref requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Caseref requires a value") ?></span>');
             invalid = true;
         }
         if($('#matter-responsible').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Responsible requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Responsible requires a value") ?></span>');
             invalid = true;
         }
         if(invalid)
@@ -111,19 +111,19 @@ $(document).ready(function(){
         var invalid = false;
         $('.validation-errors').empty();
         if($('#matter-category-code').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Category requires a correct value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Category requires a correct value") ?></span>');
             invalid = true;
         }
         if($('#matter-country-id').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Country requires a correct value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Country requires a correct value") ?></span>');
             invalid = true;
         }
         if($('#matter-caseref').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Caseref requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Caseref requires a value") ?></span>');
             invalid = true;
         }
         if($('#matter-responsible').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Responsible requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Responsible requires a value") ?></span>');
             invalid = true;
         }
         if(invalid)
@@ -145,7 +145,7 @@ $(document).ready(function(){
 					$('#facade').hide();
 					$(location).attr("href", '/matter/view/id/'+data);
 				} else
-					alert("Clone matter failed");
+					alert("<?= $this->translate->_('Clone matter failed') ?>");
             });
         }
    });
@@ -153,11 +153,11 @@ $(document).ready(function(){
         var invalid = false;
         $('.validation-errors').empty();
         if($('#matter-country-id').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Country requires a correct value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Country requires a correct value") ?></span>');
             invalid = true;
         }
         if($('#matter-responsible').val() == ""){
-            $('.validation-errors').append('<span class="errors">* Responsible requires a value</span>');
+            $('.validation-errors').append('<span class="errors">* <?= $this->translate->_("Responsible requires a value") ?></span>');
             invalid = true;
         }
         if(invalid)
@@ -181,7 +181,7 @@ $(document).ready(function(){
                     $('#facade').hide();
                     $(location).attr("href", '/matter/view/id/'+data);
                 } else
-					alert("Child matter failed");
+					alert("<?= $this->translate->_("Child matter failed") ?>Child matter failed");
             });
         }
    });

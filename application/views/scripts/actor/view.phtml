@@ -105,7 +105,7 @@ $(document).ready(function(){
 		placeholder: '',
 		select: true,
 		indicator: '<span class="icon-busy" />',
-		tooltip: 'Click to edit...',
+		tooltip: '<?= $this->translate->_("Click to edit...") ?>',
 		data: function(value, settings){
 			return $("<div/>").html(value).text();
 		}
@@ -121,9 +121,9 @@ $(document).ready(function(){
 		placeholder: '',
 		select: true,
 		indicator : '<span class="icon-busy" />',
-		tooltip: 'Click to edit...',
-		submit: 'ok',
-		cancel: 'cancel',
+		tooltip: '<?= $this->translate->_("Click to edit...") ?>',
+		submit: '<?= $this->translate->_("ok") ?>',
+		cancel: '<?= $this->translate->_("cancel") ?>',
 		data: function(value, settings){
 			var tval = value.replace(/(<br>)*/g, '');
 			return $("<div/>").html(tval).text();
@@ -159,7 +159,7 @@ $(document).ready(function(){
 		id: 'field', // the object id is the form field name
 		placeholder: '',
 		indicator: '<span class="icon-busy" />',
-		tooltip: 'Click to edit...',
+		tooltip: '<?= $this->translate->_("Click to edit...") ?>',
 		select: true
     });
 
@@ -189,7 +189,7 @@ $(document).ready(function(){
 		id: 'field', // the object id is the form field name
 		placeholder: '',
 		indicator: '<span class="icon-busy" />',
-		tooltip: 'Click to edit...',
+		tooltip: '<?= $this->translate->_("Click to edit...") ?>',
 		select: true
     });
     
@@ -220,7 +220,7 @@ $(document).ready(function(){
 		id: 'field', // the object id is the form field name
 		placeholder: '',
 		indicator: '<span class="icon-busy" />',
-		tooltip: 'Click to edit...',
+		tooltip: '<?= $this->translate->_("Click to edit...") ?>',
 		select: true
     });
 
@@ -237,7 +237,7 @@ $(document).ready(function(){
     });
 
     $('.delete-actor').click(function(){
-	    var del_conf = confirm("Deleting Actor from table. Are you sure?");
+	    var del_conf = confirm("<?= $this->translate->_("Deleting Actor from table. Are you sure?") ?>");
 		if(del_conf == 1){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({

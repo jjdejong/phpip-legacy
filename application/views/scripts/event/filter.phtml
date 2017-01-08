@@ -31,10 +31,9 @@ $(document).ready(function(){
   });
 
   $('.delete-from-list').click(function(){
-    var del_conf = confirm("Deleting Event name from table. Are you sure?");
+    var del_conf = confirm("<?= $this->translate->_("Deleting Event name from table. Are you sure?") ?>");
 	if(del_conf == 1){
     var aid = $(this).attr('id');
-    console.log('Delete event name '+aid);
     $.ajax({
       url : '/event/delete',
       type: 'POST',
@@ -60,7 +59,7 @@ $(document).ready(function(){
         <div class="col-name"><?=htmlentities(@$event['name'])?></div>
         <div class="col-notes"><?=htmlentities(@$event['notes'])?></div>
         <div class="col-delete" >
-                <span class="delete-from-list ui-icon ui-icon-trash" id="<?=$event['event_id']?>" style="float:right;" title="Delete event"></span>
+                <span class="delete-from-list ui-icon ui-icon-trash" id="<?=$event['event_id']?>" style="float:right;" title="<?= $this->translate->_("Delete event") ?>"></span>
         </div>
     </li>
 <?php endforeach; ?>

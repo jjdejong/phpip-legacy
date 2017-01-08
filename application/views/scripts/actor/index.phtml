@@ -112,7 +112,7 @@ $(document).ready(function(){
   });
 
   $('.delete-from-list').click(function(){
-	    var del_conf = confirm("Deleting Actor from table. The actor will only be deleted if not used in other tables.");
+	    var del_conf = confirm("<?= $this->translate->_("Deleting Actor from table. The actor will only be deleted if not used in other tables.") ?>");
 		if(del_conf == 1){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({

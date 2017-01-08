@@ -185,7 +185,7 @@ $(document).ready(function(){
              tids.push($(this).attr('id'));
         });
         if(tids.length == 0) {
-             alert("No tasks selected for clearing!");
+             alert("<?= $this->translate->_("No tasks selected for clearing!") ?>");
              return;
         }
         $.post('/matter/clear-tasks',
@@ -206,7 +206,7 @@ $(document).ready(function(){
              tids.push($(this).attr('id'));
         });
         if(tids.length == 0) {
-             alert("No tasks selected for clearing!");
+             alert("<?= $this->translate->_("No tasks selected for clearing!") ?>");
              return;
         }
 		$.post('/matter/clear-tasks', 
