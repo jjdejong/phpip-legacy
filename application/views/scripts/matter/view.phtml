@@ -427,7 +427,7 @@ $(document).ready(function(){
             cancel: 'X',
             indicator: '<span class="icon-busy" />',
             placeholder: '',
-            tooltip: 'Click to edit...',
+            tooltip: '<?=$this->translate->_('Click to edit...') ?>',
         });
 
         $('#matter-notes').editable('/matter/update-matter', {
@@ -440,7 +440,7 @@ $(document).ready(function(){
             select: true,
             indicator : '<span class="icon-busy" />',
             placeholder: '...',
-            tooltip: 'Click to edit...',
+            tooltip: '<?=$this->translate->_('Click to edit...') ?>',
             data: function(value, settings){
                return value.replace(/(<br>)*/g, '');
             }
@@ -647,19 +647,11 @@ endif;?>
 
 <!-- Status box (main events) -->
 
-<<<<<<< HEAD
 <div class="listrow" style="width: 485px;">
-	<div class="headlistrow" id="MatterStatus" style="margin-left: 3px;" title="Click for more detail">
-		<span class="status-col-name">Status</span>
-		<span class="status-col-date">Date</span> 
-		<span class="status-col-number">Number</span>
-=======
-<div class="listrow" style="width: 462px; display: inline-block;">
-	<div class="status-row" id="MatterStatus" style="margin-left: 5px;" title="<?=$this->translate->_('Click for more detail')?>">
+        <div class="headlistrow" id="MatterStatus" style="margin-left: 3px;" title="<?=$this->translate->_('Click for more detail')?>">
 		<span class="status-col-name"><?=$this->translate->_('Status')?></span>
 		<span class="status-col-date"><?=$this->translate->_('Date')?></span> 
 		<span class="status-col-number"><?=$this->translate->_('Number')?></span>
->>>>>>> i18n
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
 	<div class="list-matter-block-info">
@@ -841,13 +833,8 @@ endif;
 <?php 
 $trigger_id = "";
 ?>
-<<<<<<< HEAD
 <div class="listrow" style="width: 370px;">
-	<div class="headlistrow" id="MatterClassifier" title="Click for more detail">
-=======
-<div class="listrow" style="display: inline-block; width: 394px !important;">
-	<div class="status-row" id="MatterClassifier" title="<?=$this->translate->_('Click for more detail')?>">
->>>>>>> i18n
+	<div class="headlistrow" id="MatterClassifier" title="<?=$this->translate->_('Click for more detail')?>">
 		<span class="status-col-name">
 			<?=$this->translate->_('Classifier')?>
 		</span>
@@ -905,18 +892,11 @@ if ($close_type)
 	</div>
 </div>
 
-<<<<<<< HEAD
 <!-- Notes -->
 
 <div class="listrow" style="width: 350px;">
 	<div class="headlistrow">
-		<span class="status-col-name">Notes</span>
-=======
-<?php //notes?>
-<div class="listrow" style="display: inline-block; width: 304px">
-	<div class="status-row">
 		<span class="status-col-name"><?=$this->translate->_('Notes')?></span>
->>>>>>> i18n
 	</div>
 	<div class="list-matter-block-info">
 		<div class="status-row" style="margin: 5px 5px; min-height: 55px;" id="matter-notes">
