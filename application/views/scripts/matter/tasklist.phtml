@@ -173,7 +173,7 @@ $(document).ready(function(){
 		},
 		placeholder: '...',
 		indicator : '<span class="icon-busy" />',
-		tooltip: 'Click to edit...',
+		tooltip: '<?=$this->translate->_('Click to edit...') ?>',
 		select: true
     });
 
@@ -218,7 +218,7 @@ $(document).ready(function(){
 			submitdata: function(value,settings){
 				var rule_id = $(this).attr('data-rule_id');
 				if(rule_id) {
-					var update_due = confirm("Changing the due date will unlink the task from date calculation rule");
+					var update_due = confirm("<?=$this->translate->_('Changing the due date will unlink the task from date calculation rule') ?>");
 					if(update_due)
 						return { 
 							task_id: $(this).attr('id'), 
@@ -235,7 +235,7 @@ $(document).ready(function(){
             select: true,
             indicator: '<span class="icon-busy" />',
             placeholder: '...',
-            tooltip: 'Click to edit...'
+            tooltip: '<?=$this->translate->_('Click to edit...') ?>'
     });
     
     $('.editable-done-date').editable('/matter/update-task', {
@@ -249,7 +249,7 @@ $(document).ready(function(){
 		select: true,
 		indicator: '<span class="icon-busy" />',
 		placeholder: '...',
-		tooltip: 'Click to edit...'
+		tooltip: '<?=$this->translate->_('Click to edit...') ?>'
     });
 
     $('.tasklist-col-done > input[type=checkbox]').click(function(){
@@ -324,7 +324,7 @@ $(document).ready(function(){
 
     $('#add-task-submit').click(function(){
        if($('#task_id').val() == ''){
-           alert('Select task name!');
+           alert('<?=$this->translate->_('Select task name!') ?>');
            return;
        }
        if($('#task_duedate').val() == ''){
@@ -367,7 +367,7 @@ $(document).ready(function(){
     });
 
     $('.delete-event').click(function(){
-        var conf_event_del = confirm("Deleting the event will also delete the linked tasks");
+        var conf_event_del = confirm("<?=$this->translate->_('Deleting the event will also delete the linked tasks') ?>");
         if(conf_event_del){
 			$.post('/matter/delete-event', 
 				{ eid: $(this).attr('id') },
@@ -412,26 +412,17 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 	if ($event_id != $event_task ['event_ID']):			
 		$event_id = $event_task ['event_ID'];
 ?>
-		<div class="event-head">
-			<span class="tasklist-col-detail">
-				<?=$event_task['event_name'] . ": " . $event_task['event_date'] ?>
-			</span>
-			<span class="event-actions add-task-toevent" id="<?=$event_id?>" title="Add task to <?=$event_task['event_name']?>">
-				<span class="ui-icon ui-icon-plusthick"></span>
-			</span>
-			<span class="event-actions delete-event" style="cursor: pointer;" id="<?=$event_id?>" title="Delete event">
-				<span class="ui-icon ui-icon-trash"></span>
-			</span>
-			<div class="event-actions" style="width: 48px">
-				<span class="add-task-toevent" id="<?=$event_id?>" title="<?=$this->translate->_('Add task to')?> <?=$event_task['event_name']?>">
-					<span class="ui-icon ui-icon-plusthick" style="float: left;"></span>
-				</span>
-				<span class="delete-event" style="cursor: pointer;" id="<?=$event_id?>" title="<?=$this->translate->_('Delete event')?>">
-					<span class="ui-icon ui-icon-trash" style="float: right;"></span>
-				</span>
-			</div>
-		</div>
-<?php
+                <div class="event-head">
+                        <span class="tasklist-col-detail">
+                                <?=$event_task['event_name'] . ": " . $event_task['event_date'] ?>
+                        </span>
+                        <span class="event-actions add-task-toevent" id="<?=$event_id?>" title="<?=$this->translate->_('Add task to')?> <?=$event_task['event_name']?>">
+                                <span class="ui-icon ui-icon-plusthick"></span>
+                        </span>
+                        <span class="event-actions delete-event" style="cursor: pointer;" id="<?=$event_id?>" title="<?=$this->translate->_('Delete event')?>">
+                                <span class="ui-icon ui-icon-trash"></span>
+                        </span>
+                </div><?php
 	endif;
 	if ($event_id == $event_task ['trigger_ID']): ?>
 		<div class="status-row task-row" id="<?=$event_task['ID']?>">
@@ -496,12 +487,12 @@ endforeach; ?>
 		<br>
 		<label for="task_fee"><?=$this->translate->_('Fee')?>  </label>
 		<input type="text" name="task_fee" id="task_fee" value="" style="width: 120px;" />
-		<label for="task_currency">Currency </label>
+		<label for="task_currency"><?=$this->translate->_('Currency')?> </label>
 		<input type="text" name="task_currency" id="task_currency" value="" style="width: 120px;" />
 		<br>
 		<label for="task_time"><?=$this->translate->_('Time spent')?></label>
 		<input type="text" name="task_time" id="task_time" value="" style="width: 120px;" />
-		<label for="task_assigned_to">Assigned to </label>
+		<label for="task_assigned_to"><?=$this->translate->_('Assigned to')?> </label>
 		<input type="text" name="task_assigned_to" id="task_assigned_to" value="" style="width: 120px;" />
 		<br> 
 		<label for="task_notes"><?=$this->translate->_('Notes')?></label>
