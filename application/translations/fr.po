@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: phpIP 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 18:35+0100\n"
-"PO-Revision-Date: 2017-01-07 18:48+0100\n"
+"POT-Creation-Date: 2017-01-08 21:44+0100\n"
+"PO-Revision-Date: 2017-01-08 21:48+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr\n"
@@ -36,7 +36,7 @@ msgstr ""
 #. (itstool) path: matter/label
 #. (itstool) path: matter/title
 #: configs/navigation.xml.in:15 configs/navigation.xml.in:17
-#: views/scripts/index/index.phtml:346 views/scripts/index/index.phtml:463
+#: views/scripts/index/index.phtml:322 views/scripts/index/index.phtml:439
 msgid "Matter"
 msgstr "Dossier"
 
@@ -54,7 +54,7 @@ msgstr ""
 #. (itstool) path: actors/label
 #. (itstool) path: actors/title
 #: configs/navigation.xml.in:54 configs/navigation.xml.in:56
-#: views/scripts/actor/index.phtml:137 views/scripts/matter/view.phtml:608
+#: views/scripts/actor/index.phtml:137 views/scripts/matter/view.phtml:588
 msgid "Actors"
 msgstr "Acteurs"
 
@@ -94,6 +94,7 @@ msgid "Change password"
 msgstr "Changer de mot de passe"
 
 #: controllers/ActorController.php:69 controllers/ActorController.php:109
+#: views/scripts/actor/add.phtml:343
 msgid "Create Actor"
 msgstr "Créer un acteur"
 
@@ -105,23 +106,23 @@ msgstr "Mot de passe mis à jour"
 msgid "Unable to change the password: "
 msgstr "Impossible de changer le mot de passe: "
 
-#: controllers/AuthController.php:73
+#: controllers/AuthController.php:67
 msgid "Username not found!"
 msgstr "Utilisateur inconnu"
 
-#: controllers/AuthController.php:77
+#: controllers/AuthController.php:71
 msgid "Invalid password!"
 msgstr "Mot de passe non valide"
 
-#: controllers/AuthController.php:81
+#: controllers/AuthController.php:75
 msgid "success"
 msgstr "réussi"
 
-#: controllers/AuthController.php:84
+#: controllers/AuthController.php:78
 msgid "ambiguous"
 msgstr "ambigü"
 
-#: controllers/AuthController.php:109
+#: controllers/AuthController.php:103
 msgid "You are not authorized to access this resource"
 msgstr "Vous n'êtes pas autorisé à utiliser cette ressource"
 
@@ -205,7 +206,7 @@ msgid "Origin"
 msgstr "Origine"
 
 #: controllers/MatterController.php:1336 views/scripts/matter/index.phtml:443
-#: views/scripts/matter/view.phtml:671
+#: views/scripts/matter/view.phtml:652
 msgid "Status"
 msgstr "Statut"
 
@@ -635,15 +636,27 @@ msgstr "N° TVA"
 #: views/scripts/actor/add.phtml:423 views/scripts/actor/view.phtml:340
 #: views/scripts/matter/eventlist.phtml:253
 #: views/scripts/matter/eventlist.phtml:305
-#: views/scripts/matter/tasklist.phtml:401
-#: views/scripts/matter/tasklist.phtml:500 views/scripts/matter/view.phtml:916
+#: views/scripts/matter/tasklist.phtml:404
+#: views/scripts/matter/tasklist.phtml:498 views/scripts/matter/view.phtml:899
 msgid "Notes"
 msgstr ""
+
+#: views/scripts/actor/filter.phtml:35 views/scripts/actor/view.phtml:240
+msgid "Deleting Actor from table. Are you sure?"
+msgstr "Supprimer l'acteur de la table. Êtes-vous sûr ?"
 
 #: views/scripts/actor/filter.phtml:63 views/scripts/actor/index.phtml:156
 #: views/scripts/actor/view.phtml:346
 msgid "Delete actor"
 msgstr "Supprimer l'acteur"
+
+#: views/scripts/actor/index.phtml:115 views/scripts/actor/users.phtml:99
+msgid ""
+"Deleting Actor from table. The actor will only be deleted if not used in "
+"other tables."
+msgstr ""
+"Supprimer l'acteur de la table. L'acteur ne sera supprimé que s'il n'est pas "
+"utilisé ailleurs."
 
 #: views/scripts/actor/index.phtml:144
 #: views/scripts/matter/role-actors.phtml:388
@@ -654,6 +667,10 @@ msgstr "Société"
 #: views/scripts/actor/view.phtml:348
 msgid "Delete"
 msgstr "Supprimer"
+
+#: views/scripts/actor/used-in.phtml:46
+msgid "Matter Dependencies"
+msgstr "Dépendances du dossier"
 
 #: views/scripts/actor/used-in.phtml:50
 msgid "Ref"
@@ -690,6 +707,25 @@ msgstr "Dernière connexion"
 msgid "Delete user"
 msgstr "Supprimer l'utilisateur"
 
+#: views/scripts/actor/view.phtml:108 views/scripts/actor/view.phtml:124
+#: views/scripts/actor/view.phtml:162 views/scripts/actor/view.phtml:192
+#: views/scripts/actor/view.phtml:223
+#: views/scripts/matter/classifierlist.phtml:185
+#: views/scripts/matter/tasklist.phtml:176
+#: views/scripts/matter/tasklist.phtml:238
+#: views/scripts/matter/tasklist.phtml:252 views/scripts/matter/view.phtml:430
+#: views/scripts/matter/view.phtml:443
+msgid "Click to edit..."
+msgstr "Cliquer pour modifier..."
+
+#: views/scripts/actor/view.phtml:125
+msgid "ok"
+msgstr ""
+
+#: views/scripts/actor/view.phtml:126
+msgid "cancel"
+msgstr "annuler"
+
 #: views/scripts/actor/view.phtml:270
 msgid "Actor Information"
 msgstr "Information sur l'acteur"
@@ -707,80 +743,85 @@ msgid ""
 "View script for controller <b>Auth</b> and script/action name <b>logout</b>"
 msgstr "Script de vue pour le contrôleur <b>Auth</b> et l'action <b>logout</b>"
 
-#: views/scripts/index/index.phtml:274
+#: views/scripts/index/index.phtml:188 views/scripts/index/index.phtml:209
+msgid "No tasks selected for clearing!"
+msgstr "Aucune tâche sélectionnée pour la suppression !"
+
+#: views/scripts/index/index.phtml:250
 msgid "Categories for"
 msgstr "Catégories pour"
 
-#: views/scripts/index/index.phtml:277
+#: views/scripts/index/index.phtml:253
 msgid "New matter"
 msgstr "Nouveau dossier"
 
-#: views/scripts/index/index.phtml:283 views/scripts/matter/add.phtml:280
+#: views/scripts/index/index.phtml:259 views/scripts/matter/add.phtml:280
 #: views/scripts/matter/edit.phtml:269
 msgid "Category"
 msgstr "Catégorie"
 
-#: views/scripts/index/index.phtml:286
+#: views/scripts/index/index.phtml:262
 msgid "Count"
 msgstr "Nombre"
 
-#: views/scripts/index/index.phtml:327 views/scripts/matter/view.phtml:753
+#: views/scripts/index/index.phtml:303 views/scripts/matter/view.phtml:734
 msgid "Open tasks"
 msgstr "Tâches en cours"
 
-#: views/scripts/index/index.phtml:330 views/scripts/index/index.phtml:448
+#: views/scripts/index/index.phtml:306 views/scripts/index/index.phtml:424
 msgid "All"
 msgstr "Toutes"
 
-#: views/scripts/index/index.phtml:332 views/scripts/index/index.phtml:450
+#: views/scripts/index/index.phtml:308 views/scripts/index/index.phtml:426
 msgid "Mine"
 msgstr "À moi"
 
-#: views/scripts/index/index.phtml:337 views/scripts/index/index.phtml:454
+#: views/scripts/index/index.phtml:313 views/scripts/index/index.phtml:430
 msgid "Clear selected on"
 msgstr ""
 
-#: views/scripts/index/index.phtml:345 views/scripts/index/index.phtml:462
+#: views/scripts/index/index.phtml:321 views/scripts/index/index.phtml:438
 msgid "Task"
 msgstr "Tâche"
 
-#: views/scripts/index/index.phtml:347 views/scripts/index/index.phtml:464
-#: views/scripts/matter/tasklist.phtml:391
-#: views/scripts/matter/tasklist.phtml:482
+#: views/scripts/index/index.phtml:323 views/scripts/index/index.phtml:440
+#: views/scripts/matter/tasklist.phtml:394
+#: views/scripts/matter/tasklist.phtml:480
 msgid "Due date"
 msgstr "Échéance"
 
-#: views/scripts/index/index.phtml:348 views/scripts/index/index.phtml:465
+#: views/scripts/index/index.phtml:324 views/scripts/index/index.phtml:441
 msgid "Close"
 msgstr "Fermer"
 
-#: views/scripts/index/index.phtml:395
+#: views/scripts/index/index.phtml:371
 msgid "Users tasks"
 msgstr "Tâches de l'utilisateur"
 
-#: views/scripts/index/index.phtml:399
+#: views/scripts/index/index.phtml:375
 msgid "User"
 msgstr "Utilisateur"
 
-#: views/scripts/index/index.phtml:400
+#: views/scripts/index/index.phtml:376
 msgid "Open Tasks"
-msgstr ""
+msgstr "Tâches en cours"
 
-#: views/scripts/index/index.phtml:401
+#: views/scripts/index/index.phtml:377
 msgid "Most urgent"
 msgstr "Le plus urgent"
 
-#: views/scripts/index/index.phtml:445
+#: views/scripts/index/index.phtml:421
 msgid "Open renewals"
 msgstr "Annuités en cours"
 
-#: views/scripts/index/index.phtml:502
+#: views/scripts/index/index.phtml:478
 msgid "Clear"
 msgstr "Enlever"
 
 #: views/scripts/matter/add-classifier.phtml:177
+#: views/scripts/matter/add-title.phtml:122
 msgid "Add new Classifier"
-msgstr ""
+msgstr "Ajouter un nouvel élément clé"
 
 #: views/scripts/matter/add-classifier.phtml:182
 #: views/scripts/matter/add-title.phtml:127
@@ -792,6 +833,7 @@ msgid "Select type"
 msgstr "Sélection du type"
 
 #: views/scripts/matter/add-classifier.phtml:197
+#: views/scripts/matter/add-title.phtml:139
 msgid "Value"
 msgstr "Valeur"
 
@@ -803,11 +845,12 @@ msgstr "Se réfère à"
 
 #: views/scripts/matter/add-classifier.phtml:206
 #: views/scripts/matter/add-title.phtml:143 views/scripts/matter/add.phtml:379
+#: views/scripts/matter/classifierlist.phtml:134
 #: views/scripts/matter/edit.phtml:418
 #: views/scripts/matter/eventlist.phtml:321
 #: views/scripts/matter/map-actor-role.phtml:158
 #: views/scripts/matter/national.phtml:214
-#: views/scripts/matter/tasklist.phtml:503
+#: views/scripts/matter/tasklist.phtml:501
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -815,9 +858,48 @@ msgstr "Annuler"
 msgid "Add Classifier"
 msgstr "Ajout d'un classifieur"
 
+#: views/scripts/matter/add-title.phtml:17
+msgid "<span class=\"errors\">* Select classifier type</span>"
+msgstr "<span class=\"errors\">* Sélectionner le type d'élément clé</span>"
+
+#: views/scripts/matter/add-title.phtml:21
+msgid "<span class=\"errors\">* Classifier value is required</span>"
+msgstr "<span class=\"errors\">* Un élément clé est requis</span>"
+
+#: views/scripts/matter/add-title.phtml:129
+msgid "select type"
+msgstr "Sélection du type"
+
 #: views/scripts/matter/add-title.phtml:142
 msgid "Add Item"
 msgstr "Ajout d'un élément"
+
+#: views/scripts/matter/add.phtml:71 views/scripts/matter/add.phtml:114
+msgid "Category requires a correct value"
+msgstr "Une valeur correcte de catégorie est requise"
+
+#: views/scripts/matter/add.phtml:75 views/scripts/matter/add.phtml:118
+#: views/scripts/matter/add.phtml:156
+msgid "Country requires a correct value"
+msgstr "Une valeur correcte de pays est requise"
+
+#: views/scripts/matter/add.phtml:79 views/scripts/matter/add.phtml:122
+#: views/scripts/matter/edit.phtml:81
+msgid "Caseref requires a value"
+msgstr "Un numéro de dossier est requis"
+
+#: views/scripts/matter/add.phtml:83 views/scripts/matter/add.phtml:126
+#: views/scripts/matter/add.phtml:160 views/scripts/matter/edit.phtml:86
+msgid "Responsible requires a value"
+msgstr "Une valeur de responsable est requise"
+
+#: views/scripts/matter/add.phtml:148
+msgid "Clone matter failed"
+msgstr "Le clonage de dossier a échoué"
+
+#: views/scripts/matter/add.phtml:184
+msgid "Child matter failed"
+msgstr "La création du dossier fils a échoué"
 
 #: views/scripts/matter/add.phtml:312 views/scripts/matter/edit.phtml:332
 msgid "Type"
@@ -851,6 +933,22 @@ msgstr "Dossier Indépendant"
 msgid "Inherits its information"
 msgstr "Héritant ses données"
 
+#: views/scripts/matter/classifierlist.phtml:133
+msgid "Ok"
+msgstr ""
+
+#: views/scripts/matter/classifierlist.phtml:135
+msgid "submit"
+msgstr "soumettre"
+
+#: views/scripts/matter/classifierlist.phtml:234
+msgid "Do you want to delete classifier?"
+msgstr "Voulez-vous supprimer l'élément clé ?"
+
+#: views/scripts/matter/classifierlist.phtml:261
+msgid "Do you want to delete all classifiers of type"
+msgstr "Voulez-vous supprimer tous les éléments clés ?"
+
 #: views/scripts/matter/classifierlist.phtml:314
 msgid "All classifiers"
 msgstr "Tous les éléments clés"
@@ -875,6 +973,22 @@ msgstr "Effacer un type d'élément clé"
 #: views/scripts/matter/classifierlist.phtml:370
 msgid "Delete classifier"
 msgstr "Effacer un élément clé"
+
+#: views/scripts/matter/edit.phtml:68
+msgid "Category requires a value"
+msgstr "Une valeur de catégorie est requise"
+
+#: views/scripts/matter/edit.phtml:76
+msgid "Country requires a value"
+msgstr "Une valeur de pays est requise"
+
+#: views/scripts/matter/edit.phtml:91
+msgid "Index (Idx) should be a number"
+msgstr "L'index (Idx) doit être un nombre"
+
+#: views/scripts/matter/edit.phtml:133
+msgid "Are you sure you wish to change the matter"
+msgstr "Êtes-vous sûr de vouloir changer le dossier"
 
 #: views/scripts/matter/edit.phtml:260
 msgid "Advanced Matter edition"
@@ -916,13 +1030,13 @@ msgstr "Tous les évènements"
 #: views/scripts/matter/eventlist.phtml:251
 #: views/scripts/matter/index.phtml:449
 #: views/scripts/matter/role-actors.phtml:394
-#: views/scripts/matter/view.phtml:672
+#: views/scripts/matter/view.phtml:653
 msgid "Date"
 msgstr ""
 
 #: views/scripts/matter/eventlist.phtml:252
 #: views/scripts/matter/eventlist.phtml:300
-#: views/scripts/matter/view.phtml:673
+#: views/scripts/matter/view.phtml:654
 msgid "Number"
 msgstr "Numéro"
 
@@ -975,7 +1089,7 @@ msgid "Inventor"
 msgstr "Inventeur"
 
 #: views/scripts/matter/map-actor-role.phtml:106
-#: views/scripts/matter/view.phtml:613
+#: views/scripts/matter/view.phtml:594
 msgid "Add Actor"
 msgstr "Ajouter un acteur"
 
@@ -999,6 +1113,10 @@ msgstr "Ajouter l'acteur au dossier seulement"
 msgid "Add"
 msgstr "Ajouter"
 
+#: views/scripts/matter/national.phtml:22
+msgid "Adding national phases failed"
+msgstr "La création de phases nationales a échoué"
+
 #: views/scripts/matter/national.phtml:153
 msgid "Enter national phase"
 msgstr "Créer une phase nationale"
@@ -1014,6 +1132,14 @@ msgstr "Enlever"
 #: views/scripts/matter/national.phtml:219
 msgid "Submit"
 msgstr "Soumettre"
+
+#: views/scripts/matter/role-actors.phtml:302
+msgid "The actor will be deleted from the current matter only"
+msgstr "L'acteur sera supprimé du dossier actuel uniquement"
+
+#: views/scripts/matter/role-actors.phtml:304
+msgid "The actor will be deleted from all matters in the family"
+msgstr "L'acteur sera supprimé de tous les dossiers de la famille"
 
 #: views/scripts/matter/role-actors.phtml:350
 msgid "Configure fields to display for this role"
@@ -1059,149 +1185,175 @@ msgstr "Partagé"
 msgid "Delete Actor"
 msgstr "Effacer l'acteur"
 
-#: views/scripts/matter/tasklist.phtml:389
+#: views/scripts/matter/tasklist.phtml:221
+msgid "Changing the due date will unlink the task from date calculation rule"
+msgstr "Le changement de date s'écartera de la règle de calcul de la tâche"
+
+#: views/scripts/matter/tasklist.phtml:327
+msgid "Select task name!"
+msgstr "Sélectionnez une tâche !"
+
+#: views/scripts/matter/tasklist.phtml:370
+msgid "Deleting the event will also delete the linked tasks"
+msgstr "La suppression de l’événement supprimera également les tâches y liées"
+
+#: views/scripts/matter/tasklist.phtml:392
 msgid "All renewals"
 msgstr "Tous les renouvellements"
 
-#: views/scripts/matter/tasklist.phtml:389
+#: views/scripts/matter/tasklist.phtml:392
 msgid "All tasks"
 msgstr "Toutes les tâches"
 
-#: views/scripts/matter/tasklist.phtml:392
+#: views/scripts/matter/tasklist.phtml:395
 msgid "Done"
 msgstr "Fait"
 
-#: views/scripts/matter/tasklist.phtml:393
+#: views/scripts/matter/tasklist.phtml:396
 msgid "Done date"
 msgstr "Date clôture"
 
-#: views/scripts/matter/tasklist.phtml:394
-#: views/scripts/matter/tasklist.phtml:487
+#: views/scripts/matter/tasklist.phtml:397
+#: views/scripts/matter/tasklist.phtml:485
 msgid "Cost"
 msgstr "Coût"
 
-#: views/scripts/matter/tasklist.phtml:395
-#: views/scripts/matter/tasklist.phtml:490
+#: views/scripts/matter/tasklist.phtml:398
+#: views/scripts/matter/tasklist.phtml:488
 msgid "Fee"
 msgstr "Taxe"
 
-#: views/scripts/matter/tasklist.phtml:396
+#: views/scripts/matter/tasklist.phtml:399
 msgid "Cur."
 msgstr "Mon."
 
-#: views/scripts/matter/tasklist.phtml:398
+#: views/scripts/matter/tasklist.phtml:401
 msgid "Time"
 msgstr "Temps"
 
-#: views/scripts/matter/tasklist.phtml:400
+#: views/scripts/matter/tasklist.phtml:403
 msgid "Assigned To"
 msgstr "Attribué à"
 
-#: views/scripts/matter/tasklist.phtml:418
+#: views/scripts/matter/tasklist.phtml:419
 msgid "Add task to"
 msgstr "Ajouter une tâche à"
 
-#: views/scripts/matter/tasklist.phtml:421
+#: views/scripts/matter/tasklist.phtml:422
 msgid "Delete event"
 msgstr "Supprimer l'évènement"
 
-#: views/scripts/matter/tasklist.phtml:444
+#: views/scripts/matter/tasklist.phtml:443
 msgid "Click to edit cost"
 msgstr "Cliquer pour modifier le coût"
 
-#: views/scripts/matter/tasklist.phtml:447
+#: views/scripts/matter/tasklist.phtml:446
 msgid "Click to edit fee"
 msgstr "Cliquer pour modifier la taxe"
 
-#: views/scripts/matter/tasklist.phtml:450
-#: views/scripts/matter/tasklist.phtml:458
+#: views/scripts/matter/tasklist.phtml:449
+#: views/scripts/matter/tasklist.phtml:457
 msgid "Click to edit"
 msgstr "Cliquer pour modifier"
 
-#: views/scripts/matter/tasklist.phtml:454
+#: views/scripts/matter/tasklist.phtml:453
 msgid "Click to edit (HH:MM:SS)"
 msgstr "Cliquer pour modifier (HH:MM:SS)"
 
-#: views/scripts/matter/tasklist.phtml:461
+#: views/scripts/matter/tasklist.phtml:460
 msgid "Click to edit notes"
 msgstr "Cliquer pour modifier les notes"
 
-#: views/scripts/matter/tasklist.phtml:464
+#: views/scripts/matter/tasklist.phtml:463
 msgid "Delete task"
 msgstr "Supprimer la tâche"
 
-#: views/scripts/matter/tasklist.phtml:479
+#: views/scripts/matter/tasklist.phtml:477
 msgid "Task Name"
 msgstr "Tâche"
 
-#: views/scripts/matter/tasklist.phtml:485
+#: views/scripts/matter/tasklist.phtml:483
 msgid "Detail"
 msgstr "Détail"
 
-#: views/scripts/matter/tasklist.phtml:495
+#: views/scripts/matter/tasklist.phtml:490
+msgid "Currency"
+msgstr "Monnaie"
+
+#: views/scripts/matter/tasklist.phtml:493
 msgid "Time spent"
 msgstr "Temps passé"
 
-#: views/scripts/matter/tasklist.phtml:504
+#: views/scripts/matter/tasklist.phtml:495
+msgid "Assigned to"
+msgstr "Attribué à"
+
+#: views/scripts/matter/tasklist.phtml:502
 msgid "Add task"
 msgstr "Ajouter une tâche"
 
-#: views/scripts/matter/view.phtml:507
+#: views/scripts/matter/view.phtml:488
 msgid "See family"
 msgstr "Voir la famille"
 
-#: views/scripts/matter/view.phtml:516
+#: views/scripts/matter/view.phtml:497
 msgid "See parent"
 msgstr "Voir le parent"
 
-#: views/scripts/matter/view.phtml:522
+#: views/scripts/matter/view.phtml:503
 msgid "See container"
 msgstr "Voir le conteneur"
 
-#: views/scripts/matter/view.phtml:535
+#: views/scripts/matter/view.phtml:516
 msgid "Clone matter"
 msgstr "Dupliquer le dossier"
 
-#: views/scripts/matter/view.phtml:544
+#: views/scripts/matter/view.phtml:525
 msgid "New child"
 msgstr "Nouveau fils"
 
-#: views/scripts/matter/view.phtml:554
+#: views/scripts/matter/view.phtml:535
 msgid "Enter nat. phase"
 msgstr "Phases nationales"
 
-#: views/scripts/matter/view.phtml:596
+#: views/scripts/matter/view.phtml:577
 msgid "...Hover the mouse here to add a title item..."
 msgstr "...Survoler à la souris ici pour ajouter un élément titre..."
 
-#: views/scripts/matter/view.phtml:600
+#: views/scripts/matter/view.phtml:581
 msgid "Add title item"
 msgstr "Ajouter un élément de titre"
 
-#: views/scripts/matter/view.phtml:610
+#: views/scripts/matter/view.phtml:590
 msgid "Responsible:"
 msgstr "Responsable :"
 
-#: views/scripts/matter/view.phtml:670 views/scripts/matter/view.phtml:855
+#: views/scripts/matter/view.phtml:651 views/scripts/matter/view.phtml:837
 msgid "Click for more detail"
 msgstr "Cliquer pour plus de détail"
 
-#: views/scripts/matter/view.phtml:756 views/scripts/matter/view.phtml:804
+#: views/scripts/matter/view.phtml:737 views/scripts/matter/view.phtml:786
 msgid "Due"
 msgstr "Pour le"
 
-#: views/scripts/matter/view.phtml:802
+#: views/scripts/matter/view.phtml:784
 msgid "Renewals"
 msgstr "Annuités"
 
-#: views/scripts/matter/view.phtml:842
+#: views/scripts/matter/view.phtml:824
 msgid "Expiry:"
 msgstr "Expire le:"
 
-#: views/scripts/matter/view.phtml:857
+#: views/scripts/matter/view.phtml:839
 msgid "Classifier"
 msgstr "Élément clé"
 
-#: views/scripts/pagination.phtml:55
+#: views/scripts/pagination.phtml:47
 msgid " in "
 msgstr " sur "
+
+#~ msgid "Classifier value is required"
+#~ msgstr "Une valeur d'élément clé est requise"
+
+#~ msgid "Select classifier type"
+#~ msgstr "Sélectionner un type d'élément clé"
