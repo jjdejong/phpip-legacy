@@ -1,0 +1,14 @@
+The internationalisation uses these tools:
+The translation is initiated in Bootstrap.php and uses Zend_Translate and is exported via Zend_Registry.
+When user is not yet known, the user's language identified by browser is used. The user selects his language in login screen.
+The translator is taken from registry and exported for views in controller's init function.
+In HTML and php pages, a function <?=this->translate->_()?> is used to translate strings. For javascript, this function should be encapsuled into quotes.
+
+Strings are collected in a pot catalog using translation/po-update.sh script. The translated catalogs are also updated in the same time.
+Compiled catalogs have to be generated with the command msgfmt or a tool like poedit. They are stored in application/translations directory
+
+TODO
+- translation of country names
+- translation of database strings like event names and tasks, roles...
+- generate mo files when installing.
+- dropdown list for language choice
