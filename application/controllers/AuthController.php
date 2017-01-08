@@ -46,8 +46,8 @@ class AuthController extends Zend_Controller_Action {
 					$siteInfoNamespace->password = $loginForm->getValue ( 'Password' );
 					$siteInfoNamespace->role = $userInfo ['default_role'];
 					$locale = $loginForm->getValue ('Language');
-                                        if ($translate->isAvailable($locale)) {
-                                            $translate->setLocale($locale);
+                                        if ($this->translate->isAvailable($locale)) {
+                                            $this->translate->setLocale($locale);
                                             $siteInfoNamespace->lang = $locale;
                                             }
 					if ($siteInfoNamespace->requestURL) {
