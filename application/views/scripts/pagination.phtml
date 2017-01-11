@@ -5,7 +5,9 @@
   text-align:center;
 }
 </style>
-
+<?php
+$translate = Zend_Registry::get('ZT');
+?>
 <div class="pagination" >    
     <div style="display:inline-block;">
         <!-- First page link -->
@@ -44,6 +46,6 @@
         <?php else: ?>
             <span class="disabled"><?= $this->last; ?></span>
         <?php endif; ?>
-        &nbsp; Showing <?php echo $this->firstItemNumber, '-', $this->lastItemNumber, $this->translate->_(' in '), $this->totalItemCount; ?>
+        &nbsp;<?php echo $translate->_(' Showing').' '. $this->firstItemNumber, '-', $this->lastItemNumber, $translate->_(' in '), $this->totalItemCount; ?>
     </div>
  </div>
