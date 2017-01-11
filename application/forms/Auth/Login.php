@@ -15,10 +15,12 @@ class Application_Form_Auth_Login extends Zend_Form
                 'filters'    => array('StringTrim'),
             ));
  
-        $this->addElement('text', 'Language', array(
+        $this->addElement('select', 'Language', array(
             'label' => $translate->_('Language'),
+            'multiOptions' => array( 'en' => $translate->_('English'), 'fr' => $translate->_('French' )),
+            'class' => 'login-input'
             ));
- 
+  
         $this->addElement('password', 'Password', array(
             'label' => $translate->_('Password'),
             ));
