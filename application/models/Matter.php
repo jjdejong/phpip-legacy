@@ -319,27 +319,37 @@ class Application_Model_Matter {
 			matter.dead,
 			IF(isnull(matter.container_ID),1,0) AS Ctnr
 			FROM matter
-			  JOIN matter_category ON (matter.category_code = matter_category.code)
-			  LEFT JOIN (matter_actor_lnk clilnk JOIN actor cli) 
-			    ON (matter.ID = clilnk.matter_ID AND clilnk.role = 'CLI' AND cli.ID = clilnk.actor_ID)
-			  LEFT JOIN (matter_actor_lnk lclic JOIN actor clic) 
-				ON (matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1 AND clic.ID = lclic.actor_ID) 
-			  LEFT JOIN (matter_actor_lnk invlnk,actor inv) 
-			    ON (ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . " AND inv.ID = invlnk.actor_ID)
-			  LEFT JOIN (matter_actor_lnk agtlnk, actor agt) 
-			    ON (matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1 AND agt.ID = agtlnk.actor_ID)
-			  LEFT JOIN (matter_actor_lnk applnk, actor app) 
-			    ON (matter.ID = applnk.matter_ID AND applnk.role = 'APP' AND applnk.display_order = 1 AND app.ID = applnk.actor_ID)
-			  LEFT JOIN (matter_actor_lnk dellnk, actor del) 
-			    ON (ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' AND del.ID = dellnk.actor_ID)  
-			  LEFT JOIN event fil ON (matter.ID=fil.matter_ID AND fil.code='FIL')
-			  LEFT JOIN event pub ON (matter.ID=pub.matter_ID AND pub.code='PUB')
-			  LEFT JOIN event grt ON (matter.ID=grt.matter_ID AND grt.code='GRT')
-			  LEFT JOIN (event status, event_name) 
-			    ON (matter.ID=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1)
-			      LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND status.matter_id=e2.matter_id AND status.event_date < e2.event_date 
-			  LEFT JOIN (classifier, classifier_type) 
-			    ON (classifier.matter_ID = IFNULL(matter.container_ID, matter.ID) AND classifier.type_code=classifier_type.code AND main_display=1 AND classifier_type.display_order=1)
+			JOIN matter_category ON matter.category_code = matter_category.code
+			LEFT JOIN matter_actor_lnk clilnk 
+				JOIN actor cli ON cli.ID = clilnk.actor_ID 
+			ON matter.ID = clilnk.matter_ID AND clilnk.role = 'CLI' 
+			LEFT JOIN matter_actor_lnk lclic 
+				JOIN actor clic ON clic.ID = lclic.actor_ID
+			ON matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1
+			LEFT JOIN matter_actor_lnk invlnk 
+				JOIN actor inv ON inv.ID = invlnk.actor_ID 
+			ON ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . "
+			LEFT JOIN matter_actor_lnk agtlnk 
+				JOIN actor agt ON agt.ID = agtlnk.actor_ID
+			ON matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1
+			LEFT JOIN matter_actor_lnk applnk 
+				JOIN actor app ON app.ID = applnk.actor_ID 
+			ON matter.ID = applnk.matter_ID AND applnk.role = 'APP' AND applnk.display_order = 1
+			LEFT JOIN matter_actor_lnk dellnk 
+				JOIN actor del ON del.ID = dellnk.actor_ID
+			ON ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' 
+			LEFT JOIN event fil ON matter.ID = fil.matter_ID AND fil.code = 'FIL'
+			LEFT JOIN event pub ON matter.ID = pub.matter_ID AND pub.code = 'PUB'
+			LEFT JOIN event grt ON matter.ID = grt.matter_ID AND grt.code = 'GRT'
+			LEFT JOIN event status 
+				JOIN event_name ON event_name.code = status.code AND event_name.status_event = 1
+			ON matter.ID = status.matter_ID
+			LEFT JOIN event e2 
+				JOIN event_name en2 ON e2.code=en2.code AND en2.status_event = 1
+			ON status.matter_id = e2.matter_id AND status.event_date < e2.event_date 
+			LEFT JOIN classifier 
+				JOIN classifier_type ON classifier.type_code = classifier_type.code AND main_display = 1 AND classifier_type.display_order = 1 
+			ON IFNULL(matter.container_ID, matter.ID) = classifier.matter_ID
 			WHERE e2.matter_id IS NULL ";
 		
 		$where_clause = '';
