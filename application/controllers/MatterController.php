@@ -869,6 +869,8 @@ class MatterController extends Zend_Controller_Action {
 		unset ( $post_data ['value'] );
 		unset ( $post_data ['sort'] );
 		unset ( $post_data ['dir'] );
+		unset ( $post_data ['display_style'] );
+
 		
 		$mfs = new Zend_Session_Namespace ( 'matter_filter' );
 		$mfs->sort_field = $sort_field;

@@ -12,10 +12,10 @@ CREATE TABLE `actor` (
   `first_name` varchar(60) DEFAULT NULL COMMENT 'plus middle names, if required',
   `display_name` varchar(30) DEFAULT NULL COMMENT 'The name displayed in the interface, if not null',
   `login` char(16) DEFAULT NULL COMMENT 'Database user login if not null.',
-  `password` varchar(32) DEFAULT NULL,
+  `password` varchar(60) DEFAULT NULL,
   `password_salt` varchar(32) DEFAULT NULL,
   `last_login` datetime DEFAULT NULL,
-  `default_role` char(5) DEFAULT NULL COMMENT 'Link to ''actor_role'' table. A same actor can have different roles - this is the default role of the actor.',
+  `default_role` char(5) DEFAULT NULL COMMENT 'Link to actor_role table. A same actor can have different roles - this is the default role of the actor. CAUTION: for database users, this sets the user ACLs.',
   `function` varchar(45) DEFAULT NULL,
   `parent_ID` int(11) DEFAULT NULL COMMENT 'Parent company of this company (another actor), where applicable. Useful for linking several companies owned by a same corporation',
   `company_ID` int(11) DEFAULT NULL COMMENT 'Mainly for inventors and contacts. ID of the actor''s company or employer (another record in the actors table)',
@@ -33,7 +33,7 @@ CREATE TABLE `actor` (
   `phone` varchar(20) DEFAULT NULL,
   `phone2` varchar(20) DEFAULT NULL,
   `fax` varchar(20) DEFAULT NULL,
-  `pay_category` enum('0','AUTOPAY','ASK','INVOICE') DEFAULT '0' COMMENT 'How fees should be handled for the actor as a client',
+  `warn` tinyint(1) DEFAULT '0' COMMENT 'The actor will be displayed in red in the matter view when set',
   `notes` text,
   `VAT_number` varchar(45) DEFAULT NULL,
   `creator` char(16) DEFAULT NULL,
@@ -179,7 +179,15 @@ CREATE TABLE `classifier` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `classifier_creator_log` BEFORE INSERT ON `classifier` FOR EACH ROW set new.creator=SUBSTRING_INDEX(USER(),'@',1) */;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `classifier_BEFORE_INSERT` BEFORE INSERT ON `classifier` FOR EACH ROW 
+BEGIN
+	SET NEW.creator=SUBSTRING_INDEX(USER(),'@',1);
+    IF NEW.type_code = 'TITEN' THEN
+		SET NEW.value=tcase(NEW.value);
+	ELSEIF NEW.type_code IN ('TIT', 'TITOF', 'TITAL') THEN
+		SET NEW.value=CONCAT(UCASE(SUBSTR(NEW.value, 1, 1)),LCASE(SUBSTR(NEW.value FROM 2)));
+	END IF;
+END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -200,19 +208,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `classifier_list` (
-  `id` tinyint NOT NULL,
-  `matter_id` tinyint NOT NULL,
-  `type_code` tinyint NOT NULL,
-  `type_name` tinyint NOT NULL,
-  `Value` tinyint NOT NULL,
-  `url` tinyint NOT NULL,
-  `lnk_matter_id` tinyint NOT NULL,
-  `display_order` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `classifier_type` (
@@ -324,16 +319,6 @@ CREATE TABLE `country` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `debug` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `matter_id` int(10) unsigned DEFAULT NULL,
-  `task_id` int(10) unsigned DEFAULT NULL,
-  `log` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `default_actor` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `actor_id` int(11) NOT NULL,
@@ -353,60 +338,6 @@ CREATE TABLE `default_actor` (
   CONSTRAINT `fk_dfltactor_role` FOREIGN KEY (`role`) REFERENCES `actor_role` (`code`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Indicate which actors should be systematically added to new ';
 /*!40101 SET character_set_client = @saved_cs_client */;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `docmerge` (
-  `ID` tinyint NOT NULL,
-  `NODOSSIER` tinyint NOT NULL,
-  `PAYS` tinyint NOT NULL,
-  `ORIGINE` tinyint NOT NULL,
-  `COMPLEMENT` tinyint NOT NULL,
-  `PROTECTION` tinyint NOT NULL,
-  `DEPOT` tinyint NOT NULL,
-  `NODEPOT` tinyint NOT NULL,
-  `PUBLICATIO` tinyint NOT NULL,
-  `NOPUBLICAT` tinyint NOT NULL,
-  `DATEPRI` tinyint NOT NULL,
-  `NOTITREPRI` tinyint NOT NULL,
-  `PAYSPRIORI` tinyint NOT NULL,
-  `Granted` tinyint NOT NULL,
-  `GrantNo` tinyint NOT NULL,
-  `Registration` tinyint NOT NULL,
-  `RegNo` tinyint NOT NULL,
-  `PubReg` tinyint NOT NULL,
-  `PubRegNo` tinyint NOT NULL,
-  `ACCORD` tinyint NOT NULL,
-  `TEXTEACCOR` tinyint NOT NULL,
-  `EXPIRATION` tinyint NOT NULL,
-  `CLI1NOM` tinyint NOT NULL,
-  `CLI1NOM2` tinyint NOT NULL,
-  `CLI1RUE1` tinyint NOT NULL,
-  `CLI1PAYS` tinyint NOT NULL,
-  `BillingAddress` tinyint NOT NULL,
-  `REFERENC_1` tinyint NOT NULL,
-  `email` tinyint NOT NULL,
-  `VAT` tinyint NOT NULL,
-  `TITREFRANC` tinyint NOT NULL,
-  `TITREANGLA` tinyint NOT NULL,
-  `Title` tinyint NOT NULL,
-  `Trademark` tinyint NOT NULL,
-  `Class` tinyint NOT NULL,
-  `INV1NOM` tinyint NOT NULL,
-  `INV1RUE1` tinyint NOT NULL,
-  `DEP1NOM` tinyint NOT NULL,
-  `TIT1NOM` tinyint NOT NULL,
-  `CORRNOM` tinyint NOT NULL,
-  `REFERENCEC` tinyint NOT NULL,
-  `RESPONSABL` tinyint NOT NULL,
-  `Writer` tinyint NOT NULL,
-  `Contact` tinyint NOT NULL,
-  `AnnAgt` tinyint NOT NULL,
-  `AnnuityNo` tinyint NOT NULL,
-  `AnnuityDue` tinyint NOT NULL,
-  `AnnuityCost` tinyint NOT NULL,
-  `AnnuityFee` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event` (
@@ -423,9 +354,9 @@ CREATE TABLE `event` (
   PRIMARY KEY (`ID`),
   UNIQUE KEY `uqevent` (`matter_ID`,`code`,`event_date`,`alt_matter_ID`) USING BTREE,
   KEY `code` (`code`) USING HASH,
-  KEY `number` (`detail`,`matter_ID`) USING BTREE,
-  KEY `alt_matter` (`alt_matter_ID`,`matter_ID`) USING BTREE,
   KEY `date` (`event_date`) USING BTREE,
+  KEY `number` (`detail`) USING BTREE,
+  KEY `alt_matter` (`alt_matter_ID`),
   CONSTRAINT `fk_event_altmatter` FOREIGN KEY (`alt_matter_ID`) REFERENCES `matter` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_event_matter` FOREIGN KEY (`matter_ID`) REFERENCES `matter` (`ID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_event_name` FOREIGN KEY (`code`) REFERENCES `event_name` (`code`) ON UPDATE CASCADE
@@ -467,11 +398,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_insert` AFTER INSERT ON event FOR EACH ROW
-
-trig: BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_insert` AFTER INSERT ON `event` FOR EACH ROW trig: BEGIN
   DECLARE vdue_date, vbase_date, vexpiry, tmp_date DATE DEFAULT NULL;
   DECLARE vid_uqtask, vrule_id, vdays, vmonths, vyears, vpta, vid, vcli_ann_agt INT DEFAULT NULL;
   DECLARE vtask, vtype, vcurrency CHAR(5) DEFAULT NULL;
@@ -506,7 +435,12 @@ trig: BEGIN
   SELECT id INTO vcli_ann_agt FROM actor WHERE display_name='CLIENT';
   
   
-  IF (vdead OR Now() > vexpiry) THEN
+  IF (vdead) THEN
+    LEAVE trig;
+  END IF;
+  
+  IF (!vdead AND Now() > vexpiry) THEN
+	UPDATE matter SET dead = 1 WHERE matter.ID=NEW.matter_ID;
     LEAVE trig;
   END IF;
 
@@ -613,7 +547,12 @@ trig: BEGIN
   
   SELECT killer INTO vdead FROM event_name WHERE NEW.code=event_name.code;
   IF vdead THEN
-    UPDATE matter SET dead=1 WHERE matter.ID=NEW.matter_ID;
+    UPDATE matter SET dead = 1 WHERE matter.ID=NEW.matter_ID;
+  END IF;
+  
+  -- Check that we are not in a nested trigger before updating the matter change time
+  IF NEW.code != 'CRE' THEN
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
   END IF;
 
 END trig */;;
@@ -653,10 +592,9 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_update` AFTER UPDATE ON `event` FOR EACH ROW 
-trig: BEGIN
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_update` AFTER UPDATE ON `event` FOR EACH ROW trig: BEGIN
 
   DECLARE vdue_date, vbase_date DATE DEFAULT NULL;
   DECLARE vtask_id, vdays, vmonths, vyears, vrecurring, vpta, vid INT DEFAULT NULL;
@@ -744,6 +682,8 @@ trig: BEGIN
     SET vdue_date = vbase_date + INTERVAL vpta DAY + INTERVAL vmonths MONTH + INTERVAL vyears YEAR;
     UPDATE matter SET expire_date=vdue_date WHERE matter.ID=NEW.matter_ID;
   END IF;
+  
+  UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
 
 END trig */;;
 DELIMITER ;
@@ -758,7 +698,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
 	IF OLD.code IN ('PRI','PFIL') THEN
@@ -769,47 +709,17 @@ DELIMITER ;;
 		UPDATE matter SET expire_date=NULL WHERE matter.ID=OLD.matter_ID;
 	END IF;
 
-	
 	UPDATE matter, event_name SET matter.dead=0 WHERE matter.ID=OLD.matter_ID AND OLD.code=event_name.code AND event_name.killer=1 
 		AND (matter.expire_date > Now() OR matter.expire_date IS NULL)
 		AND NOT EXISTS (SELECT 1 FROM event, event_name ename WHERE event.matter_ID=OLD.matter_ID AND event.code=ename.code AND ename.killer=1);
+        
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=OLD.matter_ID;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `event_list` (
-  `event_ID` tinyint NOT NULL,
-  `status_event` tinyint NOT NULL,
-  `code` tinyint NOT NULL,
-  `name` tinyint NOT NULL,
-  `event_date` tinyint NOT NULL,
-  `detail` tinyint NOT NULL,
-  `matter_ID` tinyint NOT NULL,
-  `caseref` tinyint NOT NULL,
-  `country` tinyint NOT NULL,
-  `origin` tinyint NOT NULL,
-  `category` tinyint NOT NULL,
-  `type_code` tinyint NOT NULL,
-  `idx` tinyint NOT NULL,
-  `container_id` tinyint NOT NULL,
-  `dead` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `event_lnk_list` (
-  `ID` tinyint NOT NULL,
-  `code` tinyint NOT NULL,
-  `matter_ID` tinyint NOT NULL,
-  `event_date` tinyint NOT NULL,
-  `detail` tinyint NOT NULL,
-  `country` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `event_name` (
@@ -884,21 +794,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `filing_info` (
-  `ID` tinyint NOT NULL,
-  `caseref` tinyint NOT NULL,
-  `country` tinyint NOT NULL,
-  `origin` tinyint NOT NULL,
-  `type_code` tinyint NOT NULL,
-  `idx` tinyint NOT NULL,
-  `container_id` tinyint NOT NULL,
-  `dead` tinyint NOT NULL,
-  `filing_date` tinyint NOT NULL,
-  `filing_number` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matter` (
@@ -928,6 +823,7 @@ CREATE TABLE `matter` (
   KEY `parent` (`parent_ID`) USING HASH,
   KEY `category` (`category_code`) USING HASH,
   KEY `responsible` (`responsible`) USING HASH,
+  KEY `sort` (`caseref`,`container_ID`,`origin`,`country`,`type_code`,`idx`),
   CONSTRAINT `fk_matter_category` FOREIGN KEY (`category_code`) REFERENCES `matter_category` (`code`) ON UPDATE CASCADE,
   CONSTRAINT `fk_matter_container` FOREIGN KEY (`container_ID`) REFERENCES `matter` (`ID`) ON UPDATE CASCADE,
   CONSTRAINT `fk_matter_country` FOREIGN KEY (`country`) REFERENCES `country` (`iso`) ON UPDATE CASCADE,
@@ -1031,28 +927,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `matter_actor_list` (
-  `lnk_id` tinyint NOT NULL,
-  `actor_id` tinyint NOT NULL,
-  `display_name` tinyint NOT NULL,
-  `name` tinyint NOT NULL,
-  `first_name` tinyint NOT NULL,
-  `role` tinyint NOT NULL,
-  `role_full` tinyint NOT NULL,
-  `matter_id` tinyint NOT NULL,
-  `caseref` tinyint NOT NULL,
-  `category` tinyint NOT NULL,
-  `country` tinyint NOT NULL,
-  `origin` tinyint NOT NULL,
-  `type_code` tinyint NOT NULL,
-  `idx` tinyint NOT NULL,
-  `actor_ref` tinyint NOT NULL,
-  `company` tinyint NOT NULL,
-  `inherited` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matter_actor_lnk` (
@@ -1103,19 +977,25 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_after_insert` AFTER INSERT ON `matter_actor_lnk` FOR EACH ROW BEGIN
-DECLARE vcli_ann_agt INT DEFAULT NULL;
+	DECLARE vcli_ann_agt INT DEFAULT NULL;
 
-
-IF NEW.role='ANN' THEN
-	SELECT id INTO vcli_ann_agt FROM actor WHERE display_name='CLIENT';
-	IF NEW.actor_id=vcli_ann_agt THEN
-		DELETE task FROM event INNER JOIN task ON task.trigger_id=event.id
-		WHERE task.code='REN' AND event.matter_id=NEW.matter_id;
+	-- Delete renewal tasks when the special actor "CLIENT" is set as the annuity agent
+	IF NEW.role='ANN' THEN
+		SELECT id INTO vcli_ann_agt FROM actor WHERE display_name='CLIENT';
+		IF NEW.actor_id=vcli_ann_agt THEN
+			DELETE task FROM event INNER JOIN task ON task.trigger_id=event.id
+			WHERE task.code='REN' AND event.matter_id=NEW.matter_id;
+		END IF;
 	END IF;
-END IF;
+
+	-- Check that we are not in a nested trigger before updating the matter change time
+	IF (SELECT count(1) FROM default_actor WHERE NEW.actor_id = actor_id) = 0 THEN
+		UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
+	END IF;
+
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1132,6 +1012,46 @@ DELIMITER ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `malnk_before_update` BEFORE UPDATE ON `matter_actor_lnk` FOR EACH ROW set new.updater=SUBSTRING_INDEX(USER(),'@',1) */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `phpip`.`matter_actor_lnk_AFTER_UPDATE` AFTER UPDATE ON `matter_actor_lnk` FOR EACH ROW
+BEGIN
+
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
+
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `phpip`.`matter_actor_lnk_AFTER_DELETE` AFTER DELETE ON `matter_actor_lnk` FOR EACH ROW
+BEGIN
+
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=OLD.matter_ID;
+
+END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1182,16 +1102,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `matter_status_list` (
-  `matter_id` tinyint NOT NULL,
-  `event_date` tinyint NOT NULL,
-  `status` tinyint NOT NULL,
-  `status_date` tinyint NOT NULL,
-  `dead` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `matter_type` (
@@ -1233,31 +1143,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `sga2_list` (
-  `UID` tinyint NOT NULL,
-  `dead` tinyint NOT NULL,
-  `caseref` tinyint NOT NULL,
-  `country` tinyint NOT NULL,
-  `origin` tinyint NOT NULL,
-  `complement` tinyint NOT NULL,
-  `cat` tinyint NOT NULL,
-  `owner` tinyint NOT NULL,
-  `small_entity` tinyint NOT NULL,
-  `refsga2` tinyint NOT NULL,
-  `title` tinyint NOT NULL,
-  `filed` tinyint NOT NULL,
-  `appno` tinyint NOT NULL,
-  `published` tinyint NOT NULL,
-  `pubno` tinyint NOT NULL,
-  `granted` tinyint NOT NULL,
-  `grantno` tinyint NOT NULL,
-  `expire_date` tinyint NOT NULL,
-  `abandoned` tinyint NOT NULL,
-  `updated` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task` (
@@ -1335,7 +1220,7 @@ DELIMITER ;
 /*!50003 SET character_set_results = utf8 */ ;
 /*!50003 SET collation_connection  = utf8_general_ci */ ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `task_before_update` BEFORE UPDATE ON `task` FOR EACH ROW
 BEGIN
@@ -1343,13 +1228,13 @@ BEGIN
 	IF NEW.done_date IS NOT NULL AND OLD.done_date IS NULL AND OLD.done = 0 THEN
 		SET NEW.done = 1;
 	END IF;
-    	IF NEW.done_date IS NULL AND OLD.done_date IS NOT NULL AND OLD.done = 1 THEN
+	IF NEW.done_date IS NULL AND OLD.done_date IS NOT NULL AND OLD.done = 1 THEN
 		SET NEW.done = 0;
 	END IF;
-    	IF NEW.done = 1 AND OLD.done = 0 AND OLD.done_date IS NULL THEN
+	IF NEW.done = 1 AND OLD.done = 0 AND OLD.done_date IS NULL THEN
 		SET NEW.done_date = Least(OLD.due_date, Now());
 	END IF;
-    	IF NEW.done = 0 AND OLD.done = 1 AND OLD.done_date IS NOT NULL THEN
+	IF NEW.done = 0 AND OLD.done = 1 AND OLD.done_date IS NOT NULL THEN
 		SET NEW.done_date = NULL;
 	END IF;
 	IF NEW.due_date != OLD.due_date AND old.rule_used IS NOT NULL THEN
@@ -1361,32 +1246,6 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `task_list` (
-  `ID` tinyint NOT NULL,
-  `code` tinyint NOT NULL,
-  `name` tinyint NOT NULL,
-  `detail` tinyint NOT NULL,
-  `due_date` tinyint NOT NULL,
-  `done` tinyint NOT NULL,
-  `done_date` tinyint NOT NULL,
-  `matter_ID` tinyint NOT NULL,
-  `cost` tinyint NOT NULL,
-  `fee` tinyint NOT NULL,
-  `trigger_ID` tinyint NOT NULL,
-  `category` tinyint NOT NULL,
-  `caseref` tinyint NOT NULL,
-  `country` tinyint NOT NULL,
-  `origin` tinyint NOT NULL,
-  `type_code` tinyint NOT NULL,
-  `idx` tinyint NOT NULL,
-  `responsible` tinyint NOT NULL,
-  `delegate` tinyint NOT NULL,
-  `rule_used` tinyint NOT NULL,
-  `dead` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `task_rules` (
@@ -1427,13 +1286,14 @@ CREATE TABLE `task_rules` (
   KEY `for_country` (`for_country`),
   KEY `trigger_event` (`trigger_event`,`for_country`) USING BTREE,
   KEY `for_origin` (`for_origin`),
+  KEY `fk_category` (`for_category`),
   CONSTRAINT `fk_abort_on` FOREIGN KEY (`abort_on`) REFERENCES `event_name` (`code`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_category` FOREIGN KEY (`for_category`) REFERENCES `matter_category` (`code`) ON UPDATE CASCADE,
   CONSTRAINT `fk_condition` FOREIGN KEY (`condition_event`) REFERENCES `event_name` (`code`) ON UPDATE CASCADE,
   CONSTRAINT `fk_country` FOREIGN KEY (`for_country`) REFERENCES `country` (`iso`) ON UPDATE CASCADE,
   CONSTRAINT `fk_name` FOREIGN KEY (`task`) REFERENCES `event_name` (`code`) ON UPDATE CASCADE,
   CONSTRAINT `fk_origin` FOREIGN KEY (`for_origin`) REFERENCES `country` (`iso`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_trigger` FOREIGN KEY (`trigger_event`) REFERENCES `event_name` (`code`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_category` FOREIGN KEY (`for_category`) REFERENCES `phpip`.`matter_category` (`code`) ON UPDATE CASCADE
+  CONSTRAINT `fk_trigger` FOREIGN KEY (`trigger_event`) REFERENCES `event_name` (`code`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Rules for calculating tasks from events';
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
@@ -1487,30 +1347,87 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
-/*!50001 CREATE TABLE `tmp_main_matter_list` (
-  `id` tinyint NOT NULL,
-  `caseref` tinyint NOT NULL,
-  `country` tinyint NOT NULL,
-  `origin` tinyint NOT NULL,
-  `type_code` tinyint NOT NULL,
-  `idx` tinyint NOT NULL,
-  `Cat` tinyint NOT NULL,
-  `Status` tinyint NOT NULL,
-  `Status_date` tinyint NOT NULL,
-  `Client` tinyint NOT NULL,
-  `ClRef` tinyint NOT NULL,
-  `Agent` tinyint NOT NULL,
-  `AgtRef` tinyint NOT NULL,
-  `Title` tinyint NOT NULL,
-  `Inventor` tinyint NOT NULL,
-  `inv_order` tinyint NOT NULL,
-  `Filed` tinyint NOT NULL,
-  `FilNo` tinyint NOT NULL,
-  `PubNo` tinyint NOT NULL,
-  `container_ID` tinyint NOT NULL,
-  `dead` tinyint NOT NULL
-) ENGINE=MyISAM */;
+/*!50001 CREATE VIEW `task_list` AS SELECT 
+ 1 AS `ID`,
+ 1 AS `code`,
+ 1 AS `name`,
+ 1 AS `detail`,
+ 1 AS `due_date`,
+ 1 AS `done`,
+ 1 AS `done_date`,
+ 1 AS `matter_ID`,
+ 1 AS `cost`,
+ 1 AS `fee`,
+ 1 AS `trigger_ID`,
+ 1 AS `category`,
+ 1 AS `caseref`,
+ 1 AS `country`,
+ 1 AS `origin`,
+ 1 AS `type_code`,
+ 1 AS `idx`,
+ 1 AS `responsible`,
+ 1 AS `delegate`,
+ 1 AS `rule_used`,
+ 1 AS `dead`*/;
 SET character_set_client = @saved_cs_client;
+/*!50001 DROP VIEW IF EXISTS `task_list`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `task_list` AS select `task`.`ID` AS `ID`,`task`.`code` AS `code`,`event_name`.`name` AS `name`,`task`.`detail` AS `detail`,`task`.`due_date` AS `due_date`,`task`.`done` AS `done`,`task`.`done_date` AS `done_date`,`event`.`matter_ID` AS `matter_ID`,`task`.`cost` AS `cost`,`task`.`fee` AS `fee`,`task`.`trigger_ID` AS `trigger_ID`,`matter`.`category_code` AS `category`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,ifnull(`task`.`assigned_to`,`matter`.`responsible`) AS `responsible`,`actor`.`login` AS `delegate`,`task`.`rule_used` AS `rule_used`,`matter`.`dead` AS `dead` from (((((`matter` left join `matter_actor_lnk` on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `matter_actor_lnk`.`matter_ID`) and (`matter_actor_lnk`.`role` = 'DEL')))) left join `actor` on((`actor`.`ID` = `matter_actor_lnk`.`actor_ID`))) join `event` on((`matter`.`ID` = `event`.`matter_ID`))) join `task` on((`task`.`trigger_ID` = `event`.`ID`))) join `event_name` on((`task`.`code` = `event_name`.`code`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50106 SET @save_time_zone= @@TIME_ZONE */ ;
+DELIMITER ;;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;;
+/*!50003 SET character_set_client  = utf8mb4 */ ;;
+/*!50003 SET character_set_results = utf8mb4 */ ;;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;;
+/*!50003 SET @saved_time_zone      = @@time_zone */ ;;
+/*!50003 SET time_zone             = 'SYSTEM' */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `kill_expired` ON SCHEDULE EVERY 1 WEEK STARTS '2017-01-31 20:23:25' ON COMPLETION PRESERVE DISABLE ON SLAVE COMMENT 'Updates the expired status of matters' DO insert ignore into `event` (code, matter_id, event_date) select 'EXP', matter.id, matter.expire_date from matter where expire_date < Now() and dead=0 */ ;;
+/*!50003 SET time_zone             = @saved_time_zone */ ;;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;;
+/*!50003 SET character_set_results = @saved_cs_results */ ;;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;;
+DELIMITER ;
+/*!50106 SET TIME_ZONE= @save_time_zone */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `actor_list`(mid INT, arole TEXT) RETURNS text CHARSET utf8
+    DETERMINISTIC
+BEGIN
+	DECLARE alist TEXT;
+    
+    SELECT GROUP_CONCAT(actor.name ORDER BY mal.display_order) INTO alist FROM matter_actor_lnk mal
+    JOIN actor ON actor.ID = mal.actor_ID
+    WHERE mal.matter_ID = mid AND mal.role = arole;
+
+	RETURN alist;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 /*!50003 SET @saved_cs_client      = @@character_set_client */ ;
 /*!50003 SET @saved_cs_results     = @@character_set_results */ ;
 /*!50003 SET @saved_col_connection = @@collation_connection */ ;
@@ -1535,6 +1452,31 @@ BEGIN
     END WHILE;
   END IF;
   RETURN str;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `matter_status`(mid INT) RETURNS text CHARSET utf8
+    DETERMINISTIC
+BEGIN
+	DECLARE mstatus TEXT;
+    SELECT CONCAT_WS(': ', event_name.name, status.event_date) INTO mstatus FROM `event` status
+	JOIN event_name ON mid=status.matter_ID AND event_name.code=status.code AND event_name.status_event=1
+	LEFT JOIN (event e2, event_name en2) ON e2.code=en2.code AND en2.status_event=1 AND mid=e2.matter_id AND status.event_date < e2.event_date
+	WHERE e2.matter_id IS NULL;
+
+	RETURN mstatus;
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1671,6 +1613,47 @@ proc: BEGIN
 	END IF;
 
 END proc ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `recreate_renewals`()
+begin
+	declare vtriggerid int;
+	declare done int default FALSE;
+	declare cur cursor for select event.id from matter 
+		join matter_actor_lnk mal on (matter.id=mal.matter_id and mal.role='ANN' and mal.actor_id=410)
+		join event on (matter.id=event.matter_id)
+		where (caseref like '500%' or caseref like '510%' or caseref like '600%' or caseref like '610%')
+		and event.code in ('FIL','REG','PR')
+		and not exists (select 1 from task_list tl where matter.id=tl.matter_id and code='REN')
+		and dead=0
+		and origin is null;
+
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+	open cur;
+
+	cur_loop: loop
+		fetch cur into vtriggerid;
+		IF done THEN 
+			LEAVE cur_loop; 
+		END IF;
+		
+	end loop;
+
+	close cur;
+end ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -1840,153 +1823,11 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
-
-USE `phpip`;
-/*!50001 DROP TABLE IF EXISTS `classifier_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `classifier_list` AS select `classifier`.`ID` AS `id`,`matter`.`ID` AS `matter_id`,`classifier`.`type_code` AS `type_code`,`classifier_type`.`type` AS `type_name`,if(isnull(`classifier`.`value_ID`),`classifier`.`value`,`classifier_value`.`value`) AS `Value`,`classifier`.`url` AS `url`,`classifier`.`lnk_matter_ID` AS `lnk_matter_id`,`classifier`.`display_order` AS `display_order` from (((`classifier` join `classifier_type` on((`classifier`.`type_code` = `classifier_type`.`code`))) join `matter` on((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `classifier`.`matter_ID`))) left join `classifier_value` on((`classifier_value`.`ID` = `classifier`.`value_ID`))) order by `matter`.`ID`,`classifier`.`type_code` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `docmerge`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `docmerge` AS select `matter`.`ID` AS `ID`,`matter`.`caseref` AS `NODOSSIER`,`matter`.`country` AS `PAYS`,`matter`.`origin` AS `ORIGINE`,concat(if(isnull(`matter`.`type_code`),'',concat('-',`matter`.`type_code`)),ifnull(cast(`matter`.`idx` as char(3) charset utf8),'')) AS `COMPLEMENT`,`matter`.`category_code` AS `PROTECTION`,date_format(`fil`.`event_date`,'%d/%m/%Y') AS `DEPOT`,`fil`.`detail` AS `NODEPOT`,date_format(`pub`.`event_date`,'%d/%m/%Y') AS `PUBLICATIO`,`pub`.`detail` AS `NOPUBLICAT`,NULL AS `DATEPRI`,group_concat(distinct concat(`pri`.`country`,`pri`.`detail`,' du ',date_format(`pri`.`event_date`,'%d/%m/%Y')) separator '
-') AS `NOTITREPRI`,`pri`.`country` AS `PAYSPRIORI`,date_format(`grt`.`event_date`,'%d/%m/%Y') AS `Granted`,`grt`.`detail` AS `GrantNo`,date_format(`reg`.`event_date`,'%d/%m/%Y') AS `Registration`,`reg`.`detail` AS `RegNo`,date_format(`pr`.`event_date`,'%d/%m/%Y') AS `PubReg`,`pr`.`detail` AS `PubRegNo`,date_format(`allow`.`event_date`,'%d/%m/%Y') AS `ACCORD`,`allow`.`detail` AS `TEXTEACCOR`,date_format(`matter`.`expire_date`,'%d/%m/%Y') AS `EXPIRATION`,`cli`.`name` AS `CLI1NOM`,`cli`.`first_name` AS `CLI1NOM2`,`cli`.`address` AS `CLI1RUE1`,`cli`.`country` AS `CLI1PAYS`,if((`cli`.`address_billing` = ''),concat_ws('\n',`cli`.`name`,`cli`.`address`,`cli`.`country`),concat_ws('\n',`cli`.`address_billing`,`cli`.`country_billing`)) AS `BillingAddress`,`lcli`.`actor_ref` AS `REFERENC_1`,`cli`.`email` AS `email`,`cli`.`VAT_number` AS `VAT`,`titof`.`value` AS `TITREFRANC`,`titen`.`value` AS `TITREANGLA`,`tit`.`value` AS `Title`,`tm`.`value` AS `Trademark`,group_concat(distinct `class`.`value` separator '.') AS `Class`,group_concat(distinct concat_ws(' ',`inv`.`name`,`inv`.`first_name`) separator ' - ') AS `INV1NOM`,group_concat(distinct concat_ws('\n',concat_ws(' ',`inv`.`name`,`inv`.`first_name`),`inv`.`address`,`inv`.`country`,`inv`.`nationality`) separator '
-') AS `INV1RUE1`,concat_ws('\n',group_concat(distinct `applc`.`name` separator '
-'),group_concat(distinct `appl`.`name` separator '
-')) AS `DEP1NOM`,if((concat_ws('\n',group_concat(distinct `ownc`.`name` separator '
-'),group_concat(distinct `own`.`name` separator '
-')) <> ''),concat_ws('\n',group_concat(distinct `ownc`.`name` separator '
-'),group_concat(distinct `own`.`name` separator '
-')),concat_ws('\n',group_concat(distinct `applc`.`name` separator '
-'),group_concat(distinct `appl`.`name` separator '
-'))) AS `TIT1NOM`,concat(`agt`.`name`,'\n',`agt`.`address`,'\n',`agt`.`country`) AS `CORRNOM`,`lagt`.`actor_ref` AS `REFERENCEC`,`resp`.`name` AS `RESPONSABL`,`wri`.`name` AS `Writer`,`cnt`.`name` AS `Contact`,`ann`.`name` AS `AnnAgt`,`ren`.`detail` AS `AnnuityNo`,date_format(`ren`.`due_date`,'%d/%m/%Y') AS `AnnuityDue`,`ren`.`cost` AS `AnnuityCost`,`ren`.`fee` AS `AnnuityFee` from (((((((((((((((((((((((((`matter` left join (`matter_actor_lnk` `linv` join `actor` `inv`) on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `linv`.`matter_ID`) and (`linv`.`role` = 'INV') and (`inv`.`ID` = `linv`.`actor_ID`)))) left join (`matter_actor_lnk` `lcli` join `actor` `cli`) on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `lcli`.`matter_ID`) and (`lcli`.`role` = 'CLI') and (`lcli`.`display_order` = 1) and (`cli`.`ID` = `lcli`.`actor_ID`)))) left join (`matter_actor_lnk` `lappl` join `actor` `appl`) on(((`matter`.`ID` = `lappl`.`matter_ID`) and (`lappl`.`role` = 'APP') and (`appl`.`ID` = `lappl`.`actor_ID`)))) left join (`matter_actor_lnk` `lapplc` join `actor` `applc`) on(((`matter`.`container_ID` = `lapplc`.`matter_ID`) and (`lapplc`.`role` = 'APP') and (`lapplc`.`shared` = 1) and (`applc`.`ID` = `lapplc`.`actor_ID`)))) left join (`matter_actor_lnk` `lown` join `actor` `own`) on(((`matter`.`ID` = `lown`.`matter_ID`) and (`lown`.`role` = 'OWN') and (`own`.`ID` = `lown`.`actor_ID`)))) left join (`matter_actor_lnk` `lownc` join `actor` `ownc`) on(((`matter`.`container_ID` = `lownc`.`matter_ID`) and (`lownc`.`role` = 'OWN') and (`lownc`.`shared` = 1) and (`ownc`.`ID` = `lownc`.`actor_ID`)))) left join (`matter_actor_lnk` `lann` join `actor` `ann`) on(((`matter`.`ID` = `lann`.`matter_ID`) and (`lann`.`role` = 'ANN') and (`ann`.`ID` = `lann`.`actor_ID`)))) left join (`matter_actor_lnk` `lcnt` join `actor` `cnt`) on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `lcnt`.`matter_ID`) and (`lcnt`.`role` = 'CNT') and (`cnt`.`ID` = `lcnt`.`actor_ID`)))) left join (`matter_actor_lnk` `lagt` join `actor` `agt`) on(((`matter`.`ID` = `lagt`.`matter_ID`) and (`lagt`.`role` = 'AGT') and (`agt`.`ID` = `lagt`.`actor_ID`)))) left join (`matter_actor_lnk` `lwri` join `actor` `wri`) on(((`matter`.`ID` = `lwri`.`matter_ID`) and (`lwri`.`role` = 'WRI') and (`wri`.`ID` = `lwri`.`actor_ID`)))) left join `event` `fil` on(((`fil`.`matter_ID` = `matter`.`ID`) and (`fil`.`code` = 'FIL')))) left join `event` `pub` on(((`pub`.`matter_ID` = `matter`.`ID`) and (`pub`.`code` = 'PUB')))) left join `event` `grt` on(((`grt`.`matter_ID` = `matter`.`ID`) and (`grt`.`code` = 'GRT')))) left join `event` `reg` on(((`reg`.`matter_ID` = `matter`.`ID`) and (`reg`.`code` = 'REG')))) left join `event` `pr` on(((`pr`.`matter_ID` = `matter`.`ID`) and (`pr`.`code` = 'PR')))) left join `event_lnk_list` `pri` on(((`pri`.`matter_ID` = `matter`.`ID`) and (`pri`.`code` = 'PRI')))) left join `event` `allow` on(((`allow`.`matter_ID` = `matter`.`ID`) and (`allow`.`code` = 'ALL')))) left join `task_list` `ren` on(((`ren`.`matter_ID` = `matter`.`ID`) and (`ren`.`code` = 'REN') and (`ren`.`done` = 0)))) left join `task` `t` on(((`t`.`trigger_ID` = `ren`.`trigger_ID`) and (`t`.`code` = 'REN') and (`t`.`done` = 0) and (`ren`.`due_date` > `t`.`due_date`)))) left join `classifier` `titof` on(((`titof`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`titof`.`type_code` = 'TITOF')))) left join `classifier` `titen` on(((`titen`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`titen`.`type_code` = 'TITEN')))) left join `classifier` `tit` on(((`tit`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`tit`.`type_code` = 'TIT')))) left join `classifier` `tm` on(((`tm`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`tm`.`type_code` = 'TM')))) left join `classifier` `class` on(((`class`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`class`.`type_code` = 'TMCL')))) join `actor` `resp` on((`resp`.`login` = `matter`.`responsible`))) where isnull(`t`.`ID`) group by `matter`.`ID` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `event_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `event_list` AS select `event`.`ID` AS `event_ID`,`event_name`.`status_event` AS `status_event`,`event`.`code` AS `code`,`event_name`.`name` AS `name`,`event`.`event_date` AS `event_date`,`event`.`detail` AS `detail`,`matter`.`ID` AS `matter_ID`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`category_code` AS `category`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,`matter`.`container_ID` AS `container_id`,`matter`.`dead` AS `dead` from ((`matter` join `event`) join `event_name`) where ((`event`.`matter_ID` = `matter`.`ID`) and (`event`.`code` = `event_name`.`code`)) order by `matter`.`ID` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `event_lnk_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `event_lnk_list` AS select `event`.`ID` AS `ID`,`event`.`code` AS `code`,`event`.`matter_ID` AS `matter_ID`,if(isnull(`event`.`alt_matter_ID`),`event`.`event_date`,`lnk`.`event_date`) AS `event_date`,if(isnull(`event`.`alt_matter_ID`),`event`.`detail`,`lnk`.`detail`) AS `detail`,`matter`.`country` AS `country` from ((`event` left join `event` `lnk` on(((`event`.`alt_matter_ID` = `lnk`.`matter_ID`) and (`lnk`.`code` = 'FIL')))) left join `matter` on((`event`.`alt_matter_ID` = `matter`.`ID`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `filing_info`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `filing_info` AS select `matter`.`ID` AS `ID`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,`matter`.`container_ID` AS `container_id`,`matter`.`dead` AS `dead`,`event`.`event_date` AS `filing_date`,`event`.`detail` AS `filing_number` from (`matter` join `event`) where ((`matter`.`ID` = `event`.`matter_ID`) and (`event`.`code` = 'FIL') and (`matter`.`category_code` = 'PAT')) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `matter_actor_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `matter_actor_list` AS select `lnk`.`ID` AS `lnk_id`,`actor`.`ID` AS `actor_id`,`actor`.`display_name` AS `display_name`,`actor`.`name` AS `name`,`actor`.`first_name` AS `first_name`,`lnk`.`role` AS `role`,`actor_role`.`name` AS `role_full`,`matter`.`ID` AS `matter_id`,`matter`.`caseref` AS `caseref`,`matter`.`category_code` AS `category`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,`lnk`.`actor_ref` AS `actor_ref`,`co`.`name` AS `company`,if((`lnk`.`matter_ID` = `matter`.`container_ID`),1,0) AS `inherited` from ((((`matter` join `matter_actor_lnk` `lnk` on(((`lnk`.`matter_ID` = `matter`.`ID`) or ((`lnk`.`shared` = 1) and (`lnk`.`matter_ID` = `matter`.`container_ID`))))) join `actor` on((`lnk`.`actor_ID` = `actor`.`ID`))) left join `actor` `co` on((`co`.`ID` = `lnk`.`company_ID`))) join `actor_role` on((`lnk`.`role` = `actor_role`.`code`))) order by `matter`.`ID`,`lnk`.`role` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `matter_status_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `matter_status_list` AS select `e1`.`matter_ID` AS `matter_id`,`fil`.`event_date` AS `event_date`,`en1`.`name` AS `status`,`e1`.`event_date` AS `status_date`,`matter`.`dead` AS `dead` from ((((`event` `e1` join `event_name` `en1` on(((`en1`.`code` = `e1`.`code`) and (`en1`.`status_event` = 1)))) join `matter` on((`matter`.`ID` = `e1`.`matter_ID`))) left join (`event` `e2` join `event_name` `en2`) on(((`e2`.`code` = `en2`.`code`) and (`en2`.`status_event` = 1) and (`e1`.`matter_ID` = `e2`.`matter_ID`) and (`e1`.`event_date` < `e2`.`event_date`)))) left join `event` `fil` on(((`e1`.`matter_ID` = `fil`.`matter_ID`) and (`fil`.`code` = 'FIL')))) where isnull(`e2`.`matter_ID`) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `sga2_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `sga2_list` AS select `matter`.`ID` AS `UID`,`matter`.`dead` AS `dead`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,concat(ifnull(`matter`.`type_code`,''),ifnull(cast(`matter`.`idx` as char(3) charset utf8),'')) AS `complement`,`matter`.`category_code` AS `cat`,ifnull(group_concat(distinct `own`.`name` separator '; '),group_concat(distinct `cli`.`name` separator '; ')) AS `owner`,cast(ifnull(min(`own`.`small_entity`),min(`cli`.`small_entity`)) as char charset utf8) AS `small_entity`,`agtlnk`.`actor_ref` AS `refsga2`,`classifier`.`value` AS `title`,`fil`.`event_date` AS `filed`,`fil`.`detail` AS `appno`,`pub`.`event_date` AS `published`,`pub`.`detail` AS `pubno`,`grt`.`event_date` AS `granted`,`grt`.`detail` AS `grantno`,`matter`.`expire_date` AS `expire_date`,`aba`.`event_date` AS `abandoned`,cast(max(`updt`.`updated`) as date) AS `updated` from (((((((((`matter` left join (`matter_actor_lnk` `clilnk` join `actor` `cli`) on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `clilnk`.`matter_ID`) and (`clilnk`.`role` = 'APP') and (`cli`.`ID` = `clilnk`.`actor_ID`)))) left join (`matter_actor_lnk` `ownlnk` join `actor` `own`) on(((`matter`.`ID` = `ownlnk`.`matter_ID`) and (`ownlnk`.`role` = 'OWN') and (`own`.`ID` = `ownlnk`.`actor_ID`)))) left join (`matter_actor_lnk` `agtlnk` join `actor` `agt`) on(((`matter`.`ID` = `agtlnk`.`matter_ID`) and (`agtlnk`.`role` = 'ANN') and (`agt`.`ID` = `agtlnk`.`actor_ID`)))) left join `event` `fil` on(((`matter`.`ID` = `fil`.`matter_ID`) and (`fil`.`code` = 'FIL')))) left join `event` `pub` on(((`matter`.`ID` = `pub`.`matter_ID`) and (`pub`.`code` = 'PUB')))) left join `event` `grt` on(((`matter`.`ID` = `grt`.`matter_ID`) and (`grt`.`code` = 'GRT')))) left join `event` `aba` on(((`matter`.`ID` = `aba`.`matter_ID`) and (`aba`.`code` = 'ABA')))) left join (`classifier` join `classifier_type`) on(((`classifier`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`classifier`.`type_code` = `classifier_type`.`code`) and (`classifier_type`.`main_display` = 1) and (`classifier_type`.`display_order` = 2)))) join `event` `updt` on((`matter`.`ID` = `updt`.`matter_ID`))) where (`agt`.`name` = 'SGA2') group by `matter`.`ID` order by `matter`.`caseref`,`matter`.`container_ID`,`matter`.`origin`,`matter`.`country`,`matter`.`type_code`,`matter`.`idx` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `task_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `task_list` AS select `task`.`ID` AS `ID`,`task`.`code` AS `code`,`event_name`.`name` AS `name`,`task`.`detail` AS `detail`,`task`.`due_date` AS `due_date`,`task`.`done` AS `done`,`task`.`done_date` AS `done_date`,`event`.`matter_ID` AS `matter_ID`,`task`.`cost` AS `cost`,`task`.`fee` AS `fee`,`task`.`trigger_ID` AS `trigger_ID`,`matter`.`category_code` AS `category`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,ifnull(`task`.`assigned_to`,`matter`.`responsible`) AS `responsible`,`actor`.`login` AS `delegate`,`task`.`rule_used` AS `rule_used`,`matter`.`dead` AS `dead` from (((((`matter` left join `matter_actor_lnk` on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `matter_actor_lnk`.`matter_ID`) and (`matter_actor_lnk`.`role` = 'DEL')))) left join `actor` on((`actor`.`ID` = `matter_actor_lnk`.`actor_ID`))) join `event` on((`matter`.`ID` = `event`.`matter_ID`))) join `task` on((`task`.`trigger_ID` = `event`.`ID`))) join `event_name` on((`task`.`code` = `event_name`.`code`))) */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
-/*!50001 DROP TABLE IF EXISTS `tmp_main_matter_list`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8 */;
-/*!50001 SET character_set_results     = utf8 */;
-/*!50001 SET collation_connection      = utf8_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `tmp_main_matter_list` AS select `matter`.`ID` AS `id`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,`matter`.`category_code` AS `Cat`,`event_name`.`name` AS `Status`,max(`status`.`event_date`) AS `Status_date`,ifnull(`cli`.`display_name`,`cli`.`name`) AS `Client`,`clilnk`.`actor_ref` AS `ClRef`,ifnull(`agt`.`display_name`,`agt`.`name`) AS `Agent`,`agtlnk`.`actor_ref` AS `AgtRef`,`classifier`.`value` AS `Title`,concat(ucase(`inv`.`name`),' ',`inv`.`first_name`) AS `Inventor`,`invlnk`.`display_order` AS `inv_order`,`fil`.`event_date` AS `Filed`,`fil`.`detail` AS `FilNo`,`pub`.`detail` AS `PubNo`,`matter`.`container_ID` AS `container_ID`,`matter`.`dead` AS `dead` from (((((((((((`matter` left join `matter_actor_lnk` `clilnk` on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `clilnk`.`matter_ID`) and (`clilnk`.`role` = 'CLI') and (`clilnk`.`display_order` = 1)))) left join `actor` `cli` on((`cli`.`ID` = `clilnk`.`actor_ID`))) left join `matter_actor_lnk` `invlnk` on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `invlnk`.`matter_ID`) and (`invlnk`.`role` = 'INV')))) left join `actor` `inv` on((`inv`.`ID` = `invlnk`.`actor_ID`))) left join `matter_actor_lnk` `agtlnk` on(((`matter`.`ID` = `agtlnk`.`matter_ID`) and (`agtlnk`.`role` = 'AGT') and (`agtlnk`.`display_order` = 1)))) left join `actor` `agt` on((`agt`.`ID` = `agtlnk`.`actor_ID`))) left join `event` `fil` on(((`matter`.`ID` = `fil`.`matter_ID`) and (`fil`.`code` = 'FIL')))) left join `event` `pub` on(((`matter`.`ID` = `pub`.`matter_ID`) and (`pub`.`code` = 'PUB')))) join `event` `status` on((`matter`.`ID` = `status`.`matter_ID`))) join `event_name` on(((`event_name`.`code` = `status`.`code`) and (`event_name`.`status_event` = 1)))) left join `classifier` on(((`classifier`.`matter_ID` = ifnull(`matter`.`container_ID`,`matter`.`ID`)) and (`classifier`.`type_code` = 'TIT')))) group by `matter`.`caseref`,`matter`.`container_ID`,`matter`.`origin`,`matter`.`country`,`matter`.`type_code`,`matter`.`idx` order by `matter`.`caseref`,`matter`.`container_ID`,`matter`.`origin`,`matter`.`country`,`matter`.`type_code`,`matter`.`idx` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
--- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
 --
 -- Host: localhost    Database: phpip
 -- ------------------------------------------------------
--- Server version	5.5.47-0ubuntu0.14.04.1-log
+-- Server version	5.7.17-0ubuntu0.16.04.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -2009,7 +1850,7 @@ INSERT INTO `actor_role` VALUES ('AGT','Primary Agent',20,0,1,0,0,0,3,NULL,NULL,
 ('AGT2','Secondary Agent',22,0,1,0,0,0,3,NULL,'Usually the primary agent\'s agent','root@localhost','2011-05-05 09:17:57','root@localhost'),
 ('ANN','Annuity Agent',21,0,1,0,0,0,3,NULL,'Agent in charge of renewals. \"Client handled\" is a special agent who, when added, will delete any renewals in the matter','root','2016-03-16 15:49:49','root'),
 ('APP','Applicant',3,1,1,0,0,0,1,NULL,'Assignee in the US, i.e. the owner upon filing','root','2016-03-16 15:49:49','root'),
-('CLI','Client',1,1,1,0,1,0,1,NULL,'The client we take instructions from and who we invoice ','root','2016-03-16 15:49:50','root'),
+('CLI','Client',1,1,1,0,1,0,1,NULL,'The client we take instructions from and who we invoice. DO NOT CHANGE OR DELETE: this is also a database user role','root','2016-04-03 13:56:28','root'),
 ('CNT','Contact',30,1,1,1,0,0,4,NULL,'Client\'s contact person','root@localhost','2011-05-05 09:19:26','root@localhost'),
 ('DEL','Delegate',31,1,0,0,0,0,4,NULL,'Another user allowed to manage the case','root','2016-03-16 15:49:50','root'),
 ('FAGT','Former Agent',23,0,1,0,0,0,127,'#000000',NULL,'root','2012-08-06 09:03:14','root'),
@@ -2346,7 +2187,7 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('EOP','End of Procedure','PAT',NULL,0,1,NULL,0,1,0,1,'Indicates end of international phase for PCT','root@localhost','2014-07-07 14:01:03','root'),
 ('EXA','Examiner Action',NULL,NULL,0,0,NULL,0,0,0,0,'AKA Office Action, i.e. anything related to substantive examination','root@localhost','2011-03-20 17:03:46','root@localhost'),
 ('EXAF','Examiner Action (Final)','PAT','US',0,0,NULL,0,0,0,0,NULL,'root','2013-10-10 16:09:24','root'),
-('EXP','Expiry',NULL,NULL,0,1,NULL,0,1,0,1,'Do not use nor change - present for internal functionality','root@localhost','2013-12-17 13:31:30','root'),
+('EXP','Expiry',NULL,NULL,0,1,NULL,0,1,0,1,'Do not use nor change - present for internal functionality','root@localhost','2017-01-17 13:43:06','root'),
 ('FAP','File Notice of Appeal',NULL,NULL,1,0,NULL,1,0,0,0,NULL,'root','2016-01-30 11:46:54','root'),
 ('FBY','File by',NULL,NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost','2012-01-18 06:50:04','root'),
 ('FDIV','File Divisional','PAT',NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost','2011-04-23 20:44:30','root@localhost'),
@@ -2375,7 +2216,7 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('REF','Refused',NULL,NULL,0,1,NULL,0,0,0,0,'This is the final decision, that can only be appealed - do not mistake with an exam report','root@localhost','2013-09-19 10:27:58','root'),
 ('REG','Registration','TM',NULL,0,1,NULL,0,0,0,0,NULL,'root','2012-06-19 09:54:42',NULL),
 ('REM','Reminder',NULL,NULL,1,0,NULL,0,0,0,0,NULL,'root@localhost','2011-05-09 17:11:17',NULL),
-('REN','Renewal',NULL,NULL,1,0,NULL,0,0,1,0,'AKA Annuity','root@localhost','2013-05-16 13:24:28','root'),
+('REN','Renewal',NULL,NULL,1,0,'root',0,0,1,0,'AKA Annuity','root@localhost','2013-05-16 13:24:28','root'),
 ('REP','Respond',NULL,NULL,1,0,NULL,1,0,0,0,'Use for any response','root@localhost','2011-09-22 11:40:57','root'),
 ('REQ','Request Examination',NULL,NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost',NULL,NULL),
 ('RSTR','Restriction Req.','PAT','US',0,0,NULL,0,0,0,0,NULL,'root','2011-11-03 15:53:39','root'),
@@ -2401,10 +2242,10 @@ INSERT INTO `matter_category` VALUES ('AGR',NULL,'Agreement','OTH','root@localho
 ('IN',NULL,'Register Change','OTH','root@localhost','2011-09-27 15:52:04','root'),
 ('ISS','300','Issue','LTG','root','2011-10-20 16:15:34',NULL),
 ('LTG','300','Litigation','LTG','root@localhost','2011-10-13 16:18:28','root'),
+('OP','300','Opposition (patent)','LTG','root@localhost','2016-11-15 13:10:12','root'),
 ('OPI','300','Opinion','LTG','root','2014-10-14 08:22:29','root'),
 ('OTH','300','Others','OTH','root','2011-10-13 16:18:36','root'),
-('PAT','100','Patent','PAT','root@localhost','2011-09-27 15:44:31','root'),
-('OP','300','Opposition (patent)','LTG','root@localhost','2012-06-16 23:58:50','root'),
+('PAT','101','Patent','PAT','root@localhost','2016-10-05 11:33:25','root'),
 ('PRO','100','Provisional Application','PAT','root@localhost','2011-10-13 16:19:03','root'),
 ('SL',NULL,'Commercial Slogan','TM','root','2012-06-16 23:56:19',NULL),
 ('SO',NULL,'Soleau Envelop','PAT','root@localhost','2011-09-27 15:26:20','root'),
@@ -2464,17 +2305,16 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (24,1,'DBY','REC',0,0,'PAT',NULL,NULL,NULL,NULL,0,2,0,0,0,'PRI',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-10-21 07:33:15','root'),
 (25,1,'PRID','PRI',0,1,'PAT',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root@localhost','2011-11-04 08:03:27','root'),
 (26,1,'EHK','PUB',0,0,'PAT','CN',NULL,NULL,NULL,0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-09-02 14:13:42','root'),
-(27,1,'FOP','GRT',0,0,'OP','EP',NULL,NULL,NULL,0,9,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-09-02 14:13:42','root'),
+(27,1,'FOP','GRT',0,0,'OP','EP',NULL,NULL,NULL,0,9,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2016-11-15 13:24:01','root'),
 (29,1,'DBY','FIL',1,0,'PAT',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-09-02 14:13:42','root'),
 (30,1,'PROD','FIL',0,0,'PAT','US',NULL,NULL,'IDS',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-03-22 20:09:57',NULL),
-(31,1,'REM','FIL',0,0,'PAT','FR',NULL,NULL,'Translation for Revision',0,5,0,0,0,'PRI',NULL,1,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2012-05-30 13:23:50','root'),
 (32,1,'REP','EXA',0,0,'PAT','WO',NULL,NULL,NULL,0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-09-02 14:13:42','root'),
 (33,1,'EXP','FIL',0,0,'PAT','WO',NULL,NULL,NULL,0,31,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-09-02 14:13:42','root'),
 (34,1,'REM','FIL',0,0,'PAT','WO',NULL,NULL,'National Phase',0,27,0,0,0,NULL,NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-05-09 17:11:57','root@localhost'),
 (35,1,'PROD','FIL',0,0,'PAT','FR',NULL,NULL,'Small Entity',0,1,0,0,0,'PRI',NULL,1,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-10-05 19:56:19','root'),
 (36,1,'PAY','GRT',0,0,'PAT','CN',NULL,NULL,'HK Grant Fee',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-03-22 22:59:22',NULL),
 (37,1,'REP','COM',0,0,'PAT',NULL,NULL,NULL,'Communication',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2013-06-19 10:06:23','root'),
-(38,1,'FOP','OPP',1,0,'OP','EP',NULL,NULL,NULL,0,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Clear \"File Opposition\" task when \"Opposition\" event is created','root@localhost','2011-09-02 14:13:42','root'),
+(38,1,'FOP','OPP',1,0,'OP','EP',NULL,NULL,NULL,0,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Clear \"File Opposition\" task when \"Opposition\" event is created','root@localhost','2016-11-15 13:24:01','root'),
 (39,1,'PAY','ALL',0,0,'PAT','JP',NULL,NULL,'Grant fee',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-23 14:14:59','root'),
 (40,1,'FPR','DW',0,0,'PAT','EP',NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-09 22:41:20','root'),
 (41,1,'REP','PSR',0,0,'PAT','EP',NULL,NULL,'R70(2)',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-01-11 14:54:08','root'),
@@ -2486,16 +2326,15 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (47,1,'REP','COM',0,0,'PAT','EP',NULL,NULL,'R161',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-19 08:23:13','root'),
 (48,1,'APL','REF',0,0,'PAT',NULL,NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-03 16:38:31',NULL),
 (49,1,'PROD','REF',0,0,'PAT',NULL,NULL,NULL,'Grounds of Appeal',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-08-08 16:12:53','root'),
-(52,1,'REP','COM',0,0,'OP','EP',NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-03 18:06:54',NULL),
+(52,1,'REP','COM',0,0,'OP','EP',NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
 (53,1,'REQ','FIL',0,0,'PAT','KR',NULL,NULL,NULL,0,0,5,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:10','root'),
 (54,1,'REQ','FIL',0,0,'PAT','CA',NULL,NULL,NULL,0,0,5,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:11','root'),
 (55,1,'REQ','FIL',0,0,'PAT','CN',NULL,NULL,NULL,0,0,3,0,0,'EXA',NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:11','root'),
 (56,1,'PAY','ALL',0,0,'PAT','CA',NULL,NULL,'Grant Fees',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:06','root'),
 (57,1,'PROD','PRI',0,0,'PAT',NULL,NULL,NULL,'Priority Docs',0,16,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:12','root'),
 (58,1,'PAY','FIL',0,0,'PAT','WO',NULL,NULL,'Filing Fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:17','root'),
-(59,1,'PROD','FIL',0,0,'PAT','WO',NULL,NULL,'Power',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:25','root'),
 (60,1,'REM','ALL',0,0,'PAT','US',NULL,NULL,'File divisional',0,1,0,0,0,NULL,'RSTR',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:50:59',NULL),
-(61,1,'REP','EXA',0,0,'PAT','CN',NULL,NULL,'Exam Report',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-05-23 12:30:51','root'),
+(61,1,'REP','EXA',0,0,'PAT','CN',NULL,NULL,'Exam Report',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-04-18 15:17:15','root'),
 (62,1,'REP','EXA',0,0,'PAT','CA',NULL,NULL,'Exam Report',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:51:51','root'),
 (63,1,'REM','SR',0,0,'PAT','FR',NULL,NULL,'Request extension',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:52:04','root'),
 (64,1,'REM','EXA',0,0,'PAT','EP',NULL,NULL,'Request extension',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:52:16','root'),
@@ -2580,7 +2419,7 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1133,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:40','root'),
 (1134,1,'REN','REG',0,0,'TM','CN',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:08:41','root'),
 (1181,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Annexure to Form 3',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:33','root'),
-(1182,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Deed of Assignment',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:36','root'),
+(1182,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Declaration',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:40:06','root'),
 (1183,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Power',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:45','root'),
 (1184,1,'PAY','ALL',0,0,'PAT','KR',NULL,NULL,'Grant fee',0,3,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-12-26 15:58:04',NULL),
 (1185,1,'PAY','ALL',0,0,'PAT','TW',NULL,NULL,'Grant Fees',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-01-07 17:05:22',NULL),
@@ -2660,19 +2499,28 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1290,1,'REN','FIL',0,0,'SO','FR',NULL,NULL,'Soleau',0,0,5,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:12:28',NULL),
 (1291,1,'WAT','FIL',0,0,'SO','FR',NULL,NULL,'End of protection',0,114,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:14:53','root'),
 (1292,1,'EXP','FIL',0,0,'SO','FR',NULL,NULL,NULL,0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:14:24',NULL),
-(1299,1,'OPR','SOP',0,0,'OP',NULL,NULL,NULL,NULL,0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-06 14:48:23','root'),
-(1300,1,'PROD','SOP',0,0,'OP',NULL,NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-06 14:49:50',NULL),
+(1299,1,'OPR','SOP',0,0,'OP',NULL,NULL,NULL,NULL,0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
+(1300,1,'PROD','SOP',0,0,'OP',NULL,NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
 (1301,1,'PROD','PRI',0,0,'PAT','US','WO',NULL,'Decl. and Assignment',0,30,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-14 13:00:44','root'),
 (1302,1,'REQ','FIL',0,0,'PAT','BR',NULL,NULL,NULL,0,0,3,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-01-05 16:39:05',NULL),
-(1303,1,'APL','ORE',0,0,'OP','EP',NULL,NULL,'File Appeal',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-01-09 09:09:04','root'),
-(1304,1,'PROD','ORE',0,0,'OP','EP',NULL,NULL,'Grounds of Appeal',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-01-09 09:09:07','root'),
+(1303,1,'APL','ORE',0,0,'OP','EP',NULL,NULL,'File Appeal',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
+(1304,1,'PROD','ORE',0,0,'OP','EP',NULL,NULL,'Grounds of Appeal',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
 (1305,1,'PRID','FIL',0,0,'DSG',NULL,NULL,NULL,NULL,0,6,0,0,0,'PRI',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Priority deadline is inserted only if no priority event exists','root','2015-12-17 08:37:47',NULL),
 (1306,1,'PRID','PRI',0,1,'DSG',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root','2015-12-17 10:41:57',NULL),
 (1307,1,'PRID','PRI',0,1,'TM',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root','2015-12-17 10:43:44',NULL),
 (1308,1,'REN','FIL',0,0,'DSG','WO',NULL,NULL,'1',0,0,5,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 13:35:47','root'),
 (1309,1,'REN','FIL',0,0,'DSG','WO',NULL,NULL,'2',0,0,10,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 13:36:12','root'),
 (1310,1,'PROD','REC',0,0,'OPI',NULL,NULL,NULL,'Opinion',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-02-26 14:26:26','root'),
-(1311,1,'PROD','REC',0,0,'SR',NULL,NULL,NULL,'Report',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-02-26 14:26:26','root');
+(1311,1,'PROD','REC',0,0,'SR',NULL,NULL,NULL,'Report',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-02-26 14:26:26','root'),
+(1314,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Verification of translation',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-06-16 09:18:11',NULL),
+(1315,1,'REP','EXA',0,0,'TM','JP',NULL,NULL,'Exam Report',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-12 14:44:28','root'),
+(1316,1,'PROD','EXA',0,0,'TM','JP',NULL,NULL,'POA',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-12 14:44:32','root'),
+(1317,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Verification of translation',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:42:13','root'),
+(1318,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Annexure to Form 3',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:42:42','root'),
+(1319,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Declaration',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:43:04','root'),
+(1320,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Power',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:43:24',NULL),
+(1321,1,'PROD','SR',0,0,'PAT','EP',NULL,NULL,'Analysis of SR',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-12-22 15:45:21',NULL),
+(1322,1,'REM','GRT',0,0,'PAT',NULL,NULL,NULL,'Create Task Expiry',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-01-17 13:54:52','root');
 /*!40000 ALTER TABLE `task_rules` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -2685,12 +2533,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-21 11:13:52
--- MySQL dump 10.13  Distrib 5.5.47, for debian-linux-gnu (x86_64)
+-- Dump completed on 2017-02-01 17:21:50
+-- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
 --
 -- Host: localhost    Database: phpip
 -- ------------------------------------------------------
--- Server version	5.5.47-0ubuntu0.14.04.1-log
+-- Server version	5.7.17-0ubuntu0.16.04.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -2710,7 +2558,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `actor` WRITE;
 /*!40000 ALTER TABLE `actor` DISABLE KEYS */;
-INSERT INTO `actor` VALUES (119,'Client handled',NULL,'CLIENT',NULL,NULL,NULL,NULL,'ANN','',NULL,NULL,NULL,0,NULL,0,'',NULL,'',NULL,'',NULL,NULL,NULL,NULL,NULL,'0','DO NOT DELETE - Special actor used for removing renewal tasks that are handled by the client',NULL,'root','2013-09-19 08:03:51','root');
+INSERT INTO `actor` VALUES (119,'Client handled',NULL,'CLIENT',NULL,NULL,NULL,NULL,'ANN','',NULL,NULL,NULL,0,NULL,0,'',NULL,'',NULL,'',NULL,NULL,NULL,NULL,NULL,0,'DO NOT DELETE - Special actor used for removing renewal tasks that are handled by the client',NULL,'root','2016-06-18 07:21:41','root');
 /*!40000 ALTER TABLE `actor` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -2723,11 +2571,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-03-21 11:13:52
+-- Dump completed on 2017-02-01 17:21:50
 
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
 SET AUTOCOMMIT = 1;
+
 
 -- User creation
 CREATE USER 'phpip'@'localhost' IDENTIFIED BY 'changeme'; 
