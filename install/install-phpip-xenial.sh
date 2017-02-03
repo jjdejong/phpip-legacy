@@ -12,7 +12,7 @@ echo "
 Installing Apache, MySQL, PHP and Zend Framework. 
 You will be prompted for a new MySQL password - provide it and remember it
 ********************************"
-apt-get -y install lamp-server^ zend-framework-bin git-core
+apt-get -y install lamp-server^ zend-framework-bin git-core php7.0-simplexml
 sed -i "s/^#application\/x-httpd-php/application\/x-httpd-php/" /etc/mime.types
 a2enmod rewrite
 echo "127.0.0.1    phpip.local" >> /etc/hosts
