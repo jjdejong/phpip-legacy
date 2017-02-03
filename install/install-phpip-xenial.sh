@@ -22,7 +22,7 @@ echo "
 ********************************
 Getting phpIP from GitHub
 ********************************"
-cd /var/www
+cd /var/www/html
 git clone https://github.com/jjdejong/phpip.git
 cp phpip/install/conf/phpip.conf /etc/apache2/sites-enabled/
 service apache2 reload
