@@ -413,7 +413,7 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 		$event_id = $event_task ['event_ID'];
 ?>
 		<div class="event-head">
-			<span class="tasklist-col-detail">
+			<span>
 				<?=$event_task['event_name'] . ": " . $event_task['event_date'] ?>
 			</span>
 			<span class="event-actions add-task-toevent" id="<?=$event_id?>" title="Add task to <?=$event_task['event_name']?>">

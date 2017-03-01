@@ -1627,47 +1627,6 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `recreate_renewals`()
-begin
-	declare vtriggerid int;
-	declare done int default FALSE;
-	declare cur cursor for select event.id from matter 
-		join matter_actor_lnk mal on (matter.id=mal.matter_id and mal.role='ANN' and mal.actor_id=410)
-		join event on (matter.id=event.matter_id)
-		where (caseref like '500%' or caseref like '510%' or caseref like '600%' or caseref like '610%')
-		and event.code in ('FIL','REG','PR')
-		and not exists (select 1 from task_list tl where matter.id=tl.matter_id and code='REN')
-		and dead=0
-		and origin is null;
-
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
-
-	open cur;
-
-	cur_loop: loop
-		fetch cur into vtriggerid;
-		IF done THEN 
-			LEAVE cur_loop; 
-		END IF;
-		
-	end loop;
-
-	close cur;
-end ;;
-DELIMITER ;
-/*!50003 SET sql_mode              = @saved_sql_mode */ ;
-/*!50003 SET character_set_client  = @saved_cs_client */ ;
-/*!50003 SET character_set_results = @saved_cs_results */ ;
-/*!50003 SET collation_connection  = @saved_col_connection */ ;
-/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
-/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
-/*!50003 SET @saved_col_connection = @@collation_connection */ ;
-/*!50003 SET character_set_client  = utf8 */ ;
-/*!50003 SET character_set_results = utf8 */ ;
-/*!50003 SET collation_connection  = utf8_general_ci */ ;
-/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
-/*!50003 SET sql_mode              = '' */ ;
-DELIMITER ;;
 CREATE DEFINER=`root`@`localhost` PROCEDURE `recreate_tasks`(IN Ptrigger_id INT)
 proc: BEGIN
   DECLARE vevent_date, vdue_date, vbase_date, vexpiry, tmp_date DATE DEFAULT NULL;
@@ -2519,8 +2478,7 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1318,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Annexure to Form 3',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:42:42','root'),
 (1319,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Declaration',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:43:04','root'),
 (1320,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Power',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:43:24',NULL),
-(1321,1,'PROD','SR',0,0,'PAT','EP',NULL,NULL,'Analysis of SR',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-12-22 15:45:21',NULL),
-(1322,1,'REM','GRT',0,0,'PAT',NULL,NULL,NULL,'Create Task Expiry',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-01-17 13:54:52','root');
+(1321,1,'PROD','SR',0,0,'PAT','EP',NULL,NULL,'Analysis of SR',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-12-22 15:45:21',NULL);
 /*!40000 ALTER TABLE `task_rules` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
