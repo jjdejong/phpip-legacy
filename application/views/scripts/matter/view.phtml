@@ -696,6 +696,10 @@ foreach ( $this->matter_events as $event ) :
 					$href = 'http://bases-marques.inpi.fr/Typo3_INPI_Marques/marques_resultats_liste.html?baseFr=on&baseCommu=on&baseInter=on&rechercher=Rechercher&recherche=recherche&numero=' . $cleanednumber;
 				}
 				break;
+			case 'US':
+				$year = substr ($event ['event_date'], -4 );
+				$href = 'https://register.epo.org/ipfwretrieve?apn=US.' . $year . $cleanednumber . '.A';
+				break;
 			case 'GB':
 				$href = 'http://www.ipo.gov.uk/p-ipsum/Case/ApplicationNumber/' . $CC . $cleanednumber;
 				break;
