@@ -180,9 +180,10 @@ $(document).ready(function(){
     $('#task_assigned_to').autocomplete({
         minLength: 1,
         source: "/actor/get-all-logins",
-        select: function( event, ui ) {
-            this.value = ui.item.value;
-        }
+        change: function (event, ui) {
+			if (!ui.item)
+				$(this).val("");
+		}
     });
 
     $("#MatterAllTasks").click(function(event){
@@ -289,33 +290,15 @@ $(document).ready(function(){
     });
 
     $( "#task_name" ).autocomplete({
-            minLength: 1,
-            source: "/matter/get-all-tasks",
-            focus: function( event, ui ) {
-                    return false;
-            },
-            select: function( event, ui ) {
-                    $( "#task_name" ).val( ui.item.value );
-                    $( "#task_id" ).val( ui.item.id );
-                    var valid=true;
-                    if ( !ui.item ) {
-                      var matcher = $.ui.autocomplete.escapeRegex( $(this).val() );
-                      valid = false;
-                      ui.item.each(function(value) {
-                        if ( value.match( matcher ) ) {
-                          valid = true;
-                          return true;
-                        }
-                      });
-                    }
-                   if ( !valid ) {
-                     // remove invalid value, as it didn't match anything
-                      $( this ).val( "" );
-                      $(this).data( "autocomplete" ).term = "";
-                      return false;
-                   }
-                    return true;
-        }
+		minLength: 1,
+		source: "/matter/get-all-tasks",
+		select: function( event, ui ) {
+        	$( "#task_id" ).val( ui.item.id );
+		},
+		change: function (event, ui) {
+			if (!ui.item)
+				$(this).val("");
+		}
     });
 
     $('#task_duedate').datepicker({
@@ -335,7 +318,7 @@ $(document).ready(function(){
        		trigger_ID: $('#trigger_id').val(),
 			code: $('#task_id').val(),
 			due_date: $('#task_duedate').val(),
-			assigned_to: $('#task_assignedto').val(),
+			assigned_to: $('#task_assigned_to').val(),
 			detail: $('#task_detail').val(),
 			time_spent: $('#task_time').val(),
 			notes: $('#task_notes').val(),
