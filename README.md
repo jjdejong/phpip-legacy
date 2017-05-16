@@ -1,3 +1,5 @@
+This version is no longer being maintained because of the obsolescence of Zend Framework 1. A [new version](https://github.com/jjdejong/phpip-v2) is being developed based on Laravel.
+
 # Introduction #
 
 phpIP is a web tool developed by [Omnipat](http://www.omnipat.fr/?lang=en) for managing an IP rights portfolio, especially patents. It is intended to satisfy most needs of an IP law firm. The tool was designed to be flexible and simple to use. It is based on an Apache-MySQL-PHP framework.
