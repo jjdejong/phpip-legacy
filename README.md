@@ -1,4 +1,4 @@
-This version is no longer being maintained because of the obsolescence of Zend Framework 1. A [new version](https://github.com/jjdejong/phpip-v2) is being developed based on Laravel.
+**_This version is no longer being maintained because of the obsolescence of Zend Framework 1. A [new version](https://github.com/jjdejong/phpip-v2) is being developed based on Laravel._**
 
 # Introduction #
 
