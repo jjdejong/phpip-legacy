@@ -377,9 +377,9 @@ DELIMITER ;;
 	SET new.creator = SUBSTRING_INDEX(USER(),'@',1);
 	
 	
-	IF NEW.alt_matter_ID IS NOT NULL THEN
-		IF EXISTS (SELECT 1 FROM event WHERE code='FIL' AND NEW.alt_matter_ID=matter_ID AND event_date IS NOT NULL) THEN
-			SELECT event_date INTO vdate FROM event WHERE code='FIL' AND NEW.alt_matter_ID=matter_ID;
+	IF NEW.alt_matter_id IS NOT NULL THEN
+		IF EXISTS (SELECT 1 FROM event WHERE code='FIL' AND NEW.alt_matter_id=matter_id AND event_date IS NOT NULL) THEN
+			SELECT event_date INTO vdate FROM event WHERE code='FIL' AND NEW.alt_matter_id=matter_id;
 			SET NEW.event_date = vdate;
 		ELSE
 			SET NEW.event_date = Now();
@@ -402,7 +402,7 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_insert` AFTER INSERT ON `event` FOR EACH ROW trig: BEGIN
   DECLARE vdue_date, vbase_date, vexpiry, tmp_date DATE DEFAULT NULL;
-  DECLARE vid_uqtask, vrule_id, vdays, vmonths, vyears, vpta, vid, vcli_ann_agt INT DEFAULT NULL;
+  DECLARE vcontainer_id, vid_uqtask, vrule_id, vdays, vmonths, vyears, vpta, vid, vcli_ann_agt INT DEFAULT NULL;
   DECLARE vtask, vtype, vcurrency CHAR(5) DEFAULT NULL;
   DECLARE vdetail, vresponsible VARCHAR(160) DEFAULT NULL;
   DECLARE done, vclear_task, vdelete_task, vend_of_month, vunique, vrecurring, vuse_parent, vuse_priority, vdead BOOLEAN DEFAULT 0;
@@ -412,35 +412,36 @@ DELIMITER ;;
   DECLARE cur_rule CURSOR FOR 
     SELECT task_rules.id, task, clear_task, delete_task, detail, days, months, years, recurring, end_of_month, use_parent, use_priority, cost, fee, currency, task_rules.responsible, event_name.`unique`
     FROM task_rules, event_name, matter
-    WHERE NEW.matter_ID=matter.ID
+    WHERE NEW.matter_id=matter.id
     AND event_name.code=task
     AND NEW.code=trigger_event
     AND (for_category, ifnull(for_country, matter.country), ifnull(for_origin, matter.origin), ifnull(for_type, matter.type_code))<=>(matter.category_code, matter.country, matter.origin, matter.type_code)
 	AND (uqtrigger=0 
 		OR (uqtrigger=1 AND NOT EXISTS (SELECT 1 FROM task_rules tr 
 		WHERE (tr.task, tr.for_category, tr.for_country)=(task_rules.task, matter.category_code, matter.country) AND tr.trigger_event!=task_rules.trigger_event)))
-    AND NOT EXISTS (SELECT 1 FROM event WHERE matter_ID=NEW.matter_ID AND code=abort_on)
-    AND (condition_event IS null OR EXISTS (SELECT 1 FROM event WHERE matter_ID=NEW.matter_ID AND code=condition_event))
+    AND NOT EXISTS (SELECT 1 FROM event WHERE matter_id=NEW.matter_id AND code=abort_on)
+    AND (condition_event IS null OR EXISTS (SELECT 1 FROM event WHERE matter_id=NEW.matter_id AND code=condition_event))
     AND (NEW.event_date < use_before OR use_before IS null)
     AND (NEW.event_date > use_after OR use_after IS null)
     AND active=1;
 
   
   DECLARE cur_linked CURSOR FOR
-	SELECT matter_id FROM event WHERE alt_matter_ID=NEW.matter_ID; 
+	SELECT matter_id FROM event WHERE alt_matter_id=NEW.matter_id; 
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
-  SELECT type_code, dead, expire_date, term_adjust INTO vtype, vdead, vexpiry, vpta FROM matter WHERE matter.ID=NEW.matter_ID;
+  SELECT container_id, type_code, dead, expire_date, term_adjust INTO vcontainer_id, vtype, vdead, vexpiry, vpta FROM matter WHERE matter.id=NEW.matter_id;
   SELECT id INTO vcli_ann_agt FROM actor WHERE display_name='CLIENT';
   
-  
+  -- Do not change anything in dead cases
   IF (vdead) THEN
     LEAVE trig;
   END IF;
   
+  -- Set matter to "dead" if the expire date has been reached
   IF (!vdead AND Now() > vexpiry) THEN
-	UPDATE matter SET dead = 1 WHERE matter.ID=NEW.matter_ID;
+	UPDATE matter SET dead = 1 WHERE matter.id=NEW.matter_id;
     LEAVE trig;
   END IF;
 
@@ -455,71 +456,71 @@ DELIMITER ;;
       LEAVE create_tasks; 
     END IF;
 
-	
-	IF (vtask='REN' AND EXISTS (SELECT 1 FROM matter_actor_lnk lnk WHERE lnk.role='ANN' AND lnk.actor_id=vcli_ann_agt AND lnk.matter_id=NEW.matter_ID)) THEN
+	-- Skip renewal tasks if the client is the annuity agent
+	IF (vtask='REN' AND EXISTS (SELECT 1 FROM matter_actor_lnk lnk WHERE lnk.role='ANN' AND lnk.actor_id=vcli_ann_agt AND lnk.matter_id=NEW.matter_id)) THEN
 		ITERATE create_tasks;
 	END IF;
 
-	
 	IF vuse_parent THEN
-		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_ID=NEW.matter_ID;
+	-- Use parent filing date for task deadline calculation, if PFIL event exists
+		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_id=NEW.matter_id;
 	END IF;
 
-	
 	IF vuse_priority THEN
-		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_ID=NEW.matter_ID;
+	-- Use earliest priority date for task deadline calculation, if a PRI event exists
+		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_id=NEW.matter_id;
 	END IF;
 
-    
     IF vclear_task THEN
-      UPDATE task, event SET task.done=1, task.done_date=NEW.event_date WHERE task.trigger_ID=event.ID AND task.code=vtask AND matter_ID=NEW.matter_ID AND done=0;
+    -- Clear the task identified by the rule (do not create anything)
+      UPDATE task, event SET task.done=1, task.done_date=NEW.event_date WHERE task.trigger_id=event.id AND task.code=vtask AND matter_id=NEW.matter_id AND done=0;
       ITERATE create_tasks;
     END IF;
 
-    
-    IF vdelete_task THEN
-      DELETE task FROM event INNER JOIN task WHERE task.trigger_ID=event.ID AND task.code=vtask AND matter_ID=NEW.matter_ID;
+    IF (vdelete_task AND vcontainer_id IS NOT NULL) THEN
+    -- Delete the task identified by the rule, only if the matter is a new family member (do not create anything)
+      DELETE task FROM event INNER JOIN task WHERE task.trigger_id=event.id AND task.code=vtask AND matter_id=NEW.matter_id;
       ITERATE create_tasks;
     END IF;
 
-    
+    -- If the new event is unique or the event is a priority claim, retrieve a similar event if it already exists 
 	IF (vunique OR NEW.code='PRI') THEN 
-		IF EXISTS (SELECT 1 FROM task, event WHERE event.id=task.trigger_id AND event.matter_ID=NEW.matter_ID AND task.rule_used=vrule_id) THEN
-			SELECT task.id INTO vid_uqtask FROM task, event WHERE event.id=task.trigger_id AND event.matter_ID=NEW.matter_ID AND task.rule_used=vrule_id;
+		IF EXISTS (SELECT 1 FROM task JOIN event ON event.id=task.trigger_id WHERE event.matter_id=NEW.matter_id AND task.rule_used=vrule_id) THEN
+			SELECT task.id INTO vid_uqtask FROM task JOIN event ON event.id=task.trigger_id WHERE event.matter_id=NEW.matter_id AND task.rule_used=vrule_id;
 		END IF;
 	END IF;
 
-	
+	-- If the unique event or a priority claim already exists and its date is earlier than the new date, do nothing. If its date is later than the new date, proceed with the new date
     IF (!vuse_parent AND !vuse_priority AND (vunique OR NEW.code='PRI') AND vid_uqtask > 0) THEN
-      SELECT min(event_date) INTO vbase_date FROM event_lnk_list WHERE matter_ID=NEW.matter_ID AND code=NEW.code;
-      IF vbase_date < NEW.event_date THEN
-		
+      SELECT min(event_date) INTO vbase_date FROM event_lnk_list WHERE matter_id=NEW.matter_id AND code=NEW.code;
+      IF vbase_date < NEW.event_date THEN	
         ITERATE create_tasks;
       END IF;
     END IF;
 
+	-- Calculate the deadline
     SET vdue_date = vbase_date + INTERVAL vdays DAY + INTERVAL vmonths MONTH + INTERVAL vyears YEAR;
     IF vend_of_month THEN
       SET vdue_date=LAST_DAY(vdue_date);
     END IF;
 
-	
-	IF (vtask = 'REN' AND EXISTS (SELECT 1 FROM event WHERE code='PFIL' AND matter_ID=NEW.matter_ID) AND vdue_date < NEW.event_date) THEN
+	-- Dealine for renewals that have become due in a parent case when filing a divisional (EP 4-months rule)
+	IF (vtask = 'REN' AND EXISTS (SELECT 1 FROM event WHERE code='PFIL' AND matter_id=NEW.matter_id) AND vdue_date < NEW.event_date) THEN
 		SET vdue_date = NEW.event_date + INTERVAL 4 MONTH;
 	END IF;
 
-	
+	-- Skip creating tasks having a deadline in the past, except if the event is the expiry
     IF (vdue_date < Now() AND vtask != 'EXP') THEN
       ITERATE create_tasks;
     END IF;
 
+	-- Handle the expiry task (no task created). Otherwise replace an existing unique task with the current (unique) task, or insert the new (non-unique) task
     IF vtask='EXP' THEN
-		UPDATE matter SET expire_date = vdue_date + INTERVAL vpta DAY WHERE matter.ID=NEW.matter_ID;
+		UPDATE matter SET expire_date = vdue_date + INTERVAL vpta DAY WHERE matter.id=NEW.matter_id;
 	ELSEIF vid_uqtask > 0 THEN
-		UPDATE task SET trigger_ID=NEW.ID, due_date=vdue_date WHERE ID=vid_uqtask;
+		UPDATE task SET trigger_id=NEW.id, due_date=vdue_date WHERE id=vid_uqtask;
 	ELSE
-		
-		INSERT INTO task (trigger_id,code,due_date,detail,rule_used,cost,fee,currency,assigned_to) values (NEW.ID,vtask,vdue_date,vdetail,vrule_id,vcost,vfee,vcurrency,vresponsible);
+		INSERT INTO task (trigger_id,code,due_date,detail,rule_used,cost,fee,currency,assigned_to) values (NEW.id,vtask,vdue_date,vdetail,vrule_id,vcost,vfee,vcurrency,vresponsible);
 	END IF;
 
   END LOOP create_tasks;
@@ -527,6 +528,7 @@ DELIMITER ;;
 
   SET done = 0;
 
+  -- If the event is a filing, update the tasks of the matters linked by event (typically the tasks based on the priority date)
   IF NEW.code = 'FIL' THEN
 	OPEN cur_linked;
 	recalc_linked: LOOP
@@ -539,20 +541,20 @@ DELIMITER ;;
 	CLOSE cur_linked;
   END IF;
 
-  
+  -- Recalculate tasks based on the priority date or a parent case upon inserting a new priority claim or a parent filed event
   IF NEW.code IN ('PRI', 'PFIL') THEN
-    CALL recalculate_tasks(NEW.matter_ID, 'FIL');
+    CALL recalculate_tasks(NEW.matter_id, 'FIL');
   END IF;
 
-  
+  -- Set matter to dead upon inserting a killer event
   SELECT killer INTO vdead FROM event_name WHERE NEW.code=event_name.code;
   IF vdead THEN
-    UPDATE matter SET dead = 1 WHERE matter.ID=NEW.matter_ID;
+    UPDATE matter SET dead = 1 WHERE matter.id=NEW.matter_id;
   END IF;
   
-  -- Check that we are not in a nested trigger before updating the matter change time
+  -- Ensure that we are not in a nested trigger before updating the matter change time
   IF NEW.code != 'CRE' THEN
-	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=NEW.matter_id;
   END IF;
 
 END trig */;;
@@ -575,8 +577,8 @@ DELIMITER ;;
 	
 	SET new.updater=SUBSTRING_INDEX(USER(),'@',1);
 	-- Date taken from Filed event in linked matter
-	IF NEW.alt_matter_ID IS NOT NULL THEN
-		SELECT event_date INTO vdate FROM event WHERE code='FIL' AND NEW.alt_matter_ID=matter_ID;
+	IF NEW.alt_matter_id IS NOT NULL THEN
+		SELECT event_date INTO vdate FROM event WHERE code='FIL' AND NEW.alt_matter_id=matter_id;
 		SET NEW.event_date = vdate;
 	END IF;
 END */;;
@@ -605,17 +607,17 @@ DELIMITER ;;
   DECLARE cur_rule CURSOR FOR 
     SELECT task.id, days, months, years, recurring, end_of_month, use_parent, use_priority
     FROM task_rules, task
-    WHERE task.rule_used=task_rules.ID
-	AND task.trigger_ID=NEW.ID;
+    WHERE task.rule_used=task_rules.id
+	AND task.trigger_id=NEW.id;
 
   
   DECLARE cur_linked CURSOR FOR
-	SELECT matter_id FROM event WHERE alt_matter_ID=NEW.matter_ID;
+	SELECT matter_id FROM event WHERE alt_matter_id=NEW.matter_id;
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
   
-  IF (OLD.event_date = NEW.event_date AND NEW.alt_matter_ID <=> OLD.alt_matter_ID) THEN
+  IF (OLD.event_date = NEW.event_date AND NEW.alt_matter_id <=> OLD.alt_matter_id) THEN
     LEAVE trig;
   END IF;
 
@@ -631,12 +633,12 @@ DELIMITER ;;
 	
 	
 	IF vuse_parent THEN
-		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_ID=NEW.matter_ID;
+		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_id=NEW.matter_id;
 	END IF;
 	
 	
 	IF vuse_priority THEN
-		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_ID=NEW.matter_ID;
+		SELECT CAST(IFNULL(min(event_date), NEW.event_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_id=NEW.matter_id;
 	END IF;
 
 	
@@ -645,7 +647,7 @@ DELIMITER ;;
       SET vdue_date=LAST_DAY(vdue_date);
     END IF;
 
-    UPDATE task set due_date=vdue_date WHERE ID=vtask_id;
+    UPDATE task set due_date=vdue_date WHERE id=vtask_id;
 
   END LOOP update_tasks;
   CLOSE cur_rule;
@@ -668,22 +670,22 @@ DELIMITER ;;
 
   
   IF NEW.code IN ('PRI', 'PFIL') THEN  
-    CALL recalculate_tasks(NEW.matter_ID, 'FIL');
+    CALL recalculate_tasks(NEW.matter_id, 'FIL');
   END IF;
 
   IF NEW.code IN ('FIL', 'PFIL') THEN  
 	
-    SELECT category_code, term_adjust, country INTO vcategory, vpta, vcountry FROM matter WHERE matter.ID=NEW.matter_ID;
+    SELECT category_code, term_adjust, country INTO vcategory, vpta, vcountry FROM matter WHERE matter.id=NEW.matter_id;
     SELECT months, years INTO vmonths, vyears FROM task_rules 
 		WHERE task='EXP' 
 		AND for_category=vcategory 
 		AND (for_country=vcountry OR (for_country IS NULL AND NOT EXISTS (SELECT 1 FROM task_rules tr WHERE task_rules.task=tr.task AND for_country=vcountry)));
-    SELECT IFNULL(min(event_date), NEW.event_date) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_ID=NEW.matter_ID;
+    SELECT IFNULL(min(event_date), NEW.event_date) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_id=NEW.matter_id;
     SET vdue_date = vbase_date + INTERVAL vpta DAY + INTERVAL vmonths MONTH + INTERVAL vyears YEAR;
-    UPDATE matter SET expire_date=vdue_date WHERE matter.ID=NEW.matter_ID;
+    UPDATE matter SET expire_date=vdue_date WHERE matter.id=NEW.matter_id;
   END IF;
   
-  UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
+  UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=NEW.matter_id;
 
 END trig */;;
 DELIMITER ;
@@ -702,18 +704,18 @@ DELIMITER ;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `event_after_delete` AFTER DELETE ON `event` FOR EACH ROW BEGIN
 	IF OLD.code IN ('PRI','PFIL') THEN
-		CALL recalculate_tasks(OLD.matter_ID, 'FIL');
+		CALL recalculate_tasks(OLD.matter_id, 'FIL');
 	END IF;
 
 	IF OLD.code='FIL' THEN
-		UPDATE matter SET expire_date=NULL WHERE matter.ID=OLD.matter_ID;
+		UPDATE matter SET expire_date=NULL WHERE matter.id=OLD.matter_id;
 	END IF;
 
-	UPDATE matter, event_name SET matter.dead=0 WHERE matter.ID=OLD.matter_ID AND OLD.code=event_name.code AND event_name.killer=1 
+	UPDATE matter, event_name SET matter.dead=0 WHERE matter.id=OLD.matter_id AND OLD.code=event_name.code AND event_name.killer=1 
 		AND (matter.expire_date > Now() OR matter.expire_date IS NULL)
-		AND NOT EXISTS (SELECT 1 FROM event, event_name ename WHERE event.matter_ID=OLD.matter_ID AND event.code=ename.code AND ename.killer=1);
+		AND NOT EXISTS (SELECT 1 FROM event, event_name ename WHERE event.matter_id=OLD.matter_id AND event.code=ename.code AND ename.killer=1);
         
-	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=OLD.matter_ID;
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=OLD.matter_id;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -871,7 +873,7 @@ DELIMITER ;;
 	AND for_category=NEW.category_code;
 
 	
-	IF (vactorid is NOT NULL AND (vshared=0 OR (vshared=1 AND NEW.container_ID IS NULL))) THEN
+	IF (vactorid is NOT NULL AND (vshared=0 OR (vshared=1 AND NEW.container_id IS NULL))) THEN
 		INSERT INTO matter_actor_lnk (matter_id, actor_id, role, shared) VALUES (NEW.id, vactorid, vrole, vshared);
 	END IF;
 END */;;
@@ -993,7 +995,7 @@ DELIMITER ;;
 
 	-- Check that we are not in a nested trigger before updating the matter change time
 	IF (SELECT count(1) FROM default_actor WHERE NEW.actor_id = actor_id) = 0 THEN
-		UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
+		UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=NEW.matter_id;
 	END IF;
 
 END */;;
@@ -1029,7 +1031,7 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `phpip`.`matter_actor_lnk_AFTER_UPDATE` AFTER UPDATE ON `matter_actor_lnk` FOR EACH ROW
 BEGIN
 
-	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=NEW.matter_ID;
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=NEW.matter_id;
 
 END */;;
 DELIMITER ;
@@ -1049,7 +1051,7 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `phpip`.`matter_actor_lnk_AFTER_DELETE` AFTER DELETE ON `matter_actor_lnk` FOR EACH ROW
 BEGIN
 
-	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.ID=OLD.matter_ID;
+	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=OLD.matter_id;
 
 END */;;
 DELIMITER ;
@@ -1237,9 +1239,9 @@ BEGIN
 	IF NEW.done = 0 AND OLD.done = 1 AND OLD.done_date IS NOT NULL THEN
 		SET NEW.done_date = NULL;
 	END IF;
-	IF NEW.due_date != OLD.due_date AND old.rule_used IS NOT NULL THEN
+	/*IF NEW.due_date != OLD.due_date AND old.rule_used IS NOT NULL THEN
 		SET NEW.rule_used = NULL;
-	END IF;
+	END IF;*/
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1348,17 +1350,17 @@ DELIMITER ;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE VIEW `task_list` AS SELECT 
- 1 AS `ID`,
+ 1 AS `id`,
  1 AS `code`,
  1 AS `name`,
  1 AS `detail`,
  1 AS `due_date`,
  1 AS `done`,
  1 AS `done_date`,
- 1 AS `matter_ID`,
+ 1 AS `matter_id`,
  1 AS `cost`,
  1 AS `fee`,
- 1 AS `trigger_ID`,
+ 1 AS `trigger_id`,
  1 AS `category`,
  1 AS `caseref`,
  1 AS `country`,
@@ -1370,6 +1372,16 @@ SET character_set_client = utf8;
  1 AS `rule_used`,
  1 AS `dead`*/;
 SET character_set_client = @saved_cs_client;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE VIEW `event_lnk_list` AS SELECT 
+ 1 AS `id`,
+ 1 AS `code`,
+ 1 AS `matter_id`,
+ 1 AS `event_date`,
+ 1 AS `detail`,
+ 1 AS `country`*/;
+SET character_set_client = @saved_cs_client;
 /*!50001 DROP VIEW IF EXISTS `task_list`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
@@ -1379,7 +1391,20 @@ SET character_set_client = @saved_cs_client;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `task_list` AS select `task`.`ID` AS `ID`,`task`.`code` AS `code`,`event_name`.`name` AS `name`,`task`.`detail` AS `detail`,`task`.`due_date` AS `due_date`,`task`.`done` AS `done`,`task`.`done_date` AS `done_date`,`event`.`matter_ID` AS `matter_ID`,`task`.`cost` AS `cost`,`task`.`fee` AS `fee`,`task`.`trigger_ID` AS `trigger_ID`,`matter`.`category_code` AS `category`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,ifnull(`task`.`assigned_to`,`matter`.`responsible`) AS `responsible`,`actor`.`login` AS `delegate`,`task`.`rule_used` AS `rule_used`,`matter`.`dead` AS `dead` from (((((`matter` left join `matter_actor_lnk` on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `matter_actor_lnk`.`matter_ID`) and (`matter_actor_lnk`.`role` = 'DEL')))) left join `actor` on((`actor`.`ID` = `matter_actor_lnk`.`actor_ID`))) join `event` on((`matter`.`ID` = `event`.`matter_ID`))) join `task` on((`task`.`trigger_ID` = `event`.`ID`))) join `event_name` on((`task`.`code` = `event_name`.`code`))) */;
+/*!50001 VIEW `task_list` AS select `task`.`ID` AS `id`,`task`.`code` AS `code`,`event_name`.`name` AS `name`,`task`.`detail` AS `detail`,`task`.`due_date` AS `due_date`,`task`.`done` AS `done`,`task`.`done_date` AS `done_date`,`event`.`matter_ID` AS `matter_id`,`task`.`cost` AS `cost`,`task`.`fee` AS `fee`,`task`.`trigger_ID` AS `trigger_id`,`matter`.`category_code` AS `category`,`matter`.`caseref` AS `caseref`,`matter`.`country` AS `country`,`matter`.`origin` AS `origin`,`matter`.`type_code` AS `type_code`,`matter`.`idx` AS `idx`,ifnull(`task`.`assigned_to`,`matter`.`responsible`) AS `responsible`,`actor`.`login` AS `delegate`,`task`.`rule_used` AS `rule_used`,`matter`.`dead` AS `dead` from (((((`matter` left join `matter_actor_lnk` on(((ifnull(`matter`.`container_ID`,`matter`.`ID`) = `matter_actor_lnk`.`matter_ID`) and (`matter_actor_lnk`.`role` = 'DEL')))) left join `actor` on((`actor`.`ID` = `matter_actor_lnk`.`actor_ID`))) join `event` on((`matter`.`ID` = `event`.`matter_ID`))) join `task` on((`task`.`trigger_ID` = `event`.`ID`))) join `event_name` on((`task`.`code` = `event_name`.`code`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!50001 DROP VIEW IF EXISTS `event_lnk_list`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `event_lnk_list` AS select `event`.`ID` AS `id`,`event`.`code` AS `code`,`event`.`matter_ID` AS `matter_id`,if(isnull(`event`.`alt_matter_ID`),`event`.`event_date`,`lnk`.`event_date`) AS `event_date`,if(isnull(`event`.`alt_matter_ID`),`event`.`detail`,`lnk`.`detail`) AS `detail`,`matter`.`country` AS `country` from ((`event` left join `event` `lnk` on(((`event`.`alt_matter_ID` = `lnk`.`matter_ID`) and (`lnk`.`code` = 'FIL')))) left join `matter` on((`event`.`alt_matter_ID` = `matter`.`ID`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -1549,7 +1574,7 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = '' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `recalculate_tasks`(IN Pmatter_ID int, IN Ptrig_code char(5))
+CREATE DEFINER=`root`@`localhost` PROCEDURE `recalculate_tasks`(IN Pmatter_id int, IN Ptrig_code char(5))
 proc: BEGIN
 	DECLARE vtrigevent_date, vdue_date, vbase_date DATE DEFAULT NULL;
 	DECLARE vtask_id, vtrigevent_id, vdays, vmonths, vyears, vrecurring, vpta INT DEFAULT NULL;
@@ -1559,13 +1584,13 @@ proc: BEGIN
 	DECLARE cur_rule CURSOR FOR 
 		SELECT task.id, days, months, years, recurring, end_of_month, use_parent, use_priority
 		FROM task_rules, task
-		WHERE task.rule_used=task_rules.ID
-		AND task.trigger_ID=vtrigevent_id;
+		WHERE task.rule_used=task_rules.id
+		AND task.trigger_id=vtrigevent_id;
 
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
-	IF EXISTS (SELECT 1 FROM event_lnk_list WHERE matter_ID=Pmatter_ID AND code=Ptrig_code) THEN
-		SELECT ID, event_date INTO vtrigevent_id, vtrigevent_date FROM event_lnk_list WHERE matter_ID=Pmatter_ID AND code=Ptrig_code;
+	IF EXISTS (SELECT 1 FROM event_lnk_list WHERE matter_id=Pmatter_id AND code=Ptrig_code) THEN
+		SELECT id, event_date INTO vtrigevent_id, vtrigevent_date FROM event_lnk_list WHERE matter_id=Pmatter_id AND code=Ptrig_code;
 	ELSE
 		
 		LEAVE proc;
@@ -1580,14 +1605,14 @@ proc: BEGIN
 
 		
 		IF vuse_parent THEN
-			SELECT CAST(IFNULL(min(event_date), vtrigevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_ID=Pmatter_ID;
+			SELECT CAST(IFNULL(min(event_date), vtrigevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_id=Pmatter_id;
 		ELSE
 			SET vbase_date=vtrigevent_date;
 		END IF;
 
 		
 		IF vuse_priority THEN
-			SELECT CAST(IFNULL(min(event_date), vtrigevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_ID=Pmatter_ID;
+			SELECT CAST(IFNULL(min(event_date), vtrigevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_id=Pmatter_id;
 		END IF;
 
 		SET vdue_date = vbase_date + INTERVAL vdays DAY + INTERVAL vmonths MONTH + INTERVAL vyears YEAR;
@@ -1595,21 +1620,21 @@ proc: BEGIN
 			SET vdue_date=LAST_DAY(vdue_date);
 		END IF;
 
-		UPDATE task set due_date=vdue_date WHERE task.ID=vtask_id;
+		UPDATE task set due_date=vdue_date WHERE task.id=vtask_id;
 		
 	END LOOP update_tasks;
 	CLOSE cur_rule;
   
 	
 	IF Ptrig_code = 'FIL' THEN
-		SELECT category_code, term_adjust, country INTO vcategory, vpta, vcountry FROM matter WHERE matter.ID=Pmatter_ID;
+		SELECT category_code, term_adjust, country INTO vcategory, vpta, vcountry FROM matter WHERE matter.id=Pmatter_id;
 		SELECT months, years INTO vmonths, vyears FROM task_rules 
 			WHERE task='EXP' 
 			AND for_category=vcategory 
 			AND (for_country=vcountry OR (for_country IS NULL AND NOT EXISTS (SELECT 1 FROM task_rules tr WHERE task_rules.task=tr.task AND for_country=vcountry)));
-		SELECT CAST(IFNULL(min(event_date), vtrigevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_ID=Pmatter_ID;
+		SELECT CAST(IFNULL(min(event_date), vtrigevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_id=Pmatter_id;
 		SET vdue_date = vbase_date + INTERVAL vpta DAY + INTERVAL vmonths MONTH + INTERVAL vyears YEAR;
-		UPDATE matter SET expire_date=vdue_date WHERE matter.ID=Pmatter_ID AND IFNULL(expire_date, '0000-00-00') != vdue_date;
+		UPDATE matter SET expire_date=vdue_date WHERE matter.id=Pmatter_id AND IFNULL(expire_date, '0000-00-00') != vdue_date;
 	END IF;
 
 END proc ;;
@@ -1640,29 +1665,29 @@ proc: BEGIN
   DECLARE cur_rule CURSOR FOR 
     SELECT task_rules.id, task, clear_task, delete_task, detail, days, months, years, recurring, end_of_month, use_parent, use_priority, cost, fee, currency, task_rules.responsible, event_name.unique
     FROM task_rules, event_name, matter
-    WHERE vmatter_id=matter.ID
+    WHERE vmatter_id=matter.id
     AND event_name.code=task
     AND vevent=trigger_event
     AND (for_category, ifnull(for_country, matter.country), ifnull(for_origin, matter.origin), ifnull(for_type, matter.type_code))<=>(matter.category_code, matter.country, matter.origin, matter.type_code)
 	AND (uqtrigger=0 
 		OR (uqtrigger=1 AND NOT EXISTS (SELECT 1 FROM task_rules tr 
 		WHERE (tr.task, tr.for_category, tr.for_country)=(task_rules.task, matter.category_code, matter.country) AND tr.trigger_event!=task_rules.trigger_event)))
-    AND NOT EXISTS (SELECT 1 FROM event WHERE matter_ID=vmatter_id AND code=abort_on)
-    AND (condition_event IS null OR EXISTS (SELECT 1 FROM event WHERE matter_ID=vmatter_id AND code=condition_event))
+    AND NOT EXISTS (SELECT 1 FROM event WHERE matter_id=vmatter_id AND code=abort_on)
+    AND (condition_event IS null OR EXISTS (SELECT 1 FROM event WHERE matter_id=vmatter_id AND code=condition_event))
     AND (vevent_date < use_before OR use_before IS null)
     AND (vevent_date > use_after OR use_after IS null)
     AND active=1;
 
   
   DECLARE cur_linked CURSOR FOR
-	SELECT matter_id FROM event WHERE alt_matter_ID=vmatter_id; 
+	SELECT matter_id FROM event WHERE alt_matter_id=vmatter_id; 
 
   DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
   DELETE from task where trigger_id = Ptrigger_id;
 
   SELECT matter_id, event_date, code INTO vmatter_id, vevent_date, vevent FROM event WHERE id = Ptrigger_id;
-  SELECT type_code, dead, expire_date, term_adjust INTO vtype, vdead, vexpiry, vpta FROM matter WHERE matter.ID=vmatter_id;
+  SELECT type_code, dead, expire_date, term_adjust INTO vtype, vdead, vexpiry, vpta FROM matter WHERE matter.id=vmatter_id;
   SELECT id INTO vcli_ann_agt FROM actor WHERE display_name='CLIENT';
   
   
@@ -1688,36 +1713,36 @@ proc: BEGIN
 
 	
 	IF vuse_parent THEN
-		SELECT CAST(IFNULL(min(event_date), vevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_ID=vmatter_id;
+		SELECT CAST(IFNULL(min(event_date), vevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PFIL' AND matter_id=vmatter_id;
 	END IF;
 
 	
 	IF vuse_priority THEN
-		SELECT CAST(IFNULL(min(event_date), vevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_ID=vmatter_id;
+		SELECT CAST(IFNULL(min(event_date), vevent_date) AS DATE) INTO vbase_date FROM event_lnk_list WHERE code='PRI' AND matter_id=vmatter_id;
 	END IF;
 
     
     IF vclear_task THEN
-      UPDATE task, event SET task.done=1, task.done_date=vevent_date WHERE task.trigger_ID=event.ID AND task.code=vtask AND matter_ID=vmatter_id AND done=0;
+      UPDATE task, event SET task.done=1, task.done_date=vevent_date WHERE task.trigger_id=event.id AND task.code=vtask AND matter_id=vmatter_id AND done=0;
       ITERATE create_tasks;
     END IF;
 
     
     IF vdelete_task THEN
-      DELETE task FROM event INNER JOIN task WHERE task.trigger_ID=event.ID AND task.code=vtask AND matter_ID=vmatter_id;
+      DELETE task FROM event INNER JOIN task WHERE task.trigger_id=event.id AND task.code=vtask AND matter_id=vmatter_id;
       ITERATE create_tasks;
     END IF;
 
     
 	IF (vunique OR vevent='PRI') THEN 
-		IF EXISTS (SELECT 1 FROM task, event WHERE event.id=task.trigger_id AND event.matter_ID=vmatter_id AND task.rule_used=vrule_id) THEN
-			SELECT task.id INTO vid_uqtask FROM task, event WHERE event.id=task.trigger_id AND event.matter_ID=vmatter_id AND task.rule_used=vrule_id;
+		IF EXISTS (SELECT 1 FROM task, event WHERE event.id=task.trigger_id AND event.matter_id=vmatter_id AND task.rule_used=vrule_id) THEN
+			SELECT task.id INTO vid_uqtask FROM task, event WHERE event.id=task.trigger_id AND event.matter_id=vmatter_id AND task.rule_used=vrule_id;
 		END IF;
 	END IF;
 
 	
     IF (!vuse_parent AND !vuse_priority AND (vunique OR vevent='PRI') AND vid_uqtask > 0) THEN
-      SELECT min(event_date) INTO vbase_date FROM event_lnk_list WHERE matter_ID=vmatter_id AND code=vevent;
+      SELECT min(event_date) INTO vbase_date FROM event_lnk_list WHERE matter_id=vmatter_id AND code=vevent;
       IF vbase_date < vevent_date THEN
 		
         ITERATE create_tasks;
@@ -1730,7 +1755,7 @@ proc: BEGIN
     END IF;
 
 	
-	IF (vtask = 'REN' AND EXISTS (SELECT 1 FROM event WHERE code='PFIL' AND matter_ID=vmatter_id) AND vdue_date < vevent_date) THEN
+	IF (vtask = 'REN' AND EXISTS (SELECT 1 FROM event WHERE code='PFIL' AND matter_id=vmatter_id) AND vdue_date < vevent_date) THEN
 		SET vdue_date = vevent_date + INTERVAL 4 MONTH;
 	END IF;
 
@@ -1740,9 +1765,9 @@ proc: BEGIN
     END IF;
 
     IF vtask='EXP' THEN
-		UPDATE matter SET expire_date = vdue_date + INTERVAL vpta DAY WHERE matter.ID=vmatter_id;
+		UPDATE matter SET expire_date = vdue_date + INTERVAL vpta DAY WHERE matter.id=vmatter_id;
 	ELSEIF vid_uqtask > 0 THEN
-		UPDATE task SET trigger_ID=Ptrigger_id, due_date=vdue_date WHERE ID=vid_uqtask;
+		UPDATE task SET trigger_id=Ptrigger_id, due_date=vdue_date WHERE id=vid_uqtask;
 	ELSE
 		
 		INSERT INTO task (trigger_id,code,due_date,detail,rule_used,cost,fee,currency,assigned_to) values (Ptrigger_id,vtask,vdue_date,vdetail,vrule_id,vcost,vfee,vcurrency,vresponsible);
@@ -1773,7 +1798,7 @@ proc: BEGIN
   
   SELECT killer INTO vdead FROM event_name WHERE vevent=event_name.code;
   IF vdead THEN
-    UPDATE matter SET dead=1 WHERE matter.ID=vmatter_id;
+    UPDATE matter SET dead=1 WHERE matter.id=vmatter_id;
   END IF;
 
 END proc ;;
@@ -1782,11 +1807,11 @@ DELIMITER ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
--- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.18, for Linux (x86_64)
 --
 -- Host: localhost    Database: phpip
 -- ------------------------------------------------------
--- Server version	5.7.17-0ubuntu0.16.04.1-log
+-- Server version	5.7.18-0ubuntu0.16.04.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -1937,7 +1962,7 @@ INSERT INTO `country` VALUES (20,'AD','AND','Andorra','Andorra','Andorre',0,0,0,
 (233,'EE','EST','Estland','Estonia','Estonie',0,0,0,0),
 (818,'EG','EGY','Ägypten','Egypt','Égypte',0,0,0,0),
 (732,'EH','ESH','Westsahara','Western Sahara','Sahara Occidental',0,0,0,0),
-(0,'EM','EMA','HABM','OHIM','Office de l\'Harmonisation dans le Marché Intérieur',0,0,0,0),
+(0,'EM','EMA','EUIPO','EUIPO','Office de l’Union européenne pour la propriété intellectuelle',0,0,0,0),
 (0,'EP','EPO','Europäische Patentorganisation','European Patent Organization','Organisation du Brevet Européen',0,1,0,0),
 (232,'ER','ERI','Eritrea','Eritrea','Érythrée',0,0,0,0),
 (724,'ES','ESP','Spanien','Spain','Espagne',0,0,0,0),
@@ -2131,14 +2156,15 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('ABO','Abandon Original','PAT','EP',1,0,NULL,0,1,0,0,'Abandon the originating patent that was re-designated in EP','root@localhost','2011-04-23 20:43:27','root@localhost'),
 ('ADV','Advisory Action','PAT','US',0,0,NULL,0,0,0,0,NULL,'root@localhost',NULL,NULL),
 ('ALL','Allowance','PAT',NULL,0,1,NULL,0,0,0,0,'Use also for R71.3 in EP','root@localhost','2011-03-20 16:15:45','root@localhost'),
-('APL','Appeal',NULL,NULL,0,1,NULL,1,0,0,0,'Filing notice of appeal or the like','root@localhost','2014-11-17 16:23:35','root'),
+('APL','Appeal',NULL,NULL,0,1,NULL,1,0,0,0,'Appeal or other remedy filed','root@localhost','2017-05-24 08:32:29','root'),
 ('CAN','Cancelled','TM',NULL,0,1,NULL,0,0,0,1,NULL,'root','2014-10-09 08:54:39',NULL),
 ('CLO','Closed','LTG',NULL,0,1,NULL,0,0,0,1,NULL,'root','2015-11-25 13:07:23',NULL),
 ('COM','Communication',NULL,NULL,0,0,NULL,0,0,0,0,'Communication regarding administrative or formal matters (missing parts, irregularities...)','root@localhost','2011-04-26 14:47:36','root@localhost'),
 ('CRE','Created',NULL,NULL,0,0,NULL,0,1,0,0,'Creation date of matter - for attaching tasks necessary before anything else','root','2011-10-09 19:41:17',NULL),
-('DAPL','Decision on Appeal',NULL,NULL,0,1,NULL,0,0,0,0,'State outcome in detail field','root','2014-03-12 15:54:14','root'),
+('DAPL','Decision on Appeal',NULL,NULL,0,0,NULL,0,0,0,0,'State outcome in detail field','root','2017-02-28 15:17:46','root'),
 ('DBY','Draft By','PAT',NULL,1,0,NULL,1,0,0,0,NULL,'root@localhost','2011-09-22 08:55:07','root'),
 ('DEX','Deadline Extended',NULL,NULL,0,0,NULL,0,0,0,0,'Deadline extension requested','root@localhost','2011-04-26 14:48:02','root@localhost'),
+('DPAPL','Decision on Pre-Appeal','PAT','US',0,0,NULL,0,0,0,0,NULL,'root','2017-02-28 15:13:43',NULL),
 ('DRA','Drafted','PAT',NULL,0,1,NULL,0,0,0,0,NULL,'root@localhost',NULL,NULL),
 ('DW','Deemed withrawn',NULL,NULL,0,1,NULL,0,0,0,0,'Decision needing a reply, such as further processing','root','2014-05-05 13:53:33','root'),
 ('EHK','Extend to Hong Kong','PAT','CN',1,0,NULL,0,1,0,0,NULL,'root@localhost','2011-03-22 07:52:06',NULL),
@@ -2165,9 +2191,10 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('PDES','Post designation','TM','WO',0,1,NULL,0,0,0,0,NULL,'root','2014-07-01 12:48:03',NULL),
 ('PFIL','Parent Filed','PAT',NULL,0,1,NULL,0,1,0,0,'Filing date of the parent (use only when the matter type is defined). Use as link to the parent matter.','root@localhost','2011-06-07 08:53:24','root@localhost'),
 ('PR','Publication of Reg.','TM',NULL,0,1,NULL,0,0,0,0,NULL,'root','2012-06-20 14:03:41','root'),
+('PREP','Prepare',NULL,NULL,1,0,NULL,1,0,0,0,'Any further action to be done by the responsible (comments, pre-handling, ...)','root','2017-05-22 10:04:24','root'),
 ('PRI','Priority Claim',NULL,NULL,0,1,NULL,0,0,0,0,'Use as link to the priority matter','root@localhost','2011-06-07 08:54:06','root@localhost'),
 ('PRID','Priority Deadline',NULL,NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost','2011-11-23 18:38:13','root'),
-('PROD','Produce',NULL,NULL,1,0,NULL,0,0,0,0,'Any further documents to be filed (inventor designation, priority document, missing parts...)','root@localhost','2011-10-13 16:01:05','root'),
+('PROD','Produce',NULL,NULL,1,0,NULL,0,0,0,0,'Any further documents to be filed (inventor designation, priority document, missing parts...)','root@localhost','2017-04-25 13:07:37','root'),
 ('PSR','Publication of SR','PAT','EP',0,0,NULL,0,1,0,0,'A3 publication','root@localhost','2012-04-24 13:17:31','root'),
 ('PUB','Published',NULL,NULL,0,1,NULL,0,0,0,0,'For EP, this means publication WITH the search report (A1 publ.)','root@localhost','2011-03-20 16:09:08','root@localhost'),
 ('RCE','Request Continued Examination','PAT','US',0,1,NULL,0,0,0,0,NULL,'root@localhost',NULL,NULL),
@@ -2180,8 +2207,9 @@ INSERT INTO `event_name` VALUES ('ABA','Abandoned',NULL,NULL,0,1,NULL,0,1,0,1,NU
 ('REQ','Request Examination',NULL,NULL,1,0,NULL,0,1,0,0,NULL,'root@localhost',NULL,NULL),
 ('RSTR','Restriction Req.','PAT','US',0,0,NULL,0,0,0,0,NULL,'root','2011-11-03 15:53:39','root'),
 ('SOL','Sold',NULL,NULL,0,1,NULL,0,0,0,1,NULL,'root','2014-01-24 14:38:50','root'),
-('SOP','Summons to Oral Proc.',NULL,NULL,0,1,NULL,0,0,0,0,NULL,'root','2014-11-06 14:50:24','root'),
+('SOP','Summons to Oral Proc.',NULL,NULL,0,0,NULL,0,0,0,0,NULL,'root','2017-05-24 09:54:03','root'),
 ('SR','Search Report',NULL,NULL,0,0,NULL,0,0,0,0,NULL,'root@localhost',NULL,NULL),
+('SUS','Suspended',NULL,NULL,0,1,NULL,0,0,0,0,NULL,'root','2017-05-22 10:05:12','root'),
 ('TRF','Transferred',NULL,NULL,0,1,NULL,0,1,0,1,'Case no longer followed','root@localhost','2011-03-20 17:09:21','root@localhost'),
 ('VAL','Validate','PAT','EP',1,0,NULL,0,1,0,0,'Validate granted EP in designated countries','root@localhost','2011-03-22 10:22:17','root@localhost'),
 ('WAT','Watch',NULL,NULL,1,0,NULL,1,0,0,0,NULL,'root','2012-08-09 10:18:53','root'),
@@ -2239,7 +2267,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `task_rules` WRITE;
 /*!40000 ALTER TABLE `task_rules` DISABLE KEYS */;
-INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,0,12,0,0,0,'PRI',NULL,1,0,NULL,NULL,NULL,NULL,NULL,NULL,'Priority deadline is inserted only if no priority event exists','root@localhost','2011-11-04 08:03:27','root'),
+INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,0,12,0,0,0,'PRI',NULL,1,1,NULL,NULL,NULL,NULL,NULL,NULL,'Priority deadline is inserted only if no priority event exists','root@localhost','2017-05-24 13:26:40','root'),
 (2,1,'PRID','FIL',0,0,'TM',NULL,NULL,NULL,NULL,0,6,0,0,0,'PRI',NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'Priority deadline is inserted only if no priority event exists','root@localhost','2011-11-04 08:03:27','root'),
 (3,1,'FBY','FIL',1,0,'PAT',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,'Clear \"File by\" task when \"Filed\" event is created','root@localhost','2011-11-04 07:23:08','root'),
 (4,1,'PRID','FIL',0,0,'PRO',NULL,NULL,NULL,NULL,0,12,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'root@localhost','2011-09-02 14:13:42','root'),
@@ -2250,9 +2278,9 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (9,1,'REP','SR',0,0,'PAT','FR',NULL,NULL,'Search Report',0,3,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-03-22 21:00:57','root@localhost'),
 (10,1,'REP','EXA',0,0,'PAT','US',NULL,NULL,'Exam Report',0,3,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2012-10-05 13:26:12','root'),
 (11,1,'REP','EXA',0,0,'PAT','EP',NULL,NULL,'Exam Report',0,4,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-03-20 11:17:37','root@localhost'),
-(12,1,'EXP','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,0,0,20,0,0,NULL,NULL,1,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Create the \"Expires\" event','root@localhost','2011-09-02 14:13:42','root'),
+(12,1,'EXP','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,0,0,20,0,0,NULL,NULL,1,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2017-05-05 09:41:35','JJJ'),
 (13,1,'REP','ALL',0,0,'PAT','EP',NULL,NULL,'R71(3)',0,4,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-12-05 13:07:47','root'),
-(14,1,'PAY','ALL',0,0,'PAT','EP',NULL,NULL,'Grant fee',0,4,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-11-23 14:13:54','root'),
+(14,1,'PAY','ALL',0,0,'PAT','EP',NULL,NULL,'Grant Fee',0,4,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2017-02-28 16:15:55','root'),
 (15,1,'PROD','ALL',0,0,'PAT','EP',NULL,NULL,'Claim Translation',0,4,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-03-20 11:18:32','root@localhost'),
 (16,1,'VAL','GRT',0,0,'PAT','EP',NULL,NULL,'Translate where necessary',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-12-05 15:58:17','root'),
 (18,1,'REP','PUB',0,0,'PAT','EP',NULL,NULL,'Written Opinion',0,6,0,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-03-20 15:34:56','root@localhost'),
@@ -2274,31 +2302,31 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (36,1,'PAY','GRT',0,0,'PAT','CN',NULL,NULL,'HK Grant Fee',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2011-03-22 22:59:22',NULL),
 (37,1,'REP','COM',0,0,'PAT',NULL,NULL,NULL,'Communication',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root@localhost','2013-06-19 10:06:23','root'),
 (38,1,'FOP','OPP',1,0,'OP','EP',NULL,NULL,NULL,0,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Clear \"File Opposition\" task when \"Opposition\" event is created','root@localhost','2016-11-15 13:24:01','root'),
-(39,1,'PAY','ALL',0,0,'PAT','JP',NULL,NULL,'Grant fee',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-23 14:14:59','root'),
+(39,1,'PAY','ALL',0,0,'PAT','JP',NULL,NULL,'Grant Fee',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:16:00','root'),
 (40,1,'FPR','DW',0,0,'PAT','EP',NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-09 22:41:20','root'),
 (41,1,'REP','PSR',0,0,'PAT','EP',NULL,NULL,'R70(2)',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-01-11 14:54:08','root'),
 (42,1,'NPH','PRI',0,0,'PAT',NULL,'WO',NULL,NULL,0,30,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-14 07:20:28',NULL),
-(43,1,'PAY','FIL',0,0,'PAT','FR',NULL,NULL,'Filing fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,546.00,'EUR',NULL,NULL,'root','2015-07-01 12:52:53','root'),
-(44,1,'PAY','FIL',0,0,'PAT','EP',NULL,NULL,'Filing fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,1280.00,'EUR',NULL,NULL,'root','2013-02-25 15:02:42','root'),
+(43,1,'PAY','FIL',0,0,'PAT','FR',NULL,NULL,'Filing Fee',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,546.00,'EUR',NULL,NULL,'root','2017-02-28 16:16:15','root'),
+(44,1,'PAY','FIL',0,0,'PAT','EP',NULL,NULL,'Filing Fee',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,1280.00,'EUR',NULL,NULL,'root','2017-02-28 16:16:22','root'),
 (45,1,'VAL','GRT',0,0,'PAT',NULL,'EP',NULL,NULL,0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-17 13:42:58',NULL),
 (46,1,'REP','RSTR',0,0,'PAT','US',NULL,NULL,'Restriction Req.',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-03 15:58:40',NULL),
 (47,1,'REP','COM',0,0,'PAT','EP',NULL,NULL,'R161',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-10-19 08:23:13','root'),
-(48,1,'APL','REF',0,0,'PAT',NULL,NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-11-03 16:38:31',NULL),
-(49,1,'PROD','REF',0,0,'PAT',NULL,NULL,NULL,'Grounds of Appeal',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-08-08 16:12:53','root'),
+(48,1,'FAP','REF',0,0,'PAT',NULL,NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-05-24 08:35:27','root'),
+(49,1,'PROD','APL',0,0,'PAT',NULL,NULL,NULL,'Appeal Brief',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:13:16','root'),
 (52,1,'REP','COM',0,0,'OP','EP',NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
-(53,1,'REQ','FIL',0,0,'PAT','KR',NULL,NULL,NULL,0,0,5,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:10','root'),
+(53,1,'REQ','FIL',0,0,'PAT','KR',NULL,NULL,NULL,0,0,3,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 13:07:32','root'),
 (54,1,'REQ','FIL',0,0,'PAT','CA',NULL,NULL,NULL,0,0,5,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:11','root'),
 (55,1,'REQ','FIL',0,0,'PAT','CN',NULL,NULL,NULL,0,0,3,0,0,'EXA',NULL,0,1,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-12-17 10:54:11','root'),
-(56,1,'PAY','ALL',0,0,'PAT','CA',NULL,NULL,'Grant Fees',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:06','root'),
+(56,1,'PAY','ALL',0,0,'PAT','CA',NULL,NULL,'Grant Fee',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:14:43','root'),
 (57,1,'PROD','PRI',0,0,'PAT',NULL,NULL,NULL,'Priority Docs',0,16,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:12','root'),
-(58,1,'PAY','FIL',0,0,'PAT','WO',NULL,NULL,'Filing Fees',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2011-12-13 13:38:17','root'),
+(58,1,'PAY','FIL',0,0,'PAT','WO',NULL,NULL,'Filing Fee',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:16:26','root'),
 (60,1,'REM','ALL',0,0,'PAT','US',NULL,NULL,'File divisional',0,1,0,0,0,NULL,'RSTR',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:50:59',NULL),
 (61,1,'REP','EXA',0,0,'PAT','CN',NULL,NULL,'Exam Report',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-04-18 15:17:15','root'),
 (62,1,'REP','EXA',0,0,'PAT','CA',NULL,NULL,'Exam Report',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:51:51','root'),
 (63,1,'REM','SR',0,0,'PAT','FR',NULL,NULL,'Request extension',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:52:04','root'),
 (64,1,'REM','EXA',0,0,'PAT','EP',NULL,NULL,'Request extension',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:52:16','root'),
 (65,1,'FBY','REC',0,0,'PAT',NULL,NULL,NULL,NULL,0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:52:27','root'),
-(66,1,'PAY','ALL',0,0,'PAT','FR',NULL,NULL,'Grant Fees',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-01-19 09:52:40','root'),
+(66,1,'PAY','ALL',0,0,'PAT','FR',NULL,NULL,'Grant Fee',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:15:00','root'),
 (67,1,'REQ','PSR',0,0,'PAT','EP',NULL,NULL,NULL,0,6,0,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-04-24 13:37:41','root'),
 (68,1,'PAY','PSR',0,0,'PAT','EP',NULL,NULL,'Designation Fees',0,6,0,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-04-24 13:37:49','root'),
 (69,1,'REP','PSR',0,0,'PAT','EP',NULL,NULL,'Written Opinion',0,6,0,0,0,'EXA',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-04-24 13:36:45',NULL),
@@ -2340,9 +2368,9 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (218,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'18',0,0,17,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:47','root'),
 (219,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'19',0,0,18,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:48','root'),
 (220,1,'REN','FIL',0,0,'PAT','EP',NULL,NULL,'20',0,0,19,0,1,NULL,NULL,1,0,NULL,NULL,1560.00,305.00,'EUR',NULL,NULL,'root','2014-03-18 15:44:51','root'),
-(234,1,'PAY','ALL',0,0,'PAT','CN',NULL,NULL,'Grant Fees',76,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-09-21 14:10:24','root'),
+(234,1,'PAY','ALL',0,0,'PAT','CN',NULL,NULL,'Grant Fee',76,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:15:41','root'),
 (235,1,'REP','SR',0,0,'PAT','WO',NULL,NULL,'Written Opinion',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-03-07 16:32:14','root'),
-(236,1,'PAY','ALL',0,0,'PAT','US',NULL,NULL,'Grant Fees',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-05-18 12:46:08','root'),
+(236,1,'PAY','ALL',0,0,'PAT','US',NULL,NULL,'Grant Fee',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:15:48','root'),
 (237,1,'PROD','GRT',0,0,'PAT','IN',NULL,NULL,'Working Report',0,2,0,0,1,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Change date to end of March','root','2012-05-22 07:14:03',NULL),
 (238,1,'WAT','PUB',0,0,'TM','FR',NULL,NULL,'Opposition deadline',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-06-19 09:48:26',NULL),
 (239,1,'WAT','PUB',0,0,'TM','EM',NULL,NULL,'Opposition deadline',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-06-19 09:49:18',NULL),
@@ -2380,8 +2408,8 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1181,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Annexure to Form 3',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:33','root'),
 (1182,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Declaration',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:40:06','root'),
 (1183,1,'PROD','FIL',0,0,'PAT','IN',NULL,NULL,'Power',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-29 15:06:45','root'),
-(1184,1,'PAY','ALL',0,0,'PAT','KR',NULL,NULL,'Grant fee',0,3,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2012-12-26 15:58:04',NULL),
-(1185,1,'PAY','ALL',0,0,'PAT','TW',NULL,NULL,'Grant Fees',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-01-07 17:05:22',NULL),
+(1184,1,'PAY','ALL',0,0,'PAT','KR',NULL,NULL,'Grant Fee',0,3,0,0,0,'GRT',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:16:08','root'),
+(1185,1,'PAY','ALL',0,0,'PAT','TW',NULL,NULL,'Grant Fee',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:15:12','root'),
 (1186,1,'REP','EXA',0,0,'PAT','AU',NULL,NULL,'Exam Report',0,12,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-02-20 09:07:08','root'),
 (1187,1,'REP','EXA',0,0,'PAT','IN',NULL,NULL,'Exam Report',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-03-04 14:26:35',NULL),
 (1188,1,'REP','EXA',0,0,'PAT','KR',NULL,NULL,'Exam Report',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-03-26 11:07:07',NULL),
@@ -2422,7 +2450,7 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1238,1,'REP','EXA',0,0,'TM','KR',NULL,NULL,'Exam Report',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-08-07 09:34:45',NULL),
 (1239,1,'REP','COM',0,0,'TM','EM',NULL,NULL,'Irregularity',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-08-20 16:22:03',NULL),
 (1240,1,'REP','EXA',0,0,'TM','CN',NULL,NULL,'Exam Report',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-08-27 07:56:38',NULL),
-(1241,1,'PAY','ALL',0,0,'TM','CA',NULL,NULL,'Grant fees',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-11-12 15:01:25','root'),
+(1241,1,'PAY','ALL',0,0,'TM','CA',NULL,NULL,'Grant Fee',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:15:30','root'),
 (1242,1,'PROD','ALL',0,0,'TM','CA',NULL,NULL,'Declaration of use',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-11-20 10:14:24','root'),
 (1243,1,'WAT','PUB',0,0,'TM','BR',NULL,NULL,'Opposition deadline',60,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-09 09:07:42',NULL),
 (1244,1,'PROD','OPP',0,0,'TM','FR',NULL,NULL,'Observations',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-09 09:20:14',NULL),
@@ -2432,14 +2460,14 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1248,1,'PROD','EXA',0,0,'TM','KR',NULL,NULL,'POA',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-17 14:03:44',NULL),
 (1249,1,'PROD','EXA',0,0,'TM','CN',NULL,NULL,'POA',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-17 14:04:03',NULL),
 (1250,1,'PROD','EXA',0,0,'TM','IL',NULL,NULL,'POA',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-17 14:04:22',NULL),
-(1251,1,'PROD','REF',0,0,'TM',NULL,NULL,NULL,'Grounds of Appeal',45,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:18','root'),
+(1251,1,'PROD','REF',0,0,'TM',NULL,NULL,NULL,'Appeal Brief',45,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2017-02-28 16:13:47','root'),
 (1252,1,'PROD','REF',0,0,'TM',NULL,NULL,NULL,'POA',45,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:19','root'),
 (1253,1,'REP','EXA',0,0,'TM','CA',NULL,NULL,'Exam Report',0,6,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-20 11:10:30','root'),
 (1254,1,'REP','EXA',0,0,'TM','TH',NULL,NULL,'Exam Report',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-09-20 13:43:06','root'),
 (1258,1,'REP','EXAF',0,0,'PAT','US',NULL,NULL,'Final OA',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-10-04 12:23:02',NULL),
 (1259,1,'PROD','REG',0,0,'TM','US',NULL,NULL,'Declaration of use',0,114,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'délai à 9 ans et demi','root','2013-10-15 11:02:03','root'),
 (1260,1,'REP','COM',0,0,'TM','WO',NULL,NULL,'Irregularity',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-11-06 14:43:17',NULL),
-(1262,1,'PROD','APL',0,0,'TM','EM',NULL,NULL,'Statement of Grounds ',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2013-11-12 15:14:22',NULL),
+(1262,1,'PROD','APL',0,0,'TM','EM',NULL,NULL,'Appeal Brief',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-03-01 09:47:37','JJJ'),
 (1263,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'10',0,0,10,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:26','root'),
 (1267,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'20',0,0,20,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:28','root'),
 (1268,1,'REN','PRI',0,0,'TM','NZ',NULL,NULL,'30',0,0,30,0,0,NULL,'ALL',0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:30','root'),
@@ -2452,7 +2480,7 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1275,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'30',0,0,30,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:38','root'),
 (1277,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'40',0,0,40,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:39','root'),
 (1278,1,'REN','PRI',0,0,'TM','RU',NULL,NULL,'50',0,0,50,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR','root',NULL,'root','2014-11-12 10:09:43','root'),
-(1280,1,'PROD','SOP',0,0,'PAT','EP',NULL,NULL,'Comments',10,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-05-07 07:12:20','root'),
+(1280,1,'PROD','SOP',0,0,'PAT','EP',NULL,NULL,'Observations',10,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-05-24 09:55:39','root'),
 (1281,1,'OPR','SOP',0,0,'PAT','EP',NULL,NULL,NULL,10,5,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-05-07 07:10:52','root'),
 (1282,1,'PAY','ALL',0,0,'TM','JP',NULL,NULL,'2nd part of individual fee',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-05 16:13:42','root'),
 (1290,1,'REN','FIL',0,0,'SO','FR',NULL,NULL,'Soleau',0,0,5,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-09-10 08:12:28',NULL),
@@ -2462,8 +2490,7 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1300,1,'PROD','SOP',0,0,'OP',NULL,NULL,NULL,'Observations',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
 (1301,1,'PROD','PRI',0,0,'PAT','US','WO',NULL,'Decl. and Assignment',0,30,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2014-11-14 13:00:44','root'),
 (1302,1,'REQ','FIL',0,0,'PAT','BR',NULL,NULL,NULL,0,0,3,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2015-01-05 16:39:05',NULL),
-(1303,1,'APL','ORE',0,0,'OP','EP',NULL,NULL,'File Appeal',0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
-(1304,1,'PROD','ORE',0,0,'OP','EP',NULL,NULL,'Grounds of Appeal',0,4,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-11-15 13:24:01','root'),
+(1303,1,'FAP','ORE',0,0,'OP','EP',NULL,NULL,NULL,0,2,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-05-24 09:20:47','root'),
 (1305,1,'PRID','FIL',0,0,'DSG',NULL,NULL,NULL,NULL,0,6,0,0,0,'PRI',NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Priority deadline is inserted only if no priority event exists','root','2015-12-17 08:37:47',NULL),
 (1306,1,'PRID','PRI',0,1,'DSG',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root','2015-12-17 10:41:57',NULL),
 (1307,1,'PRID','PRI',0,1,'TM',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,'FIL',0,0,NULL,NULL,NULL,NULL,'EUR',NULL,'Deletes priority deadline when a priority event is inserted','root','2015-12-17 10:43:44',NULL),
@@ -2478,7 +2505,14 @@ INSERT INTO `task_rules` VALUES (1,1,'PRID','FIL',0,0,'PAT',NULL,NULL,NULL,NULL,
 (1318,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Annexure to Form 3',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:42:42','root'),
 (1319,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Declaration',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:43:04','root'),
 (1320,1,'PROD','FIL',0,0,'PAT','IN','WO',NULL,'Power',0,0,2,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-10-25 13:43:24',NULL),
-(1321,1,'PROD','SR',0,0,'PAT','EP',NULL,NULL,'Analysis of SR',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-12-22 15:45:21',NULL);
+(1321,1,'PROD','SR',0,0,'PAT','EP',NULL,NULL,'Analysis of SR',0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2016-12-22 15:45:21',NULL),
+(1322,1,'PROD','DPAPL',0,0,'PAT','US',NULL,NULL,'Appeal Brief',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 15:16:05',NULL),
+(1323,1,'FRCE','EXAF',0,0,'PAT','US',NULL,NULL,NULL,0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:27:42',NULL),
+(1326,1,'FAP','EXAF',0,0,'PAT','US',NULL,NULL,NULL,0,3,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 16:32:58',NULL),
+(1327,1,'FAP','APL',1,0,'PAT',NULL,NULL,NULL,NULL,0,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-02-28 17:54:34',NULL),
+(1328,1,'PROD','REC',0,0,'TM',NULL,NULL,NULL,'Analyse CompuMark',15,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-03-02 08:47:19',NULL),
+(1329,1,'PROD','REC',0,0,'TM',NULL,NULL,NULL,'Libellé P/S',0,1,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-03-02 08:47:43',NULL),
+(1330,1,'PROD','EXA',0,0,'PAT',NULL,NULL,NULL,'Preliminary Comments',40,0,0,0,0,NULL,NULL,0,0,NULL,NULL,NULL,NULL,'EUR',NULL,NULL,'root','2017-05-24 09:57:42','root');
 /*!40000 ALTER TABLE `task_rules` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -2491,12 +2525,12 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-01 17:21:50
--- MySQL dump 10.13  Distrib 5.7.17, for Linux (x86_64)
+-- Dump completed on 2017-05-26 10:57:46
+-- MySQL dump 10.13  Distrib 5.7.18, for Linux (x86_64)
 --
 -- Host: localhost    Database: phpip
 -- ------------------------------------------------------
--- Server version	5.7.17-0ubuntu0.16.04.1-log
+-- Server version	5.7.18-0ubuntu0.16.04.1-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -2529,7 +2563,7 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-02-01 17:21:50
+-- Dump completed on 2017-05-26 10:57:46
 
 SET FOREIGN_KEY_CHECKS = 1;
 COMMIT;
