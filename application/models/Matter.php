@@ -1133,6 +1133,9 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		} else
 			$data ["$field_name"] = $field_value;
 		
+		if ($rule_id == NULL)
+			$data ['rule_used'] = NULL;
+			
 		return $this->getDbTable ( 'Application_Model_DbTable_Task' )->update ( $data, array (
 				'ID = ?' => $task_id 
 		) );

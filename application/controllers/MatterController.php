@@ -479,7 +479,7 @@ class MatterController extends Zend_Controller_Action {
 		$task_id = $post_data ['task_id'];
 		$field_name = $post_data ['field'];
 		$field_value = $post_data ['value'];
-		$rule_id = '';
+		$rule_id = 'none';
 		if (isset ( $post_data ['rule_id'] ) && $post_data ['rule_id'] )
 			$rule_id = NULL;
 		
