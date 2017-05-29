@@ -331,7 +331,7 @@ $(document).ready(function(){
 
         $("#MatterRenTasks").click(function(){
         	$('.ui-widget-overlay').show();
-            trig_id = <?=(isset($this->matter_open_tasks_ren[0]) ? $this->matter_open_tasks_ren[0]['trigger_ID'] : 0) ?>;
+            trig_id = <?=(isset($this->matter_open_tasks_ren[0]) ? $this->matter_open_tasks_ren[0]['trigger_id'] : 0) ?>;
             if(trig_id == 0) return false;
          	$('#tasklist-pop-up').load("/matter/tasklist/event_id/" + trig_id, { renewal: 1 })
          	.css('top', $(this).offset().top).show().draggable();
@@ -747,8 +747,8 @@ endforeach;
 $trigger_id = "";
 foreach ( $this->matter_open_tasks as $open_task ) :
 	// Display the trigger event in the first iteration
-	if ($trigger_id != $open_task ['trigger_ID']) {
-		$trigger_id = $open_task ['trigger_ID'];
+	if ($trigger_id != $open_task ['trigger_id']) {
+		$trigger_id = $open_task ['trigger_id'];
 ?>
 		<div class="status-row" style="border-bottom: 1px solid #DDD; margin-top: 2px;">
 			<span class="task-col-name">
@@ -758,7 +758,7 @@ foreach ( $this->matter_open_tasks as $open_task ) :
 		</div>
 <?php
 	}
-	if ($trigger_id == $open_task ['trigger_ID']) {
+	if ($trigger_id == $open_task ['trigger_id']) {
 ?> 
 		<div class="status-row">
 			<span class="task-col-name help_cursor" title="<?=htmlentities($open_task['notes']) ?>">
@@ -795,8 +795,8 @@ endforeach;
 $ren_trigger_id = "";
 foreach ( $this->matter_open_tasks_ren as $open_task_ren ) :
 	// Display the trigger event in the first iteration
-	if ($ren_trigger_id != $open_task_ren ['trigger_ID']) {
-		$ren_trigger_id = $open_task_ren ['trigger_ID'];
+	if ($ren_trigger_id != $open_task_ren ['trigger_id']) {
+		$ren_trigger_id = $open_task_ren ['trigger_id'];
 ?>
 		<div class="status-row"
 			style="margin: 5px 0px; border-bottom: 1px solid #DDD;">
@@ -808,7 +808,7 @@ foreach ( $this->matter_open_tasks_ren as $open_task_ren ) :
 		</div>
 <?php
 	}
-	if ($ren_trigger_id == $open_task_ren ['trigger_ID']) {
+	if ($ren_trigger_id == $open_task_ren ['trigger_id']) {
 ?> 
 		<div class="status-row">
 			<span class="renewal-col-name">
