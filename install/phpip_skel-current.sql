@@ -504,13 +504,13 @@ DELIMITER ;;
       SET vdue_date=LAST_DAY(vdue_date);
     END IF;
 
-	-- Dealine for renewals that have become due in a parent case when filing a divisional (EP 4-months rule)
+	-- Deadline for renewals that have become due in a parent case when filing a divisional (EP 4-months rule)
 	IF (vtask = 'REN' AND EXISTS (SELECT 1 FROM event WHERE code='PFIL' AND matter_id=NEW.matter_id) AND vdue_date < NEW.event_date) THEN
 		SET vdue_date = NEW.event_date + INTERVAL 4 MONTH;
 	END IF;
 
 	-- Skip creating tasks having a deadline in the past, except if the event is the expiry
-    IF (vdue_date < Now() AND vtask != 'EXP') THEN
+    IF (vdue_date < Now() AND vtask NOT IN ('EXP', 'REN')) OR (vdue_date < (Now() - INTERVAL 3 MONTH) AND vtask = 'REN') THEN
       ITERATE create_tasks;
     END IF;
 
@@ -1590,7 +1590,7 @@ proc: BEGIN
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
 	IF EXISTS (SELECT 1 FROM event_lnk_list WHERE matter_id=Pmatter_id AND code=Ptrig_code) THEN
-		SELECT id, event_date INTO vtrigevent_id, vtrigevent_date FROM event_lnk_list WHERE matter_id=Pmatter_id AND code=Ptrig_code;
+		SELECT id, event_date INTO vtrigevent_id, vtrigevent_date FROM event_lnk_list WHERE matter_id=Pmatter_id AND code=Ptrig_code ORDER BY event_date LIMIT 1;
 	ELSE
 		
 		LEAVE proc;
@@ -1760,7 +1760,7 @@ proc: BEGIN
 	END IF;
 
 	
-    IF (vdue_date < Now() AND vtask != 'EXP') THEN
+    IF (vdue_date < Now() AND vtask NOT IN ('EXP', 'REN')) OR (vdue_date < (Now() - INTERVAL 3 MONTH) AND vtask = 'REN') THEN
       ITERATE create_tasks;
     END IF;
 
