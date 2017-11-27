@@ -180,7 +180,7 @@ CREATE DEFINER=`root`@`localhost` TRIGGER `event_after_insert` AFTER INSERT ON `
 	END IF;
 
 	-- Skip creating tasks having a deadline too far in the past, except if the event is the expiry
-    IF (vdue_date < Now() AND vtask NOT IN ('EXP', 'REN')) OR (vdue_date < (Now() - INTERVAL 3 MONTH) AND vtask = 'REN') THEN
+    IF (vdue_date < Now() AND vtask NOT IN ('EXP', 'REN')) OR (vdue_date < (Now() - INTERVAL 7 MONTH) AND vtask = 'REN') THEN
       ITERATE create_tasks;
     END IF;
 
@@ -341,7 +341,7 @@ proc: BEGIN
 	END IF;
 
 	
-    IF (vdue_date < Now() AND vtask NOT IN ('EXP', 'REN')) OR (vdue_date < (Now() - INTERVAL 3 MONTH) AND vtask = 'REN') THEN
+    IF (vdue_date < Now() AND vtask NOT IN ('EXP', 'REN')) OR (vdue_date < (Now() - INTERVAL 7 MONTH) AND vtask = 'REN') THEN
       ITERATE create_tasks;
     END IF;
 
