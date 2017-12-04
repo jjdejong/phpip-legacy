@@ -38,22 +38,22 @@ $(document).ready(function(){
 				+ '<span class="national-matter-remove ui-icon ui-icon-trash" id="' + mindex + '" title="Remove" style="float: left" onclick="$(\'#nmp-'+ mindex + '\').remove();"></span></div>';
 			$('#national-phases').append(new_country);
 			$('.entered-date').datepicker({
-				showOn: 'focus',
 				dateFormat: 'dd/mm/yy',
-				altField: '#alt-entered-date' + mindex,
-				altFormat: 'yy-mm-dd',
-			})
+				altField: '#alt-entered-date-' + mindex,
+				altFormat: 'yy-mm-dd'
+			});
 		},
 		close: function( event, ui ) {
 			$("#additional-country").val('');
         }
     });
 
-   $('.entered-date').datepicker({
-        showOn: 'focus',
-        dateFormat: 'dd/mm/yy',
-        altField: '#alt-entered-date' + $(this).attr('id'),
-        altFormat: 'yy-mm-dd',
+   $('.entered-date').each(function(){
+   		$(this).datepicker({
+        	dateFormat: 'dd/mm/yy',
+        	altField: '#alt-entered-date-' + $(this).attr('id'),
+        	altFormat: 'yy-mm-dd'
+        });
    });
 
    $('.national-matter-remove').on("click", function(){
@@ -186,13 +186,11 @@ foreach ( $this->country_options as $cflag ) {?>
 					</span>
 					<input type="text" 
 						name="entered_date[<?=$i?>]"
-						class="entered-date" 
-						value="" 
+						class="entered-date"
 						id="<?=$i?>" /> 
 					<input type="hidden"
 						name="alt_entered_date[<?=$i?>]" 
-						id="alt-entered-date-<?=$i?>"
-						value="" /> 
+						id="alt-entered-date-<?=$i?>" /> 
 					<span class="national-matter-remove ui-icon ui-icon-trash" id="<?=$i?>" title="Remove" style="float: left;"></span>
 				</div>
 <?php 
