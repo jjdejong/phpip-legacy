@@ -33,9 +33,12 @@ echo "
 ********************************
 Installing database.
 When prompted for a password, enter the MySQL password defined earlier
-********************************"
+********************************
+Creating structure..."
 mysql -u root -p < phpip/install/phpip_skel-current.sql
-mysql -u root -p < phpip/install/phpip_sample-data.sql
+echo "
+Importing data..."
+mysql -u root -p phpip < phpip/install/phpip_sample-data.sql
 echo "
 Ready to go now. 
 Point your browser to http://phpip.local and login with phpipuser:changeme

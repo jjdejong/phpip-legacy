@@ -1,3 +1,6 @@
+SET AUTOCOMMIT = 0;
+SET FOREIGN_KEY_CHECKS=0;
+
 CREATE DATABASE /*!32312 IF NOT EXISTS*/ `phpip` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `phpip`;
@@ -1822,6 +1825,9 @@ UNLOCK TABLES;
 
 -- Dump completed on 2017-05-26 10:57:46
 
+SET FOREIGN_KEY_CHECKS = 1;
+COMMIT;
+SET AUTOCOMMIT = 1;
 -- User creation
 CREATE USER 'phpip'@'localhost' IDENTIFIED BY 'changeme'; 
 GRANT SELECT ON phpip.* TO 'phpip'@'localhost'; 
