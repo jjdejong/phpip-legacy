@@ -4,7 +4,6 @@ select {
 }
 
 #edit-rule-content {
-	width: 98%;
 	background: #FFF;
 	display: block;
 	border: 1px inset #888;
@@ -55,7 +54,6 @@ select {
 
 #edit-rule-head {
 	display: block;
-	width: 98%;
 	background: #1E4262;
 	color: #FFF;
 	padding: 5px;
@@ -317,11 +315,6 @@ $(document).ready(function(){
                 tooltip: 'Click to edit...',
                 select: true
     });
-
-    $('#event_date').datepicker({
-        dateFormat: 'dd/mm/yy',
-    });
-    $('#event_date').datepicker('setDate', new Date());
 
     $.editable.addInputType("datepicker", {
         element:  function(settings, original) {

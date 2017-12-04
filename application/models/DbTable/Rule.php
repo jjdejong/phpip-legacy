@@ -215,7 +215,7 @@ class Application_Model_DbTable_Rule extends Zend_Db_Table_Abstract
                         return false;
                 $data = array ();
                 if ($field_name == 'use_after' || $field_name == 'use_before') {
-                    $data ["$field_name"] = $field_value != "" ? new Zend_Db_Expr ('STR_TO_DATE("$field_value", "%d/%m/%Y" )') : NULL;
+                    $data ["$field_name"] = $field_value != "" ? new Zend_Db_Expr ("STR_TO_DATE('$field_value', '%d/%m/%Y' )") : NULL;
                 }
                 else {
                     $data ["$field_name"] = $field_value != "" ? $field_value : NULL;
