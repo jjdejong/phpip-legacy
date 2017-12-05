@@ -22,7 +22,7 @@
 .home-box-header{
     background: #B5D9E5;
     display:block;
-    height: 24px;
+    height: 32px;
     padding: 5px 5px 0px 0px;
     margin:0px 0px -3px 5px;
     box-shadow: 2px 0px 1px #888;
@@ -230,7 +230,8 @@ $(document).ready(function(){
         $('#ren-tasks-list').load('/index/task-filter', { task_type : 'ren', filter: tasks_flag });
     });
     $( "button, input:button").button();
-    $( "input[type='radio']" ).checkboxradio({icon: false});
+    $("#radio-tasks, #radio-renewals").controlgroup();
+    $( "input:radio" ).checkboxradio({icon: false});
 
 	var restricted = <?=$this->restricted?>;
 	if (restricted) {
@@ -249,7 +250,7 @@ $(document).ready(function(){
 					Categories for <em><?=$this->responsible?></em>
 				</div>
 				<div class="clear-tasks-box">
-					<button class="add-cat-matter" style="display:block; margin-top: -5px" id="Patent-PAT">New matter</button>
+					<button class="add-cat-matter" style="display:block;" id="Patent-PAT">New matter</button>
 				</div>
 			</div>
 			<div id="" class="home-card">
@@ -300,7 +301,7 @@ if(count($this->categories)){ ?>
 if(count($this->open_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open tasks
-					<span id="radio-tasks" style="float: right; margin-top: -5px;">
+					<span id="radio-tasks" style="float: right;">
 						<input type="radio" name="open-tasks-filter" id="open-tasks-all" value="0" checked="checked" />
 						<label for="open-tasks-all" style="width: 50px;">All</label>
 						<input type="radio" name="open-tasks-filter" id="open-tasks-assigned" value="1" />
@@ -308,14 +309,14 @@ if(count($this->open_tasks)): ?>
 					</span>
 				</div>
 
-				<div class="clear-tasks-box" style="margin-top: -7px;">
-					<input type="button" id="clear-open-tasks" value="Clear selected on" style="padding: 2px 8px;" />
+				<div class="clear-tasks-box">
+					<input type="button" id="clear-open-tasks" value="Clear selected on" />
 					<label for="open-done-date" ></label>
 					<input type="text" value="" id="open-done-date" class="done-date" />
 					<input type="hidden" value="" id="alt-date" />
 				</div>
 			</div>
-			<div id="" class="home-card">
+			<div class="home-card">
 				<div class="list-headers">
 					<div class="col-task-name">Task</div>
 					<div class="col-task-matter">Matter</div>
@@ -418,15 +419,15 @@ endif;?>
 if(count($this->ren_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open renewals
-					<span id="radio-renewals" style="float: right; margin-top: -5px;">
+					<span id="radio-renewals" style="float: right;">
 						<input type="radio" name="open-rens-filter" id="open-rens-all" value="0" checked="checked" />
 						<label for="open-rens-all" style="width: 50px;">All</label>
 						<input type="radio" name="open-rens-filter" id="open-rens-assigned" value="1" />
 						<label for="open-rens-assigned" style="width: 50px;">Mine</label>
 					</span>
 				</div>
-				<div class="clear-tasks-box" style="margin-top: -7px;">
-					<input type="button" id="clear-ren-tasks" value="Clear selected on" style="padding: 2px 8px;" />
+				<div class="clear-tasks-box">
+					<input type="button" id="clear-ren-tasks" value="Clear selected on" />
 					<label for="ren-done-date" ></label>
 					<input type="text" value="" id="ren-done-date" class="done-date" />
 					<input type="hidden" value="" id="alt-date" />

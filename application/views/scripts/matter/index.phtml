@@ -381,8 +381,8 @@ $(document).ready(function(){
      });
                   
      $( "button, input:submit, input:button").button();
-     $( "input[type='radio']" ).checkboxradio({icon: false});
-     $( "input[type='checkbox']" ).checkboxradio({icon: false});
+     $( "#container-all, #actor-status" ).controlgroup();
+     $( "input:radio, input:checkbox" ).checkboxradio({icon: false});
 
 });
 
@@ -407,9 +407,9 @@ if (isset ( $this->containers )) {
 	</div>
 	<div id="actor-status" style="float: left; margin-left: 20px;">
 		<input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?=!$this->display_style ? 'checked' : ''?> /> 
-		<label for="show-actor">Actor View</label> 
+		<label for="show-actor">Bibliography</label> 
 		<input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?=$this->display_style ? 'checked' : ''?> /> 
-		<label for="show-status">Status View</label>
+		<label for="show-status">Status</label>
 	</div>
 	
 	<div id="mine-all" style="float: left; margin-left: 20px;">
