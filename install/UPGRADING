@@ -16,4 +16,4 @@ mysql -u root -p phpip < phpip_upgrade-<timestamp>.sql
 You will be prompted for your mysql root password.
 
 Check the detailed guide at:
-https://code.google.com/p/phpip/wiki/Installing
+https://github.com/jjdejong/phpip/wiki/Installing
