@@ -230,14 +230,13 @@ $(document).ready(function(){
         $('#ren-tasks-list').load('/index/task-filter', { task_type : 'ren', filter: tasks_flag });
     });
     $( "button, input:button").button();
-    $("#radio-tasks").buttonset();
-    $("#radio-renewals").buttonset();
+    $( "input[type='radio']" ).checkboxradio({icon: false});
 
 	var restricted = <?=$this->restricted?>;
 	if (restricted) {
 		$('.col-actions').show().hide();
 		$('.clear-tasks-box').show().hide();
-		$('.ui-buttonset').show().hide();
+		$('.ui-checkboxradio').show().hide();
 		$('.editable').show().hide();
 	}
 });

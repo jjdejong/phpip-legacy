@@ -7,16 +7,16 @@
 <?= $this->headMeta() ?>
 
 <?= $this->headLink()->appendStylesheet($this->baseUrl('/css/layout-screen-new.css'), 'screen')
-	->headLink()->prependStylesheet($this->baseUrl('/js/jquery-ui.css'), 'screen') ?>
+	->headLink()->prependStylesheet($this->baseUrl('/js/jquery-ui.min.css'), 'screen') ?>
 	
 <?php
 	$this->headScript()->appendFile(
-    '/js/jquery-2.1.4.js',
+    '/js/jquery-3.2.1.min.js',
     'text/javascript'
     );
 	
 	$this->headScript()->appendFile(
-	'/js/jquery-ui.js',
+	'/js/jquery-ui.min.js',
 	'text/javascript'
 	);
 	

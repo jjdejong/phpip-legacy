@@ -381,9 +381,8 @@ $(document).ready(function(){
      });
                   
      $( "button, input:submit, input:button").button();
-     $( "#container-all" ).buttonset();
-     $( "#actor-status" ).buttonset();
-     $( "#mine-all" ).buttonset();
+     $( "input[type='radio']" ).checkboxradio({icon: false});
+     $( "input[type='checkbox']" ).checkboxradio({icon: false});
 
 });
 

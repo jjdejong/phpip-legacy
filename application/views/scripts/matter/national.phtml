@@ -29,7 +29,7 @@ $(document).ready(function(){
         source: "/matter/get-country-codes",
         autoFocus: true,
         select: function( event, ui ) {
-			var mindex = $('#national-phases > div').size();
+			var mindex = $('#national-phases > div').length;
 			var new_country = '<div id="nmp-' + mindex + '">'
 				+ '<input type="hidden" name="matter_country[' + mindex + ']" value=' + ui.item.id + ' />'
     			+ '<span class="national-countries">' + ui.item.value + '</span>'
