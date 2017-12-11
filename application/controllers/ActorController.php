@@ -104,7 +104,7 @@ class ActorController extends Zend_Controller_Action {
 		$actors = $actorModel->getAllActors ( $this->view->term );
 		array_push ( $actors, array (
 				'id' => 'CreateActor',
-				'value' => '<font color="red">Create Actor</font>' 
+				'value' => '>> CREATE UNEXISTING ACTOR <<' 
 		) );
 		
 		$this->view->matter_actor = $actors;
