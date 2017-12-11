@@ -68,7 +68,7 @@ class Application_Form_Actor_Add extends Zend_Form
                     'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
                     'separator' => '',
                     'label_style' => 'width:78px;vertical-align:top;margin-left:0px;',
-                    'value' => '1'
+                    'value' => '0'
                 ));
 
          $this->addElement('text', 'nationality', array(
@@ -84,7 +84,7 @@ class Application_Form_Actor_Add extends Zend_Form
                     'multiOptions' => array( '1' => 'Yes', '0' => 'No' ),
                     'separator' => '',
                     'label_style' => 'width:83px;vertical-align:top;margin-left:0px;',
-                    'value' => '0'
+                    'value' => '1'
                 ));
 
          $this->addElement('textarea', 'address', array(
