@@ -341,18 +341,24 @@ $(document).ready(function(){
         if( confirm("Do you want to delete task?") ){
 			$.post('/matter/delete-task', { tid: $(this).parent().attr('id') }, function(data){
 				if(!isNaN(parseInt(data))){
-					$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
+					if(<?=$this->renewal?>) {
+						$('#tasklist-pop-up').load("/matter/tasklist/event_id/<?=$this->event_id?>", {renewal: <?=$this->renewal ? 1 : 0?>});
+					}
+					else {
+						$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
+					}
+
 				}else{
 					alert(data);
 				}
 			});
-		} 
+		}
     });
 
     $('.delete-event').click(function(){
         var conf_event_del = confirm("Deleting the event will also delete the linked tasks");
         if(conf_event_del){
-			$.post('/matter/delete-event', 
+			$.post('/matter/delete-event',
 				{ eid: $(this).attr('id') },
 				function(data){
 					if(!isNaN(parseInt(data))){
