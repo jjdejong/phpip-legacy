@@ -269,8 +269,8 @@ $(document).ready(function(){
         $.post('/matter/update-task', { task_id: tid, field: 'done', value: done_val }, function(data){
         	var event_id = <?=(isset($this->event_id)?$this->event_id:0)?>;
         	if ( event_id )
-        		$('#tasklist-pop-up').load("/matter/tasklist/event_id/<?=$this->event_id?>", {renewal: <?=$this->renewal ? 1 : 0?>});
-        	else 
+        		$('#tasklist-pop-up').load("/matter/tasklist/event_id/" + event_id, {renewal: <?=$this->renewal ? 1 : 0?>});
+        	else
         		$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
         });
     });
@@ -341,8 +341,9 @@ $(document).ready(function(){
         if( confirm("Do you want to delete task?") ){
 			$.post('/matter/delete-task', { tid: $(this).parent().attr('id') }, function(data){
 				if(!isNaN(parseInt(data))){
-					if(<?=$this->renewal?>) {
-						$('#tasklist-pop-up').load("/matter/tasklist/event_id/<?=$this->event_id?>", {renewal: <?=$this->renewal ? 1 : 0?>});
+					var is_renewal = <?=$this->renewal ? 1 : 0?>;
+					if( is_renewal ) {
+						$('#tasklist-pop-up').load("/matter/tasklist/event_id/<?=$this->event_id?>", {renewal: 1});
 					}
 					else {
 						$('#tasklist-pop-up').load("/matter/tasklist/matter_id/<?=$this->matter_id?>");
