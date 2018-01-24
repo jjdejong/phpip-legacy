@@ -1348,6 +1348,7 @@ class MatterController extends Zend_Controller_Action {
 				'Pub. No',
 				'Granted',
 				'Grt No',
+				'Expiry',
 				'ID',
 				'container_ID',
 				'parent_ID',

@@ -311,6 +311,7 @@ class Application_Model_Matter {
 			pub.detail AS PubNo,
 			grt.event_date AS Granted,
 			grt.detail AS GrtNo,
+			matter.expire_date AS Expires,
 			matter.ID,
 			matter.container_ID,
 			matter.parent_ID,
