@@ -324,10 +324,10 @@ $(document).ready(function(){
 	</fieldset>
 	<fieldset class="actor-info-set">
 		<legend>Other details</legend>
-		<label for="lglform" title="<?=$this->actorComments['phone2']?>">Legal form</label>
-		<span class="actor-input-wide editable" id="lglform"><?=$this->actor['phone2']?></span>
-		<label for="regno" title="<?=$this->actorComments['fax']?>">Registration No</label>
-		<span class="actor-input-narrow editable" id="regno"><?=$this->actor['fax']?></span>
+		<label for="legal_form" title="<?=$this->actorComments['legal_form']?>">Legal form</label>
+		<span class="actor-input-wide editable" id="legal_form"><?=$this->actor['legal_form']?></span>
+		<label for="registration_no" title="<?=$this->actorComments['registration_no']?>">Registration No</label>
+		<span class="actor-input-narrow editable" id="registration_no"><?=$this->actor['registration_no']?></span>
 		<label for="warn" title="<?=$this->actorComments['warn']?>">Warn</label>
  		<span class="actor-input-wide" id="warn">
 			<input type="radio" name="warn" value="1" <?=$this->actor['warn'] ? 'checked="checked"' : ""?> />YES&nbsp;&nbsp;

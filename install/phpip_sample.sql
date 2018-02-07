@@ -31,8 +31,8 @@ CREATE TABLE `actor` (
   `country_billing` char(2) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
-  `phone2` varchar(20) DEFAULT NULL,
-  `fax` varchar(20) DEFAULT NULL,
+  `legal_form` varchar(60) DEFAULT NULL,
+  `registration_no` varchar(20) DEFAULT NULL,
   `warn` tinyint(1) DEFAULT '0' COMMENT 'The actor will be displayed in red in the matter view when set',
   `notes` text,
   `VAT_number` varchar(45) DEFAULT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE `actor` (
   CONSTRAINT `fk_actor_site` FOREIGN KEY (`site_ID`) REFERENCES `actor` (`ID`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='All actors involved in a patent';
 /*!40101 SET character_set_client = @saved_cs_client */;
-INSERT INTO `actor` (`ID`, `name`, `first_name`, `display_name`, `login`, `password`, `password_salt`, `last_login`, `default_role`, `function`, `parent_ID`, `company_ID`, `site_ID`, `phy_person`, `nationality`, `small_entity`, `address`, `country`, `address_mailing`, `country_mailing`, `address_billing`, `country_billing`, `email`, `phone`, `phone2`, `fax`, `warn`, `notes`, `VAT_number`, `creator`, `updated`, `updater`)
+INSERT INTO `actor` (`ID`, `name`, `first_name`, `display_name`, `login`, `password`, `password_salt`, `last_login`, `default_role`, `function`, `parent_ID`, `company_ID`, `site_ID`, `phy_person`, `nationality`, `small_entity`, `address`, `country`, `address_mailing`, `country_mailing`, `address_billing`, `country_billing`, `email`, `phone`, `legal_form`, `registration_no`, `warn`, `notes`, `VAT_number`, `creator`, `updated`, `updater`)
 VALUES
 	(1,'Client handled',NULL,'CLIENT',NULL,NULL,NULL,NULL,'ANN','',NULL,NULL,NULL,0,NULL,0,'',NULL,'',NULL,'',NULL,NULL,NULL,NULL,NULL,0,'DO NOT DELETE - Special actor used for removing renewal tasks that are handled by the client',NULL,NULL,'2016-06-18 07:21:41',NULL),
 	(120,'phpIP User',NULL,NULL,'phpipuser','26320dbc247a9f2aec0afc69b5d82d72','salt','2017-12-04 09:28:29',NULL,NULL,NULL,NULL,NULL,1,NULL,0,'',NULL,'',NULL,'',NULL,'root@localhost',NULL,NULL,NULL,0,NULL,NULL,'root','2017-12-04 09:28:29','phpip'),

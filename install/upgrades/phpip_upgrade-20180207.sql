@@ -1,0 +1,5 @@
+ALTER TABLE `actor` 
+CHANGE COLUMN `phone2` `legal_form` VARCHAR(60) NULL DEFAULT NULL ;
+
+ALTER TABLE `actor` 
+CHANGE COLUMN `fax` `registration_no` VARCHAR(20) NULL DEFAULT NULL ;

@@ -315,8 +315,8 @@ $(document).ready(function(){
                     country_billing: $('#country_billing-code').val(),
                     email: $('#email').val(),
                     phone: $('#phone').val(),
-                    phone2: $('#phone2').val(),
-                    fax: $('#fax').val(),
+                    legal_form: $('#legal_form').val(),
+                    registration_no: $('#registration_no').val(),
                     warn: $('#warn').val(),
                     notes: $('#notes').val(),
                     VAT_number: $('#VAT_number').val(),
@@ -412,10 +412,10 @@ $(document).ready(function(){
 	</fieldset>
 	<fieldset class="actor-info-set">
 		<legend>Other details</legend>
-		<label for="phone2" title="<?=$this->actorComments['phone2']?>">Legal form</label>
-			<?=$this->actorForm->getElement('phone2')?>
-		<label for="fax" title="<?=$this->actorComments['fax']?>">Registration No</label>
-			<?=$this->actorForm->getElement('fax')?>
+		<label for="legal_form" title="<?=$this->actorComments['legal_form']?>">Legal form</label>
+			<?=$this->actorForm->getElement('legal_form')?>
+		<label for="registration_no" title="<?=$this->actorComments['registration_no']?>">Registration No</label>
+			<?=$this->actorForm->getElement('registration_no')?>
 		<label for="warn" title="<?=$this->actorComments['warn']?>">Warn</label>
 			<?=$this->actorForm->getElement('warn');?>
 		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT No.</label>

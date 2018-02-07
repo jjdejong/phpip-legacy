@@ -138,13 +138,13 @@ class Application_Form_Actor_Add extends Zend_Form
                     'class' => 'actor-input'
                 ));
 
-         $this->addElement('text', 'phone2', array(
+         $this->addElement('text', 'legal_form', array(
                     'label' => '',
                     'filters' => array('StringTrim'),
                     'class' => 'actor-input'
                 ));
 
-         $this->addElement('text', 'fax', array(
+         $this->addElement('text', 'registration_no', array(
                     'label' => '',
                     'filters' => array('StringTrim'),
                     'class' => 'actor-input'
