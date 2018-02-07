@@ -409,13 +409,13 @@ $(document).ready(function(){
 			<?=$this->actorForm->getElement('email')?>
 		<label for="phone" title="<?=$this->actorComments['phone']?>">Phone</label>
 			<?=$this->actorForm->getElement('phone')?>
-		<label for="phone2" title="<?=$this->actorComments['phone2']?>">Phone 2</label>
-			<?=$this->actorForm->getElement('phone2')?>
-		<label for="fax" title="<?=$this->actorComments['fax']?>">Fax</label>
-			<?=$this->actorForm->getElement('fax')?>
 	</fieldset>
 	<fieldset class="actor-info-set">
 		<legend>Other details</legend>
+		<label for="phone2" title="<?=$this->actorComments['phone2']?>">Legal form</label>
+			<?=$this->actorForm->getElement('phone2')?>
+		<label for="fax" title="<?=$this->actorComments['fax']?>">Registration No</label>
+			<?=$this->actorForm->getElement('fax')?>
 		<label for="warn" title="<?=$this->actorComments['warn']?>">Warn</label>
 			<?=$this->actorForm->getElement('warn');?>
 		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT No.</label>
