@@ -1203,8 +1203,8 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 				'e' => 'event' 
 		), "m.ID=e.matter_ID AND e.code='FIL'", array (
 				'number' => 'e.detail',
-				'filing_date' => 'e.event_date' 
-		) )->where ( "m.type_code IS NULL AND caseref LIKE '" . $term . "%'" );
+				'filing_date' => 'e.event_date'
+		) )->where ( "caseref LIKE '" . $term . "%'" )->limit(20);
 		return $db->fetchAll ( $selectQuery );
 	}
 	
