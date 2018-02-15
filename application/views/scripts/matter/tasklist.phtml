@@ -166,9 +166,9 @@ $(document).ready(function(){
 			}
         },
         submitdata: function(value,settings){
-			return { 
-				task_id : $(this).parent().attr('id'), 
-				field : 'assigned_to' 
+			return {
+				task_id : $(this).parent().attr('id'),
+				field : 'assigned_to'
 			};
 		},
 		placeholder: '...',
@@ -195,15 +195,15 @@ $(document).ready(function(){
 		submitdata: function(value, settings){
 			var fclass = $(this).attr('class').split(" ");
 			var field_name = (fclass[0]).split('-');
-			return { 
-				task_id : $(this).parent().attr('id'), 
+			return {
+				task_id : $(this).parent().attr('id'),
 				field : field_name[2]
 			}
 		},
 		placeholder: '...',
 		select : true,
 		indicator : '<span class="icon-busy" />',
-		// This is to diplay only the "detail" portion of the task in the edit field when clicking on a task name for edition                 
+		// This is to diplay only the "detail" portion of the task in the edit field when clicking on a task name for edition
 		data: function(value, settings){
 			var fclass = $(this).attr('class').split(" ");
 			var field_name = (fclass[0]).split('-');
@@ -214,21 +214,21 @@ $(document).ready(function(){
 				return value;
 		}
 	});
-    
+
     $('.editable-due-date').editable('/matter/update-task', {
 			submitdata: function(value,settings){
 				var rule_id = $(this).attr('data-rule_id');
 				if(rule_id) {
 					var update_due = confirm("Changing the due date will unlink the task from date calculation rule");
 					if(update_due)
-						return { 
-							task_id: $(this).attr('id'), 
-							field: 'due_date', 
-							rule_id: rule_id 
+						return {
+							task_id: $(this).attr('id'),
+							field: 'due_date',
+							rule_id: rule_id
 						}
-				} else 
-					return { 
-						task_id: $(this).attr('id'), 
+				} else
+					return {
+						task_id: $(this).attr('id'),
 						field: 'due_date'
 					}
             },
@@ -238,11 +238,11 @@ $(document).ready(function(){
             placeholder: '...',
             tooltip: 'Click to edit...'
     });
-    
+
     $('.editable-done-date').editable('/matter/update-task', {
 		submitdata: function(value,settings){
-			return { 
-				task_id: $(this).attr('id'), 
+			return {
+				task_id: $(this).attr('id'),
 				field: 'done_date'
 			};
 		},
@@ -256,7 +256,7 @@ $(document).ready(function(){
     $('.tasklist-col-done > input[type=checkbox]').click(function(){
        var tid = $(this).val();
        var done_val = 0;
-       if($(this).is(":checked")){ 
+       if($(this).is(":checked")){
           done_val = 1;
        }else{
           done_val = 0;
@@ -314,7 +314,7 @@ $(document).ready(function(){
            alert('Due date required!');
            return;
        }
-		$.post('/matter/add-event-task', { 
+		$.post('/matter/add-event-task', {
        		trigger_ID: $('#trigger_id').val(),
 			code: $('#task_id').val(),
 			due_date: $('#task_duedate').val(),
@@ -368,7 +368,7 @@ $(document).ready(function(){
 						alert(data);
 					}
 				}
-			); 
+			);
 		}
 	});
     $("button, input:button").button();
@@ -382,16 +382,16 @@ $(document).ready(function(){
 			<?=$this->renewal ? "All renewals" : "All tasks" ?>
 		</span>
 		<span class="tasklist-col-due_date">Due date</span>
-		<span class="tasklist-col-done">Done</span> 
-		<span class="tasklist-col-done_date">Done date</span> 
-		<span class="tasklist-col-cost">Cost</span> 
+		<span class="tasklist-col-done">Done</span>
+		<span class="tasklist-col-done_date">Done date</span>
+		<span class="tasklist-col-cost">Cost</span>
 		<span class="tasklist-col-fee">Fee</span>
 		<span class="tasklist-col-currency">Cur.</span>
-<?php if (!$this->renewal) {?> 
+<?php if (!$this->renewal) {?>
 		<span class="tasklist-col-time_spent">Time</span>
 <?php } ?>
-		<span class="tasklist-col-assigned_to">Assigned To</span> 
-		<span class="tasklist-col-notes">Notes</span> 
+		<span class="tasklist-col-assigned_to">Assigned To</span>
+		<span class="tasklist-col-notes">Notes</span>
 		<span class="ui-icon ui-icon-arrowreturnthick-1-s" style="float: right;"></span>
 	</div>
 	<div style="max-height: 350px; min-height: 100px; height: auto; width: 100%; background: whitesmoke; overflow: auto">
@@ -399,7 +399,7 @@ $(document).ready(function(){
 $event_id = '';
 foreach ( $this->matter_event_tasks as $event_task ) :
 	// Display the trigger event in the first iteration
-	if ($event_id != $event_task ['event_ID']):			
+	if ($event_id != $event_task ['event_ID']):
 		$event_id = $event_task ['event_ID'];
 ?>
 		<div class="event-head">
@@ -420,14 +420,14 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 			<span class="tasklist-col-detail editable" title="Click to edit detail">
 				<?=$event_task['task_name']?>
 				<?=$event_task ['detail'] != "" ? ": " . $event_task ['detail'] : ''?>
-			</span> 
+			</span>
 			<span id="<?=$event_task['ID']?>" class="tasklist-col-due_date editable-due-date" data-rule_id="<?=$event_task['rule_used']?>">
 				<?=$event_task['due_date']?>
 			</span>
 			<span class="tasklist-col-done">
 				<input type="checkbox" name="doneflag-<?=$event_task['ID']?>" value="<?=$event_task['ID']?>"
 				<?=$event_task['done'] ? 'checked' : '' ?>>
-			</span> 
+			</span>
 			<span id="<?=$event_task['ID']?>" class="tasklist-col-done_date editable-done-date">
 				<?=$event_task['done_date']?>
 			</span>
@@ -455,7 +455,7 @@ foreach ( $this->matter_event_tasks as $event_task ) :
 				<span class="ui-icon ui-icon-trash" style="float: right;"></span>
 			</span>
 		</div>
-<?php 
+<?php
 	endif;
 endforeach; ?>
 	</div>
@@ -485,7 +485,7 @@ endforeach; ?>
 		<input type="text" name="task_time" id="task_time" value="" style="width: 120px;" />
 		<label for="task_assigned_to">Assigned to </label>
 		<input type="text" name="task_assigned_to" id="task_assigned_to" value="" style="width: 120px;" />
-		<br> 
+		<br>
 		<label for="task_notes">Notes</label>
 		<textarea name="task_notes" id="task_notes" rows=2 cols=45></textarea>
 		<br>

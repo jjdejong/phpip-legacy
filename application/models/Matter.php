@@ -1,22 +1,22 @@
 <?php
 /************************************************************************
- 
+
  phpIP, a patent and other IP matters management system
  Copyright (C) 2011 Omnipat <http://www.omnipat.fr>
- 
+
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
  the Free Software Foundation, either version 3 of the License, or
  (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
- 
+
  You should have received a copy of the GNU General Public License
  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- 
+
  *************************************************************************/
 class Application_Model_Matter {
 	protected $_id;
@@ -92,7 +92,7 @@ class Application_Model_Matter {
 	public function getError() {
 		return $this->_error;
 	}
-	
+
 	/**
 	 * saves new matter record upon adding a matter
 	 * *
@@ -102,12 +102,12 @@ class Application_Model_Matter {
 			return false;
 		if (! isset ( $matter ['caseref'] ) || empty ( $matter ['caseref'] ))
 			return false;
-		
+
 		if (! isset ( $matter ['category_code'] ) || empty ( $matter ['category_code'] ))
 			return false;
 		if (! isset ( $matter ['country'] ) || empty ( $matter ['country'] ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		try {
 			$this->_dbTable->insert ( $matter );
@@ -118,7 +118,7 @@ class Application_Model_Matter {
 		}
 		return $this->getID ();
 	}
-	
+
 	/**
 	 * creates a new child matter
 	 * *
@@ -128,17 +128,17 @@ class Application_Model_Matter {
 			return false;
 		if (! isset ( $matter ['caseref'] ) || empty ( $matter ['caseref'] ))
 			return false;
-		
+
 		if (! isset ( $matter ['category_code'] ) || empty ( $matter ['category_code'] ))
 			return false;
 		if (! isset ( $matter ['country'] ) || empty ( $matter ['country'] ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		if (! $this->isMatterUnique ( $matter )) {
 			$matter ['idx'] = $this->getNextIdx ( $matter );
 		}
-		
+
 		try {
 			$this->_dbTable->insert ( $matter );
 			$this->setID ( $this->_adapter->lastInsertID () );
@@ -148,7 +148,7 @@ class Application_Model_Matter {
 		}
 		return $this->getID ();
 	}
-	
+
 	/**
 	 * to find whether a newly created matter has unique index
 	 * return @boolean
@@ -166,16 +166,16 @@ class Application_Model_Matter {
 			$origin_sq = "origin is NULL";
 		else
 			$origin_sq = "origin = '" . $matter ['origin'] . "'";
-		
+
 		if ($matter ['type_code'] == '' || ! isset ( $matter ['type_code'] ))
 			$type_sq = "type_code is NULL";
 		else
 			$type_sq = "type_code = '" . $matter ['type_code'] . "'";
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		) )->where ( "caseref = '" . $matter ['caseref'] . "' AND country='" . $matter ['country'] . "' AND " . $origin_sq . " AND " . $type_sq . " AND category_code='" . $matter ['category_code'] . "'" . $extended );
 		$result = $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 		if (empty ( $result ))
@@ -183,7 +183,7 @@ class Application_Model_Matter {
 		else
 			return false;
 	}
-	
+
 	/**
 	 * Creates Parent Filed event for a child matter
 	 * *
@@ -192,7 +192,7 @@ class Application_Model_Matter {
 		$this->setDbTable ( 'Application_Model_DbTable_Event' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		) )->where ( "matter_ID = " . $parent_id . " AND code='PFIL'" );
 		$result = $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 		$data = array ();
@@ -208,7 +208,7 @@ class Application_Model_Matter {
 			$this->_dbTable->insert ( $result );
 		}
 	}
-	
+
 	/**
 	 * Creates a Priority claim event for a child matter
 	 * *
@@ -216,7 +216,7 @@ class Application_Model_Matter {
 	public function childPriClaimEvent($matter_id, $child_id) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Event' );
 		$data ['code'] = 'PRI';
 		$data ['matter_ID'] = $child_id;
@@ -224,7 +224,7 @@ class Application_Model_Matter {
 		$data ['event_date'] = date ( 'Y-m-d' );
 		$this->_dbTable->insert ( $data );
 	}
-	
+
 	/**
 	 * creates a recieved event for a matter
 	 * *
@@ -232,14 +232,14 @@ class Application_Model_Matter {
 	public function receivedEvent($matter_id = null) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Event' );
 		$data ['code'] = 'REC';
 		$data ['matter_ID'] = $matter_id;
 		$data ['event_date'] = date ( 'Y-m-d' );
 		$this->_dbTable->insert ( $data );
 	}
-	
+
 	/**
 	 * creates Filed, Published, Granted events copied from current matter to a new matter
 	 * *
@@ -247,13 +247,13 @@ class Application_Model_Matter {
 	public function nationalPhaseEvents($matter_cur = null, $matter_new = null) {
 		if (! isset ( $matter_cur ) || ! isset ( $matter_new ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$query = "INSERT INTO event(code, matter_ID, event_date, alt_matter_ID, detail, notes) SELECT code, " . $matter_new . ", event_date, alt_matter_ID, detail, notes FROM `event` where code IN ('FIL', 'PUB', 'GRT') AND matter_ID =" . $matter_cur;
 		$nquery = $this->_dbTable->getAdapter ()->prepare ( $query );
 		$nquery->execute ();
 	}
-	
+
 	/**
 	 * creates an entered event for a matter with entered_date as specified or now()
 	 * *
@@ -261,37 +261,37 @@ class Application_Model_Matter {
 	public function enteredEvent($matter_id = null, $entered_date = null) {
 		if (! $matter_id)
 			return;
-		
+
 		if (! isset ( $entered_date ) || empty ( $entered_date )) {
 			$entered_date = date ( 'Y-m-d' );
 		}
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Event' );
 		$data ['code'] = 'ENT';
 		$data ['matter_ID'] = $matter_id;
 		$data ['event_date'] = $entered_date;
 		$this->_dbTable->insert ( $data );
 	}
-	
+
 	/**
 	 * retrieves paginated/unpaginated list of matters with specified filters
 	 */
-	public function fetchMatters( 
-			$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx', 
-			$sortDir = '', 
-			$multi_filter = array(), 
-			$matter_category_display_type = false, 
+	public function fetchMatters(
+			$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx',
+			$sortDir = '',
+			$multi_filter = array(),
+			$matter_category_display_type = false,
 			$paginated = false ) {
 		if (array_key_exists ( 'Inventor1', $multi_filter )) {
 			$inventor_filter = '';
 		} else {
 			$inventor_filter = 'AND invlnk.display_order = 1';
 		}
-		
+
 		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		$userid = $siteInfoNamespace->userId;
 		$role = $siteInfoNamespace->role;
-		
+
 		$sql = "SELECT CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', concat(caseref, matter.country), origin), matter.type_code), idx) AS Ref,
 			matter.country AS country,
 			matter.category_code AS Cat,
@@ -321,44 +321,44 @@ class Application_Model_Matter {
 			IF(isnull(matter.container_ID),1,0) AS Ctnr
 			FROM matter
 			JOIN matter_category ON matter.category_code = matter_category.code
-			LEFT JOIN matter_actor_lnk clilnk 
-				JOIN actor cli ON cli.ID = clilnk.actor_ID 
-			ON matter.ID = clilnk.matter_ID AND clilnk.role = 'CLI' 
-			LEFT JOIN matter_actor_lnk lclic 
+			LEFT JOIN matter_actor_lnk clilnk
+				JOIN actor cli ON cli.ID = clilnk.actor_ID
+			ON matter.ID = clilnk.matter_ID AND clilnk.role = 'CLI'
+			LEFT JOIN matter_actor_lnk lclic
 				JOIN actor clic ON clic.ID = lclic.actor_ID
 			ON matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1
-			LEFT JOIN matter_actor_lnk invlnk 
-				JOIN actor inv ON inv.ID = invlnk.actor_ID 
+			LEFT JOIN matter_actor_lnk invlnk
+				JOIN actor inv ON inv.ID = invlnk.actor_ID
 			ON ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . "
-			LEFT JOIN matter_actor_lnk agtlnk 
+			LEFT JOIN matter_actor_lnk agtlnk
 				JOIN actor agt ON agt.ID = agtlnk.actor_ID
 			ON matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1
-			LEFT JOIN matter_actor_lnk applnk 
-				JOIN actor app ON app.ID = applnk.actor_ID 
+			LEFT JOIN matter_actor_lnk applnk
+				JOIN actor app ON app.ID = applnk.actor_ID
 			ON matter.ID = applnk.matter_ID AND applnk.role = 'APP' AND applnk.display_order = 1
-			LEFT JOIN matter_actor_lnk dellnk 
+			LEFT JOIN matter_actor_lnk dellnk
 				JOIN actor del ON del.ID = dellnk.actor_ID
-			ON ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL' 
+			ON ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL'
 			LEFT JOIN event fil ON matter.ID = fil.matter_ID AND fil.code = 'FIL'
 			LEFT JOIN event pub ON matter.ID = pub.matter_ID AND pub.code = 'PUB'
 			LEFT JOIN event grt ON matter.ID = grt.matter_ID AND grt.code = 'GRT'
-			LEFT JOIN event status 
+			LEFT JOIN event status
 				JOIN event_name ON event_name.code = status.code AND event_name.status_event = 1
 			ON matter.ID = status.matter_ID
-			LEFT JOIN event e2 
+			LEFT JOIN event e2
 				JOIN event_name en2 ON e2.code=en2.code AND en2.status_event = 1
-			ON status.matter_id = e2.matter_id AND status.event_date < e2.event_date 
-			LEFT JOIN classifier 
-				JOIN classifier_type ON classifier.type_code = classifier_type.code AND main_display = 1 AND classifier_type.display_order = 1 
+			ON status.matter_id = e2.matter_id AND status.event_date < e2.event_date
+			LEFT JOIN classifier
+				JOIN classifier_type ON classifier.type_code = classifier_type.code AND main_display = 1 AND classifier_type.display_order = 1
 			ON IFNULL(matter.container_ID, matter.ID) = classifier.matter_ID
 			WHERE e2.matter_id IS NULL ";
-		
+
 		$where_clause = '';
 		if ($matter_category_display_type)
 			$where_clause = "AND matter_category.display_with = '$matter_category_display_type' ";
 		if ($role == 'CLI')
 			$where_clause .= "AND '" . $userid . "' IN (cli.id, clic.id)";
-		
+
 		$having_clause = '';
 		if (! empty ( $multi_filter )) {
 			foreach ( $multi_filter as $key => $value ) {
@@ -374,7 +374,7 @@ class Application_Model_Matter {
 				}
 			}
 		}
-		
+
 		if ($sortField == 'caseref') {
 			if ($sortDir == 'desc') {
 				$sortField = 'matter.caseref DESC, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx';
@@ -384,13 +384,13 @@ class Application_Model_Matter {
 			$sortDir = '';
 		} else
 			$sortDir .= ', matter.caseref, matter.origin, matter.country';
-		
+
 		$sql .= $where_clause . $having_clause . 'ORDER BY ' . $sortField . ' ' . $sortDir;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbStmt = $this->_dbTable->getAdapter ()->query ( $sql );
 		$results = $dbStmt->fetchAll ();
-		
+
 		if ($paginated) {
 			$adapter = new Zend_Paginator_Adapter_Array ( $results );
 			return new Zend_Paginator ( $adapter );
@@ -398,7 +398,7 @@ class Application_Model_Matter {
 			return $results;
 		}
 	}
-	
+
 	/**
 	 * gets complete details of a matter from matter table
 	 * * (usefulness questionable)
@@ -406,29 +406,29 @@ class Application_Model_Matter {
 	public function getMatter($matter_id = 0) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$uidsql = "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(m.caseref, m.country), m.origin), m.type_code), m.idx)";
 		$selectQuery = $db->select ()->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), array (
 				'm.*',
-				'UID' => new Zend_Db_Expr ( $uidsql ) 
+				'UID' => new Zend_Db_Expr ( $uidsql )
 		) )->joinLeft ( array (
-				'c' => 'country' 
+				'c' => 'country'
 		), 'c.iso = m.country', array (
-				'country_name' => 'c.name' 
+				'country_name' => 'c.name'
 		) )->joinLeft ( array (
-				'mc' => 'matter_category' 
+				'mc' => 'matter_category'
 		), 'm.category_code = mc.code', array (
-				'category' => 'mc.category' 
+				'category' => 'mc.category'
 		) )->where ( 'ID = ?', $matter_id );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * Gets merge data for a matter
 	 * *
@@ -436,7 +436,7 @@ class Application_Model_Matter {
 	public function getMatterMergeData($matter_id = 0) {
 		if (! $matter_id)
 			return;
-	
+
 			$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 			$dbStmt = $this->_dbTable->getAdapter ()->query ( "SELECT matter.ID,
 	CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(matter.caseref, matter.country), matter.origin), matter.type_code), matter.idx) AS OurRef,
@@ -515,10 +515,10 @@ FROM
 	LEFT JOIN classifier class ON class.matter_ID = IFNULL(matter.container_ID, matter.ID) AND class.type_code = 'TMCL'
 	JOIN actor resp ON resp.login = matter.responsible
 WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
-	
+
 			return $dbStmt->fetchAll ();
 	}
-	
+
 	/**
 	 * returns container_ID of a matter
 	 * * (usefulness questionable)
@@ -526,21 +526,21 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getMatterContainer($matter_id = 0) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		) )->where ( 'ID = ?', $matter_id );
-		
+
 		$matter = $db->fetchRow ( $selectQuery );
 		if ($matter ['container_ID'] == null)
 			return $matter_id;
 		else
 			return $matter ['container_ID'];
 	}
-	
+
 	/**
 	 * retrieves all actors linked to a matter from matter_actor_lnk
 	 * *
@@ -548,43 +548,43 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getMatterActors($matter_id = 0, $container_id = 0) {
 		if (! $matter_id)
 			return;
-		
+
 		if (! $container_id)
 			$container_id = 0;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'mal' => 'matter_actor_lnk' 
+				'mal' => 'matter_actor_lnk'
 		), array (
 				'mal.*',
-				'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)' 
+				'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)'
 		) )->joinLeft ( array (
-				'a' => 'actor' 
+				'a' => 'actor'
 		), 'a.ID = mal.actor_ID', array (
 				'a.name',
 				'a.first_name',
 				'a.display_name',
 				'a.warn'
 		) )->joinLeft ( array (
-				'ar' => 'actor_role' 
+				'ar' => 'actor_role'
 		), 'mal.role = ar.code', array (
-				'role_name' => 'ar.name' 
+				'role_name' => 'ar.name'
 		) )->joinLeft ( array (
-				'aa' => 'actor' 
+				'aa' => 'actor'
 		), 'aa.ID = mal.company_ID', array (
-				'company_name' => 'aa.name' 
+				'company_name' => 'aa.name'
 		) )->order ( array (
 				'ar.display_order',
 				'mal.display_order',
 				'ar.box',
-				'ar.box_color' 
+				'ar.box_color'
 		) )->where ( 'matter_ID = ?', $matter_id )->orwhere ( 'matter_ID = ? and mal.shared = 1 and matter_ID != 0', $container_id );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrives actors for a given role and linked to a matter
 	 * *
@@ -592,27 +592,27 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getMatterActorsForRole($container_id = 0, $matter_id = 0, $role = '') {
 		if (! $matter_id)
 			return;
-		
+
 		if (! $container_id)
 			$container_id = 0;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'mal' => 'matter_actor_lnk' 
+				'mal' => 'matter_actor_lnk'
 		), array (
 				'mal.*',
-				'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)' 
+				'inherited' => 'if(mal.matter_ID =' . $container_id . ', 1,0)'
 		) )->joinLeft ( array (
-				'a' => 'actor' 
+				'a' => 'actor'
 		), 'a.ID = mal.actor_ID', array (
 				'AID' => 'a.ID',
 				'a.name',
 				'a.first_name',
-				'a.display_name' 
+				'a.display_name'
 		) )->joinLeft ( array (
-				'ar' => 'actor_role' 
+				'ar' => 'actor_role'
 		), 'mal.role = ar.code', array (
 				'ar.name as role_name',
 				'ar.code',
@@ -621,20 +621,20 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 				'ar.show_ref',
 				'ar.show_company',
 				'ar.show_date',
-				'ar.show_rate' 
+				'ar.show_rate'
 		) )->joinLeft ( array (
-				'aa' => 'actor' 
+				'aa' => 'actor'
 		), 'aa.ID = mal.company_ID', array (
-				'company_name' => 'aa.name' 
+				'company_name' => 'aa.name'
 		) )->order ( array (
 				'mal.display_order',
 				'ar.box',
-				'ar.box_color' 
+				'ar.box_color'
 		) )->where ( "matter_ID = " . $matter_id . " AND mal.role = '" . $role . "'" )->orwhere ( "matter_ID = " . $container_id . " AND mal.role = '" . $role . "' AND mal.shared = 1 AND matter_ID != 0" );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retreives all status events of a given matter, and displays link information
 	 * *
@@ -642,27 +642,27 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getMatterEvents($matter_id = 0) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), array (
 				'event_date' => 'DATE_FORMAT(ifnull(e2.event_date, e.event_date),"%d/%m/%Y")',
 				'detail' => 'ifnull(concat(m2.country, e2.detail), e.detail)',
-				'alt_matter_ID' 
+				'alt_matter_ID'
 		) )->join ( array (
-				'en' => 'event_name' 
+				'en' => 'event_name'
 		), 'e.code = en.code' )->joinLeft ( array (
-				'e2' => 'event' 
+				'e2' => 'event'
 		), 'e2.matter_ID = e.alt_matter_ID and e2.code = "FIL"', array () )->joinLeft ( array (
-				'm2' => 'matter' 
+				'm2' => 'matter'
 		), 'm2.ID = e.alt_matter_ID', array () )->where ( 'e.matter_ID = ? and en.status_event = 1', $matter_id )->order ( 'e.event_date asc' );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves all events for a matter (for the full list opened when clicking on the status event box title)
 	 * *
@@ -670,35 +670,35 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getMatterAllEvents($matter_id = 0) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), array (
 				'ID',
 				'event_date' => 'DATE_FORMAT(e.event_date,"%d/%m/%Y")',
 				'detail',
 				'alt_matter_ID',
-				'e.notes' 
+				'e.notes'
 		) )->join ( array (
-				'en' => 'event_name' 
+				'en' => 'event_name'
 		), 'e.code = en.code', 'en.name' )->joinLeft ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), 'm.ID = e.alt_matter_ID', array (
 				'alt_caseref' => 'm.caseref',
 				'm.country',
-				'm.origin' 
+				'm.origin'
 		) )->joinLeft ( array (
-				'mt' => 'matter_type' 
+				'mt' => 'matter_type'
 		), 'mt.code = m.type_code', array (
-				'matter_type' => 'mt.type' 
+				'matter_type' => 'mt.type'
 		) )->where ( 'matter_ID = ? ', $matter_id )->order ( 'e.event_date asc' );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves all open tasks for a matter
 	 * *
@@ -706,40 +706,40 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getOpenTasks($matter_id = 0) { // NOT RENewal
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'tl' => "task_list" 
+				'tl' => "task_list"
 		), array (
 				'tl.trigger_ID',
 				'due_date' => 'DATE_FORMAT(tl.due_date,"%d/%m/%Y")',
 				'posix_due_date' => 'tl.due_date',
-				'task_name' => 'tl.name' 
+				'task_name' => 'tl.name'
 		) )->join ( array (
-				't' => 'task' 
+				't' => 'task'
 		), 't.ID = tl.ID', array (
 				't.detail',
 				't.ID',
-				't.notes' 
+				't.notes'
 		) )->join ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), 'e.ID=tl.trigger_ID', array (
 				'e.code',
-				'trigger_detail' => 'e.detail' 
+				'trigger_detail' => 'e.detail'
 		) )->join ( array (
-				'en' => 'event_name' 
+				'en' => 'event_name'
 		), 'en.code=e.code', array (
-				'trigger_name' => 'en.name' 
+				'trigger_name' => 'en.name'
 		) )->where ( 'tl.matter_ID = ?  AND t.code != "REN" AND t.done=0', $matter_id )->order ( array (
 				'tl.trigger_ID',
-				'tl.due_date asc' 
+				'tl.due_date asc'
 		) );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves the next two open renewal tasks for a matter
 	 * *
@@ -747,38 +747,38 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getOpenTasksREN($matter_id = 0) { // RENewal
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'tl' => "task_list" 
+				'tl' => "task_list"
 		), array (
 				'tl.trigger_ID',
 				'due_date' => 'DATE_FORMAT(tl.due_date,"%d/%m/%Y")',
 				'posix_due_date' => 'tl.due_date',
-				'task_name' => 'tl.name' 
+				'task_name' => 'tl.name'
 		) )->join ( array (
-				't' => 'task' 
+				't' => 'task'
 		), 't.ID = tl.ID', array (
 				't.detail',
-				't.ID' 
+				't.ID'
 		) )->join ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), 'e.ID=tl.trigger_ID', array (
-				'e.code' 
+				'e.code'
 		) )->join ( array (
-				'en' => 'event_name' 
+				'en' => 'event_name'
 		), 'en.code=e.code', array (
-				'trigger_name' => 'en.name' 
+				'trigger_name' => 'en.name'
 		) )->where ( 'tl.matter_ID = ?  AND t.code = "REN" AND t.done=0', $matter_id )->order ( array (
 				'tl.due_date asc',
-				'tl.trigger_ID' 
+				'tl.trigger_ID'
 		) )->limit ( 2, 0 );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves classifiers for a given matter
 	 * main_display=1 gives main classifiers which are used as titles in a matter view table
@@ -787,46 +787,46 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getClassifier($matter_id = 0, $main_display = 0) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		$selectQuery = $db->select ()->from ( array (
-				'c' => "classifier" 
+				'c' => "classifier"
 		), array (
 				'c.ID',
 				'c_value' => 'c.value',
-				'lnk_matter_id' => 'if(' . $matter_id . ' = c.lnk_matter_id, matter_id, lnk_matter_id)' 
+				'lnk_matter_id' => 'if(' . $matter_id . ' = c.lnk_matter_id, matter_id, lnk_matter_id)'
 		) )->join ( array (
-				'ct' => 'classifier_type' 
+				'ct' => 'classifier_type'
 		), "ct.code = c.type_code AND ct.main_display=" . $main_display, array (
-				'ct.type' 
+				'ct.type'
 		) )->joinLeft ( array (
-				'cv' => 'classifier_value' 
+				'cv' => 'classifier_value'
 		), 'cv.ID = c.value_ID', array (
-				'cv_value' => 'cv.value' 
+				'cv_value' => 'cv.value'
 		) )->joinLeft ( array (
-				'ctv' => 'classifier_type' 
+				'ctv' => 'classifier_type'
 		), 'cv.type_code = ctv.code', array (
-				'cv_type' => 'ctv.type' 
+				'cv_type' => 'ctv.type'
 		) )->joinLeft ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), 'c.lnk_matter_id = m.id', array (
 				'caseref',
 				'country',
-				'origin' 
+				'origin'
 		) )->joinLeft ( array (
-				'mt' => 'matter_type' 
+				'mt' => 'matter_type'
 		), 'mt.code = m.type_code', array (
-				'matter_type' => 'mt.type' 
+				'matter_type' => 'mt.type'
 		) )->where ( 'c.matter_ID = ?', $matter_id )->orwhere ( 'c.lnk_matter_ID = ?', $matter_id )->order ( array (
 				'ct.display_order',
-				'c.display_order' 
+				'c.display_order'
 		) );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * Retrieves non-main classifiers for display in the matter detail screen
 	 * *
@@ -834,11 +834,11 @@ WHERE ISNULL(t.ID) AND matter.ID = ?", $matter_id );
 	public function getClassifiers($matter_id = 0) {
 		if (! $matter_id)
 			return 0;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
-		
+
 		// The UNION clause retrieves the backward links
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( "(SELECT 
+		$dbStmt = $this->_dbTable->getAdapter ()->query ( "(SELECT
     classifier_type.type AS type,
     IFNULL(mlnk.caseref,
             IFNULL(classifier_value.`value`,
@@ -861,8 +861,8 @@ FROM
         LEFT JOIN
     matter mlnk ON (mlnk.id = classifier.lnk_matter_id)
 WHERE m.id = " . $matter_id . "
-ORDER BY classifier_type.type, classifier_type.display_order, classifier.display_order) 
-UNION (SELECT 
+ORDER BY classifier_type.type, classifier_type.display_order, classifier.display_order)
+UNION (SELECT
     classifier_type.type AS type,
     mlnk.caseref AS value,
     CONCAT('/matter/view/id/', mlnk.id) AS url
@@ -876,10 +876,10 @@ FROM
         JOIN
     matter mlnk ON (mlnk.id = classifier.matter_id)
 WHERE m.id = " . $matter_id . ")" );
-		
+
 		return $dbStmt->fetchAll ();
 	}
-	
+
 	/**
 	 * Retrieves non-main classifiers for display in the detailed classifier list
 	 * *
@@ -887,10 +887,10 @@ WHERE m.id = " . $matter_id . ")" );
 	public function getMatterClassifiers($matter_id = 0) {
 		if (! $matter_id)
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		// For the links, this query only lists those included in the container
-		$dbStmt = $this->_dbTable->getAdapter ()->query ( "SELECT 
+		$dbStmt = $this->_dbTable->getAdapter ()->query ( "SELECT
     c.ID,
     ct.type,
     c.type_code,
@@ -912,10 +912,10 @@ FROM
 WHERE
     m.id = " . $matter_id . "
 ORDER BY ct.type, ct.display_order, c.display_order" );
-		
+
 		return $dbStmt->fetchAll ();
 	}
-	
+
 	/**
 	 * retrieves all tasks for a matter with event details
 	 * *
@@ -929,17 +929,17 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			$rencomp = ' != ';
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
-		
+
 		// Retrieve tasks linked to a matter, distinguising between renewals and others
 		if ($matter_id != 0) {
 			$selectQuery = $db->select ()->from ( array (
-					'e' => 'event' 
+					'e' => 'event'
 			), array (
 					'event_ID' => 'e.ID',
 					'event_detail' => 'e.detail',
-					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")' 
+					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")'
 			) )->joinLeft ( array (
-					't' => 'task' 
+					't' => 'task'
 			), "e.ID = t.trigger_ID AND t.code $rencomp 'REN'", array (
 					'*',
 					'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")',
@@ -947,31 +947,31 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 					'posix_due_date' => 't.due_date',
 					't.detail',
 					't.ID',
-					'task_notes' => 't.notes' 
+					'task_notes' => 't.notes'
 			) )->join ( array (
-					'en' => 'event_name' 
+					'en' => 'event_name'
 			), 'e.code = en.code', array (
-					'event_name' => 'en.name' 
+					'event_name' => 'en.name'
 			) )->joinLeft ( array (
-					'ent' => 'event_name' 
+					'ent' => 'event_name'
 			), 't.code = ent.code', array (
-					'task_name' => 'ent.name' 
+					'task_name' => 'ent.name'
 			) )->where ( 'e.matter_ID = ?', $matter_id )->order ( array (
 					'e.event_date',
-					't.due_date' 
+					't.due_date'
 			) );
 		}
-		
+
 		// Retrieve tasks linked to a specific event, distinguising between renewals and others
 		if ($event_id != 0) {
 			$selectQuery = $db->select ()->from ( array (
-					'e' => 'event' 
+					'e' => 'event'
 			), array (
 					'event_ID' => 'e.ID',
 					'event_detail' => 'e.detail',
-					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")' 
+					'event_date' => 'DATE_FORMAT(e.event_date, "%d/%m/%Y")'
 			) )->joinLeft ( array (
-					't' => 'task' 
+					't' => 'task'
 			), "e.ID = t.trigger_ID AND t.code $rencomp 'REN'", array (
 					'*',
 					'done_date' => 'DATE_FORMAT(t.done_date,"%d/%m/%Y")',
@@ -979,20 +979,20 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 					'posix_due_date' => 't.due_date',
 					't.detail',
 					't.ID',
-					'task_notes' => 't.notes' 
+					'task_notes' => 't.notes'
 			) )->joinInner ( array (
-					'en' => 'event_name' 
+					'en' => 'event_name'
 			), 'e.code = en.code', array (
-					'event_name' => 'en.name' 
+					'event_name' => 'en.name'
 			) )->joinLeft ( array (
-					'ent' => 'event_name' 
+					'ent' => 'event_name'
 			), 't.code = ent.code', array (
-					'task_name' => 'ent.name' 
+					'task_name' => 'ent.name'
 			) )->where ( 'e.ID = ?', $event_id )->order ( 't.due_date' );
 		}
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves all categories from matter_category filter by search term
 	 * *
@@ -1001,14 +1001,14 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				'mc' => 'matter_category' 
+				'mc' => 'matter_category'
 		), array (
 				'id' => 'mc.code',
-				'value' => 'mc.category' 
+				'value' => 'mc.category'
 		) )->where ( 'mc.category like ? ', $term . '%' )->order ( 'mc.category asc' );
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * updates a record of a matter_actor_lnk
 	 * *
@@ -1018,11 +1018,11 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			$dbTable = $this->getDbTable ( 'Application_Model_DbTable_MatterActorLink' );
 			// $dbTable->getAdapter()->query('SET NAMES utf8');
 			return $dbTable->update ( $data, array (
-					'ID = ?' => $matter_actor_id 
+					'ID = ?' => $matter_actor_id
 			) );
 		}
 	}
-	
+
 	/**
 	 * deletes a record from matter_actor_lnk
 	 * *
@@ -1042,30 +1042,30 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			}
 		}
 	}
-	
+
 	/**
 	 *
 	 * @return next display order value for an actor newly linked to a matter
-	 *        
+	 *
 	 */
 	public function getNextDisplayOrder($matter_id = null, $container_id = 0, $role = null) {
 		if (! $matter_id || ! $role)
 			return null;
-		
+
 		if (! $container_id)
 			$container_id = 0;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$db = $this->_dbTable->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				'mal' => 'matter_actor_lnk' 
+				'mal' => 'matter_actor_lnk'
 		), array (
-				'max_dis_order' => 'max(display_order)' 
+				'max_dis_order' => 'max(display_order)'
 		) )->where ( "matter_ID = " . $matter_id . " AND mal.role = '" . $role . "'" )->orwhere ( "matter_ID = " . $container_id . " AND mal.role = '" . $role . "'" );
 		$result = $db->fetchRow ( $selectQuery );
 		return (( int ) $result ['max_dis_order'] + 1);
 	}
-	
+
 	/**
 	 * links an actor to a matter i.e., a new record is added to matter_actor_lnk
 	 * *
@@ -1073,7 +1073,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function addMatterActor($data = array()) {
 		if (empty ( $data ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_MatterActorLink' );
 		try {
 			$this->_dbTable->insert ( $data );
@@ -1083,7 +1083,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		}
 		return true;
 	}
-	
+
 	/**
 	 * retrives matter.expire_date for a given matter
 	 * *
@@ -1093,16 +1093,16 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 			$db = $this->_dbTable->getAdapter ();
 			$selectQuery = $db->select ()->from ( array (
-					'm' => 'matter' 
+					'm' => 'matter'
 			), array (
 					'ID',
 					'expire_date' => 'DATE_FORMAT(`expire_date`, "%d/%m/%Y")',
-					'term_adjust' 
+					'term_adjust'
 			) )->where ( 'ID = ?', $matter_id );
 			return $db->fetchRow ( $selectQuery );
 		}
 	}
-	
+
 	/**
 	 * shares a actor_role
 	 * i.e., updates shareable column of actor_role to 1 for a give actor_role.code
@@ -1112,11 +1112,11 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		if ($role) {
 			$data ['shareable'] = 1;
 			return $this->getDbTable ( 'Application_Model_DbTable_ActorRole' )->update ( $data, array (
-					'code = ?' => $role_code 
+					'code = ?' => $role_code
 			) );
 		}
 	}
-	
+
 	/**
 	 * updates task details for a given column through in-place edit
 	 * *
@@ -1125,23 +1125,23 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		if (preg_match ( "/_date/", $field_name )) {
 			if ($field_value == '')
 				$data = array (
-						"$field_name" => NULL 
+						"$field_name" => NULL
 				);
 			else
 				$data = array (
-						"$field_name" => new Zend_Db_Expr ( "STR_TO_DATE('$field_value', '%d/%m/%Y' )" ) 
+						"$field_name" => new Zend_Db_Expr ( "STR_TO_DATE('$field_value', '%d/%m/%Y' )" )
 				);
 		} else
 			$data ["$field_name"] = $field_value;
-		
+
 		if ($rule_id == NULL)
 			$data ['rule_used'] = NULL;
-			
+
 		return $this->getDbTable ( 'Application_Model_DbTable_Task' )->update ( $data, array (
-				'ID = ?' => $task_id 
+				'ID = ?' => $task_id
 		) );
 	}
-	
+
 	/**
 	 * clears a set of tasks i.e., task.done is set to 1 on done_date or now()
 	 * CHECK with new done flag handled by trigger
@@ -1154,26 +1154,26 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		else {
 			$data ['done_date'] = new Zend_Db_Expr ( "STR_TO_DATE('$done_date', '%d/%m/%Y' )" );
 		}
-		
+
 		$tids = implode ( ',', $task_ids );
-		
+
 		try {
 			$this->getDbTable ( 'Application_Model_DbTable_Task' )->update ( $data, array (
-					'ID IN (' . $tids . ')' 
+					'ID IN (' . $tids . ')'
 			) );
 			return 1;
 		} catch ( Exception $e ) {
 			return $e->getMessage ();
 		}
 	}
-	
+
 	/**
 	 * updateTaskDoneDate
 	 * updates task.done_date to if(due_date < now(), due_date, now())
 	 * Obsolete - done in trigger
 	 * *
 	 */
-	
+
 	/**
 	 * updates an event record
 	 * *
@@ -1181,12 +1181,12 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function saveEventDetails($event_id = 0, $data) {
 		if (! $event_id)
 			return false;
-		
+
 		return $this->getDbTable ( 'Application_Model_DbTable_Event' )->update ( $data, array (
-				'ID = ?' => $event_id 
+				'ID = ?' => $event_id
 		) );
 	}
-	
+
 	/**
 	 * retrieves all matter caseref concatenated with country, detail and event_date
 	 * filtered with search term
@@ -1195,19 +1195,19 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getAllMatterRefers($term = null) {
 		$db = $this->getDbTable ()->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), array (
 				'value' => "concat(caseref, country, ', ', e.detail, ', ', e.event_date)",
-				'm.ID' 
+				'm.ID'
 		) )->joinLeft ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), "m.ID=e.matter_ID AND e.code='FIL'", array (
 				'number' => 'e.detail',
 				'filing_date' => 'e.event_date'
 		) )->where ( "caseref LIKE '" . $term . "%'" )->limit(20);
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves a list of caserefs of container matters
 	 * *
@@ -1215,23 +1215,23 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getContainerRefers($caseref = null, $term = null, $matter_id = null) {
 		$db = $this->getDbTable ()->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), array (
 				'value' => "concat(caseref, country, ', ', e.detail, ', ', e.event_date)",
-				'm.ID' 
+				'm.ID'
 		) )->joinLeft ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), "m.ID = e.matter_ID AND e.code = 'FIL'", array (
 				'number' => 'e.detail',
-				'filing_date' => 'e.event_date' 
+				'filing_date' => 'e.event_date'
 		) )->where ( "m.caseref = '" . $caseref . "' AND m.ID != '" . $matter_id . "' AND container_ID IS NULL AND caseref LIKE '" . $term . "%'" );
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 *
 	 * @return UID of a matter
-	 *        
+	 *
 	 */
 	public function getMatterUID($matter_id = null) {
 		if (! isset ( $matter_id ))
@@ -1239,14 +1239,14 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$uidsql = "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(m.caseref, m.country), m.origin), m.type_code), m.idx)";
 		$db = $this->getDbTable ()->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), array (
-				'UID' => new Zend_Db_Expr ( $uidsql ) 
+				'UID' => new Zend_Db_Expr ( $uidsql )
 		) )->where ( 'm.ID = ?', $matter_id );
 		$result = $db->fetchRow ( $selectQuery );
 		return $result ['UID'];
 	}
-	
+
 	/**
 	 * retrieves all task names and codes from event_name for a given search term in autocomplete
 	 * *
@@ -1254,15 +1254,15 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getAllTasks($term = null) {
 		$db = $this->getDbTable ( 'Application_Model_DbTable_Event' )->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				'en' => 'event_name' 
+				'en' => 'event_name'
 		), array (
 				'value' => 'name',
-				'id' => 'code' 
+				'id' => 'code'
 		) )->where ( "is_task = 1 AND name LIKE '" . $term . "%'" );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * inserts a new task to an event
 	 * *
@@ -1270,7 +1270,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function addTaskToEvent($data = array()) {
 		if (empty ( $data ))
 			return null;
-		
+
 		try {
 			$this->getDbTable ( 'Application_Model_DbTable_Task' )->insert ( $data );
 			return 1;
@@ -1279,7 +1279,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			return false;
 		}
 	}
-	
+
 	/**
 	 * deletes a task
 	 * *
@@ -1287,7 +1287,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function deleteTask($task_id = null) {
 		if (! $task_id)
 			return;
-		
+
 		$dbTable = $this->getDbTable ( 'Application_Model_DbTable_Task' );
 		$where = $dbTable->getAdapter ()->quoteInto ( 'ID = ?', $task_id );
 		try {
@@ -1297,7 +1297,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			return $e->getMessage ();
 		}
 	}
-	
+
 	/**
 	 * deletes a classifier
 	 * *
@@ -1305,7 +1305,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function deleteClassifier($classifier_id = null) {
 		if (! $classifier_id)
 			return;
-		
+
 		$dbTable = $this->getDbTable ( 'Application_Model_DbTable_Classifier' );
 		$where = $dbTable->getAdapter ()->quoteInto ( 'ID = ?', $classifier_id );
 		try {
@@ -1315,7 +1315,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			return $e->getMessage ();
 		}
 	}
-	
+
 	/**
 	 * retrieves a list of events filtered by a search term
 	 * *
@@ -1323,15 +1323,15 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getAllEvents($term = null) {
 		$dbSelect = $this->getDbTable ( 'Application_Model_DbTable_Event' )->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'en' => 'event_name' 
+				'en' => 'event_name'
 		), array (
 				'name as value',
-				'code as id' 
+				'code as id'
 		) )->where ( "is_task = 0 AND name LIKE '" . $term . "%'" );
-		
+
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * inserts a new event record
 	 * *
@@ -1339,10 +1339,10 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function addEvent($data = array()) {
 		if (empty ( $data ))
 			return null;
-		
+
 		if (@$data ['alt_matter_ID'] == '')
 			$data ['alt_matter_ID'] = NULL;
-		
+
 		try {
 			$this->getDbTable ( 'Application_Model_DbTable_Event' )->insert ( $data );
 			return 1;
@@ -1351,7 +1351,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			return false;
 		}
 	}
-	
+
 	/**
 	 * deletes an event
 	 * *
@@ -1359,7 +1359,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function deleteEvent($event_id = null) {
 		if (! $event_id)
 			return;
-		
+
 		$dbTable = $this->getDbTable ( 'Application_Model_DbTable_Event' );
 		$where = $dbTable->getAdapter ()->quoteInto ( 'ID = ?', $event_id );
 		try {
@@ -1369,7 +1369,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			return $e->getMessage ();
 		}
 	}
-	
+
 	/**
 	 * retrieves count of matter for each category for given user
 	 * *
@@ -1384,26 +1384,26 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), array (
 				'm.category_code',
-				'count(*) as no_of_matters' 
+				'count(*) as no_of_matters'
 		) )->join ( array (
-				'mc' => 'matter_category' 
+				'mc' => 'matter_category'
 		), 'm.category_code = mc.code', array (
-				'mc.category' 
+				'mc.category'
 		) )->group ( 'category_code' );
-		
+
 		if ($role == 'CLI')
 			$selectQuery->join ( array (
 					'cli' => 'matter_actor_lnk'
 			), "ifnull(m.container_ID,m.ID) = cli.matter_ID AND cli.role='CLI' AND cli.actor_id = $userid", array() );
-		else 
+		else
 			$selectQuery->where ( 'responsible = ?', $user );
-		
+
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves open task or renewals which are assigned to a user or a user is responsible for.
 	 * $flag = 1 provides only tasks specifically assigned to the current user (assigned_to field in task)
@@ -1412,14 +1412,14 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$siteInfoNamespace = new Zend_Session_Namespace ( 'siteInfoNamespace' );
 		if (! isset ( $user )) {
 			$user = $siteInfoNamespace->username;
-		}		
+		}
 		$userid = $siteInfoNamespace->userId;
 		$role = $siteInfoNamespace->role;
 		if ($ren == 0)
 			$ren_condition = "t.code != 'REN'";
 		else if ($ren == 1)
 			$ren_condition = "t.code = 'REN'";
-		
+
 		$where = 't.due_date < DATE_ADD(NOW(), INTERVAL 1 YEAR) AND ';
 		if ($role == 'CLI')
 			$where .= $ren_condition;
@@ -1427,53 +1427,53 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			$where .= "t.assigned_to = '$user' AND " . $ren_condition;
 		else
 			$where .= "'$user' IN(t.assigned_to, m.responsible, a.login) AND " . $ren_condition;
-			
+
 		$this->setDbTable ( 'Application_Model_DbTable_Task' );
 		$db = $this->_dbTable->getAdapter ();
 		$uidsql = "CONCAT_WS('', CONCAT_WS('-', CONCAT_WS('/', CONCAT(m.caseref, m.country), m.origin), m.type_code), m.idx)";
 		$selectQuery = $db->select ()->from ( array (
-				't' => 'task' 
+				't' => 'task'
 		), array (
 				'task_ID' => 't.ID',
 				't.code',
 				'due_date' => 'DATE_FORMAT(t.due_date, "%d/%m/%Y")',
 				'posix_due_date' => 't.due_date',
 				'task_detail' => 't.detail',
-				't.trigger_ID' 
+				't.trigger_ID'
 		) )->join ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), 't.trigger_ID = e.ID AND t.done = 0', array (
-				'MID' => 'e.matter_ID' 
+				'MID' => 'e.matter_ID'
 		) )->join ( array (
-				'en' => 'event_name' 
+				'en' => 'event_name'
 		), 't.code=en.code', array (
-				'task_name' => 'en.name' 
+				'task_name' => 'en.name'
 		) )->join ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), 'e.matter_ID = m.ID AND m.dead = 0', array (
 				'm.caseref',
 				'm.country',
 				'm.origin',
 				'm.type_code',
-				'UID' => new Zend_Db_Expr ( $uidsql ) 
+				'UID' => new Zend_Db_Expr ( $uidsql )
 		) )->joinLeft ( array (
-				'mal' => 'matter_actor_lnk' 
+				'mal' => 'matter_actor_lnk'
 		), "ifnull(m.container_ID,m.ID) = mal.matter_ID AND mal.role='DEL'", array(
 		) )->joinLeft ( array (
-				'a' => 'actor' 
+				'a' => 'actor'
 		), "a.ID = mal.actor_ID", array() )->where ( $where )->order ( array (
 				't.due_date',
-				'm.caseref' 
+				'm.caseref'
 		) );
-		
+
 		if ($role == 'CLI')
 			$selectQuery->join ( array (
-				'cli' => 'matter_actor_lnk' 
+				'cli' => 'matter_actor_lnk'
 			), "ifnull(m.container_ID,m.ID) = cli.matter_ID AND cli.role='CLI' AND cli.actor_id = $userid", array() );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves count of open tasks for each user
 	 * *
@@ -1485,28 +1485,28 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Task' );
 		$db = $this->_dbTable->getAdapter ();
 		$selectQuery = $db->select ()->from ( array (
-				't' => 'task' 
+				't' => 'task'
 		), array (
 				'no_of_tasks' => 'count(*)',
 				'urgent_date' => 'DATE_FORMAT(MIN(t.due_date), "%d/%m/%Y")',
-				'posix_urgent_date' => 'MIN(t.due_date)' 
+				'posix_urgent_date' => 'MIN(t.due_date)'
 		) )->join ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		), 't.trigger_id=e.id', array(
 		) )->join ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), 'e.matter_id=m.id', array (
-				'login' => 'ifnull(t.assigned_to, m.responsible)' 
+				'login' => 'ifnull(t.assigned_to, m.responsible)'
 		) )->where ( 'm.dead=0 AND t.done=0' )->group ( 'login' );
-		
+
 		if ($role == 'CLI')
 			$selectQuery->join ( array (
 					'cli' => 'matter_actor_lnk'
 			), "ifnull(m.container_ID,m.ID) = cli.matter_ID AND cli.role='CLI' AND cli.actor_id = $userid", array() );
-		
+
 		return $db->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves list of country names and codes filtered by search term
 	 * *
@@ -1515,14 +1515,14 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'c' => 'country' 
+				'c' => 'country'
 		), array (
 				'c.iso as id',
-				'c.name as value' 
+				'c.name as value'
 		) )->where ( 'c.name like ? ', $term . '%' )->order ( 'c.name asc' );
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves all matter types filtered by seatch term
 	 * *
@@ -1531,14 +1531,14 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'mt' => 'matter_type' 
+				'mt' => 'matter_type'
 		), array (
 				'mt.code as id',
-				'mt.type as value' 
+				'mt.type as value'
 		) )->where ( 'mt.type like ? ', $term . '%' )->order ( 'mt.type asc' );
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * returns caseref for a new matter filtered by caseref search term
 	 * *
@@ -1547,10 +1547,10 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), array (
 				"max(caseref) as id",
-				"max(caseref) as value" 
+				"max(caseref) as value"
 		) )->where ( "caseref like  '" . $term . "%' AND container_ID is NULL" );
 		$returnval = $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 		if ($returnval [0] ['value'] == NULL) {
@@ -1565,7 +1565,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		}
 		return $returnval;
 	}
-	
+
 	/**
 	 * retrieves all caserefs of matter which are containers
 	 * *
@@ -1574,14 +1574,14 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), array (
 				'm.ID as id',
-				'm.caseref as value' 
+				'm.caseref as value'
 		) )->where ( "caseref like  '" . $term . "%' AND container_ID is NULL" );
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * return matter_category.ref_prefix for a given matter_category.code
 	 * *
@@ -1590,13 +1590,13 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'mc' => 'matter_category' 
+				'mc' => 'matter_category'
 		), array (
-				'ref_prefix' 
+				'ref_prefix'
 		) )->where ( "mc.code = ?", $category_code );
 		return $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves all main classifier types i.e., classifier_type.main_display=1
 	 * these are used as titles in matter view page
@@ -1605,15 +1605,15 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getMainClassifierTypes($category = null) {
 		if (! isset ( $category ))
 			return;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'ct' => 'classifier_type' 
+				'ct' => 'classifier_type'
 		) )->where ( "(for_category = '" . $category . "' OR for_category IS NULL) AND main_display=1" );
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * retrieves classifier types whose classifier_type.main_display=0
 	 * *
@@ -1622,11 +1622,11 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
 		$selectQuery = $dbSelect->from ( array (
-				'ct' => 'classifier_type' 
+				'ct' => 'classifier_type'
 		) )->where ( "main_display=0" );
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * add a new classifier
 	 * *
@@ -1634,11 +1634,11 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function addClassifier($classifier = array()) {
 		if (empty ( $classifier ))
 			return false;
-		
+
 		$do = $this->getClassifierDisplayorder ( $classifier ['matter_ID'], $classifier ['type_code'] );
 		if ($do)
 			$classifier ['display_order'] = $do;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Classifier' );
 		// $this->_dbTable->getAdapter()->query("SET NAMES utf8");
 		try {
@@ -1648,7 +1648,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			return $e->getMessage ();
 		}
 	}
-	
+
 	/**
 	 * retrieves classfier's next display order for a matter, for a type_code
 	 * *
@@ -1656,7 +1656,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getClassifierDisplayorder($matter_id = 0, $type_code = null) {
 		if (! $matter_id || ! isset ( $type_code ))
 			return false;
-		
+
 		$container_id = $this->getMatterContainer ( $matter_id );
 		$this->setDbTable ( 'Application_Model_DbTable_Classifier' );
 		$dbStmt = $this->_dbTable->getAdapter ()->query ( "SELECT ifnull(max(display_order)+1,1) AS ndo FROM classifier WHERE matter_ID=" . $container_id . " AND type_code='" . $type_code . "'" );
@@ -1666,7 +1666,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 		else
 			return null;
 	}
-	
+
 	/**
 	 * edits a main (title) classifier
 	 * *
@@ -1674,9 +1674,9 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function editClassifier($classifier_id = null, $value = null) {
 		if (! isset ( $classifier_id ))
 			return false;
-		
+
 		$dbTable = $this->getDbTable ( 'Application_Model_DbTable_Classifier' );
-		
+
 		if ($value == '') {
 			try {
 				$where = $dbTable->getAdapter ()->quoteInto ( 'ID = ?', $classifier_id );
@@ -1689,7 +1689,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			$data ['value'] = $value;
 			try {
 				$dbTable->update ( $data, array (
-						'ID = ?' => $classifier_id 
+						'ID = ?' => $classifier_id
 				) );
 			} catch ( Exception $e ) {
 				$this->setError ( $e->getMessage () );
@@ -1697,7 +1697,7 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 			}
 		}
 	}
-	
+
 	/**
 	 * updates a classifier
 	 * *
@@ -1705,14 +1705,14 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function updateClassifier($classifier_id = null, $data = array()) {
 		if (! isset ( $classifier_id ) || empty ( $data ))
 			return false;
-		
+
 		$dbTable = $this->getDbTable ( 'Application_Model_DbTable_Classifier' );
-		
+
 		$dbTable->update ( $data, array (
-				'ID = ?' => $classifier_id 
+				'ID = ?' => $classifier_id
 		) );
 	}
-	
+
 	/**
 	 * get the country details from country for a given country_code(iso)
 	 * *
@@ -1720,17 +1720,17 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getCountryByCode($country_code = null) {
 		if (! isset ( $country_code ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
-		
+
 		$selectQuery = $dbSelect->from ( array (
-				'c' => 'country' 
+				'c' => 'country'
 		) )->where ( 'iso = ?', $country_code );
-		
+
 		return $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 	}
-	
+
 	/**
 	 * matter_type details for a given type_code
 	 * *
@@ -1738,17 +1738,17 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function getTypeCode($type_code = null) {
 		if (! isset ( $type_code ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
-		
+
 		$selectQuery = $dbSelect->from ( array (
-				'mt' => 'matter_type' 
+				'mt' => 'matter_type'
 		) )->where ( 'code = ?', $type_code );
-		
+
 		return $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 	}
-	
+
 	/**
 	 * this function clones actors from a matter to a newly cloned matter
 	 * this is called upon cloning matter
@@ -1757,9 +1757,9 @@ ORDER BY ct.type, ct.display_order, c.display_order" );
 	public function cloneActors($matter_ID = null, $clone_ID = null) {
 		if (! isset ( $matter_ID ) || ! isset ( $clone_ID ))
 			return false;
-		
+
 		$container_ID = $this->getMatterContainer ( $matter_ID );
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$query = "replace into matter_actor_lnk (matter_id, actor_id, display_order, role, shared, actor_ref, company_id, rate, date)
 select " . $clone_ID . ", actor_id, display_order, role, shared, actor_ref, company_id, rate, date
@@ -1768,7 +1768,7 @@ where matter_id=" . $matter_ID . " or (matter_id=" . $container_ID . " and share
 		$clquery = $this->_dbTable->getAdapter ()->prepare ( $query );
 		$clquery->execute ();
 	}
-	
+
 	/**
 	 * this function copies actors from parent matter to child matter upon creating child matter
 	 * *
@@ -1776,7 +1776,7 @@ where matter_id=" . $matter_ID . " or (matter_id=" . $container_ID . " and share
 	public function childActors($matter_ID = null, $child_ID = null) {
 		if (! isset ( $matter_ID ) || ! isset ( $clone_ID ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$query = "replace into matter_actor_lnk (matter_id, actor_id, display_order, role, shared, actor_ref, company_id, rate, date)
 select " . $child_ID . ", actor_id, display_order, role, shared, actor_ref, company_id, rate, date
@@ -1785,7 +1785,7 @@ where matter_id=" . $matter_ID; // . " or matter_id=(select container_id from ma
 		$clquery = $this->_dbTable->getAdapter ()->prepare ( $query );
 		$clquery->execute ();
 	}
-	
+
 	/**
 	 * classifiers of a matter are copied to a clone matter upon creating a new clone for a matter
 	 * *
@@ -1793,7 +1793,7 @@ where matter_id=" . $matter_ID; // . " or matter_id=(select container_id from ma
 	public function cloneClassifiers($matter_ID = null, $clone_ID = null) {
 		if (! isset ( $matter_ID ) || ! isset ( $clone_ID ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$query = "insert into classifier (matter_id, type_code, value, url, value_id, display_order, lnk_matter_id)
 select " . $clone_ID . ", type_code, value, url, value_id, display_order, lnk_matter_id
@@ -1801,7 +1801,7 @@ from classifier where matter_id=ifnull((select container_id from matter where id
 		$clquery = $this->_dbTable->getAdapter ()->prepare ( $query );
 		$clquery->execute ();
 	}
-	
+
 	/**
 	 * Priority events are copied from a matter to its newly created clone matter
 	 * *
@@ -1809,7 +1809,7 @@ from classifier where matter_id=ifnull((select container_id from matter where id
 	public function clonePriorities($matter_ID = null, $clone_ID = null) {
 		if (! isset ( $matter_ID ) || ! isset ( $clone_ID ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$query = "insert into event (code, matter_id, event_date, alt_matter_id, detail, notes)
 select 'PRI', " . $clone_ID . ", event_date, alt_matter_id, detail, notes
@@ -1817,7 +1817,7 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 		$clquery = $this->_dbTable->getAdapter ()->prepare ( $query );
 		$clquery->execute ();
 	}
-	
+
 	/**
 	 * retrieves countries whose ep/wo is set to 1
 	 * *
@@ -1825,12 +1825,12 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 	public function getFlagCountries($country_flag = null) {
 		if (! isset ( $country_flag ))
 			return 0;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbStmt = $this->_dbTable->getAdapter ()->query ( "SELECT * from country WHERE " . $country_flag . " = 1" );
 		return $dbStmt->fetchAll ();
 	}
-	
+
 	/**
 	 * determines whether a matter has filed event or not
 	 *
@@ -1840,21 +1840,21 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 	public function hasFiledEvent($matter_id = null) {
 		if (! isset ( $matter_id ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
-		
+
 		$selectQuery = $dbSelect->from ( array (
-				'e' => 'event' 
+				'e' => 'event'
 		) )->where ( "code = 'FIL' AND matter_ID='" . $matter_id . "'" );
-		
+
 		$result = $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 		if (empty ( $result ))
 			return false;
 		else
 			return true;
 	}
-	
+
 	/**
 	 * updates a matter record
 	 * *
@@ -1862,13 +1862,13 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 	public function updateMatter($data = array(), $matter_id = 0) {
 		if (empty ( $data ))
 			return false;
-			
+
 			// $this->getDbTable('Application_Model_DbTable_Matter')->getAdapter()->query("SET NAMES utf8");
 		$this->getDbTable ( 'Application_Model_DbTable_Matter' )->update ( $data, array (
-				'ID = ?' => $matter_id 
+				'ID = ?' => $matter_id
 		) );
 	}
-	
+
 	/**
 	 * deletes a matter
 	 * *
@@ -1883,7 +1883,7 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 			return $e->getMessage ();
 		}
 	}
-	
+
 	/**
 	 * return next idx for a new matter created
 	 * *
@@ -1891,28 +1891,28 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 	public function getNextIdx($matter = array()) {
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
-		
+
 		if ($matter ['origin'] == '' || ! isset ( $matter ['origin'] ))
 			$origin_sq = "origin is NULL";
 		else
 			$origin_sq = "origin = '" . $matter ['origin'] . "'";
-		
+
 		if ($matter ['type_code'] == '' || ! isset ( $matter ['type_code'] ))
 			$type_sq = "type_code is NULL";
 		else
 			$type_sq = "type_code = '" . $matter ['type_code'] . "'";
-		
+
 		$selectQuery = $dbSelect->from ( array (
-				'm' => 'matter' 
+				'm' => 'matter'
 		), 'max(idx) as midx' )->where ( "caseref = '" . $matter ['caseref'] . "' AND country='" . $matter ['country'] . "' AND " . $origin_sq . " AND " . $type_sq . " AND category_code='" . $matter ['category_code'] . "'" );
-		
+
 		$result = $this->_dbTable->getAdapter ()->fetchRow ( $selectQuery );
 		if ($result ['midx'] > 1)
 			return ($result ['midx'] + 1);
 		else
 			return 2;
 	}
-	
+
 	/**
 	 * retrieves list of classifier values for a type_code and a search term
 	 * *
@@ -1920,21 +1920,21 @@ from event where matter_id=" . $matter_ID . " and code='PRI';";
 	public function getClassifierValues($type_code = null, $term = '') {
 		if (! isset ( $type_code ))
 			return false;
-		
+
 		$this->setDbTable ( 'Application_Model_DbTable_Classifier' );
 		$dbSelect = $this->_dbTable->getAdapter ()->select ();
-		
+
 		$selectQuery = $dbSelect->from ( array (
-				'cv' => 'classifier_value' 
+				'cv' => 'classifier_value'
 		), array (
 				'cv.id as id',
 				'cv.value as value',
-				'cv.notes as notes' 
+				'cv.notes as notes'
 		) )->where ( "type_code = '" . $type_code . "' AND value LIKE '" . $term . "%'" );
-		
+
 		return $this->_dbTable->getAdapter ()->fetchAll ( $selectQuery );
 	}
-	
+
 	/**
 	 * adds a new record to classifier_value
 	 * *

@@ -344,24 +344,24 @@ $(document).ready(function(){
 </div>
 <div id="add-actor-content">
 	<?php
-	if(isset($this->formErrors)){ 
+	if(isset($this->formErrors)){
 		?>
 	<div class="validation-errors">
-		<?php	
+		<?php
 		foreach ( $this->formErrors as $key => $value ) {
 			echo '<div class="valid-error">* ' . $key . ' - ' . $value ['isEmpty'] . '</div>';
 		}
 		?>
 	</div>
-	<?php 
-	} 
+	<?php
+	}
 	if(isset($this->sqlErrors)){
 		?>
 	<div class="validation-errors">
 		<?=$this->sqlErrors;?>
 	</div>
-	<?php 
-	} 
+	<?php
+	}
 	?>
 <form id="add-actor-form" method="post" action="" accept-charset="utf-8">
 	<fieldset class="actor-info-set">
@@ -423,48 +423,48 @@ $(document).ready(function(){
 		<label for="notes" title="<?=$this->actorComments['notes']?>">Notes</label>
 			<?=$this->actorForm->getElement('notes');?>
 	</fieldset>
-		<input type="hidden" 
-			value="" 
-			id="Employer-id" 
-			name="Employer-id" /> 
-		<input type="hidden" 
-			value="" 
-			id="parent_company-id" 
-			name="parent_company-id" /> 
-		<input type="hidden" 
-			value=""
-			id="WorkSite-id" 
-			name="WorkSite-id" /> 
-		<input type="hidden" 
-			value=""
-			id="country-code" 
-			name="country-code" /> 
 		<input type="hidden"
-			value="" 
-			id="nationality-code" 
-			name="country-code" /> 
-		<input type="hidden" 
-			value="" 
-			id="country_mailing-code"
-			name="country_mailing-code" /> 
-		<input type="hidden" 
 			value=""
-			id="country_billing-code" 
-			name="country_billing-code" /> 
+			id="Employer-id"
+			name="Employer-id" />
+		<input type="hidden"
+			value=""
+			id="parent_company-id"
+			name="parent_company-id" />
+		<input type="hidden"
+			value=""
+			id="WorkSite-id"
+			name="WorkSite-id" />
+		<input type="hidden"
+			value=""
+			id="country-code"
+			name="country-code" />
+		<input type="hidden"
+			value=""
+			id="nationality-code"
+			name="country-code" />
+		<input type="hidden"
+			value=""
+			id="country_mailing-code"
+			name="country_mailing-code" />
+		<input type="hidden"
+			value=""
+			id="country_billing-code"
+			name="country_billing-code" />
 		<input
-			type="hidden" 
+			type="hidden"
 			value="<?=$this->default_role_code?>"
-			id="default_role-code" 
+			id="default_role-code"
 			name="default_role-code" />
 
 		<div style="text-align: center; margin-top: 5px;">
-			<input type="button" 
-				value="Create" 
+			<input type="button"
+				value="Create"
 				name="add-actor-submit"
-				id="add-actor-submit" /> 
-			<input type="button" 
+				id="add-actor-submit" />
+			<input type="button"
 				value="Cancel"
-				name="add-actor-cancel" 
+				name="add-actor-cancel"
 				id="add-actor-cancel" />
 		</div>
 	</form>

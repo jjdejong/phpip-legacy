@@ -9,7 +9,7 @@ $(document).ready(function(){
         	$( "#matter-country-id" ).val( ui.item.id );
         },
     });
-    
+
     $('#matter-origin').autocomplete({
         minLength: 2,
         source: "/matter/get-country-codes",
@@ -19,7 +19,7 @@ $(document).ready(function(){
             $( "#matter-origin-id" ).val( ui.item.id );
         },
     });
-    
+
     $('#matter-type').autocomplete({
         minLength: 1,
         source: "/matter/get-matter-types",
@@ -29,7 +29,7 @@ $(document).ready(function(){
             $( "#matter-type-id" ).val( ui.item.id );
         },
     });
-    
+
     $('#matter-caseref').autocomplete({
         minLength: 3,
         source: "/matter/get-matter-caseref",
@@ -39,7 +39,7 @@ $(document).ready(function(){
             $( "#matter-caseref-id" ).val( ui.item.id );
         },
     });
-    
+
     $('#matter-responsible').autocomplete({
         minLength: 1,
         source: "/actor/get-all-logins",
@@ -48,7 +48,7 @@ $(document).ready(function(){
             $(this).val( ui.item.value );
         },
     });
-    
+
     $('#matter-category').autocomplete({
         minLength: 1,
         source: "/matter/get-all-categories",
@@ -58,7 +58,7 @@ $(document).ready(function(){
             $( "#matter-category-code" ).val( ui.item.id );
         },
     });
-    
+
     $('#add-matter-cancel').click(function(){
         $('#add-matter-popup').css('display', 'none');
         $('#facade').css('display', 'none');
@@ -87,14 +87,14 @@ $(document).ready(function(){
             $('.validation-errors').css('display', 'block');
         else{
             $('.validation-errors').css('display', 'none');
-            $.post('/matter/add', { 
+            $.post('/matter/add', {
             	category_code: $('#matter-category-code').val(),
                 country: $('#matter-country-id').val(),
                 origin: $('#matter-origin-id').val(),
                 type_code: $('#matter-type-id').val(),
                 caseref: $('#matter-caseref-id').val(),
                 responsible: $('#matter-responsible').val()
-            }, 
+            },
             function(data){
                 if(isNaN(parseInt(data))){
                 	alert(data);
@@ -106,7 +106,7 @@ $(document).ready(function(){
             });
         }
    });
-   
+
    $('#clone-matter-submit').click(function(){
         var invalid = false;
         $('.validation-errors').empty();
@@ -130,7 +130,7 @@ $(document).ready(function(){
             $('.validation-errors').css('display', 'block');
         else{
             $('.validation-errors').css('display', 'none');
-            $.post('/matter/clone', { 
+            $.post('/matter/clone', {
             	category_code: $('#matter-category-code').val(),
                 country: $('#matter-country-id').val(),
                 origin: $('#matter-origin-id').val(),
@@ -164,7 +164,7 @@ $(document).ready(function(){
             $('.validation-errors').css('display', 'block');
         else{
             $('.validation-errors').css('display', 'none');
-            $.post('/matter/child', { 
+            $.post('/matter/child', {
             	category_code: $('#matter-category-code').val(),
                 country: $('#matter-country-id').val(),
                 origin: $('#matter-origin-id').val(),
@@ -185,7 +185,7 @@ $(document).ready(function(){
             });
         }
    });
-   
+
    $("input:button, button").button();
 });
 
@@ -278,66 +278,66 @@ $(document).ready(function(){
 		<div class="validation-errors"></div>
 		<form method="post" action="" id="add-matter-form" accept-charset="utf-8">
 			<label for="matter-category" style="font-weight: bold;">Category</label>
-			<input type="text" 
-				name="matter-category" 
-				id="matter-category"
-				value="<?=$this->category?>" 
-				class="required"
-				onfocus="this.select()" /> 
-			<input type="hidden"
-				name="matter-category-code" 
-				id="matter-category-code"
-				value="<?=$this->category_code?>" /> 
-			<label for="matter-country" style="font-weight: bold;">Country</label> 
 			<input type="text"
-				name="matter-country" 
-				id="matter-country"
-				value="<?=$this->country_name?>" 
+				name="matter-category"
+				id="matter-category"
+				value="<?=$this->category?>"
 				class="required"
-				onfocus="this.select()" /> 
+				onfocus="this.select()" />
 			<input type="hidden"
-				name="matter-country-id" 
+				name="matter-category-code"
+				id="matter-category-code"
+				value="<?=$this->category_code?>" />
+			<label for="matter-country" style="font-weight: bold;">Country</label>
+			<input type="text"
+				name="matter-country"
+				id="matter-country"
+				value="<?=$this->country_name?>"
+				class="required"
+				onfocus="this.select()" />
+			<input type="hidden"
+				name="matter-country-id"
 				id="matter-country-id"
-				value="<?=$this->country_code?>" /> 
+				value="<?=$this->country_code?>" />
 			<label for="matter-origin">Origin</label>
-			<input type="text" 
-				name="matter-origin" 
+			<input type="text"
+				name="matter-origin"
 				id="matter-origin"
-				value="<?=$this->origin_name?>" 
-				onfocus="this.select()" /> 
-			<input type="hidden" 
-				name="matter-origin-id" 
+				value="<?=$this->origin_name?>"
+				onfocus="this.select()" />
+			<input type="hidden"
+				name="matter-origin-id"
 				id="matter-origin-id"
-				value="<?=$this->origin_code?>" /> 
+				value="<?=$this->origin_code?>" />
 			<label for="matter-type">Type</label>
-			<input type="text" 
-				name="matter-type" 
+			<input type="text"
+				name="matter-type"
 				id="matter-type"
-				value="<?=$this->type_name?>" 
-				onfocus="this.select()" /> 
-			<input type="hidden" 
-				name="matter-type-id" 
+				value="<?=$this->type_name?>"
+				onfocus="this.select()" />
+			<input type="hidden"
+				name="matter-type-id"
 				id="matter-type-id"
-				value="<?=$this->type_code?>" /> 
+				value="<?=$this->type_code?>" />
 			<label for="matter-caseref" style="font-weight: bold;">Caseref</label>
 			<?php if(isset($this->child)){?>
 				<span id="matter-caseref" class="display-field"><?=$this->caseref?></span>
 			<?php }else { ?>
-				<input type="text" 
-					name="matter-caseref" 
+				<input type="text"
+					name="matter-caseref"
 					id="matter-caseref"
-					value="<?=$this->caseref?>" 
-					class="required" 
+					value="<?=$this->caseref?>"
+					class="required"
 					onfocus="this.select()" />
 			<?php } ?>
-			<input type="hidden" 
+			<input type="hidden"
 				name="matter-caseref-id" id="matter-caseref-id"
-				value="<?=$this->caseref?>" /> 
-			<label for="matter-responsible" style="font-weight: bold;">Responsible</label> 
-			<input type="text" 
-				name="matter-responsible" 
+				value="<?=$this->caseref?>" />
+			<label for="matter-responsible" style="font-weight: bold;">Responsible</label>
+			<input type="text"
+				name="matter-responsible"
 				id="matter-responsible"
-				value="<?=$this->username?>" 
+				value="<?=$this->username?>"
 				class="required"
 				onfocus="this.select()" />
 
@@ -345,23 +345,23 @@ $(document).ready(function(){
 			<div id="child-matter-options">
 				<span>Use current matter as: </span> 
 				<input type="radio"
-					name="child-matter-priority" 
+					name="child-matter-priority"
 					value="1" checked="checked"
 					id="current-priority-matter" />
 				<label for="current-priority-matter">PRIORITY</label>
-				<input type="radio" 
-					name="child-matter-priority" 
+				<input type="radio"
+					name="child-matter-priority"
 					value="0"
 					id="current-parent-matter" />
 				<label for="current-parent-matter">PARENT</label><br>
-				<span>Child matter as : </span> 
+				<span>Child matter as : </span>
 				<input type="radio"
-					name="child-matter-container" 
+					name="child-matter-container"
 					value="1"
 					id="child-independent-matter" />
-				<label for="child-independent-matter">Independent Container</label> 
-				<input type="radio" 
-					name="child-matter-container" 
+				<label for="child-independent-matter">Independent Container</label>
+				<input type="radio"
+					name="child-matter-container"
 					value="0"
 					checked="checked" id="child-inherit-matter" />
 				<label for="child-inherit-matter">Inherits its information</label>
@@ -369,12 +369,12 @@ $(document).ready(function(){
 			<?php } ?>
 
 			<div id="add-matter-actions">
-				<input type="button" 
+				<input type="button"
 					name="<?=$this->matter_cap_id?>"
-					id="<?=$this->matter_cap_id?>" 
-					value="<?=$this->matter_cap?>" /> 
-				<input type="button" 
-					name="add-matter-cancel" 
+					id="<?=$this->matter_cap_id?>"
+					value="<?=$this->matter_cap?>" />
+				<input type="button"
+					name="add-matter-cancel"
 					id="add-matter-cancel"
 					value="Cancel" />
 			</div>

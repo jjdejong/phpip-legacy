@@ -108,7 +108,7 @@ $(document).ready(function(){
 			return $("<div/>").html(value).text();
 		}
     });
-    
+
     $('.teditable').editable('/actor/update', {
 		submitdata: function(value,settings){
 			var actor_id = $('#actor-id').val();
@@ -127,10 +127,10 @@ $(document).ready(function(){
 			return $("<div/>").html(tval).text();
 		}
     });
-    
+
 	var fvalue = '';
 	var dvalue = '';
-	
+
     $('.auto-editable').editable('/actor/update', {
 		type: 'autocomplete',
         autocomplete: {
@@ -144,10 +144,10 @@ $(document).ready(function(){
 			}
 		},
         submitdata: function(value,settings){
-			return { 
-				actor_id: $('#actor-id').val(), 
-				value: fvalue, 
-				dvalue: dvalue 
+			return {
+				actor_id: $('#actor-id').val(),
+				value: fvalue,
+				dvalue: dvalue
 			}
 		},
 		callback : function(value, settings) { // Reset variables after submission
@@ -174,10 +174,10 @@ $(document).ready(function(){
 			}
         },
         submitdata: function(value, settings){
-			return { 
-				actor_id: $('#actor-id').val(), 
-				value: fvalue, 
-				dvalue: dvalue 
+			return {
+				actor_id: $('#actor-id').val(),
+				value: fvalue,
+				dvalue: dvalue
 			}
 		},
 		callback : function(value, settings) { // Reset variables after submission
@@ -190,7 +190,7 @@ $(document).ready(function(){
 		tooltip: 'Click to edit...',
 		select: true
     });
-    
+
     $('.role-editable').editable('/actor/update', {
         type: 'autocomplete',
         onblur: 'submit',
@@ -205,10 +205,10 @@ $(document).ready(function(){
 			}
 		},
         submitdata: function(value,settings){
-			return { 
-				actor_id: $('#actor-id').val(), 
-				value: fvalue, 
-				dvalue: dvalue 
+			return {
+				actor_id: $('#actor-id').val(),
+				value: fvalue,
+				dvalue: dvalue
 			};
 		},
 		callback : function(value, settings) { // Reset variables after submission
@@ -225,7 +225,7 @@ $(document).ready(function(){
     $('input[name=phy_person]').change(function(){
         $.post('/actor/update', { actor_id : $('#actor-id').val(), field : 'phy_person', value: $('input[name=phy_person]:checked').val()});
     });
-    
+
     $('input[name=small_entity]').change(function(){
         $.post('/actor/update', { actor_id : $('#actor-id').val(), field : 'small_entity', value: $('input[name=small_entity]:checked').val()});
     });
@@ -244,9 +244,9 @@ $(document).ready(function(){
 	      		data: { aid:aid },
 	      		success: function(data){
 	        		if(isNaN(parseInt(data)))
-	          			alert(data); 
-	        		else 
-		        		location.reload();     
+	          			alert(data);
+	        		else
+		        		location.reload();
           		}
 			});
 		}
@@ -258,7 +258,7 @@ $(document).ready(function(){
         $('#actor-details-used-in').hide();
         $('#facade').hide();
     });
-    
+
     $( "button, input:button" ).button();
 
 });
@@ -272,9 +272,9 @@ $(document).ready(function(){
 		value="<?=$this->actor['ID']?>" />
 	<fieldset class="actor-info-set">
 		<legend>Actor details - ID: <?=$this->actor['ID']?></legend>
-		<label for="name" class="required-field" title="<?=$this->actorComments['name']?>">Name</label> 
+		<label for="name" class="required-field" title="<?=$this->actorComments['name']?>">Name</label>
 		<span class="actor-input-wide editable" id="name"><?=htmlentities($this->actor['name'])?></span>
-		<label for="first_name" title="<?=$this->actorComments['first_name']?>">Firstname</label> 
+		<label for="first_name" title="<?=$this->actorComments['first_name']?>">Firstname</label>
 		<span class="actor-input-narrow editable" id="first_name"><?=htmlentities($this->actor['first_name'])?></span>
 		<label for="display_name" title="<?=$this->actorComments['display_name']?>">Display name</label>
 		<span class="actor-input-wide editable" id="display_name"><?=$this->actor['display_name']?></span>
@@ -288,9 +288,9 @@ $(document).ready(function(){
 		<span class="actor-input-wide auto-editable" id="company_ID"><?=htmlentities($this->actor['company_name'])?></span>
 		<label for="parent_company" title="<?=$this->actorComments['parent_ID']?>">Parent company</label>
 		<span class="actor-input-narrow auto-editable" id="parent_ID"><?=$this->actor['parent_name']?></span>
-		<label for="WorkSite" title="<?=$this->actorComments['site_ID']?>">Work site</label> 
-		<span class="actor-input-wide auto-editable" id="site_ID"><?=$this->actor['site_name']?></span> 
-		<label for="phy_person" title="<?=$this->actorComments['phy_person']?>">Physical person</label> 
+		<label for="WorkSite" title="<?=$this->actorComments['site_ID']?>">Work site</label>
+		<span class="actor-input-wide auto-editable" id="site_ID"><?=$this->actor['site_name']?></span>
+		<label for="phy_person" title="<?=$this->actorComments['phy_person']?>">Physical person</label>
 		<span class="actor-input-narrow" id="phy_person">
 			<input type="radio" name="phy_person" value="1" <?=$this->actor['phy_person'] ? 'checked="checked"' : ""?> />YES&nbsp;&nbsp;
 			<input type="radio" name="phy_person" value="0" <?=$this->actor['phy_person'] ? '' :'checked="checked"'?> />NO
@@ -331,9 +331,9 @@ $(document).ready(function(){
 		<label for="warn" title="<?=$this->actorComments['warn']?>">Warn</label>
  		<span class="actor-input-wide" id="warn">
 			<input type="radio" name="warn" value="1" <?=$this->actor['warn'] ? 'checked="checked"' : ""?> />YES&nbsp;&nbsp;
-			<input type="radio" name="warn" value="0" <?=$this->actor['warn'] ? '' :'checked="checked"'?> />NO		
+			<input type="radio" name="warn" value="0" <?=$this->actor['warn'] ? '' :'checked="checked"'?> />NO
  		</span>
-		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT no.</label> 
+		<label for="VAT_number" title="<?=$this->actorComments['VAT_number']?>">VAT no.</label>
 		<span class="actor-input-narrow editable" id="VAT_number"><?=$this->actor['VAT_number']?></span>
 		<label for="notes" title="<?=$this->actorComments['notes']?>">Notes</label>
 		<span class="actor-input-wide teditable" id="notes"><?=$this->actor['notes']?></span>
@@ -347,11 +347,11 @@ $(document).ready(function(){
 		</button>
 	</fieldset>
 
-	<input type="hidden" value="" id="Employer-id" name="Employer-id" /> 
+	<input type="hidden" value="" id="Employer-id" name="Employer-id" />
 	<input type="hidden" value="" id="parent_company-id" name="parent_company-id" />
-	<input type="hidden" value="" id="WorkSite-id" name="WorkSite-id" /> 
-	<input type="hidden" value="" id="country-code" name="country-code" /> 
-	<input type="hidden" value="" id="country_mailing-code" name="country_mailing-code" /> 
-	<input type="hidden" value="" id="country_billing-code" name="country_billing-code" /> 
+	<input type="hidden" value="" id="WorkSite-id" name="WorkSite-id" />
+	<input type="hidden" value="" id="country-code" name="country-code" />
+	<input type="hidden" value="" id="country_mailing-code" name="country_mailing-code" />
+	<input type="hidden" value="" id="country_billing-code" name="country_billing-code" />
 	<input type="hidden" value="<?=$this->actor['default_role']?>" id="default_role-code" name="default_role-code" />
 </div>
