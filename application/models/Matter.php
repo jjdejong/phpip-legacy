@@ -249,7 +249,7 @@ class Application_Model_Matter {
 			return false;
 
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
-		$query = "INSERT INTO event(code, matter_ID, event_date, alt_matter_ID, detail, notes) SELECT code, " . $matter_new . ", event_date, alt_matter_ID, detail, notes FROM `event` where code IN ('FIL', 'PUB', 'GRT') AND matter_ID =" . $matter_cur;
+		$query = "INSERT INTO event(code, matter_ID, event_date, alt_matter_ID, detail, notes) SELECT code, $matter_new, event_date, alt_matter_ID, detail, notes FROM `event` where code IN ('FIL', 'PUB', 'GRT') AND matter_ID = $matter_cur";
 		$nquery = $this->_dbTable->getAdapter ()->prepare ( $query );
 		$nquery->execute ();
 	}
@@ -303,6 +303,7 @@ class Application_Model_Matter {
 			COALESCE(app.display_name, app.name) AS Applicant,
 			COALESCE(agt.display_name, agt.name) AS Agent,
 			agtlnk.actor_ref AS AgtRef,
+			COALESCE(lcn.display_name, lcn.name) AS Licensee,
 			classifier.value AS Title,
 			CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
 			fil.event_date AS Filed,
@@ -329,13 +330,16 @@ class Application_Model_Matter {
 			ON matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1
 			LEFT JOIN matter_actor_lnk invlnk
 				JOIN actor inv ON inv.ID = invlnk.actor_ID
-			ON ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' " . $inventor_filter . "
+			ON ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' $inventor_filter
 			LEFT JOIN matter_actor_lnk agtlnk
 				JOIN actor agt ON agt.ID = agtlnk.actor_ID
 			ON matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1
 			LEFT JOIN matter_actor_lnk applnk
 				JOIN actor app ON app.ID = applnk.actor_ID
 			ON matter.ID = applnk.matter_ID AND applnk.role = 'APP' AND applnk.display_order = 1
+			LEFT JOIN matter_actor_lnk lcnlnk
+				JOIN actor lcn ON lcn.ID = lcnlnk.actor_ID
+			ON matter.ID = lcnlnk.matter_ID AND lcnlnk.role = 'LCN'
 			LEFT JOIN matter_actor_lnk dellnk
 				JOIN actor del ON del.ID = dellnk.actor_ID
 			ON ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL'

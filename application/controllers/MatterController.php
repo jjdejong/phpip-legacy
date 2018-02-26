@@ -1340,6 +1340,7 @@ class MatterController extends Zend_Controller_Action {
 				'Applicant',
 				'Agent',
 				'Agent Ref',
+				'Licensee',
 				'Title',
 				'Inventor 1',
 				'Filed',
