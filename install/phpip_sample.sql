@@ -487,12 +487,6 @@ DELIMITER ;;
     LEAVE trig;
   END IF;
 
-  -- Set matter to "dead" if the expire date has been reached
-  IF (!vdead AND Now() > vexpiry) THEN
-	UPDATE matter SET dead = 1 WHERE matter.id=NEW.matter_id;
-    LEAVE trig;
-  END IF;
-
   OPEN cur_rule;
   create_tasks: LOOP
 
@@ -557,7 +551,7 @@ DELIMITER ;;
 		SET vdue_date = NEW.event_date + INTERVAL 4 MONTH;
 	END IF;
 
-	-- Skip creating tasks having a deadline in the past, except if the event is the expiry
+	-- Skip creating tasks having a deadline too far in the past, except if the event is the expiry
     IF (vdue_date < Now() AND vtask NOT IN ('EXP', 'REN')) OR (vdue_date < (Now() - INTERVAL 7 MONTH) AND vtask = 'REN') THEN
       ITERATE create_tasks;
     END IF;
@@ -600,7 +594,7 @@ DELIMITER ;;
     UPDATE matter SET dead = 1 WHERE matter.id=NEW.matter_id;
   END IF;
 
-  -- Ensure that we are not in a nested trigger before updating the matter change time
+  -- Ensure that we are not in a nested trigger before updating the matter change time (happens for the "Created" event, which is inserted upon a matter creation)
   IF NEW.code != 'CRE' THEN
 	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=NEW.matter_id;
   END IF;
@@ -759,9 +753,11 @@ DELIMITER ;;
 		UPDATE matter SET expire_date=NULL WHERE matter.id=OLD.matter_id;
 	END IF;
 
-	UPDATE matter, event_name SET matter.dead=0 WHERE matter.id=OLD.matter_id AND OLD.code=event_name.code AND event_name.killer=1
-		AND (matter.expire_date > Now() OR matter.expire_date IS NULL)
-		AND NOT EXISTS (SELECT 1 FROM event, event_name ename WHERE event.matter_id=OLD.matter_id AND event.code=ename.code AND ename.killer=1);
+	UPDATE matter
+		JOIN event_name ON (OLD.code=event_name.code)
+        SET matter.dead=0
+        WHERE matter.id=OLD.matter_id
+		AND NOT EXISTS (SELECT 1 FROM event JOIN event_name en ON (event.code=en.code) WHERE event.matter_id=OLD.matter_id AND en.killer=1);
 
 	UPDATE matter SET updated = Now(), updater = SUBSTRING_INDEX(USER(),'@',1) WHERE matter.id=OLD.matter_id;
 END */;;
@@ -1512,7 +1508,7 @@ DELIMITER ;;
 /*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;;
 /*!50003 SET @saved_time_zone      = @@time_zone */ ;;
 /*!50003 SET time_zone             = 'SYSTEM' */ ;;
-/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `kill_expired` ON SCHEDULE EVERY 1 WEEK STARTS '2017-01-31 20:23:25' ON COMPLETION PRESERVE DISABLE ON SLAVE COMMENT 'Updates the expired status of matters' DO insert ignore into `event` (code, matter_id, event_date) select 'EXP', matter.id, matter.expire_date from matter where expire_date < Now() and dead=0 */ ;;
+/*!50106 CREATE*/ /*!50117 DEFINER=`root`@`localhost`*/ /*!50106 EVENT `kill_expired` ON SCHEDULE EVERY 1 WEEK STARTS '2017-01-31 20:23:25' ON COMPLETION PRESERVE DISABLE ON SLAVE COMMENT 'Updates the expired status of matters' DO CALL update_expired() */ ;;
 /*!50003 SET time_zone             = @saved_time_zone */ ;;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;;
@@ -1895,6 +1891,39 @@ proc: BEGIN
 
 END proc ;;
 DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8 */ ;
+/*!50003 SET character_set_results = utf8 */ ;
+/*!50003 SET collation_connection  = utf8_general_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = '' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `update_expired`()
+BEGIN
+	DECLARE vmatter_id INTEGER;
+    DECLARE vexpire_date DATE;
+    DECLARE done INT DEFAULT FALSE;
+    DECLARE cur_expired CURSOR FOR
+		SELECT matter.id, matter.expire_date FROM matter WHERE expire_date < Now() AND dead=0;
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+    OPEN cur_expired;
+
+    read_loop: LOOP
+		FETCH cur_expired INTO vmatter_id, vexpire_date;
+        IF done THEN
+			LEAVE read_loop;
+		END IF;
+		INSERT IGNORE INTO `event` (code, matter_id, event_date) VALUES ('EXP', vmatter_id, vexpire_date);
+	END LOOP;
+END;;
+DELIMITER;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
 /*!50003 SET character_set_results = @saved_cs_results */ ;
