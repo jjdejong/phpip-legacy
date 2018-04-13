@@ -305,6 +305,7 @@ class Application_Model_Matter {
 			agtlnk.actor_ref AS AgtRef,
 			COALESCE(lcn.display_name, lcn.name) AS Licensee,
 			classifier.value AS Title,
+			classifier2.value AS Title2,
 			CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
 			fil.event_date AS Filed,
 			fil.detail AS FilNo,
@@ -355,6 +356,9 @@ class Application_Model_Matter {
 			LEFT JOIN classifier
 				JOIN classifier_type ON classifier.type_code = classifier_type.code AND main_display = 1 AND classifier_type.display_order = 1
 			ON IFNULL(matter.container_ID, matter.ID) = classifier.matter_ID
+			LEFT JOIN classifier classifier2
+				JOIN classifier_type ct2 ON classifier2.type_code = ct2.code AND ct2.main_display=1 AND ct2.display_order=2
+			ON IFNULL(matter.container_ID, matter.ID) = classifier2.matter_ID
 			WHERE e2.matter_id IS NULL ";
 
 		$where_clause = '';
