@@ -328,7 +328,7 @@ class Application_Model_Matter {
 			ON matter.ID = clilnk.matter_ID AND clilnk.role = 'CLI'
 			LEFT JOIN matter_actor_lnk lclic
 				JOIN actor clic ON clic.ID = lclic.actor_ID
-			ON matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1
+			ON matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1  AND lclic.display_order = 1
 			LEFT JOIN matter_actor_lnk invlnk
 				JOIN actor inv ON inv.ID = invlnk.actor_ID
 			ON ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' $inventor_filter
@@ -340,7 +340,7 @@ class Application_Model_Matter {
 			ON matter.ID = applnk.matter_ID AND applnk.role = 'APP' AND applnk.display_order = 1
 			LEFT JOIN matter_actor_lnk lcnlnk
 				JOIN actor lcn ON lcn.ID = lcnlnk.actor_ID
-			ON matter.ID = lcnlnk.matter_ID AND lcnlnk.role = 'LCN'
+			ON ifnull(matter.container_ID,matter.ID) = lcnlnk.matter_ID AND lcnlnk.role = 'LCN'
 			LEFT JOIN matter_actor_lnk dellnk
 				JOIN actor del ON del.ID = dellnk.actor_ID
 			ON ifnull(matter.container_ID,matter.ID) = dellnk.matter_ID AND dellnk.role = 'DEL'

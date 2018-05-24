@@ -235,8 +235,8 @@ $(document).ready(function(){
     });
 
     $('.delete-actor').click(function(){
-	    var del_conf = confirm("Deleting Actor from table. Are you sure?");
-		if(del_conf == 1){
+	    var del_conf = window.confirm("Deleting "+ $('#name').text() +" from Actor table. Are you sure?");
+		if(del_conf){
 	    	var aid = $(this).attr('id');
 	    	$.ajax({
 	      		url: '/actor/delete',
