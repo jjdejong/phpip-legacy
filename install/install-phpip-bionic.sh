@@ -5,18 +5,16 @@ echo "
 ********************************
 Updating Ubuntu
 ********************************"
-apt-get update
-apt-get -y upgrade
+add-apt-repository universe
+apt update
+apt -y upgrade
 echo "
 ********************************
-Installing Apache, MySQL, PHP and Zend Framework. 
-You will be prompted for a new MySQL password - provide it and remember it
+Installing Apache, MySQL, PHP and Zend Framework
 ********************************"
-apt-get -y install lamp-server^ zendframework git-core php7.2-simplexml
-sed -i "s/^#application\/x-httpd-php/application\/x-httpd-php/" /etc/mime.types
+apt -y install lamp-server^ zendframework git-core php7.2-simplexml
 a2enmod rewrite
 echo "127.0.0.1    phpip.local" >> /etc/hosts
-sed -i 's/^;include_path = ".:/usr/share/php"/include_path = ".:/usr/share/php"/' /etc/php/7.2/apache2/php.ini
 echo "
 ********************************
 Getting phpIP from GitHub
@@ -28,10 +26,9 @@ service apache2 reload
 mv phpip/application/configs/application.ini.example phpip/application/configs/application.ini
 echo "
 ********************************
-Installing database.
-When prompted for a password, enter the MySQL password defined earlier
+Installing database
 ********************************"
-mysql -u root -p < phpip/install/phpip_sample.sql
+mysql < phpip/install/phpip_sample.sql
 echo "
 Ready to go now. 
 Point your browser to http://phpip.local and login with phpipuser:changeme
