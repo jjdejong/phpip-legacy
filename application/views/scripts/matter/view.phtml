@@ -573,8 +573,10 @@ if (count ( @$classifier_arr )) {
 			</div>
 <?php
 	endforeach	;
-} else
-	echo "...Hover the mouse here to add a title item...";
+} else {
+	<span class="classifier-main-name"><b>Empty</b></span>:
+	<span class="classifier-main-value">Hover the mouse here to add a title item</span>
+}
 ?>
 			<button id="add-classifier-link" data-code="<?=$this->matter_record[0]['category_code']?>" style="position: absolute; width: 120px; margin-left: 30px; margin-top: -10px">
 				<span class="ui-icon ui-icon-plusthick" style="float: left;"></span>
