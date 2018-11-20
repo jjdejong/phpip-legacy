@@ -321,7 +321,7 @@ $(document).ready(function(){
         	$('.ui-widget-overlay').show();
             $('#event-pop-up').load("/matter/eventlist/id/<?=$this->matter_record[0]['ID']?>")
             .css($(this).offset()).show().draggable();
-        }); 
+        });
 
         $("#MatterOpenTasks").click(function(){
         	$('.ui-widget-overlay').show();
@@ -335,14 +335,14 @@ $(document).ready(function(){
             if(trig_id == 0) return false;
          	$('#tasklist-pop-up').load("/matter/tasklist/event_id/" + trig_id, { renewal: 1 })
          	.css('top', $(this).offset().top).show().draggable();
-        }); 
+        });
 
         $("#MatterClassifier").click(function(){
         	$('.ui-widget-overlay').show();
             $('#classifier-popup').load("/matter/classifierlist/id/<?=$this->matter_record[0]['ID']?>")
             .css('top', $(this).offset().top).show().draggable();
         });
- 
+
         $(".add-actor").click(function(){
             role = $(this).attr('id').split('-');
             $('.ui-widget-overlay').show();
@@ -358,10 +358,10 @@ $(document).ready(function(){
             role_id = matter_role_id[3];
             //$('.ui-widget-overlay').show();
             $('#facade').show();
-            $('#mapactor-pop-up').load("/matter/role-actors/", { 
-            	matter_id: $('input[name=matterId]').val(), 
-            	container_id: container_id, 
-            	role_id: role_id 
+            $('#mapactor-pop-up').load("/matter/role-actors/", {
+            	matter_id: $('input[name=matterId]').val(),
+            	container_id: container_id,
+            	role_id: role_id
             }).css({width: 840, top: $(this).offset().top})
             .show().draggable();
         });
@@ -377,26 +377,26 @@ $(document).ready(function(){
         $('#clone-matter-link').click(function(){
 			//$('.ui-widget-overlay').show();
 			$('#facade').show();
-			$.get('/matter/clone', { 
-            	category_id: $(this).attr('data-code'), 
-            	country: $(this).attr('data-country'), 
-            	origin: $(this).attr('data-origin'), 
-            	type: $(this).attr('data-type') 
+			$.get('/matter/clone', {
+            	category_id: $(this).attr('data-code'),
+            	country: $(this).attr('data-country'),
+            	origin: $(this).attr('data-origin'),
+            	type: $(this).attr('data-type')
             },
             function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
             });
         });
-                  
+
         $('#child-matter-link').click(function(){
 			//$('.ui-widget-overlay').show();
 			$('#facade').show();
-			$.get('/matter/child', { 
-            	caseref: $(this).attr('data-caseref'), 
-            	category_id : $(this).attr('data-code'), 
-            	country: $(this).attr('data-country'), 
-            	origin: $(this).attr('data-origin'), 
-            	type: $(this).attr('data-type') 
+			$.get('/matter/child', {
+            	caseref: $(this).attr('data-caseref'),
+            	category_id : $(this).attr('data-code'),
+            	country: $(this).attr('data-country'),
+            	origin: $(this).attr('data-origin'),
+            	type: $(this).attr('data-type')
             },
             function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
@@ -406,10 +406,10 @@ $(document).ready(function(){
         $('#national-matter-link').click(function(){
 			//$('.ui-widget-overlay').show();
 			$('#facade').show();
-			$.get('/matter/national', { 
-            	caseref: $(this).attr('data-caseref'), 
-            	category_id: $(this).attr('data-code'), 
-            	country: $(this).attr('data-country') 
+			$.get('/matter/national', {
+            	caseref: $(this).attr('data-caseref'),
+            	category_id: $(this).attr('data-code'),
+            	country: $(this).attr('data-country')
             },
             function(data){
             	$('#add-matter-popup').html(data).show().css({left: 400, top: 150}).draggable();
@@ -464,11 +464,11 @@ $(document).ready(function(){
     $('.matter-actor').click(function(event){
       //$('.ui-widget-overlay').show();
       	$('#facade').show();
-      	$('#actor-details-popup').load("/actor/view", { actor_id: this.id }, function(){ 
-      		$(this).position({of: event, collision: "fit"}); 
+      	$('#actor-details-popup').load("/actor/view", { actor_id: this.id }, function(){
+      		$(this).position({of: event, collision: "fit"});
       	}).show().draggable();
     });
-                  
+
     $( "button, input:submit, input:button").button();
 });
 </script>
@@ -521,7 +521,7 @@ if ($this->matter_container) { ?>
 				data-origin="<?=$this->matter_record[0]['origin']?>"
 				data-type="<?=$this->matter_record[0]['type_code']?>"
 				data-code="<?=$this->matter_record[0]['category']?>-<?=$this->matter_record[0]['category_code']?>">
-				<span class="ui-icon ui-icon-link" style="float: left;"></span> 
+				<span class="ui-icon ui-icon-link" style="float: left;"></span>
 				New child
 			</button>
 <?php if($this->national_phase){ ?>
@@ -536,7 +536,7 @@ if ($this->matter_container) { ?>
 			</button>
 <?php } ?>
 		</div>
-<?php 
+<?php
 // Title box ("main" classifiers)
 foreach ( $this->matter_classifier_main as $classifier ) :
 	$cid = $classifier ['ID'];
@@ -576,7 +576,7 @@ if (count ( @$classifier_arr )) {
 } else
 	echo "...Hover the mouse here to add a title item...";
 ?>
-			<button id="add-classifier-link" data-code="<?=$this->matter_record[0]['category_code']?>" style="position: absolute; width: 120px; margin-left: 50px; margin-top: -10px">
+			<button id="add-classifier-link" data-code="<?=$this->matter_record[0]['category_code']?>" style="position: absolute; width: 120px; margin-left: 30px; margin-top: -10px">
 				<span class="ui-icon ui-icon-plusthick" style="float: left;"></span>
 				Add title item
 			</button>
@@ -595,16 +595,16 @@ if (count ( @$classifier_arr )) {
 		</button>
 	</div>
 	<div class="list-matter-block-info" style="height: 150px;">
-		<input type="hidden" 
-			name="matterId" 
-			id="this-matter-id"
-			value="<?=$this->matter_id?>" /> 
 		<input type="hidden"
-			name="containerId" 
+			name="matterId"
+			id="this-matter-id"
+			value="<?=$this->matter_id?>" />
+		<input type="hidden"
+			name="containerId"
 			id="this-container-id"
 			value="<?=$this->matter_record[0]['container_ID']?>" />
 <?php
-if (!empty ( $this->matter_actors )) : 
+if (!empty ( $this->matter_actors )) :
 // Actors box
 	// Group actors in an array per role
 	foreach  ( $this->matter_actors as $actor ) {
@@ -614,32 +614,32 @@ if (!empty ( $this->matter_actors )) :
 		<div class="actor-block">
 			<span class="matter-role" id="matter-role-<?=$this->matter_id?>-<?=$actors [0]['role']?>">
 				<?=$role_name?>
-				
+
 			</span>
 			<span class="add-actor ui-icon ui-icon-plusthick" id="add-actor-<?=$actors [0]['role']?>" title="Add Actor" style="display: inline-block"></span>
-<?php 	
+<?php
 		foreach ( $actors as $actor ):
 			$tooltip = '';
-			$actor_display_name = ($actor ['display_name'] == "") ? $actor ['name'] . (($actor ['first_name']) ? (", " . $actor ['first_name']) : "") : $actor ['display_name'];			
+			$actor_display_name = ($actor ['display_name'] == "") ? $actor ['name'] . (($actor ['first_name']) ? (", " . $actor ['first_name']) : "") : $actor ['display_name'];
 			if ($actor ['actor_ref'])
-				$actor_display_name .= " (" . $actor ['actor_ref'] . ")";			
-				$tooltip = $actor ['actor_ref'];			
+				$actor_display_name .= " (" . $actor ['actor_ref'] . ")";
+				$tooltip = $actor ['actor_ref'];
 			if ($actor ['company_name'])
-				$tooltip = $actor ['company_name'];			
+				$tooltip = $actor ['company_name'];
 			if ($tooltip):?>
 			<div id="<?=$actor ['actor_ID']?>" class="matter-actor help_cursor <?=($actor ['inherited'] ? ' actor-inherit' : '')?><?=$actor ['warn'] ? ' actor-warn' : ''?>" title="<?=htmlentities ( $tooltip )?>">
 				<?=$actor_display_name?>
-				
+
 			</div>
 			<?php else:?>
 			<div id="<?=$actor ['actor_ID']?>" class="matter-actor <?=$actor ['inherited'] ? ' actor-inherit' : ''?><?=$actor ['warn'] ? ' actor-warn' : ''?>">
 				<?=$actor_display_name?>
-				
+
 			</div>
 			<?php endif;
 		endforeach;?>
 		</div>
-<?php 
+<?php
 	endforeach;
 endif;?>
 	</div>
@@ -650,7 +650,7 @@ endif;?>
 <div class="listrow" style="width: 485px;">
 	<div class="headlistrow" id="MatterStatus" style="margin-left: 3px;" title="Click for more detail">
 		<span class="status-col-name">Status</span>
-		<span class="status-col-date">Date</span> 
+		<span class="status-col-date">Date</span>
 		<span class="status-col-number">Number</span>
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
@@ -669,7 +669,7 @@ foreach ( $this->matter_events as $event ) :
 			'/,/',
 			'/-/',
 			'/\//',
-			'/\.[0-9]/' 
+			'/\.[0-9]/'
 	);
 	$cleanednumber = preg_replace ( $removethese, '', $event ['detail'] );
 	$href = '';
@@ -708,14 +708,14 @@ foreach ( $this->matter_events as $event ) :
 				break;
 		}
 	}
-?> 
+?>
 		<div class="status-row">
 			<span class="status-col-name">
 				<?=$event['name']?>
-			</span> 
+			</span>
 			<span class="status-col-date">
 				<?=$event['event_date']?>
-			</span> 
+			</span>
 			<span class="status-col-number">
 				<?php if($href !=  ""){ ?>
 					<a href="<?=$href?>" target="_blank"><?=$event['detail']?></a>
@@ -739,7 +739,7 @@ endforeach;
 		</span>
 		<span class="status-col-date">
 			Due
-		</span> 
+		</span>
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
 	<div class="list-matter-block-info">
@@ -759,7 +759,7 @@ foreach ( $this->matter_open_tasks as $open_task ) :
 <?php
 	}
 	if ($trigger_id == $open_task ['trigger_id']) {
-?> 
+?>
 		<div class="status-row">
 			<span class="task-col-name help_cursor" title="<?=htmlentities($open_task['notes']) ?>">
 <?php
@@ -767,7 +767,7 @@ foreach ( $this->matter_open_tasks as $open_task ) :
 		if ($open_task ['detail'] != "")
 			echo ": " . $open_task ['detail'];
 ?>
-			</span> 
+			</span>
 			<span class="status-col-date">
 				<?=$open_task['due_date']?>
 			</span>
@@ -785,9 +785,9 @@ endforeach;
 <div class="listrow" style="width: 240px;">
 	<div class="headlistrow" id="MatterRenTasks" title="Click for more detail">
 		<span class="renewal-col-name">
-			Renewals</span> 
+			Renewals</span>
 		<span class="renewal-col-date">
-			Due</span> 
+			Due</span>
 		<span style="float: right;" class="ui-icon ui-icon-newwin"></span>
 	</div>
 	<div class="list-matter-block-info">
@@ -803,17 +803,17 @@ foreach ( $this->matter_open_tasks_ren as $open_task_ren ) :
 			<span class="renewal-col-name">
 				From: <b><?=$open_task_ren['trigger_name']?></b>
 			</span>
-			<span class="renewal-col-date"></span> 
+			<span class="renewal-col-date"></span>
 			<span class="renewal-col-number"></span>
 		</div>
 <?php
 	}
 	if ($ren_trigger_id == $open_task_ren ['trigger_id']) {
-?> 
+?>
 		<div class="status-row">
 			<span class="renewal-col-name">
 				<?=$open_task_ren['detail']?>
-			</span> 
+			</span>
 			<span class="renewal-col-date">
 				<?=$open_task_ren['due_date']?>
 			</span>
@@ -834,7 +834,7 @@ endif;
 
 <!-- Classifiers -->
 
-<?php 
+<?php
 $trigger_id = "";
 ?>
 <div class="listrow" style="width: 370px;">
