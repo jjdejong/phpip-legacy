@@ -5,7 +5,7 @@ This will upgrade the UI.
 
 To upgrade the database, go into the "install" folder and check whether there are any upgrade scripts having a timestamp above your release.
 
-NEVER apply a phpip_skel-xxx.sql script on a production database - it will wipe your database to recreate a new one.
+NEVER apply the phpip_sample.sql script on a production database - it will wipe your database to recreate a new one.
 
 To upgrade your database structure, apply, in order, ALL the phpip_upgrade-<timestamp>.sql scripts having a timestamp above your current version.
 
