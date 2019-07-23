@@ -120,7 +120,7 @@
 	float:left;
 	margin-left: 5px;
 	width:240px;
-	display:block; 
+	display:block;
 }
 .home-box{
 	float:left;
@@ -165,7 +165,7 @@ $(document).ready(function(){
     $('.add-cat-matter').click(function(){
         $('#facade').show();
         $('#add-matter-popup').css( $(this).offset() );
-        $.get('/matter/add', 
+        $.get('/matter/add',
 			{ category_id : $(this).attr('id') },
 			function(data){
 				$('#add-matter-popup').html(data).show().draggable();
@@ -209,7 +209,7 @@ $(document).ready(function(){
              alert("No tasks selected for clearing!");
              return;
         }
-		$.post('/matter/clear-tasks', 
+		$.post('/matter/clear-tasks',
 			{ task_ids: tids, done_date: $('#ren-done-date').val() },
 			function(data){
 				if(!isNaN(parseInt(data)))
@@ -263,10 +263,10 @@ $(document).ready(function(){
     				</span>
     				<span class="col-actions">&nbsp;</span>
     			</div>
-<?php 
+<?php
 if(count($this->categories)){ ?>
 				<ul class="phpip-list" id="category-list">
-<?php 
+<?php
 	foreach($this->categories as $matter):
 		$filter = 'Cat/' . $matter['category_code'];
 		if (!$this->restricted)
@@ -276,12 +276,12 @@ if(count($this->categories)){ ?>
     					<span style="display: inline-block; width: 180px;">
     						<a href="/matter/filter/<?=$filter?>">
     							<?=$matter['category']." (".$matter['category_code'].")"?>
-    							
+
     						</a>
     					</span>
     					<span style="display:inline-block; width: 100px; text-align: right;">
     						<?=$matter['no_of_matters']?>
-    						
+
     					</span>
     					<span class="col-actions">
     						<a href="javascript:void(0);" class="add-cat-matter" id="<?=$matter['category']?>-<?=$matter['category_code']?>" title="New <?=$matter['category']?>">
@@ -289,15 +289,15 @@ if(count($this->categories)){ ?>
     						</a>
     					</span>
     				</li>
-<?php 
+<?php
 	endforeach; ?>
 				</ul>
-<?php 
+<?php
 } ?>
 			</div>
 		</div>
 		<div id="open-tasks-box" class="home-box">
-<?php 
+<?php
 if(count($this->open_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open tasks
@@ -324,43 +324,40 @@ if(count($this->open_tasks)): ?>
 					<div class="col-actions">Close</div>
 				</div>
 				<ul class="phpip-list" id="open-tasks-list">
-<?php 
-	foreach($this->open_tasks as $open_task){ 
+<?php
+	foreach($this->open_tasks as $open_task){
 		$task_name  = $open_task['task_name'];
 		$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
 		if ($open_task['posix_due_date'] < date('Y-m-d'))
 			$open_task['due_date'] = '<span style="color:red; text-decoration:blink;">' .$open_task['due_date']. '</span>';
 		else if ($open_task['posix_due_date'] < date('Y-m-d', strtotime('+1 week')))
 			$open_task['due_date'] = '<span style="color:tomato;">' .$open_task['due_date']. '</span>';
-			if($this->restricted)
-				$viewlink = 'javascript:void(0);';
-			else 
 				$viewlink = '/matter/view/id/' . $open_task['MID']; ?>
 					<li id="<?=$open_task['task_ID']?>">
 						<div class="col-task-name">
 							<a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>">
 								<?=$task_name?>
-								
+
 							</a>
 						</div>
 						<div class="col-task-matter">
 							<a href="<?=$viewlink?>">
 								<?=$open_task['UID']?>
-								
+
 							</a>
 						</div>
 						<div class="col-task-due_date">
 							<?=$open_task['due_date']?>
-							
+
 						</div>
 						<div class="col-actions">
 							<input type="checkbox" name="clear-task-<?=$open_task['task_ID']?>" id="<?=$open_task['task_ID']?>" class="clear-open-task" value="Clear">
 						</div>
 					</li>
-<?php 
+<?php
 	} ?>
 				</ul>
-<?php 
+<?php
 endif; ?>
 			</div>
 		</div>
@@ -376,10 +373,10 @@ endif; ?>
 					<div class="col-open-count">Open Tasks</div>
 					<div class="col-most-urgent">Most urgent</div>
 				</div>
-<?php 
+<?php
 if(count($this->users_list)): ?>
 				<ul class="phpip-list" id="users-task-count" >
-<?php 
+<?php
 	foreach($this->users_list as $user){
 		if($this->restricted)
 			$userpagelink = 'javascript:void(0);';
@@ -395,27 +392,27 @@ if(count($this->users_list)): ?>
 						<div class="col-user-login">
 							<a href="<?=$userpagelink?>">
 								<?=$user['login']?>
-								
+
 							</a>
 						</div>
 						<div class="col-open-count">
 							<?=$user['no_of_tasks']?>
-							
+
 						</div>
 						<div class="col-most-urgent">
 							<?=$user['urgent_date']?>
-							
+
 						</div>
 					</li>
 <?php 	}
 	} ?>
 				</ul>
-<?php 
+<?php
 endif;?>
 			</div>
 		</div>
 		<div id="open-renewals-box" class="home-box">
-<?php 
+<?php
 if(count($this->ren_tasks)): ?>
 			<div class="home-box-header">
 				<div class="list-header">Open renewals
@@ -441,12 +438,9 @@ if(count($this->ren_tasks)): ?>
 					<div class="col-actions">Close</div>
 				</div>
 				<ul class="phpip-list" id="ren-tasks-list">
-<?php 
-	foreach($this->ren_tasks as $open_task){ 
-		if($this->restricted)
-			$viewlink = 'javascript:void(0);';
-			else
-				$viewlink = '/matter/view/id/' . $open_task['MID'];
+<?php
+	foreach($this->ren_tasks as $open_task){
+		$viewlink = '/matter/view/id/' . $open_task['MID'];
 		$task_name  = $open_task['task_name'];
 		$task_name .= ($open_task['task_detail'])?" - ".$open_task['task_detail']: "";
 		if ($open_task['posix_due_date'] < date('Y-m-d'))
@@ -457,31 +451,31 @@ if(count($this->ren_tasks)): ?>
 						<div class="col-task-name">
 							<a href="javascript:void(0);" class="open-task" id="<?=$open_task['trigger_ID']?>-<?=$open_task['code']?>">
 								<?=$task_name?>
-								
+
 							</a>
 						</div>
 						<div class="col-task-matter">
 							<a href="<?=$viewlink?>">
 								<?=$open_task['UID']?>
-								
+
 							</a>
 						</div>
 						<div class="col-task-due_date">
 							<?=$open_task['due_date']?>
-							
+
 						</div>
 						<div class="col-actions">
-							<input type="checkbox" 
-								name="clear-task-<?=$open_task['task_ID']?>" 
-								id="<?=$open_task['task_ID']?>" 
-								class="clear-ren-task button-style" 
+							<input type="checkbox"
+								name="clear-task-<?=$open_task['task_ID']?>"
+								id="<?=$open_task['task_ID']?>"
+								class="clear-ren-task button-style"
 								value="Clear">
 						</div>
 					</li>
-<?php 
+<?php
 	} ?>
 				</ul>
-<?php 
+<?php
 endif; ?>
 			</div>
 		</div>
@@ -492,4 +486,3 @@ endif; ?>
 <div id="tasklist-pop-up"></div>
 <div id="add-matter-popup"></div>
 <div id="facade"></div>
-
