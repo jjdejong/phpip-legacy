@@ -330,9 +330,9 @@ $(document).ready(function(){
         });
 
         $("#MatterRenTasks").click(function(){
-        	$('.ui-widget-overlay').show();
-            trig_id = <?=(isset($this->matter_open_tasks_ren[0]) ? $this->matter_open_tasks_ren[0]['trigger_id'] : 0) ?>;
-            if(trig_id == 0) return false;
+        	trig_id = <?=(isset($this->matter_open_tasks_ren[0]) ? $this->matter_open_tasks_ren[0]['trigger_id'] : 0) ?>;
+          if(trig_id == 0) return false;
+					$('.ui-widget-overlay').show();
          	$('#tasklist-pop-up').load("/matter/tasklist/event_id/" + trig_id, { renewal: 1 })
          	.css('top', $(this).offset().top).show().draggable();
         });
