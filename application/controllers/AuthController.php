@@ -91,6 +91,6 @@ class AuthController extends Zend_Controller_Action {
 	public function unauthorizedAction() {
 		$this->_helper->layout->disableLayout ();
 		$this->_helper->viewRenderer->setNoRender ();
-		echo 'You are not authorized to access this resource';
+		echo '<div class="place-card"><h2>You are not authorized to access this resource</h2> Please reload page</div>';
 	}
 }

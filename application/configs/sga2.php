@@ -260,4 +260,4 @@ foreach ($xml->PATENT as $AQSpatent) {
 }
 
 echo "\r\nAnnuities updated: $updated, inserted: $inserted, among processed: $annsprocessed\r\nPatents not recognized: $unrecognized, ambiguous: $ambiguous, total processed: $patsprocessed\r\n";
-?>
+
