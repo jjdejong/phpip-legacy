@@ -296,14 +296,14 @@ class Application_Model_Matter {
 			matter.country AS country,
 			matter.category_code AS Cat,
 			matter.origin,
-			event_name.name AS Status,
-			status.event_date AS Status_date,
+			GROUP_CONCAT(event_name.name SEPARATOR '; ') AS Status,
+			min(status.event_date) AS Status_date,
 			COALESCE(cli.display_name, clic.display_name, cli.name, clic.name) AS Client,
 			COALESCE(clilnk.actor_ref, lclic.actor_ref) AS ClRef,
-			COALESCE(app.display_name, app.name) AS Applicant,
+			GROUP_CONCAT(COALESCE(app.display_name, app.name) SEPARATOR '; ') AS Applicant,
 			COALESCE(agt.display_name, agt.name) AS Agent,
 			agtlnk.actor_ref AS AgtRef,
-			COALESCE(lcn.display_name, lcn.name) AS Licensee,
+			GROUP_CONCAT(COALESCE(lcn.display_name, lcn.name) SEPARATOR '; ') AS Licensee,
 			classifier.value AS Title,
 			classifier2.value AS Title2,
 			CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
@@ -367,12 +367,14 @@ class Application_Model_Matter {
 		if ($role == 'CLI')
 			$where_clause .= "AND '" . $userid . "' IN (cli.id, clic.id)";
 
+		$group_by_clause = "matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx";
+
 		$having_clause = '';
 		if (! empty ( $multi_filter )) {
 			foreach ( $multi_filter as $key => $value ) {
 				if ($value != '' && $key != 'display' && $key != 'display_style') {
 					if ($having_clause == '')
-						$having_clause = "HAVING ";
+						$having_clause = " HAVING ";
 					else
 						$having_clause .= "AND ";
 					if ($key == 'responsible')
@@ -385,15 +387,15 @@ class Application_Model_Matter {
 
 		if ($sortField == 'caseref') {
 			if ($sortDir == 'desc') {
-				$sortField = 'matter.caseref DESC, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx';
+				$sortField = 'matter.caseref DESC';
 			} elseif ($sortDir == 'asc') {
-				$sortField = 'matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx';
+				$sortField = 'matter.caseref ASC';
 			}
 			$sortDir = '';
 		} else
 			$sortDir .= ', matter.caseref, matter.origin, matter.country';
 
-		$sql .= $where_clause . $having_clause . 'ORDER BY ' . $sortField . ' ' . $sortDir;
+		$sql .= $where_clause . ' GROUP BY ' . $group_by_clause . $having_clause . ' ORDER BY ' . $sortField . ' ' . $sortDir;
 
 		$this->setDbTable ( 'Application_Model_DbTable_Matter' );
 		$dbStmt = $this->_dbTable->getAdapter ()->query ( $sql );
