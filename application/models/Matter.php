@@ -296,14 +296,14 @@ class Application_Model_Matter {
 			matter.country AS country,
 			matter.category_code AS Cat,
 			matter.origin,
-			GROUP_CONCAT(event_name.name SEPARATOR '; ') AS Status,
+			GROUP_CONCAT(DISTINCT event_name.name SEPARATOR '; ') AS Status,
 			min(status.event_date) AS Status_date,
-			COALESCE(cli.display_name, clic.display_name, cli.name, clic.name) AS Client,
-			COALESCE(clilnk.actor_ref, lclic.actor_ref) AS ClRef,
-			GROUP_CONCAT(COALESCE(app.display_name, app.name) SEPARATOR '; ') AS Applicant,
+			GROUP_CONCAT(DISTINCT COALESCE(cli.display_name, cli.name) SEPARATOR '; ') AS Client,
+			clilnk.actor_ref AS ClRef,
+			GROUP_CONCAT(DISTINCT COALESCE(app.display_name, app.name) SEPARATOR '; ') AS Applicant,
 			COALESCE(agt.display_name, agt.name) AS Agent,
 			agtlnk.actor_ref AS AgtRef,
-			GROUP_CONCAT(COALESCE(lcn.display_name, lcn.name) SEPARATOR '; ') AS Licensee,
+			GROUP_CONCAT(DISTINCT COALESCE(lcn.display_name, lcn.name) SEPARATOR '; ') AS Licensee,
 			classifier.value AS Title,
 			classifier2.value AS Title2,
 			CONCAT_WS(' ', inv.name, inv.first_name) as Inventor1,
@@ -325,19 +325,16 @@ class Application_Model_Matter {
 			JOIN matter_category ON matter.category_code = matter_category.code
 			LEFT JOIN matter_actor_lnk clilnk
 				JOIN actor cli ON cli.ID = clilnk.actor_ID
-			ON matter.ID = clilnk.matter_ID AND clilnk.role = 'CLI'
-			LEFT JOIN matter_actor_lnk lclic
-				JOIN actor clic ON clic.ID = lclic.actor_ID
-			ON matter.container_ID = lclic.matter_ID AND lclic.role = 'CLI' AND lclic.shared = 1  AND lclic.display_order = 1
+			ON ifnull(matter.container_ID,matter.ID) = clilnk.matter_ID AND clilnk.role = 'CLI'
 			LEFT JOIN matter_actor_lnk invlnk
 				JOIN actor inv ON inv.ID = invlnk.actor_ID
 			ON ifnull(matter.container_ID,matter.ID) = invlnk.matter_ID AND invlnk.role = 'INV' $inventor_filter
 			LEFT JOIN matter_actor_lnk agtlnk
 				JOIN actor agt ON agt.ID = agtlnk.actor_ID
-			ON matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT' AND agtlnk.display_order = 1
+			ON matter.ID = agtlnk.matter_ID AND agtlnk.role = 'AGT'
 			LEFT JOIN matter_actor_lnk applnk
 				JOIN actor app ON app.ID = applnk.actor_ID
-			ON matter.ID = applnk.matter_ID AND applnk.role = 'APP' AND applnk.display_order = 1
+			ON ifnull(matter.container_ID,matter.ID) = applnk.matter_ID AND applnk.role = 'APP'
 			LEFT JOIN matter_actor_lnk lcnlnk
 				JOIN actor lcn ON lcn.ID = lcnlnk.actor_ID
 			ON ifnull(matter.container_ID,matter.ID) = lcnlnk.matter_ID AND lcnlnk.role = 'LCN'
