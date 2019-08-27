@@ -362,7 +362,7 @@ class Application_Model_Matter {
 		if ($matter_category_display_type)
 			$where_clause = "AND matter_category.display_with = '$matter_category_display_type' ";
 		if ($role == 'CLI')
-			$where_clause .= "AND '" . $userid . "' IN (cli.id, clic.id)";
+			$where_clause .= "AND cli.id = $userid";
 
 		$group_by_clause = "matter.caseref, matter.container_id, matter.origin, matter.country, matter.type_code, matter.idx";
 
