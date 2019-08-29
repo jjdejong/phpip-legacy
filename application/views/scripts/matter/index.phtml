@@ -230,7 +230,7 @@
             url = url + '/Granted/' + granted;
         if (grtno !== '')
             url = url + '/GrtNo/' + grtno;
-        if (responsible === 1)
+        if (responsible == 1)
             url = url + '/responsible/' + '<?= $this->login ?>';
         url = url + '/sort/' + sortKey + '/dir/' + sortDir;
 <?php if ($this->category_display): ?>
@@ -239,7 +239,7 @@
         url = url + '/display_style/' + display_style;
         return url;
     }
-    
+
     // Used below for triggering Ajax call after .keyup() only when user stops typing ("debouncing")
     function delay(callback, ms) {
         var timer = 0;
@@ -413,20 +413,20 @@
     }
     ?>
     <div id="container-all" style="float: left;">
-        <input type="radio" id="show-all" name="container-filter" value=0 <?= $show_all ?> /> 
-        <label for="show-all">Show All</label> 
-        <input type="radio" id="show-containers" name="container-filter" value=1 <?= $show_conts ?> /> 
+        <input type="radio" id="show-all" name="container-filter" value=0 <?= $show_all ?> />
+        <label for="show-all">Show All</label>
+        <input type="radio" id="show-containers" name="container-filter" value=1 <?= $show_conts ?> />
         <label for="show-containers">Show Containers</label>
     </div>
     <div id="actor-status" style="float: left; margin-left: 20px;">
-        <input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?= !$this->display_style ? 'checked' : '' ?> /> 
-        <label for="show-actor">Bibliography</label> 
-        <input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?= $this->display_style ? 'checked' : '' ?> /> 
+        <input class="display_style" type="radio" id="show-actor" name="displaystyle" value="0" <?= !$this->display_style ? 'checked' : '' ?> />
+        <label for="show-actor">Bibliography</label>
+        <input class="display_style" type="radio" id="show-status" name="displaystyle" value="1" <?= $this->display_style ? 'checked' : '' ?> />
         <label for="show-status">Status</label>
     </div>
 
     <div id="mine-all" style="float: left; margin-left: 20px;">
-        <input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?= $this->responsible ? 'checked' : '' ?> /> 
+        <input class="responsible-filter" type="checkbox" id="show-responsible" name="responsible-filter" value="1" <?= $this->responsible ? 'checked' : '' ?> />
         <label for="show-responsible">Show Mine</label>
     </div>
 
@@ -444,7 +444,7 @@
         <div class="display_actor display_status column column-case">
             <a class="sorting-dirs" id="caseref-desc">UID</a>
             <span class="sorting-img" id="caseref-sort">&nbsp;</span>
-            <br> 
+            <br>
             <input type="text" name="filter-ref" id="filter-ref" value="<?= @$this->filters['Ref'] ?>" size=8 class="filter-input" />
         </div>
         <div class="display_actor display_status column column-cat">
@@ -459,13 +459,13 @@
         </div>
         <div class="display_status column column-date">
             <a class="sorting-dirs" id="Status_date-asc">Date</a>
-            <span class="sorting-img" id="Status_date-sort">&nbsp;</span> 
+            <span class="sorting-img" id="Status_date-sort">&nbsp;</span>
             <br>
             <input type="text" name="filter-status_date" id="filter-status_date" value="<?= @$this->filters['Status_date'] ?>" size=8 class="filter-input" />
         </div>
         <div class="display_actor display_status column column-client">
             <a class="sorting-dirs" id="Client-asc">Client</a>
-            <span class="sorting-img" id="Client-sort">&nbsp;</span> 
+            <span class="sorting-img" id="Client-sort">&nbsp;</span>
             <br>
             <input type="text" name="filter-client" id="filter-client" value="<?= @$this->filters['Client'] ?>" size=8 class="filter-input" />
         </div>
@@ -475,7 +475,7 @@
         </div>
         <div class="display_actor column column-agent">
             <a class="sorting-dirs" id="Agent-asc">Agent</a>
-            <span class="sorting-img" id="Agent-sort">&nbsp;</span> 
+            <span class="sorting-img" id="Agent-sort">&nbsp;</span>
             <br>
             <input type="text" name="filter-agent" id="filter-agent" value="<?= @$this->filters['Agent'] ?>" size=8 class="filter-input" />
         </div>
@@ -489,13 +489,13 @@
         </div>
         <div class="display_actor column column-inventor">
             <a class="sorting-dirs" id="Inventor1-asc">Inventor</a>
-            <span class="sorting-img" id="Inventor1-sort">&nbsp;</span> 
+            <span class="sorting-img" id="Inventor1-sort">&nbsp;</span>
             <br>
             <input type="text" name="filter-inventor" id="filter-inventor" value="<?= @$this->filters['Inventor1'] ?>" size=8 class="filter-input" />
         </div>
         <div class="display_actor display_status column column-date">
             <a class="sorting-dirs" id="Filed-asc">Filed</a>
-            <span class="sorting-img" id="Filed-sort">&nbsp;</span> 
+            <span class="sorting-img" id="Filed-sort">&nbsp;</span>
             <br>
             <input type="text" name="filter-filed" id="filter-filed" value="<?= @$this->filters['Filed'] ?>" size=8 class="filter-input" />
         </div>
@@ -505,7 +505,7 @@
         </div>
         <div class="display_status column column-date">
             <a class="sorting-dirs" id="Published-asc">Published</a>
-            <span class="sorting-img" id="Published-sort">&nbsp;</span> 
+            <span class="sorting-img" id="Published-sort">&nbsp;</span>
             <br>
             <input type="text" name="filter-published" id="filter-published" value="<?= @$this->filters['filed'] ?>" size=8 class="filter-input" />
         </div>
@@ -515,7 +515,7 @@
         </div>
         <div class="display_status column column-date">
             <a class="sorting-dirs" id="Granted-asc">Granted</a>
-            <span class="sorting-img" id="Granted-sort">&nbsp;</span> 
+            <span class="sorting-img" id="Granted-sort">&nbsp;</span>
             <br>
             <input type="text" name="filter-granted" id="filter-granted" value="<?= @$this->filters['granted'] ?>" size=8 class="filter-input" />
         </div>
